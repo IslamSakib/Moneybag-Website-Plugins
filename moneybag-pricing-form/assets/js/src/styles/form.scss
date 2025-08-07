@@ -1,0 +1,433 @@
+// MoneyBag Pricing Form Styles
+.moneybag-pricing-form {
+  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdf2f8 0%, #f1f5f9 50%, #dbeafe 100%);
+
+  .form-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    &.consultation-mode {
+      grid-template-columns: 1fr;
+      position: relative;
+    }
+  }
+
+  .form-section {
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .form-header {
+      margin-bottom: 40px;
+
+      h2 {
+        font-size: 48px;
+        font-weight: bold;
+        color: #1e293b;
+        line-height: 1.1;
+        margin: 0 0 16px 0;
+      }
+
+      p {
+        font-size: 16px;
+        color: #64748b;
+        line-height: 1.6;
+        margin: 0;
+      }
+    }
+
+    .form-fields {
+      margin-bottom: 40px;
+
+      .main-fields {
+        display: grid;
+        gap: 24px;
+      }
+
+      .consultation-fields {
+        margin-top: 32px;
+        display: grid;
+        gap: 24px;
+
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+        }
+
+        .form-row-three {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 24px;
+        }
+      }
+
+      .form-field {
+        label {
+          display: block;
+          margin-bottom: 8px;
+          font-size: 14px;
+          font-weight: 500;
+          color: #374151;
+        }
+
+        select,
+        input {
+          width: 100%;
+          padding: 14px 16px;
+          border: 2px solid transparent;
+          border-radius: 12px;
+          background-color: rgba(255, 255, 255, 0.7);
+          font-size: 16px;
+          outline: none;
+          transition: all 0.2s;
+
+          &:focus {
+            border-color: var(--primary-color, #0ea5e9);
+            background-color: rgba(255, 255, 255, 0.9);
+          }
+
+          &.error {
+            border-color: #ef4444;
+          }
+
+          &::placeholder {
+            color: #9ca3af;
+          }
+        }
+
+        .error-message {
+          color: #ef4444;
+          font-size: 14px;
+          margin-top: 4px;
+        }
+      }
+    }
+
+    .form-actions {
+      button {
+        padding: 16px 32px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        outline: none;
+
+        &.btn-primary {
+          background-color: #374151;
+          color: white;
+
+          &:hover {
+            background-color: #1f2937;
+          }
+        }
+
+        &.btn-appointment {
+          background-color: transparent;
+          color: #374151;
+          border: 2px solid #374151;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          &:hover {
+            background-color: #374151;
+            color: white;
+          }
+        }
+
+        &.btn-submit {
+          background-color: #374151;
+          color: white;
+
+          &:hover:not(:disabled) {
+            background-color: #1f2937;
+          }
+
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+
+  .content-section {
+    padding: 60px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .description-content {
+      max-width: 500px;
+      text-align: center;
+
+      p {
+        font-size: 24px;
+        color: #64748b;
+        line-height: 1.6;
+        margin: 0;
+      }
+    }
+
+    .pricing-cards {
+      display: grid;
+      gap: 24px;
+      width: 100%;
+      max-width: 600px;
+
+      .card {
+        background-color: white;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+        h3 {
+          font-size: 20px;
+          font-weight: bold;
+          color: #ef4444;
+          margin: 0 0 24px 0;
+        }
+
+        &.documents-card {
+          .documents-list {
+            display: grid;
+            gap: 16px;
+
+            .document-item {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+
+              .checkmark {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background-color: #10b981;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: bold;
+                flex-shrink: 0;
+              }
+
+              span:not(.checkmark):not(.optional) {
+                font-size: 16px;
+                color: #374151;
+                flex: 1;
+              }
+
+              .optional {
+                font-size: 12px;
+                color: #9ca3af;
+                background-color: #f3f4f6;
+                padding: 2px 8px;
+                border-radius: 8px;
+              }
+            }
+          }
+        }
+
+        &.pricing-card {
+          .pricing-grid {
+            display: grid;
+            gap: 12px;
+
+            .pricing-row {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              font-size: 16px;
+
+              span {
+                color: #374151;
+
+                &:nth-child(even) {
+                  font-weight: 600;
+                }
+              }
+            }
+          }
+
+          .contact-note {
+            font-size: 14px;
+            color: #64748b;
+            margin: 20px 0 0 0;
+
+            a {
+              text-decoration: underline;
+              color: #0ea5e9;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+
+    .consultation-content {
+      position: fixed;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+
+      .consultation-illustration {
+        position: relative;
+        width: 400px;
+        height: 300px;
+
+        .moneybag-logo-consultation {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          z-index: 2;
+
+          .logo-svg {
+            width: 60px;
+            height: 60px;
+          }
+        }
+
+        .illustration-placeholder {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 250px;
+          background-color: rgba(255, 255, 255, 0.8);
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+          .consultation-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Thank You Page
+.moneybag-thank-you {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdf2f8 0%, #f1f5f9 50%, #dbeafe 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, sans-serif;
+
+  text-align: center;
+  padding: 60px 40px;
+  max-width: 600px;
+
+  .moneybag-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    .logo-svg {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  h1 {
+    font-size: 48px;
+    font-weight: bold;
+    color: #1e293b;
+    margin: 0 0 24px 0;
+  }
+
+  p {
+    font-size: 18px;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .moneybag-pricing-form {
+    .form-layout {
+      grid-template-columns: 1fr;
+
+      .content-section {
+        .consultation-content {
+          position: static;
+          transform: none;
+          display: flex;
+          justify-content: center;
+          margin-top: 40px;
+
+          .consultation-illustration {
+            width: 300px;
+            height: 200px;
+
+            .illustration-placeholder {
+              height: 180px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .moneybag-pricing-form {
+    .form-section {
+      padding: 40px 20px;
+
+      .form-header h2 {
+        font-size: 36px;
+      }
+
+      .form-fields {
+        .consultation-fields {
+          .form-row,
+          .form-row-three {
+            grid-template-columns: 1fr;
+          }
+        }
+      }
+    }
+
+    .content-section {
+      padding: 40px 20px;
+
+      .description-content p {
+        font-size: 18px;
+      }
+
+      .pricing-cards .card {
+        padding: 24px;
+      }
+    }
+  }
+
+  .moneybag-thank-you {
+    padding: 40px 20px;
+
+    h1 {
+      font-size: 36px;
+    }
+  }
+}

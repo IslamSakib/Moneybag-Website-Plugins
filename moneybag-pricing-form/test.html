@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MoneyBag Quick Test</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</head>
+
+<body>
+    <h1>MoneyBag Form Test</h1>
+    <div id="test-container"></div>
+
+    <div style="background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; font-family: monospace;">
+        <strong>Debug Info:</strong><br>
+        <div id="debug-info">Loading...</div>
+    </div>
+
+    <script>
+        console.log('=== QUICK TEST START ===');
+        console.log('React:', typeof React);
+        console.log('ReactDOM:', typeof ReactDOM);
+
+        document.getElementById('debug-info').innerHTML = `
+            React: ${typeof React !== 'undefined' ? '✅ Loaded' : '❌ Not loaded'}<br>
+            ReactDOM: ${typeof ReactDOM !== 'undefined' ? '✅ Loaded' : '❌ Not loaded'}<br>
+            Loading form script...
+        `;
+    </script>
+
+    <script src="assets/js/dist/form-widget.js"></script>
+
+    <script>
+        console.log('After loading form script:');
+        console.log('MoneyBagPricingForm type:', typeof MoneyBagPricingForm);
+        console.log('MoneyBagPricingForm object:', MoneyBagPricingForm);
+
+        if (typeof MoneyBagPricingForm !== 'undefined') {
+            console.log('MoneyBagPricingForm.init type:', typeof MoneyBagPricingForm.init);
+        }
+
+        document.getElementById('debug-info').innerHTML += `<br>
+            MoneyBag Script: ${typeof MoneyBagPricingForm !== 'undefined' ? '✅ Loaded' : '❌ Not loaded'}<br>
+            Init Function: ${typeof MoneyBagPricingForm !== 'undefined' && typeof MoneyBagPricingForm.init === 'function' ? '✅ Available' : '❌ Missing'}
+        `;
+
+        if (typeof MoneyBagPricingForm !== 'undefined' && typeof MoneyBagPricingForm.init === 'function') {
+            console.log('SUCCESS: Initializing form...');
+            MoneyBagPricingForm.init('test-container', {
+                form_title: 'Test Form - SUCCESS!',
+                form_description: 'The form is working correctly!',
+                primary_color: '#28a745'
+            });
+        } else {
+            console.error('FAILED: MoneyBagPricingForm.init not available');
+            document.getElementById('test-container').innerHTML = '<div style="padding: 20px; background: #ffebee; border: 1px solid #f44336; border-radius: 4px;"><h3>❌ Form Loading Failed</h3><p>Check the browser console for details.</p></div>';
+        }
+    </script>
+</body>
+
+</html>

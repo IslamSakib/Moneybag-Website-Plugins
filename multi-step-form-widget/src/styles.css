@@ -1,0 +1,457 @@
+/* Multi-Step Form Container */
+.msfm-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+}
+
+.msfm-title {
+  text-align: center;
+  color: #2d3748;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+
+/* Progress Bar */
+.msfm-progress-container {
+  margin-bottom: 40px;
+}
+
+.msfm-progress-bar {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.msfm-progress-fill {
+  height: 100%;
+  background: #4a5568;
+  transition: width 0.3s ease;
+}
+
+.msfm-progress-steps {
+  display: flex;
+  justify-content: space-between;
+}
+
+.msfm-progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.msfm-progress-step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #718096;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.msfm-progress-step-active .msfm-progress-step-circle {
+  background: #4a5568;
+  color: white;
+}
+
+.msfm-progress-step-label {
+  font-size: 12px;
+  color: #718096;
+}
+
+/* Step Header */
+.msfm-step-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.msfm-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.msfm-step-description {
+  color: #718096;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.msfm-timer {
+  font-size: 24px;
+  font-weight: 600;
+  color: #4a5568;
+  margin-top: 16px;
+}
+
+/* Form Fields */
+.msfm-field {
+  margin-bottom: 20px;
+}
+
+.msfm-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #4a5568;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.msfm-required {
+  color: #e53e3e;
+}
+
+.msfm-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.msfm-input:focus {
+  outline: none;
+  border-color: #4a5568;
+  box-shadow: 0 0 0 3px rgba(74, 85, 104, 0.1);
+}
+
+.msfm-input-error {
+  border-color: #e53e3e;
+}
+
+.msfm-input-error:focus {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.msfm-error {
+  display: block;
+  margin-top: 4px;
+  color: #e53e3e;
+  font-size: 12px;
+}
+
+.msfm-error-box {
+  background: #fed7d7;
+  color: #9b2c2c;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+/* Password Field */
+.msfm-password-wrapper {
+  position: relative;
+}
+
+.msfm-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.msfm-password-toggle:hover {
+  opacity: 1;
+}
+
+/* Form Grid */
+.msfm-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .msfm-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Buttons */
+.msfm-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.msfm-btn-primary {
+  background: #4a5568;
+  color: white;
+}
+
+.msfm-btn-primary:hover:not(:disabled) {
+  background: #2d3748;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.msfm-btn-secondary {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.msfm-btn-secondary:hover:not(:disabled) {
+  background: #cbd5e0;
+}
+
+.msfm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Navigation */
+.msfm-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
+.msfm-navigation:has(.msfm-btn:only-child) {
+  justify-content: flex-end;
+}
+
+/* Resend Button */
+.msfm-resend-btn {
+  background: none;
+  border: none;
+  color: #4a5568;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 8px;
+}
+
+.msfm-resend-btn:hover {
+  color: #2d3748;
+}
+
+/* CAPTCHA */
+.msfm-captcha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.msfm-captcha input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.msfm-captcha label {
+  cursor: pointer;
+  flex: 1;
+}
+
+.msfm-captcha img {
+  height: 40px;
+  border-radius: 4px;
+}
+
+/* Success Message */
+.msfm-success-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.msfm-success-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.msfm-success-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #48bb78;
+  margin-bottom: 16px;
+}
+
+.msfm-success-message {
+  font-size: 18px;
+  color: #4a5568;
+  margin-bottom: 32px;
+}
+
+.msfm-success-details {
+  background: #f7fafc;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 32px;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.msfm-success-details h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.msfm-success-details p {
+  text-align: center;
+  color: #4a5568;
+  margin: 16px 0;
+}
+
+.msfm-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.msfm-credential-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.msfm-credential-label {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.msfm-credential-value {
+  font-family: monospace;
+  color: #2d3748;
+}
+
+.msfm-success-note {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #718096;
+}
+
+/* Email Sent Message */
+.msfm-email-sent-container {
+  text-align: center;
+  padding: 60px 40px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.msfm-email-icon {
+  font-size: 80px;
+  margin-bottom: 24px;
+  filter: grayscale(20%);
+}
+
+.msfm-email-title {
+  font-size: 20px;
+  font-weight: 400;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+.msfm-email-address {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 20px;
+}
+
+.msfm-email-description {
+  font-size: 14px;
+  color: #718096;
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+.msfm-sandbox-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  color: #4a5568;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.msfm-sandbox-link:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+  transform: translateX(2px);
+}
+
+/* Loading Spinner */
+.msfm-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: msfm-spin 0.8s linear infinite;
+}
+
+@keyframes msfm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .msfm-container {
+    padding: 24px;
+    margin: 20px;
+  }
+
+  .msfm-title {
+    font-size: 24px;
+  }
+
+  .msfm-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .msfm-navigation {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+}

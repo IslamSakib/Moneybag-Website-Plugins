@@ -1,0 +1,65 @@
+.moneybag-pricing-form-container {
+  --primary-color: #007cba;
+  --secondary-color: #f8f9fa;
+}
+
+.elementor-widget-moneybag-pricing-form {
+  .moneybag-pricing-form {
+    margin: 2rem 0;
+  }
+}
+
+/* Elementor Editor Styles */
+.elementor-editor .moneybag-pricing-form-container {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #e9ecef;
+  border-radius: 8px;
+  position: relative;
+}
+
+.elementor-editor .moneybag-pricing-form-container::before {
+  content: "MoneyBag Pricing Form Widget";
+  color: #6c757d;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.elementor-editor
+  .moneybag-pricing-form-container
+  .moneybag-pricing-form-loading {
+  display: none;
+}
+
+/* Loading styles */
+.moneybag-pricing-form-loading {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.moneybag-pricing-form-loading .spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color, #007cba);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.moneybag-pricing-form-loading p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
