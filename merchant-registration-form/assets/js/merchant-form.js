@@ -1,23 +1,6 @@
 const { useState, useEffect } = React;
 
-// Icon components (simplified versions)
-const ChevronDown = () =>
-  React.createElement(
-    "svg",
-    {
-      className: "w-5 h-5",
-      fill: "none",
-      stroke: "currentColor",
-      viewBox: "0 0 24 24",
-    },
-    React.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      strokeWidth: 2,
-      d: "M19 9l-7 7-7-7",
-    })
-  );
-
+// Icon components
 const CheckCircle = () =>
   React.createElement(
     "svg",
@@ -39,7 +22,7 @@ const Upload = () =>
   React.createElement(
     "svg",
     {
-      className: "w-5 h-5",
+      className: "mrf-file-icon",
       fill: "none",
       stroke: "currentColor",
       viewBox: "0 0 24 24",
@@ -52,11 +35,11 @@ const Upload = () =>
     })
   );
 
-const FileText = () =>
+const Download = () =>
   React.createElement(
     "svg",
     {
-      className: "w-6 h-6",
+      className: "mrf-file-icon",
       fill: "none",
       stroke: "currentColor",
       viewBox: "0 0 24 24",
@@ -65,24 +48,113 @@ const FileText = () =>
       strokeLinecap: "round",
       strokeLinejoin: "round",
       strokeWidth: 2,
-      d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+      d: "M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
     })
   );
 
-const Clock = () =>
+// Illustration SVG Component
+const FormIllustration = () =>
   React.createElement(
     "svg",
     {
-      className: "w-6 h-6",
-      fill: "none",
-      stroke: "currentColor",
-      viewBox: "0 0 24 24",
+      width: "160",
+      height: "160",
+      viewBox: "0 0 200 200",
+      className: "mrf-illustration",
     },
-    React.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      strokeWidth: 2,
-      d: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z",
+    // Background circle
+    React.createElement("circle", {
+      cx: "100",
+      cy: "100",
+      r: "85",
+      fill: "#FFF5F5",
+      stroke: "#FED7D7",
+      strokeWidth: "2",
+    }),
+    // Person body
+    React.createElement("ellipse", {
+      cx: "80",
+      cy: "120",
+      rx: "22",
+      ry: "32",
+      fill: "#F56565",
+    }),
+    // Person head
+    React.createElement("circle", {
+      cx: "80",
+      cy: "75",
+      r: "13",
+      fill: "#FBB6CE",
+    }),
+    // Person arm
+    React.createElement("ellipse", {
+      cx: "105",
+      cy: "100",
+      rx: "7",
+      ry: "18",
+      fill: "#F56565",
+      transform: "rotate(45 105 100)",
+    }),
+    // Mobile device
+    React.createElement("rect", {
+      x: "115",
+      y: "85",
+      width: "23",
+      height: "38",
+      rx: "4",
+      fill: "#E2E8F0",
+      stroke: "#CBD5E0",
+      strokeWidth: "2",
+    }),
+    // Mobile screen
+    React.createElement("rect", {
+      x: "118",
+      y: "90",
+      width: "17",
+      height: "23",
+      rx: "2",
+      fill: "#FFFFFF",
+    }),
+    // Mobile screen elements
+    React.createElement("rect", {
+      x: "120",
+      y: "93",
+      width: "13",
+      height: "2",
+      fill: "#FED7D7",
+    }),
+    React.createElement("rect", {
+      x: "120",
+      y: "97",
+      width: "9",
+      height: "2",
+      fill: "#FED7D7",
+    }),
+    React.createElement("rect", {
+      x: "120",
+      y: "101",
+      width: "11",
+      height: "2",
+      fill: "#FED7D7",
+    }),
+    // Decorative elements
+    React.createElement("circle", {
+      cx: "145",
+      cy: "60",
+      r: "2.5",
+      fill: "#F6AD55",
+    }),
+    React.createElement("circle", {
+      cx: "45",
+      cy: "50",
+      r: "2",
+      fill: "#68D391",
+    }),
+    React.createElement("circle", {
+      cx: "155",
+      cy: "140",
+      r: "2",
+      fill: "#63B3ED",
     })
   );
 
@@ -131,7 +203,6 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
   const [submissionResult, setSubmissionResult] = useState(null);
 
   useEffect(() => {
-    // Clear errors when changing steps
     setErrors({});
   }, [currentStep]);
 
@@ -141,7 +212,6 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
       [field]: value,
     }));
 
-    // Clear error for this field
     if (errors[field]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -368,7 +438,6 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
         React.createElement(
           "div",
           { className: "mrf-header-content" },
-          React.createElement("div"),
           React.createElement(
             "div",
             { className: "mrf-header-links" },
@@ -492,67 +561,6 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
           ),
           React.createElement(
             "div",
-            { className: "mrf-process-steps" },
-            React.createElement(
-              "div",
-              { className: "mrf-process-step" },
-              React.createElement(
-                "div",
-                { className: "mrf-process-icon mrf-blue" },
-                React.createElement(FileText)
-              ),
-              React.createElement(
-                "h4",
-                { className: "mrf-process-title" },
-                "Document Review"
-              ),
-              React.createElement(
-                "p",
-                { className: "mrf-process-desc" },
-                "Our team will verify all submitted documents and business information."
-              )
-            ),
-            React.createElement(
-              "div",
-              { className: "mrf-process-step" },
-              React.createElement(
-                "div",
-                { className: "mrf-process-icon mrf-yellow" },
-                React.createElement(Clock)
-              ),
-              React.createElement(
-                "h4",
-                { className: "mrf-process-title" },
-                "Processing Time"
-              ),
-              React.createElement(
-                "p",
-                { className: "mrf-process-desc" },
-                "Review typically takes 1-3 business days. We'll email you with updates."
-              )
-            ),
-            React.createElement(
-              "div",
-              { className: "mrf-process-step" },
-              React.createElement(
-                "div",
-                { className: "mrf-process-icon mrf-green" },
-                React.createElement(CheckCircle)
-              ),
-              React.createElement(
-                "h4",
-                { className: "mrf-process-title" },
-                "Account Activation"
-              ),
-              React.createElement(
-                "p",
-                { className: "mrf-process-desc" },
-                "Once approved, you'll receive login credentials and API keys."
-              )
-            )
-          ),
-          React.createElement(
-            "div",
             { className: "mrf-action-buttons" },
             React.createElement(
               "button",
@@ -570,16 +578,6 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               "button",
               { className: "mrf-btn mrf-btn-secondary" },
               "Download Receipt"
-            )
-          ),
-          React.createElement(
-            "div",
-            { className: "mrf-important-notice" },
-            React.createElement(
-              "p",
-              null,
-              React.createElement("strong", null, "Important:"),
-              " Please save your Application ID for future reference. You'll receive a confirmation email shortly with detailed next steps."
             )
           )
         )
@@ -621,7 +619,7 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
             },
             formData[fieldName] || `Choose ${label.toLowerCase()} file...`
           ),
-          React.createElement(Upload)
+          React.createElement(formData[fieldName] ? Download : Upload)
         ),
         uploadProgress[fieldName] !== undefined &&
           uploadProgress[fieldName] !== null &&
@@ -694,8 +692,7 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                     { value: "partnership" },
                     "Partnership"
                   )
-                ),
-                React.createElement(ChevronDown)
+                )
               ),
               errors.legalIdentity &&
                 React.createElement(
@@ -744,8 +741,7 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                     { value: "manufacturing" },
                     "Manufacturing"
                   )
-                ),
-                React.createElement(ChevronDown)
+                )
               ),
               errors.businessCategory &&
                 React.createElement(
@@ -802,8 +798,7 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                     { value: "600000+" },
                     "600,000+"
                   )
-                ),
-                React.createElement(ChevronDown)
+                )
               ),
               errors.monthlyVolume &&
                 React.createElement(
@@ -864,8 +859,7 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   React.createElement("option", { value: "BDT" }, "BDT"),
                   React.createElement("option", { value: "USD" }, "USD"),
                   React.createElement("option", { value: "EUR" }, "EUR")
-                ),
-                React.createElement(ChevronDown)
+                )
               ),
               errors.currencyType &&
                 React.createElement(
@@ -1224,14 +1218,13 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
     {
       className: `mrf-container-wrapper ${theme === "dark" ? "mrf-dark" : ""}`,
     },
-    // Header
+    // Header with Need Assistance and FAQ
     React.createElement(
       "div",
       { className: "mrf-header" },
       React.createElement(
         "div",
         { className: "mrf-header-content" },
-        React.createElement("div"),
         React.createElement(
           "div",
           { className: "mrf-header-links" },
@@ -1334,6 +1327,12 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   )
                 )
               )
+            ),
+            // Add illustration
+            React.createElement(
+              "div",
+              { className: "mrf-sidebar-illustration" },
+              React.createElement(FormIllustration)
             )
           )
         ),
