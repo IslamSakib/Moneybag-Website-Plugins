@@ -4,7 +4,7 @@
  * Plugin Name: Merchant Registration Form
  * Description: Elementor widget for merchant registration form with React JS
  * Version: 1.0.0
- * Author: Your Name
+ * Author: Sakib Islam
  */
 
 if (!defined('ABSPATH')) {
