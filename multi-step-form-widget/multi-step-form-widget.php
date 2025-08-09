@@ -4,7 +4,7 @@
  * Plugin Name: Multi-Step Form Widget
  * Description: A multi-step form widget for Elementor with MoneyBag API integration
  * Version: 1.0.0
- * Author: Your Name
+ * Author: Sakib Islam
  * Text Domain: multi-step-form-widget
  */
 
@@ -84,7 +84,7 @@ class MultiStepFormWidget
         wp_localize_script('msfm-app', 'msfm_ajax', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('msfm_nonce'),
-            'api_base' => 'https://staging.api.moneybag.com.bd/api/v2/sandbox'
+            'api_base' => 'https://sandbox.api.moneybag.com.bd/api/v2/sandbox'
         ]);
     }
 
@@ -122,7 +122,7 @@ class MultiStepFormWidget
             wp_send_json_error(['message' => 'Invalid email address']);
         }
 
-        $response = wp_remote_post('https://staging.api.moneybag.com.bd/api/v2/sandbox/email-verification', [
+        $response = wp_remote_post('https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
@@ -154,7 +154,7 @@ class MultiStepFormWidget
         $session_id = sanitize_text_field($_POST['session_id']);
         $otp = sanitize_text_field($_POST['otp']);
 
-        $response = wp_remote_post('https://staging.api.moneybag.com.bd/api/v2/sandbox/verify-otp', [
+        $response = wp_remote_post('https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
@@ -213,7 +213,7 @@ class MultiStepFormWidget
             $business_data['business_website'] = esc_url($website);
         }
 
-        $response = wp_remote_post('https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details', [
+        $response = wp_remote_post('https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'

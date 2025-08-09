@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_BASE =
   window.msfm_ajax?.api_base ||
-  "https://staging.api.moneybag.com.bd/api/v2/sandbox";
+  "https://sandbox.api.moneybag.com.bd/api/v2/sandbox";
 const AJAX_URL = window.msfm_ajax?.ajax_url || "/wp-admin/admin-ajax.php";
 const NONCE = window.msfm_ajax?.nonce || "";
 
