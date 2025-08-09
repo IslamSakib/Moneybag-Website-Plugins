@@ -1,0 +1,725 @@
+/* Merchant Registration Form Styles */
+.mrf-container-wrapper {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+.mrf-container-wrapper.mrf-dark {
+  background-color: #111827;
+}
+
+/* Header */
+.mrf-header {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 1.5rem;
+}
+
+.mrf-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mrf-header-links {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.mrf-link {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mrf-link:hover {
+  color: #1f2937;
+}
+
+/* Main Container */
+.mrf-main-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Progress Section */
+.mrf-progress-section {
+  margin-bottom: 2rem;
+}
+
+.mrf-progress-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.mrf-progress-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.mrf-progress-bar-container {
+  width: 100%;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+}
+
+.mrf-progress-bar-fill {
+  background-color: #ef4444;
+  height: 0.5rem;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Error Banner */
+.mrf-error-banner {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+}
+
+.mrf-error-banner-text {
+  color: #991b1b;
+  margin: 0;
+}
+
+/* Content Grid */
+.mrf-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .mrf-content-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Sidebar Cards */
+.mrf-sidebar-left,
+.mrf-sidebar-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.mrf-sidebar-card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+}
+
+.mrf-sidebar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 1.5rem 0;
+}
+
+.mrf-sidebar-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0 0 2rem 0;
+}
+
+/* Steps List */
+.mrf-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mrf-step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.mrf-step-item:hover {
+  background-color: #f9fafb;
+  border-left-color: #d1d5db;
+}
+
+.mrf-step-item.mrf-step-active {
+  background-color: #fef2f2;
+  border-left-color: #ef4444;
+}
+
+.mrf-step-item.mrf-step-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mrf-step-item.mrf-step-clickable {
+  cursor: pointer;
+}
+
+.mrf-step-number {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.mrf-step-item.mrf-step-active .mrf-step-number {
+  color: #dc2626;
+}
+
+.mrf-step-title {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.mrf-step-item.mrf-step-active .mrf-step-title {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* Main Form */
+.mrf-main-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.mrf-form-card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  padding: 2rem;
+}
+
+/* Step Content */
+.mrf-step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Form Grid */
+.mrf-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.mrf-col-span-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .mrf-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mrf-col-span-2 {
+    grid-column: span 1;
+  }
+}
+
+/* Field Group */
+.mrf-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mrf-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Inputs */
+.mrf-input,
+.mrf-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.mrf-input:focus,
+.mrf-select:focus {
+  outline: none;
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.mrf-error-input {
+  border-color: #ef4444;
+}
+
+/* Select Container */
+.mrf-select-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mrf-select {
+  appearance: none;
+  padding-right: 2.5rem;
+}
+
+.mrf-select-container svg {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  width: 1.25rem;
+  height: 1.25rem;
+  pointer-events: none;
+}
+
+/* Services Section */
+.mrf-services-section {
+  margin-top: 2rem;
+}
+
+.mrf-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .mrf-checkbox-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.mrf-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.mrf-checkbox {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #ef4444;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+}
+
+.mrf-checkbox-label {
+  font-size: 0.875rem;
+  color: #374151;
+  text-transform: capitalize;
+}
+
+/* File Upload */
+.mrf-file-upload-container {
+  position: relative;
+}
+
+.mrf-file-input {
+  display: none;
+}
+
+.mrf-file-label {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s;
+}
+
+.mrf-file-label:hover {
+  background-color: #f9fafb;
+}
+
+.mrf-file-placeholder {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.mrf-file-selected {
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+.mrf-file-label svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #9ca3af;
+}
+
+/* Upload Progress */
+.mrf-upload-progress {
+  margin-top: 0.5rem;
+}
+
+.mrf-progress-bar {
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+}
+
+.mrf-progress-fill {
+  background-color: #3b82f6;
+  height: 0.5rem;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Error Messages */
+.mrf-error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0 0;
+}
+
+/* Form Buttons */
+.mrf-form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.mrf-btn {
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mrf-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mrf-btn-primary {
+  background-color: #1f2937;
+  color: white;
+}
+
+.mrf-btn-primary:hover:not(:disabled) {
+  background-color: #111827;
+}
+
+.mrf-btn-secondary {
+  background-color: #d1d5db;
+  color: #374151;
+}
+
+.mrf-btn-secondary:hover:not(:disabled) {
+  background-color: #9ca3af;
+}
+
+/* Spinner */
+.mrf-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Instructions */
+.mrf-instructions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mrf-instruction-item {
+  display: flex;
+  align-items: flex-start;
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.mrf-instruction-bullet {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #9ca3af;
+  border-radius: 50%;
+  margin-top: 0.5rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Thank You Page Styles */
+.mrf-min-h-screen {
+  min-height: 100vh;
+}
+
+.mrf-bg-gradient {
+  background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 50%, #dbeafe 100%);
+}
+
+.mrf-container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+}
+
+.mrf-thank-you-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid #e5e7eb;
+  padding: 3rem;
+  text-align: center;
+}
+
+.mrf-success-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.mrf-icon-circle {
+  width: 5rem;
+  height: 5rem;
+  background-color: #dcfce7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mrf-icon-circle svg {
+  color: #16a34a;
+}
+
+.mrf-thank-you-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 1rem 0;
+}
+
+.mrf-thank-you-message {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin: 0 auto 2rem auto;
+  max-width: 32rem;
+}
+
+.mrf-application-details {
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin: 0 auto 2rem auto;
+  max-width: 32rem;
+}
+
+.mrf-details-title {
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 1rem 0;
+}
+
+.mrf-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.mrf-detail-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mrf-detail-label {
+  color: #6b7280;
+}
+
+.mrf-detail-value {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.mrf-application-id {
+  font-weight: 500;
+  color: #16a34a;
+}
+
+.mrf-process-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .mrf-process-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mrf-process-step {
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.mrf-process-step.mrf-blue {
+  background-color: #eff6ff;
+}
+
+.mrf-process-step.mrf-yellow {
+  background-color: #fefce8;
+}
+
+.mrf-process-step.mrf-green {
+  background-color: #f0fdf4;
+}
+
+.mrf-process-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+.mrf-process-icon.mrf-blue {
+  background-color: #dbeafe;
+}
+
+.mrf-process-icon.mrf-blue svg {
+  color: #2563eb;
+}
+
+.mrf-process-icon.mrf-yellow {
+  background-color: #fef3c7;
+}
+
+.mrf-process-icon.mrf-yellow svg {
+  color: #d97706;
+}
+
+.mrf-process-icon.mrf-green {
+  background-color: #dcfce7;
+}
+
+.mrf-process-icon.mrf-green svg {
+  color: #16a34a;
+}
+
+.mrf-process-title {
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.mrf-process-desc {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.mrf-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+  .mrf-action-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.mrf-important-notice {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #eff6ff;
+  border-radius: 0.5rem;
+}
+
+.mrf-important-notice p {
+  font-size: 0.875rem;
+  color: #1e40af;
+  margin: 0;
+}
+
+/* Dark Mode Overrides */
+.mrf-dark .mrf-sidebar-card,
+.mrf-dark .mrf-form-card {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.mrf-dark .mrf-sidebar-title,
+.mrf-dark .mrf-label {
+  color: white;
+}
+
+.mrf-dark .mrf-sidebar-subtitle,
+.mrf-dark .mrf-instruction-item {
+  color: #d1d5db;
+}
+
+.mrf-dark .mrf-input,
+.mrf-dark .mrf-select,
+.mrf-dark .mrf-file-label {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: white;
+}
+
+.mrf-dark .mrf-header {
+  background-color: #1f2937;
+  border-color: #374151;
+}
