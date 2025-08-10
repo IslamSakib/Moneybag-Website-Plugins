@@ -1,0 +1,116 @@
+{
+    "steps": [
+        {
+            "id": 1,
+            "title": "Email Verification",
+            "fields": [
+                "email"
+            ]
+        },
+        {
+            "id": 2,
+            "title": "OTP Verification",
+            "fields": [
+                "otp"
+            ]
+        },
+        {
+            "id": 3,
+            "title": "Business Details",
+            "fields": [
+                "firstName",
+                "lastName",
+                "mobile",
+                "legalIdentity",
+                "businessName",
+                "website",
+                "password",
+                "confirmPassword"
+            ]
+        }
+    ],
+    "fields": {
+        "email": {
+            "type": "email",
+            "label": "Email Address",
+            "required": true,
+            "placeholder": "your@email.com"
+        },
+        "otp": {
+            "type": "text",
+            "label": "OTP Code",
+            "required": true,
+            "placeholder": "Enter 6-digit OTP",
+            "maxLength": 6
+        },
+        "firstName": {
+            "type": "text",
+            "label": "First Name",
+            "required": true,
+            "placeholder": "First Name"
+        },
+        "lastName": {
+            "type": "text",
+            "label": "Last Name",
+            "required": true,
+            "placeholder": "Last Name"
+        },
+        "mobile": {
+            "type": "tel",
+            "label": "Mobile Number",
+            "required": true,
+            "placeholder": "+8801XXXXXXXXX"
+        },
+        "legalIdentity": {
+            "type": "select",
+            "label": "Legal Identity",
+            "required": true,
+            "options": [
+                {
+                    "value": "individual",
+                    "label": "Individual"
+                },
+                {
+                    "value": "proprietorship",
+                    "label": "Proprietorship"
+                },
+                {
+                    "value": "partnership",
+                    "label": "Partnership"
+                },
+                {
+                    "value": "limited_company",
+                    "label": "Limited Company"
+                },
+                {
+                    "value": "others",
+                    "label": "Others"
+                }
+            ]
+        },
+        "businessName": {
+            "type": "text",
+            "label": "Business Name",
+            "required": true,
+            "placeholder": "Your Business Name"
+        },
+        "website": {
+            "type": "url",
+            "label": "Website (Optional)",
+            "required": false,
+            "placeholder": "https://example.com"
+        },
+        "password": {
+            "type": "password",
+            "label": "Password",
+            "required": true,
+            "placeholder": "Create a strong password"
+        },
+        "confirmPassword": {
+            "type": "password",
+            "label": "Confirm Password",
+            "required": true,
+            "placeholder": "Confirm your password"
+        }
+    }
+}
