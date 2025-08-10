@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(rmdir:*)",
+      "Bash(Remove-Item -Path \"C:\\Users\\Admin\\Documents\\GitHub\\Moneybag-Website-Plugins\\Moneybag-Multirole-Plugin\\merchant-registration-form\" -Recurse -Force)",
+      "Bash(Remove-Item -Path \"C:\\Users\\Admin\\Documents\\GitHub\\Moneybag-Website-Plugins\\Moneybag-Multirole-Plugin\\moneybag-pricing-form\" -Recurse -Force)",
+      "Bash(Remove-Item -Path \"C:\\Users\\Admin\\Documents\\GitHub\\Moneybag-Website-Plugins\\Moneybag-Multirole-Plugin\\multi-step-form-widget\" -Recurse -Force)",
+      "Bash(powershell:*)",
+      "Bash(Remove-Item -Path 'C:\\Users\\Admin\\Documents\\GitHub\\Moneybag-Website-Plugins\\Moneybag-Multirole-Plugin\\moneybag-multirole-plugin\\assets\\js\\moneybag-multirole-fixed.js' -Force)",
+      "Bash(dir:*)",
+      "Bash(mkdir:*)",
+      "Bash(php -l:*)",
+      "Bash(for file in *.php)",
+      "Bash(do echo \"Checking $file\")",
+      "Bash(done)",
+      "Bash(node:*)",
+      "Bash(findstr:*)"
+    ],
+    "deny": []
+  }
+}
