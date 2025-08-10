@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer --version)",
+      "Bash(touch:*)",
+      "Bash(docker compose exec:*)",
+      "Bash(docker compose:*)",
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(docker exec:*)",
+      "Bash(rm:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(find:*)"
+    ],
+    "deny": []
+  }
+}

@@ -1,3 +1,10 @@
+/**
+ * Merchant Registration Form - React Component
+ * Author: Sakib Islam
+ * Version: 1.0.0
+ * Description: Multi-step registration form with instant validation and file upload
+ */
+
 const { useState, useEffect } = React;
 
 // Icon components
@@ -158,12 +165,20 @@ const FormIllustration = () =>
     })
   );
 
-const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
+const MerchantRegistrationForm = ({
+  title,
+  subtitle,
+  showProgress,
+  showHeader,
+  theme,
+}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [touchedFields, setTouchedFields] = useState({});
   const [uploadProgress, setUploadProgress] = useState({});
+  const [completedSteps, setCompletedSteps] = useState([]);
   const [formData, setFormData] = useState({
     // Step 1 data
     legalIdentity: "",
@@ -202,32 +217,197 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
 
   const [submissionResult, setSubmissionResult] = useState(null);
 
-  useEffect(() => {
-    setErrors({});
-  }, [currentStep]);
+  // Validation rules for each field
+  const validateField = (field, value) => {
+    let error = "";
 
+    switch (field) {
+      // Step 1 validations
+      case "legalIdentity":
+        if (!value) error = "Legal Identity is required";
+        break;
+      case "businessCategory":
+        if (!value) error = "Business Category is required";
+        break;
+      case "currencyType":
+        if (!value) error = "Currency Type is required";
+        break;
+      case "maxAmount":
+        if (!value) error = "Maximum amount is required";
+        else if (isNaN(value) || parseFloat(value) <= 0)
+          error = "Please enter a valid amount";
+        break;
+
+      // Step 2 validations
+      case "merchantRegisteredName":
+        if (!value) error = "Merchant Registered Name is required";
+        else if (value.length < 3) error = "Name must be at least 3 characters";
+        break;
+      case "tradingName":
+        if (!value) error = "Trading Name is required";
+        else if (value.length < 3) error = "Name must be at least 3 characters";
+        break;
+      case "domainName":
+        if (
+          value &&
+          !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(
+            value
+          )
+        ) {
+          error = "Please enter a valid URL";
+        }
+        break;
+
+      // Step 3 validations
+      case "name":
+        if (!value) error = "Name is required";
+        else if (value.length < 2) error = "Name must be at least 2 characters";
+        break;
+      case "designation":
+        if (!value) error = "Designation is required";
+        break;
+      case "email":
+        if (!value) error = "Email is required";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+          error = "Please enter a valid email";
+        break;
+      case "mobileNumber":
+        if (!value) error = "Mobile Number is required";
+        else if (!/^(\+88)?01[3-9]\d{8}$/.test(value.replace(/\s/g, ""))) {
+          error = "Please enter a valid Bangladesh mobile number";
+        }
+        break;
+
+      // Step 4 validations
+      case "businessLogo":
+        if (!value) error = "Business Logo is required";
+        break;
+      case "tradeLicense":
+        if (!value) error = "Trade License is required";
+        break;
+      case "idDocument":
+        if (!value) error = "ID Document is required";
+        break;
+      case "tinCertificate":
+        if (!value) error = "TIN Certificate is required";
+        break;
+    }
+
+    return error;
+  };
+
+  // Validate payment methods separately
+  const validatePaymentMethods = (methods) => {
+    const hasSelection = Object.values(methods).some((val) => val === true);
+    return hasSelection ? "" : "Please select at least one payment method";
+  };
+
+  // Check if a step is valid
+  const isStepValid = (stepNumber) => {
+    switch (stepNumber) {
+      case 1:
+        return (
+          !validateField("legalIdentity", formData.legalIdentity) &&
+          !validateField("businessCategory", formData.businessCategory) &&
+          !validateField("currencyType", formData.currencyType) &&
+          !validateField("maxAmount", formData.maxAmount) &&
+          !validatePaymentMethods(formData.paymentMethods)
+        );
+      case 2:
+        return (
+          !validateField(
+            "merchantRegisteredName",
+            formData.merchantRegisteredName
+          ) && !validateField("tradingName", formData.tradingName)
+        );
+      case 3:
+        return (
+          !validateField("name", formData.name) &&
+          !validateField("designation", formData.designation) &&
+          !validateField("email", formData.email) &&
+          !validateField("mobileNumber", formData.mobileNumber)
+        );
+      case 4:
+        return (
+          !validateField("businessLogo", formData.businessLogo) &&
+          !validateField("tradeLicense", formData.tradeLicense) &&
+          !validateField("idDocument", formData.idDocument) &&
+          !validateField("tinCertificate", formData.tinCertificate)
+        );
+      default:
+        return false;
+    }
+  };
+
+  // Handle input change with instant validation
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
 
-    if (errors[field]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
+    // Mark field as touched
+    setTouchedFields((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
+
+    // Validate immediately
+    const error = validateField(field, value);
+    setErrors((prev) => ({
+      ...prev,
+      [field]: error,
+    }));
+
+    // Check if current step is now complete
+    if (isStepValid(currentStep) && !completedSteps.includes(currentStep)) {
+      setCompletedSteps((prev) => [...prev, currentStep]);
     }
   };
 
+  // Handle checkbox change with instant validation
   const handleCheckboxChange = (method) => {
+    const newPaymentMethods = {
+      ...formData.paymentMethods,
+      [method]: !formData.paymentMethods[method],
+    };
+
     setFormData((prev) => ({
       ...prev,
-      paymentMethods: {
-        ...prev.paymentMethods,
-        [method]: !prev.paymentMethods[method],
-      },
+      paymentMethods: newPaymentMethods,
+    }));
+
+    // Mark as touched
+    setTouchedFields((prev) => ({
+      ...prev,
+      paymentMethods: true,
+    }));
+
+    // Validate payment methods
+    const error = validatePaymentMethods(newPaymentMethods);
+    setErrors((prev) => ({
+      ...prev,
+      paymentMethods: error,
+    }));
+
+    // Check if current step is now complete
+    if (isStepValid(currentStep) && !completedSteps.includes(currentStep)) {
+      setCompletedSteps((prev) => [...prev, currentStep]);
+    }
+  };
+
+  // Handle field blur for validation
+  const handleFieldBlur = (field) => {
+    setTouchedFields((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
+
+    const value = formData[field];
+    const error = validateField(field, value);
+    setErrors((prev) => ({
+      ...prev,
+      [field]: error,
     }));
   };
 
@@ -242,19 +422,45 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
     setUploadProgress((prev) => ({ ...prev, [fieldName]: 0 }));
 
     try {
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          const current = prev[fieldName] || 0;
+          if (current >= 90) {
+            clearInterval(progressInterval);
+            return prev;
+          }
+          return { ...prev, [fieldName]: current + 10 };
+        });
+      }, 100);
+
       const response = await fetch(window.mrfAjax.ajaxUrl, {
         method: "POST",
         body: formDataUpload,
       });
 
+      clearInterval(progressInterval);
       const result = await response.json();
 
       if (result.success) {
         handleInputChange(fieldName, result.data.files[fieldName].filename);
         setUploadProgress((prev) => ({ ...prev, [fieldName]: 100 }));
+
+        // Clear progress after a delay
+        setTimeout(() => {
+          setUploadProgress((prev) => {
+            const updated = { ...prev };
+            delete updated[fieldName];
+            return updated;
+          });
+        }, 1000);
       } else {
         setErrors((prev) => ({ ...prev, [fieldName]: result.data.message }));
-        setUploadProgress((prev) => ({ ...prev, [fieldName]: null }));
+        setUploadProgress((prev) => {
+          const updated = { ...prev };
+          delete updated[fieldName];
+          return updated;
+        });
       }
     } catch (error) {
       console.error("Upload error:", error);
@@ -262,38 +468,62 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
         ...prev,
         [fieldName]: "Upload failed. Please try again.",
       }));
-      setUploadProgress((prev) => ({ ...prev, [fieldName]: null }));
+      setUploadProgress((prev) => {
+        const updated = { ...prev };
+        delete updated[fieldName];
+        return updated;
+      });
     }
   };
 
   const validateStep = async (stepNumber) => {
-    const stepData = getStepData(stepNumber);
+    const valid = isStepValid(stepNumber);
 
-    try {
-      const response = await fetch(window.mrfAjax.ajaxUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          action: "mrf_validate_step",
-          nonce: window.mrfAjax.nonce,
-          step: stepNumber,
-          data: JSON.stringify(stepData),
-        }),
-      });
+    // Mark all fields in this step as touched to show errors
+    const fieldsToTouch = getStepFields(stepNumber);
+    const newTouchedFields = {};
+    fieldsToTouch.forEach((field) => {
+      newTouchedFields[field] = true;
+    });
+    setTouchedFields((prev) => ({ ...prev, ...newTouchedFields }));
 
-      const result = await response.json();
-
-      if (result.success) {
-        setErrors(result.data.errors || {});
-        return result.data.valid;
+    // Validate all fields in this step
+    const newErrors = {};
+    fieldsToTouch.forEach((field) => {
+      if (field === "paymentMethods") {
+        const error = validatePaymentMethods(formData.paymentMethods);
+        if (error) newErrors[field] = error;
+      } else {
+        const error = validateField(field, formData[field]);
+        if (error) newErrors[field] = error;
       }
-    } catch (error) {
-      console.error("Validation error:", error);
-    }
+    });
 
-    return false;
+    setErrors((prev) => ({ ...prev, ...newErrors }));
+
+    return valid;
+  };
+
+  const getStepFields = (stepNumber) => {
+    switch (stepNumber) {
+      case 1:
+        return [
+          "legalIdentity",
+          "businessCategory",
+          "monthlyVolume",
+          "maxAmount",
+          "currencyType",
+          "paymentMethods",
+        ];
+      case 2:
+        return ["merchantRegisteredName", "tradingName", "domainName"];
+      case 3:
+        return ["name", "designation", "email", "mobileNumber", "phoneNumber"];
+      case 4:
+        return ["businessLogo", "tradeLicense", "idDocument", "tinCertificate"];
+      default:
+        return [];
+    }
   };
 
   const getStepData = (stepNumber) => {
@@ -334,12 +564,30 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
   };
 
   const handleStepClick = async (stepNumber) => {
+    // Allow going back to any previous step
     if (stepNumber < currentStep) {
       setCurrentStep(stepNumber);
-    } else if (stepNumber === currentStep + 1) {
-      const isValid = await validateStep(currentStep);
-      if (isValid) {
-        setCurrentStep(stepNumber);
+      return;
+    }
+
+    // Allow going to already completed steps
+    if (completedSteps.includes(stepNumber)) {
+      setCurrentStep(stepNumber);
+      return;
+    }
+
+    // For forward navigation, validate current step first
+    if (stepNumber > currentStep) {
+      // Only allow moving one step forward at a time
+      if (stepNumber === currentStep + 1) {
+        const isValid = await validateStep(currentStep);
+        if (isValid) {
+          // Mark current step as completed
+          if (!completedSteps.includes(currentStep)) {
+            setCompletedSteps((prev) => [...prev, currentStep]);
+          }
+          setCurrentStep(stepNumber);
+        }
       }
     }
   };
@@ -347,6 +595,10 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
   const handleNext = async () => {
     const isValid = await validateStep(currentStep);
     if (isValid && currentStep < 4) {
+      // Mark current step as completed
+      if (!completedSteps.includes(currentStep)) {
+        setCompletedSteps((prev) => [...prev, currentStep]);
+      }
       setCurrentStep(currentStep + 1);
     }
   };
@@ -358,6 +610,12 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
   };
 
   const handleSubmit = async () => {
+    // First validate the current step
+    const isValid = await validateStep(currentStep);
+    if (!isValid) {
+      return;
+    }
+
     setIsSubmitting(true);
     setErrors({});
 
@@ -377,6 +635,10 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
       const result = await response.json();
 
       if (result.success) {
+        // Mark step 4 as completed
+        if (!completedSteps.includes(4)) {
+          setCompletedSteps((prev) => [...prev, 4]);
+        }
         setSubmissionResult({
           success: true,
           message: result.data.message,
@@ -414,42 +676,34 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
   ];
 
   const getProgressPercentage = () => {
-    switch (currentStep) {
-      case 1:
-        return 28;
-      case 2:
-        return 52;
-      case 3:
-        return 74;
-      case 4:
-        return 96;
-      default:
-        return 28;
-    }
+    const baseProgress = (currentStep - 1) * 25;
+    const stepProgress = isStepValid(currentStep) ? 25 : 12;
+    return Math.min(baseProgress + stepProgress, 100);
   };
 
   const renderThankYouPage = () => {
     return React.createElement(
       "div",
       { className: "mrf-min-h-screen mrf-bg-gradient" },
-      React.createElement(
-        "div",
-        { className: "mrf-header" },
+      showHeader === "yes" &&
         React.createElement(
           "div",
-          { className: "mrf-header-content" },
+          { className: "mrf-header" },
           React.createElement(
             "div",
-            { className: "mrf-header-links" },
+            { className: "mrf-header-content" },
             React.createElement(
-              "button",
-              { className: "mrf-link" },
-              "Need Assistance?"
-            ),
-            React.createElement("button", { className: "mrf-link" }, "FAQ")
+              "div",
+              { className: "mrf-header-links" },
+              React.createElement(
+                "button",
+                { className: "mrf-link" },
+                "Need Assistance?"
+              ),
+              React.createElement("button", { className: "mrf-link" }, "FAQ")
+            )
           )
-        )
-      ),
+        ),
       React.createElement(
         "div",
         { className: "mrf-container" },
@@ -570,6 +824,40 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   setIsSubmitted(false);
                   setCurrentStep(1);
                   setSubmissionResult(null);
+                  setCompletedSteps([]);
+                  setTouchedFields({});
+                  // Reset form data
+                  setFormData({
+                    legalIdentity: "",
+                    businessCategory: "",
+                    monthlyVolume: "500000-600000",
+                    maxAmount: "5000",
+                    currencyType: "",
+                    paymentMethods: {
+                      visa: false,
+                      mastercard: false,
+                      amex: false,
+                      unionPay: false,
+                      dinersClub: false,
+                      dbblNexus: false,
+                      bkash: false,
+                      nagad: false,
+                      rocket: false,
+                      upay: false,
+                    },
+                    merchantRegisteredName: "",
+                    tradingName: "",
+                    domainName: "",
+                    name: "",
+                    designation: "",
+                    email: "",
+                    mobileNumber: "",
+                    phoneNumber: "",
+                    businessLogo: "",
+                    tradeLicense: "",
+                    idDocument: "",
+                    tinCertificate: "",
+                  });
                 },
               },
               "Submit Another Application"
@@ -590,10 +878,17 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
     label,
     accept = ".jpg,.jpeg,.png,.pdf"
   ) => {
+    const hasError = touchedFields[fieldName] && errors[fieldName];
+
     return React.createElement(
       "div",
       { className: "mrf-field-group" },
-      React.createElement("label", { className: "mrf-label" }, label),
+      React.createElement(
+        "label",
+        { className: "mrf-label" },
+        label,
+        React.createElement("span", { style: { color: "#dc3545" } }, " *")
+      ),
       React.createElement(
         "div",
         { className: "mrf-file-upload-container" },
@@ -608,7 +903,7 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
           "label",
           {
             htmlFor: `file-${fieldName}`,
-            className: "mrf-file-label",
+            className: `mrf-file-label ${hasError ? "mrf-error-input" : ""}`,
           },
           React.createElement(
             "span",
@@ -635,7 +930,7 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               })
             )
           ),
-        errors[fieldName] &&
+        hasError &&
           React.createElement(
             "p",
             { className: "mrf-error" },
@@ -661,7 +956,12 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               React.createElement(
                 "label",
                 { className: "mrf-label" },
-                "Legal Identity"
+                "Legal Identity",
+                React.createElement(
+                  "span",
+                  { style: { color: "#dc3545" } },
+                  " *"
+                )
               ),
               React.createElement(
                 "div",
@@ -670,11 +970,14 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   "select",
                   {
                     className: `mrf-select ${
-                      errors.legalIdentity ? "mrf-error-input" : ""
+                      touchedFields.legalIdentity && errors.legalIdentity
+                        ? "mrf-error-input"
+                        : ""
                     }`,
                     value: formData.legalIdentity,
                     onChange: (e) =>
                       handleInputChange("legalIdentity", e.target.value),
+                    onBlur: () => handleFieldBlur("legalIdentity"),
                   },
                   React.createElement("option", { value: "" }, "Select"),
                   React.createElement(
@@ -694,7 +997,8 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   )
                 )
               ),
-              errors.legalIdentity &&
+              touchedFields.legalIdentity &&
+                errors.legalIdentity &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -709,7 +1013,12 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               React.createElement(
                 "label",
                 { className: "mrf-label" },
-                "Business Category"
+                "Business Category",
+                React.createElement(
+                  "span",
+                  { style: { color: "#dc3545" } },
+                  " *"
+                )
               ),
               React.createElement(
                 "div",
@@ -718,11 +1027,14 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   "select",
                   {
                     className: `mrf-select ${
-                      errors.businessCategory ? "mrf-error-input" : ""
+                      touchedFields.businessCategory && errors.businessCategory
+                        ? "mrf-error-input"
+                        : ""
                     }`,
                     value: formData.businessCategory,
                     onChange: (e) =>
                       handleInputChange("businessCategory", e.target.value),
+                    onBlur: () => handleFieldBlur("businessCategory"),
                   },
                   React.createElement("option", { value: "" }, "Select"),
                   React.createElement(
@@ -743,7 +1055,8 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   )
                 )
               ),
-              errors.businessCategory &&
+              touchedFields.businessCategory &&
+                errors.businessCategory &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -767,11 +1080,14 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   "select",
                   {
                     className: `mrf-select ${
-                      errors.monthlyVolume ? "mrf-error-input" : ""
+                      touchedFields.monthlyVolume && errors.monthlyVolume
+                        ? "mrf-error-input"
+                        : ""
                     }`,
                     value: formData.monthlyVolume,
                     onChange: (e) =>
                       handleInputChange("monthlyVolume", e.target.value),
+                    onBlur: () => handleFieldBlur("monthlyVolume"),
                   },
                   React.createElement(
                     "option",
@@ -800,7 +1116,8 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   )
                 )
               ),
-              errors.monthlyVolume &&
+              touchedFields.monthlyVolume &&
+                errors.monthlyVolume &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -815,17 +1132,27 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               React.createElement(
                 "label",
                 { className: "mrf-label" },
-                "Maximum Amount in a Single Transaction"
+                "Maximum Amount in a Single Transaction",
+                React.createElement(
+                  "span",
+                  { style: { color: "#dc3545" } },
+                  " *"
+                )
               ),
               React.createElement("input", {
                 type: "number",
                 className: `mrf-input ${
-                  errors.maxAmount ? "mrf-error-input" : ""
+                  touchedFields.maxAmount && errors.maxAmount
+                    ? "mrf-error-input"
+                    : ""
                 }`,
                 value: formData.maxAmount,
                 onChange: (e) => handleInputChange("maxAmount", e.target.value),
+                onBlur: () => handleFieldBlur("maxAmount"),
+                placeholder: "Enter amount",
               }),
-              errors.maxAmount &&
+              touchedFields.maxAmount &&
+                errors.maxAmount &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -840,7 +1167,12 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               React.createElement(
                 "label",
                 { className: "mrf-label" },
-                "Currency Type"
+                "Currency Type",
+                React.createElement(
+                  "span",
+                  { style: { color: "#dc3545" } },
+                  " *"
+                )
               ),
               React.createElement(
                 "div",
@@ -849,11 +1181,14 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   "select",
                   {
                     className: `mrf-select ${
-                      errors.currencyType ? "mrf-error-input" : ""
+                      touchedFields.currencyType && errors.currencyType
+                        ? "mrf-error-input"
+                        : ""
                     }`,
                     value: formData.currencyType,
                     onChange: (e) =>
                       handleInputChange("currencyType", e.target.value),
+                    onBlur: () => handleFieldBlur("currencyType"),
                   },
                   React.createElement("option", { value: "" }, "Select"),
                   React.createElement("option", { value: "BDT" }, "BDT"),
@@ -861,7 +1196,8 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                   React.createElement("option", { value: "EUR" }, "EUR")
                 )
               ),
-              errors.currencyType &&
+              touchedFields.currencyType &&
+                errors.currencyType &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -877,7 +1213,8 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
             React.createElement(
               "label",
               { className: "mrf-label" },
-              "Type of Service Needed"
+              "Type of Service Needed",
+              React.createElement("span", { style: { color: "#dc3545" } }, " *")
             ),
             React.createElement(
               "div",
@@ -909,7 +1246,8 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
                 )
               )
             ),
-            errors.paymentMethods &&
+            touchedFields.paymentMethods &&
+              errors.paymentMethods &&
               React.createElement(
                 "p",
                 { className: "mrf-error" },
@@ -929,18 +1267,25 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
             React.createElement(
               "label",
               { className: "mrf-label" },
-              "Merchant Registered Name"
+              "Merchant Registered Name",
+              React.createElement("span", { style: { color: "#dc3545" } }, " *")
             ),
             React.createElement("input", {
               type: "text",
               className: `mrf-input ${
-                errors.merchantRegisteredName ? "mrf-error-input" : ""
+                touchedFields.merchantRegisteredName &&
+                errors.merchantRegisteredName
+                  ? "mrf-error-input"
+                  : ""
               }`,
               value: formData.merchantRegisteredName,
               onChange: (e) =>
                 handleInputChange("merchantRegisteredName", e.target.value),
+              onBlur: () => handleFieldBlur("merchantRegisteredName"),
+              placeholder: "Enter your registered business name",
             }),
-            errors.merchantRegisteredName &&
+            touchedFields.merchantRegisteredName &&
+              errors.merchantRegisteredName &&
               React.createElement(
                 "p",
                 { className: "mrf-error" },
@@ -955,17 +1300,23 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
             React.createElement(
               "label",
               { className: "mrf-label" },
-              "Trading Name (Name on the Shop)"
+              "Trading Name (Name on the Shop)",
+              React.createElement("span", { style: { color: "#dc3545" } }, " *")
             ),
             React.createElement("input", {
               type: "text",
               className: `mrf-input ${
-                errors.tradingName ? "mrf-error-input" : ""
+                touchedFields.tradingName && errors.tradingName
+                  ? "mrf-error-input"
+                  : ""
               }`,
               value: formData.tradingName,
               onChange: (e) => handleInputChange("tradingName", e.target.value),
+              onBlur: () => handleFieldBlur("tradingName"),
+              placeholder: "Enter your shop/brand name",
             }),
-            errors.tradingName &&
+            touchedFields.tradingName &&
+              errors.tradingName &&
               React.createElement(
                 "p",
                 { className: "mrf-error" },
@@ -980,18 +1331,22 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
             React.createElement(
               "label",
               { className: "mrf-label" },
-              "Domain Name"
+              "Domain Name (Optional)"
             ),
             React.createElement("input", {
               type: "text",
               className: `mrf-input ${
-                errors.domainName ? "mrf-error-input" : ""
+                touchedFields.domainName && errors.domainName
+                  ? "mrf-error-input"
+                  : ""
               }`,
               value: formData.domainName,
               onChange: (e) => handleInputChange("domainName", e.target.value),
+              onBlur: () => handleFieldBlur("domainName"),
               placeholder: "www.yourwebsite.com",
             }),
-            errors.domainName &&
+            touchedFields.domainName &&
+              errors.domainName &&
               React.createElement(
                 "p",
                 { className: "mrf-error" },
@@ -1008,14 +1363,24 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
           React.createElement(
             "div",
             { className: "mrf-field-group" },
-            React.createElement("label", { className: "mrf-label" }, "Name"),
+            React.createElement(
+              "label",
+              { className: "mrf-label" },
+              "Name",
+              React.createElement("span", { style: { color: "#dc3545" } }, " *")
+            ),
             React.createElement("input", {
               type: "text",
-              className: `mrf-input ${errors.name ? "mrf-error-input" : ""}`,
+              className: `mrf-input ${
+                touchedFields.name && errors.name ? "mrf-error-input" : ""
+              }`,
               value: formData.name,
               onChange: (e) => handleInputChange("name", e.target.value),
+              onBlur: () => handleFieldBlur("name"),
+              placeholder: "Enter your full name",
             }),
-            errors.name &&
+            touchedFields.name &&
+              errors.name &&
               React.createElement("p", { className: "mrf-error" }, errors.name)
           ),
 
@@ -1029,18 +1394,28 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               React.createElement(
                 "label",
                 { className: "mrf-label" },
-                "Designation"
+                "Designation",
+                React.createElement(
+                  "span",
+                  { style: { color: "#dc3545" } },
+                  " *"
+                )
               ),
               React.createElement("input", {
                 type: "text",
                 className: `mrf-input ${
-                  errors.designation ? "mrf-error-input" : ""
+                  touchedFields.designation && errors.designation
+                    ? "mrf-error-input"
+                    : ""
                 }`,
                 value: formData.designation,
                 onChange: (e) =>
                   handleInputChange("designation", e.target.value),
+                onBlur: () => handleFieldBlur("designation"),
+                placeholder: "e.g., CEO, Manager",
               }),
-              errors.designation &&
+              touchedFields.designation &&
+                errors.designation &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -1050,14 +1425,28 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
             React.createElement(
               "div",
               { className: "mrf-field-group" },
-              React.createElement("label", { className: "mrf-label" }, "Email"),
+              React.createElement(
+                "label",
+                { className: "mrf-label" },
+                "Email",
+                React.createElement(
+                  "span",
+                  { style: { color: "#dc3545" } },
+                  " *"
+                )
+              ),
               React.createElement("input", {
                 type: "email",
-                className: `mrf-input ${errors.email ? "mrf-error-input" : ""}`,
+                className: `mrf-input ${
+                  touchedFields.email && errors.email ? "mrf-error-input" : ""
+                }`,
                 value: formData.email,
                 onChange: (e) => handleInputChange("email", e.target.value),
+                onBlur: () => handleFieldBlur("email"),
+                placeholder: "your@email.com",
               }),
-              errors.email &&
+              touchedFields.email &&
+                errors.email &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -1076,19 +1465,28 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               React.createElement(
                 "label",
                 { className: "mrf-label" },
-                "Mobile Number"
+                "Mobile Number",
+                React.createElement(
+                  "span",
+                  { style: { color: "#dc3545" } },
+                  " *"
+                )
               ),
               React.createElement("input", {
                 type: "tel",
                 className: `mrf-input ${
-                  errors.mobileNumber ? "mrf-error-input" : ""
+                  touchedFields.mobileNumber && errors.mobileNumber
+                    ? "mrf-error-input"
+                    : ""
                 }`,
                 value: formData.mobileNumber,
                 onChange: (e) =>
                   handleInputChange("mobileNumber", e.target.value),
+                onBlur: () => handleFieldBlur("mobileNumber"),
                 placeholder: "+88 01XXX XXX XXX",
               }),
-              errors.mobileNumber &&
+              touchedFields.mobileNumber &&
+                errors.mobileNumber &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -1106,13 +1504,18 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
               React.createElement("input", {
                 type: "tel",
                 className: `mrf-input ${
-                  errors.phoneNumber ? "mrf-error-input" : ""
+                  touchedFields.phoneNumber && errors.phoneNumber
+                    ? "mrf-error-input"
+                    : ""
                 }`,
                 value: formData.phoneNumber,
                 onChange: (e) =>
                   handleInputChange("phoneNumber", e.target.value),
+                onBlur: () => handleFieldBlur("phoneNumber"),
+                placeholder: "Office phone number",
               }),
-              errors.phoneNumber &&
+              touchedFields.phoneNumber &&
+                errors.phoneNumber &&
                 React.createElement(
                   "p",
                   { className: "mrf-error" },
@@ -1129,22 +1532,22 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
           renderFileUpload(
             "businessLogo",
             "Business / Organization Logo",
-            ".jpg,.jpeg,.png"
+            ".jpg,.jpeg,.png,.gif"
           ),
           renderFileUpload(
             "tradeLicense",
             "Trade License",
-            ".jpg,.jpeg,.png,.pdf"
+            ".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx"
           ),
           renderFileUpload(
             "idDocument",
             "NID / Passport / Birth Certificate / Driving License",
-            ".jpg,.jpeg,.png,.pdf"
+            ".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx"
           ),
           renderFileUpload(
             "tinCertificate",
             "TIN Certificate",
-            ".jpg,.jpeg,.png,.pdf"
+            ".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx"
           )
         );
 
@@ -1158,17 +1561,17 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
       1: [
         "Select your business type from the Legal Identity dropdown",
         "Enter your expected monthly transaction amount in BDT",
-        "Specify the highest single transaction amount you expect to process in a Single transaction",
-        "Choose whether you serve domestic, international, or both customer types",
+        "Specify the highest single transaction amount you expect to process",
+        "Choose your preferred currency type for transactions",
         "Select all payment methods you want to accept (you can add more later)",
-        "All fields are required to proceed to the next step",
+        "All fields marked with * are required to proceed",
         "Ensure your transaction volumes are realistic to avoid delays in approval",
       ],
       2: [
         "Enter your official business name as registered with government authorities",
         "Trading name is what customers see (your shop/brand name)",
         "Domain Name should be your complete website URL (e.g. www.yourbusiness.com)",
-        'If you don\'t have a website yet, enter "N/A" or your social media page',
+        "If you don't have a website yet, you can leave the domain field empty",
         "Double-check spelling - this information will appear on your merchant account",
         "These details will be used for payment gateway integration",
       ],
@@ -1176,7 +1579,7 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
         "Provide details of the primary contact person for this merchant account",
         "This person will receive all account-related communications",
         "Email must be valid and actively monitored - verification code will be sent",
-        "Mobile number must be a Bangladesh number starting with +88",
+        "Mobile number must be a Bangladesh number starting with +88 or 01",
         "Phone number is optional but recommended for urgent support",
         "This contact will have admin access to the merchant dashboard",
       ],
@@ -1219,24 +1622,25 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
       className: `mrf-container-wrapper ${theme === "dark" ? "mrf-dark" : ""}`,
     },
     // Header with Need Assistance and FAQ
-    React.createElement(
-      "div",
-      { className: "mrf-header" },
+    showHeader === "yes" &&
       React.createElement(
         "div",
-        { className: "mrf-header-content" },
+        { className: "mrf-header" },
         React.createElement(
           "div",
-          { className: "mrf-header-links" },
+          { className: "mrf-header-content" },
           React.createElement(
-            "button",
-            { className: "mrf-link" },
-            "Need Assistance?"
-          ),
-          React.createElement("button", { className: "mrf-link" }, "FAQ")
+            "div",
+            { className: "mrf-header-links" },
+            React.createElement(
+              "button",
+              { className: "mrf-link" },
+              "Need Assistance?"
+            ),
+            React.createElement("button", { className: "mrf-link" }, "FAQ")
+          )
         )
-      )
-    ),
+      ),
 
     React.createElement(
       "div",
@@ -1296,37 +1700,42 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
             React.createElement(
               "p",
               { className: "mrf-sidebar-subtitle" },
-              "After completing all steps you will be eligible for 7 days trial."
+              subtitle ||
+                "After completing all steps you will be eligible for 7 days trial."
             ),
             React.createElement(
               "div",
               { className: "mrf-steps-list" },
-              steps.map((step) =>
-                React.createElement(
+              steps.map((step) => {
+                const isActive = step.number === currentStep;
+                const isCompleted = completedSteps.includes(step.number);
+                const isPending = step.number > currentStep && !isCompleted;
+
+                let className = "mrf-step-item";
+                if (isActive) className += " mrf-step-active";
+                if (isCompleted) className += " mrf-step-completed";
+                if (isPending) className += " mrf-step-pending";
+
+                return React.createElement(
                   "div",
                   {
                     key: step.number,
-                    className: `mrf-step-item ${
-                      step.active ? "mrf-step-active" : ""
-                    } ${
-                      currentStep >= step.number
-                        ? "mrf-step-clickable"
-                        : "mrf-step-disabled"
-                    }`,
+                    className: className,
                     onClick: () => handleStepClick(step.number),
+                    style: { cursor: "pointer" },
                   },
                   React.createElement(
                     "span",
                     { className: "mrf-step-number" },
-                    `Step ${step.number}:`
+                    isCompleted && !isActive ? "✓ " : `Step ${step.number}:`
                   ),
                   React.createElement(
                     "span",
                     { className: "mrf-step-title" },
                     step.title
                   )
-                )
-              )
+                );
+              })
             ),
             // Add illustration
             React.createElement(
@@ -1401,3 +1810,5 @@ const MerchantRegistrationForm = ({ title, showProgress, theme }) => {
 
 // Make it globally available
 window.MerchantRegistrationForm = MerchantRegistrationForm;
+
+// Plugin developed by Sakib Islam

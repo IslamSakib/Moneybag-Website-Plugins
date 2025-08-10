@@ -1,4 +1,7 @@
-/* Merchant Registration Form - Pixel Perfect Match */
+/* Merchant Registration Form - Complete CSS */
+/* Author: Sakib Islam */
+/* Version: 1.0.0 */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -89,7 +92,7 @@ body {
   background-color: #dc3545;
   height: 3px;
   border-radius: 2px;
-  transition: width 0.3s ease;
+  transition: width 0.5s ease-out;
 }
 
 /* Content Grid - Three Column Layout */
@@ -151,7 +154,7 @@ body {
   margin-left: 0;
 }
 
-.mrf-step-item:hover:not(.mrf-step-disabled) {
+.mrf-step-item:hover {
   color: #333;
 }
 
@@ -161,19 +164,44 @@ body {
   margin-left: -1rem;
 }
 
-.mrf-step-item.mrf-step-disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* Navigation states */
+.mrf-step-completed {
+  cursor: pointer;
+}
+
+.mrf-step-completed .mrf-step-number {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.mrf-step-completed .mrf-step-title {
+  color: #333;
+}
+
+.mrf-step-pending {
+  opacity: 0.7;
+}
+
+.mrf-step-pending:hover {
+  opacity: 0.85;
 }
 
 .mrf-step-number {
   font-weight: 400;
   color: #6c757d;
   margin-right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  min-width: 60px;
 }
 
 .mrf-step-item.mrf-step-active .mrf-step-number {
   color: #dc3545;
+  font-weight: 500;
+}
+
+.mrf-step-item.mrf-step-completed .mrf-step-number {
+  color: #28a745;
   font-weight: 500;
 }
 
@@ -244,6 +272,11 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.mrf-label span {
+  color: #dc3545;
+  font-weight: 600;
+}
+
 /* Inputs */
 .mrf-input,
 .mrf-select {
@@ -268,13 +301,41 @@ body {
   color: #6c757d;
 }
 
+/* Error state with animation */
 .mrf-error-input {
   border-color: #dc3545;
+  animation: shake 0.3s ease-in-out;
 }
 
 .mrf-error-input:focus {
   border-color: #dc3545;
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Success state for completed fields */
+.mrf-input:valid:not(:placeholder-shown):not(.mrf-error-input) {
+  border-color: #28a745;
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
 }
 
 /* Select Container */
@@ -341,12 +402,23 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: border-color 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
   font-size: 0.875rem;
 }
 
 .mrf-file-label:hover {
   border-color: #80bdff;
+  background-color: #f8f9fa;
+}
+
+.mrf-file-label.mrf-error-input {
+  border-color: #dc3545;
+  animation: shake 0.3s ease-in-out;
+}
+
+.mrf-file-label.mrf-error-input:hover {
+  border-color: #dc3545;
+  background-color: #fff5f5;
 }
 
 .mrf-file-placeholder {
@@ -380,6 +452,32 @@ body {
   height: 3px;
   border-radius: 2px;
   transition: width 0.3s ease;
+  position: relative;
+}
+
+.mrf-progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Form Buttons */
@@ -485,6 +583,7 @@ body {
   color: #dc3545;
   font-size: 0.8rem;
   margin: 0.25rem 0 0 0;
+  animation: fadeIn 0.3s ease-in;
 }
 
 .mrf-error-banner {
@@ -494,10 +593,34 @@ body {
   border: 1px solid #f5c6cb;
   border-radius: 4px;
   color: #721c24;
+  animation: slideDown 0.3s ease-out;
 }
 
 .mrf-error-banner-text {
   margin: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Spinner */
