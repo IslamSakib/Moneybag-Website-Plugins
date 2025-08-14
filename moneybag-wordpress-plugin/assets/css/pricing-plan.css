@@ -1,0 +1,477 @@
+/* Moneybag Pricing Plan Styles - Scoped to prevent conflicts */
+.moneybag-pricing-plan-wrapper {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.moneybag-pricing-plan-wrapper *,
+.moneybag-pricing-plan-wrapper *::before,
+.moneybag-pricing-plan-wrapper *::after {
+    box-sizing: inherit;
+}
+
+.pricing-plan-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f0f5 0%, #e8f4ff 100%);
+    font-family: inherit;
+    padding: 20px;
+}
+
+/* Step 1 & 2 Layout */
+.pricing-plan-container .step-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 60px;
+    align-items: start;
+    padding: 40px 0;
+}
+
+/* Step 2 Three Column Layout */
+.pricing-plan-container .step-container-three-col {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 380px 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+    padding: 40px 0;
+}
+
+/* Step 3 Consultation Layout */
+.pricing-plan-container .consultation-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+.pricing-plan-container .consultation-container h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 40px;
+    line-height: 1.2;
+}
+
+.pricing-plan-container .consultation-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 60px;
+    align-items: start;
+}
+
+/* Step 4 Thank You Layout */
+.pricing-plan-container .thank-you-container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.pricing-plan-container .thank-you-container h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 40px 0;
+}
+
+.pricing-plan-container .thank-you-container p {
+    font-size: 18px;
+    color: #4a5568;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Form Section */
+.pricing-plan-container .form-section {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.pricing-plan-container .form-section h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 40px;
+    line-height: 1.2;
+}
+
+/* Content Section */
+.pricing-plan-container .content-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pricing-plan-container .content-text h2 {
+    font-size: 28px;
+    font-weight: 500;
+    color: #4a5568;
+    line-height: 1.4;
+}
+
+.pricing-plan-container .highlight {
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+/* Form Elements */
+.pricing-plan-container .form-group {
+    margin-bottom: 24px;
+}
+
+.pricing-plan-container .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+.pricing-plan-container .form-select,
+.pricing-plan-container .form-input {
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #f1eff4;
+    font-size: 16px;
+    color: #2d3748;
+    outline: none;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.pricing-plan-container .form-select:focus,
+.pricing-plan-container .form-input:focus {
+    background: #e8e5ed;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.15);
+}
+
+.pricing-plan-container .form-select:disabled,
+.pricing-plan-container .form-input:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.pricing-plan-container .form-select.error,
+.pricing-plan-container .form-input.error {
+    background: #fef2f2;
+    border: 1px solid #f87171;
+}
+
+.pricing-plan-container .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.pricing-plan-container .consultation-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+/* Buttons */
+.pricing-plan-container .primary-button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+    font-family: inherit;
+}
+
+.pricing-plan-container .primary-button:hover:not(:disabled) {
+    background: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 107, 107, 0.4);
+}
+
+.pricing-plan-container .primary-button:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    animation: pulse 2s infinite;
+}
+
+/* Cards */
+.pricing-plan-container .card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    height: fit-content;
+}
+
+.pricing-plan-container .card-header {
+    color: #ff6b6b;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Document Checklist */
+.pricing-plan-container .checklist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pricing-plan-container .checklist-item {
+    padding: 8px 0;
+    color: #4a5568;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-plan-container .checklist-item::before {
+    content: '✓';
+    color: #10b981;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.pricing-plan-container .optional {
+    color: #a0a0a0;
+    font-size: 12px;
+    margin-left: 8px;
+    font-style: italic;
+}
+
+/* Pricing Grid */
+.pricing-plan-container .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.pricing-plan-container .pricing-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+    color: #4a5568;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.pricing-plan-container .pricing-row:last-child {
+    border-bottom: none;
+}
+
+.pricing-plan-container .contact-text {
+    font-size: 12px;
+    color: #718096;
+    margin: 16px 0 0 0;
+    font-style: italic;
+}
+
+.pricing-plan-container .special-offer {
+    background: #ecfdf5;
+    border: 1px solid #10b981;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: #065f46;
+}
+
+/* WiFi Logo Animation */
+.pricing-plan-container .wifi-logo {
+    position: relative;
+    display: inline-block;
+}
+
+.pricing-plan-container .wifi-logo.large {
+    transform: scale(2);
+    margin-bottom: 20px;
+}
+
+.pricing-plan-container .logo-m {
+    font-size: 48px;
+    font-weight: 700;
+    color: #6b7280;
+    display: block;
+}
+
+.pricing-plan-container .wifi-signals {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 3px;
+}
+
+.pricing-plan-container .signal {
+    width: 8px;
+    height: 8px;
+    background: #ff4444;
+    border-radius: 50% 50% 0 0;
+    transform-origin: bottom;
+}
+
+.pricing-plan-container .signal-1 {
+    height: 4px;
+    animation: pulse 2s infinite;
+}
+
+.pricing-plan-container .signal-2 {
+    height: 6px;
+    animation: pulse 2s infinite 0.3s;
+}
+
+.pricing-plan-container .signal-3 {
+    height: 8px;
+    animation: pulse 2s infinite 0.6s;
+}
+
+/* Illustration */
+.pricing-plan-container .illustration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+}
+
+.pricing-plan-container .meeting-illustration {
+    text-align: center;
+}
+
+/* Error Messages */
+.pricing-plan-container .error-message {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.pricing-plan-container .submit-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #dc2626;
+}
+
+/* Loading States */
+.pricing-plan-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    background: linear-gradient(135deg, #f5f0f5 0%, #e8f4ff 100%);
+    border-radius: 12px;
+}
+
+.pricing-plan-loading p {
+    color: #4a5568;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .pricing-plan-container .step-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        max-width: 800px;
+    }
+
+    .pricing-plan-container .step-container-three-col {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        max-width: 800px;
+    }
+
+    .pricing-plan-container .consultation-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .pricing-plan-container .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .pricing-plan-container {
+        padding: 10px;
+    }
+    
+    .pricing-plan-container .form-section {
+        padding: 24px;
+    }
+    
+    .pricing-plan-container .form-grid,
+    .pricing-plan-container .consultation-form .form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .pricing-plan-container .consultation-container h1 {
+        font-size: 36px;
+    }
+
+    .pricing-plan-container .form-section h1 {
+        font-size: 28px;
+    }
+
+    .pricing-plan-container .content-text h2 {
+        font-size: 20px;
+    }
+
+    .pricing-plan-container .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pricing-plan-container .card {
+        padding: 20px;
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1300px) {
+    .pricing-plan-container .step-container-three-col {
+        grid-template-columns: 320px 1fr 1fr;
+        gap: 30px;
+    }
+}
+
+/* Elementor Editor Preview Styles */
+.pricing-plan-preview {
+    padding: 20px;
+    text-align: center;
+}
+
+.pricing-plan-preview h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.pricing-plan-preview p {
+    margin: 0 0 20px 0;
+    color: #666;
+    font-size: 14px;
+}

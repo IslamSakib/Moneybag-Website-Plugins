@@ -1,0 +1,29 @@
+{
+  "name": "moneybag-wordpress-plugin",
+  "version": "1.0.0",
+  "description": "Elementor widgets for Moneybag payment integration with React.js forms",
+  "main": "assets/js/sandbox-form.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "dev": "wp-scripts start --watch",
+    "lint:js": "wp-scripts lint-js assets/js/",
+    "format:js": "wp-scripts format-js assets/js/"
+  },
+  "keywords": [
+    "wordpress",
+    "elementor",
+    "react",
+    "payment",
+    "moneybag"
+  ],
+  "author": "Moneybag Team",
+  "license": "GPL-2.0+",
+  "devDependencies": {
+    "@wordpress/scripts": "^27.0.0"
+  },
+  "dependencies": {
+    "@wordpress/element": "^5.24.0",
+    "@wordpress/api-fetch": "^6.44.0"
+  }
+}

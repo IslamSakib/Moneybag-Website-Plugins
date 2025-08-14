@@ -1,0 +1,561 @@
+/* Moneybag Sandbox Form Styles - Scoped to prevent conflicts */
+.moneybag-sandbox-form-wrapper {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.moneybag-sandbox-form-wrapper *,
+.moneybag-sandbox-form-wrapper *::before,
+.moneybag-sandbox-form-wrapper *::after {
+    box-sizing: inherit;
+}
+
+.moneybag-form-container {
+    min-height: 460px;
+    background: #f4f6f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    font-family: inherit;
+}
+
+.moneybag-form-container .split-layout,
+.moneybag-form-container .full-form {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 920px;
+    overflow: hidden;
+    min-height: 460px;
+}
+
+.moneybag-form-container .split-layout {
+    display: flex;
+    min-height: 460px;
+}
+
+.moneybag-form-container .left-section {
+    flex: 0 0 42%;
+    background: #f7f9fb;
+    padding: 70px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.moneybag-form-container .right-section {
+    flex: 1;
+    padding: 70px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    position: relative;
+}
+
+.moneybag-form-container .icon-container {
+    margin-bottom: 35px;
+}
+
+.moneybag-form-container .envelope-icon {
+    position: relative;
+    width: 150px;
+    height: 100px;
+}
+
+.moneybag-form-container .envelope-card {
+    position: absolute;
+    width: 120px;
+    height: 80px;
+    background: white;
+    border-radius: 6px;
+    top: 15px;
+    left: 15px;
+    transform: rotate(-5deg);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.moneybag-form-container .envelope-front {
+    position: relative;
+    width: 120px;
+    height: 80px;
+    background: #dce3ea;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    font-weight: 600;
+    color: #6e7f8d;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.moneybag-form-container .check-icon {
+    position: relative;
+    width: 120px;
+    height: 90px;
+}
+
+.moneybag-form-container .check-box {
+    width: 120px;
+    height: 90px;
+    background: white;
+    border: 2.5px solid #e5eaef;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.moneybag-form-container .check-mark {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 44px;
+    height: 44px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    font-size: 24px;
+    color: #f85149;
+    font-weight: bold;
+}
+
+.moneybag-form-container .dots {
+    position: absolute;
+    bottom: 22px;
+    left: 18px;
+    display: flex;
+    gap: 6px;
+}
+
+.moneybag-form-container .dot {
+    width: 7px;
+    height: 7px;
+    background: #f85149;
+    border-radius: 50%;
+}
+
+.moneybag-form-container .info-text {
+    font-size: 14.5px;
+    color: #5f6d7e;
+    line-height: 1.5;
+    text-align: center;
+    max-width: 260px;
+    margin: 0;
+}
+
+.moneybag-form-container .form-content {
+    width: 100%;
+    max-width: 340px;
+}
+
+.moneybag-form-container .input-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #5f6d7e;
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+.moneybag-form-container .input-field {
+    width: 100%;
+    padding: 11px 18px;
+    border: 1.5px solid #e5eaef;
+    border-radius: 40px;
+    font-size: 14.5px;
+    outline: none;
+    transition: all 0.2s;
+    background: white;
+    font-family: inherit;
+}
+
+.moneybag-form-container .input-field:focus {
+    border-color: #f85149;
+    box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.1);
+}
+
+.moneybag-form-container .input-field.error {
+    border-color: #ef4444;
+}
+
+.moneybag-form-container .input-field:disabled {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+}
+
+.moneybag-form-container .primary-btn {
+    background: #f85149;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 18px;
+    font-family: inherit;
+}
+
+.moneybag-form-container .primary-btn:hover:not(:disabled) {
+    background: #e73c33;
+    transform: translateY(-1px);
+}
+
+.moneybag-form-container .primary-btn:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+}
+
+.moneybag-form-container .secondary-btn {
+    background: #f0f4f8;
+    color: #5f6d7e;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.moneybag-form-container .secondary-btn:hover:not(:disabled) {
+    background: #e2e8f0;
+}
+
+.moneybag-form-container .secondary-btn:disabled {
+    background: #f9fafb;
+    color: #d1d5db;
+    cursor: not-allowed;
+}
+
+.moneybag-form-container .countdown {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 22px;
+    color: #a0aec0;
+    font-weight: 600;
+    font-family: 'SF Mono', 'Monaco', monospace;
+    letter-spacing: 1px;
+}
+
+.moneybag-form-container .otp-text {
+    font-size: 12px;
+    color: #a0aec0;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.moneybag-form-container .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.moneybag-form-container .btn-row .primary-btn {
+    margin-top: 0;
+    flex: 1;
+}
+
+.moneybag-form-container .full-form {
+    padding: 55px 70px;
+}
+
+.moneybag-form-container .input-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.moneybag-form-container .input-row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.moneybag-form-container .field-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.moneybag-form-container .field-label {
+    font-size: 13px;
+    color: #5f6d7e;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.moneybag-form-container .password-field {
+    position: relative;
+}
+
+.moneybag-form-container .eye-icon {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #a0aec0;
+    font-size: 16px;
+    user-select: none;
+}
+
+.moneybag-form-container .eye-icon:hover {
+    color: #6b7280;
+}
+
+.moneybag-form-container .dropdown-wrapper {
+    position: relative;
+}
+
+.moneybag-form-container .dropdown-wrapper select {
+    appearance: none;
+    padding-right: 40px;
+    color: #1e293b;
+}
+
+.moneybag-form-container .dropdown-wrapper select:invalid {
+    color: #5f6d7e;
+}
+
+.moneybag-form-container .dropdown-arrow {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #a0aec0;
+    font-size: 12px;
+}
+
+.moneybag-form-container .verify-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    background: #f9fafb;
+    padding: 14px 16px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.moneybag-form-container .verify-check {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #f85149;
+}
+
+.moneybag-form-container .verify-text {
+    font-size: 13.5px;
+    color: #374151;
+    cursor: pointer;
+    margin: 0;
+}
+
+.moneybag-form-container .cf-logo {
+    margin-left: 18px;
+    text-align: right;
+}
+
+.moneybag-form-container .cf-text {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #ff6b00;
+    letter-spacing: 0.3px;
+    margin: 0;
+}
+
+.moneybag-form-container .cf-links {
+    font-size: 9px;
+    color: #9ca3af;
+    margin-top: 1px;
+    margin-bottom: 0;
+}
+
+.moneybag-form-container .arrow-btn {
+    background: #f85149;
+    color: white;
+    border: none;
+    padding: 12px 36px;
+    border-radius: 40px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+}
+
+.moneybag-form-container .arrow-btn:hover:not(:disabled) {
+    background: #e73c33;
+    transform: translateY(-1px);
+}
+
+.moneybag-form-container .arrow-btn:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+}
+
+.moneybag-form-container .success-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+    text-align: center;
+    min-height: 460px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+.moneybag-form-container .success-heading {
+    font-size: 17px;
+    color: #374151;
+    font-weight: 400;
+    margin-bottom: 6px;
+    margin-top: 0;
+}
+
+.moneybag-form-container .email-display {
+    font-size: 17px;
+    color: #1f2937;
+    font-weight: 600;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+.moneybag-form-container .success-info {
+    font-size: 14.5px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    max-width: 380px;
+    margin-top: 0;
+}
+
+.moneybag-form-container .error-message {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.moneybag-form-container .submit-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+.moneybag-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 460px;
+    background: #f4f6f9;
+    border-radius: 12px;
+}
+
+.moneybag-loading p {
+    color: #5f6d7e;
+    font-size: 14.5px;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .moneybag-form-container {
+        padding: 20px 10px;
+    }
+    
+    .moneybag-form-container .split-layout {
+        flex-direction: column;
+        max-width: 500px;
+    }
+    
+    .moneybag-form-container .left-section {
+        flex: none;
+        padding: 40px 30px;
+    }
+    
+    .moneybag-form-container .right-section {
+        padding: 40px 30px;
+    }
+    
+    .moneybag-form-container .full-form {
+        padding: 30px 20px;
+    }
+    
+    .moneybag-form-container .input-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .moneybag-form-container .input-row-2 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .moneybag-form-container .success-page {
+        padding: 40px 20px;
+    }
+    
+    .moneybag-form-container .countdown {
+        position: static;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+}
+
+/* Elementor Editor Preview Styles */
+.moneybag-form-preview {
+    padding: 20px;
+    text-align: center;
+}
+
+.moneybag-form-preview h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.moneybag-form-preview p {
+    margin: 0 0 20px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Animation for loading states */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.moneybag-form-container .primary-btn:disabled,
+.moneybag-form-container .arrow-btn:disabled {
+    animation: pulse 2s infinite;
+}
