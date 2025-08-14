@@ -40,6 +40,10 @@ class AdminSettings {
         register_setting('moneybag_settings', 'moneybag_sandbox_api_url');
         register_setting('moneybag_settings', 'moneybag_default_redirect_url');
         
+        // reCAPTCHA Settings
+        register_setting('moneybag_settings', 'moneybag_recaptcha_site_key');
+        register_setting('moneybag_settings', 'moneybag_recaptcha_secret_key');
+        
         // CRM Settings
         register_setting('moneybag_crm_settings', 'moneybag_crm_api_key');
         register_setting('moneybag_crm_settings', 'moneybag_crm_api_url');
@@ -77,6 +81,32 @@ class AdminSettings {
                 'option_name' => 'moneybag_default_redirect_url',
                 'default' => 'https://sandbox.moneybag.com.bd/',
                 'description' => 'Default URL to redirect users after successful form submission'
+            ]
+        );
+        
+        add_settings_field(
+            'moneybag_recaptcha_site_key',
+            __('reCAPTCHA Site Key', 'moneybag-plugin'),
+            [$this, 'text_field_callback'],
+            'moneybag_settings',
+            'moneybag_general_section',
+            [
+                'option_name' => 'moneybag_recaptcha_site_key',
+                'default' => '6LeH1jEqAAAAALzgHRj-E4TGKbpGEs2K_P3_XcM8',
+                'description' => 'Your Google reCAPTCHA v2 Site Key (public key)'
+            ]
+        );
+        
+        add_settings_field(
+            'moneybag_recaptcha_secret_key',
+            __('reCAPTCHA Secret Key', 'moneybag-plugin'),
+            [$this, 'password_field_callback'],
+            'moneybag_settings',
+            'moneybag_general_section',
+            [
+                'option_name' => 'moneybag_recaptcha_secret_key',
+                'default' => '6LeH1jEqAAAAALzgHRj-E4TGKbpGEs2K_P3_XcM8',
+                'description' => 'Your Google reCAPTCHA v2 Secret Key (private key)'
             ]
         );
         

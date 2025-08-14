@@ -25,6 +25,9 @@
             humanVerified: false
         });
         
+        const [recaptchaResponse, setRecaptchaResponse] = useState('');
+        const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+        
         const [passwordVisible, setPasswordVisible] = useState({
             password: false,
             confirmPassword: false
@@ -43,11 +46,59 @@
                 if (interval) clearInterval(interval);
             };
         }, [timerActive, timeLeft]);
+        
+        useEffect(() => {
+            loadRecaptcha();
+        }, []);
+        
+        const loadRecaptcha = () => {
+            if (window.grecaptcha || document.querySelector('script[src*="recaptcha"]')) {
+                setRecaptchaLoaded(true);
+                return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = `https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit`;
+            script.async = true;
+            script.defer = true;
+            
+            window.onRecaptchaLoad = () => {
+                setRecaptchaLoaded(true);
+            };
+            
+            document.head.appendChild(script);
+        };
+        
+        const renderRecaptcha = () => {
+            if (window.grecaptcha && config.recaptcha_site_key) {
+                const recaptchaDiv = document.getElementById('recaptcha-container');
+                if (recaptchaDiv && !recaptchaDiv.hasChildNodes()) {
+                    window.grecaptcha.render('recaptcha-container', {
+                        'sitekey': config.recaptcha_site_key,
+                        'callback': (response) => setRecaptchaResponse(response),
+                        'expired-callback': () => setRecaptchaResponse('')
+                    });
+                }
+            }
+        };
 
         const formatTime = (seconds) => {
             const minutes = Math.floor(seconds / 60);
             const secs = seconds % 60;
             return `0${minutes}:${secs.toString().padStart(2, '0')}`;
+        };
+        
+        const renderCountdown = (timeString) => {
+            const digits = timeString.split('');
+            return digits.map((digit, index) => {
+                if (digit === ':') {
+                    return createElement('span', { key: index, style: { margin: '0 2px' } }, ':');
+                }
+                return createElement('div', { 
+                    key: index, 
+                    className: 'countdown-digit' 
+                }, digit);
+            });
         };
 
         const validateEmail = (email) => {
@@ -229,8 +280,8 @@
                 hasErrors = true;
             }
             
-            if (!formData.humanVerified) {
-                setErrors(prev => ({ ...prev, humanVerified: 'Please verify you are human' }));
+            if (!recaptchaResponse && config.recaptcha_site_key) {
+                setErrors(prev => ({ ...prev, recaptcha: 'Please complete the reCAPTCHA verification' }));
                 hasErrors = true;
             }
             
@@ -238,7 +289,7 @@
             
             setLoading(true);
             try {
-                const response = await apiCall('/sandbox/merchants/business-details', {
+                const requestData = {
                     business_name: formData.businessName,
                     business_website: formData.website || '',
                     first_name: formData.firstName,
@@ -247,7 +298,13 @@
                     password: formData.password,
                     phone: formData.mobile,
                     session_id: sessionId
-                });
+                };
+                
+                if (config.recaptcha_site_key && recaptchaResponse) {
+                    requestData.recaptcha_response = recaptchaResponse;
+                }
+                
+                const response = await apiCall('/sandbox/merchants/business-details', requestData);
                 
                 if (response.success) {
                     goToStep(4);
@@ -267,6 +324,11 @@
                 setTimerActive(true);
             } else {
                 setTimerActive(false);
+            }
+            
+            // Render reCAPTCHA when moving to step 3
+            if (step === 3 && config.recaptcha_site_key) {
+                setTimeout(renderRecaptcha, 100);
             }
         };
 
@@ -345,14 +407,18 @@
                 createElement('div', { className: 'left-section' },
                     createElement('div', { className: 'icon-container' },
                         createElement('div', { className: 'envelope-icon' },
-                            createElement('div', { className: 'envelope-card' }),
-                            createElement('div', { className: 'envelope-front' }, 'E')
+                            createElement('img', {
+                                src: config.plugin_url + 'assets/image/emojione_e-mail.webp',
+                                alt: 'Email verification',
+                                style: { width: '120px', height: '120px' }
+                            })
                         )
                     ),
                     createElement('p', { className: 'info-text' },
                         'Secure email verification ensures your sandbox credentials are delivered safely to the right person.'
                     )
                 ),
+                createElement('div', { className: 'section-divider' }),
                 createElement('div', { className: 'right-section' },
                     createElement('div', { className: 'form-content' },
                         createElement('label', { className: 'input-label' }, 'Email'),
@@ -379,24 +445,26 @@
             currentStep === 2 && createElement('div', { className: 'split-layout' },
                 createElement('div', { className: 'left-section' },
                     createElement('div', { className: 'icon-container' },
-                        createElement('div', { className: 'check-icon' },
-                            createElement('div', { className: 'check-box' },
-                                createElement('div', { className: 'check-mark' }, '✓'),
-                                createElement('div', { className: 'dots' },
-                                    createElement('div', { className: 'dot' }),
-                                    createElement('div', { className: 'dot' }),
-                                    createElement('div', { className: 'dot' })
-                                )
-                            )
+                        createElement('div', { className: 'envelope-icon' },
+                            createElement('img', {
+                                src: config.plugin_url + 'assets/image/streamline-freehand-color_password-approved.webp',
+                                alt: 'Password approved',
+                                style: { 
+                                    width: '155.625px', 
+                                    height: '120px', 
+                                    aspectRatio: '83/64' 
+                                }
+                            })
                         )
                     ),
                     createElement('p', { className: 'info-text' },
                         'Enter the 6-digit verification code sent to your email. Code expires in 5 minutes for security.'
                     )
                 ),
+                createElement('div', { className: 'section-divider' }),
                 createElement('div', { className: 'right-section' },
-                    createElement('div', { className: 'countdown' }, formatTime(timeLeft)),
                     createElement('div', { className: 'form-content' },
+                        createElement('div', { className: 'countdown' }, ...renderCountdown(formatTime(timeLeft))),
                         createElement('div', { className: 'otp-text' }, 'OTP'),
                         createElement('input', {
                             type: 'text',
@@ -463,22 +531,13 @@
                     renderPasswordField('password', 'Password'),
                     renderPasswordField('confirmPassword', 'Confirm Password')
                 ),
-                createElement('div', { className: 'verify-section' },
-                    createElement('input', {
-                        type: 'checkbox',
-                        className: 'verify-check',
-                        id: 'human',
-                        name: 'humanVerified',
-                        checked: formData.humanVerified,
-                        onChange: handleInputChange
+                config.recaptcha_site_key && createElement('div', { className: 'recaptcha-section' },
+                    createElement('div', { 
+                        id: 'recaptcha-container',
+                        style: { marginBottom: '15px' }
                     }),
-                    createElement('label', { htmlFor: 'human', className: 'verify-text' }, 'Verify you are human'),
-                    createElement('div', { className: 'cf-logo' },
-                        createElement('div', { className: 'cf-text' }, 'CLOUDFLARE'),
-                        createElement('div', { className: 'cf-links' }, 'Privacy • Terms')
-                    )
+                    errors.recaptcha && createElement('span', { className: 'error-message' }, errors.recaptcha)
                 ),
-                errors.humanVerified && createElement('span', { className: 'error-message' }, errors.humanVerified),
                 errors.submit && createElement('div', { className: 'error-message submit-error' }, errors.submit),
                 createElement('button', {
                     className: 'arrow-btn',
@@ -494,8 +553,11 @@
             currentStep === 4 && createElement('div', { className: 'success-page' },
                 createElement('div', { className: 'icon-container' },
                     createElement('div', { className: 'envelope-icon' },
-                        createElement('div', { className: 'envelope-card' }),
-                        createElement('div', { className: 'envelope-front' }, 'E')
+                        createElement('img', {
+                            src: config.plugin_url + 'assets/image/emojione_e-mail.webp',
+                            alt: 'Email sent',
+                            style: { width: '120px', height: '120px' }
+                        })
                     )
                 ),
                 createElement('h2', { className: 'success-heading' }, "You're almost there! We sent an email to"),
@@ -528,6 +590,8 @@
                 redirect_url: config.redirect_url || '',
                 form_title: config.form_title || 'Sandbox Account Registration',
                 primary_color: config.primary_color || '#f85149',
+                recaptcha_site_key: config.recaptcha_site_key || '',
+                plugin_url: config.plugin_url || '',
                 ...config
             };
             

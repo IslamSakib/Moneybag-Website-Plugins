@@ -30,6 +30,10 @@ class MoneybagPlugin {
         if (is_admin()) {
             $this->init_admin();
         }
+        
+        // Add AJAX handlers for reCAPTCHA validation
+        add_action('wp_ajax_verify_recaptcha', [$this, 'verify_recaptcha']);
+        add_action('wp_ajax_nopriv_verify_recaptcha', [$this, 'verify_recaptcha']);
     }
     
     public function init() {
@@ -154,6 +158,61 @@ class MoneybagPlugin {
             MONEYBAG_PLUGIN_VERSION,
             true
         );
+    }
+    
+    public function verify_recaptcha() {
+        // Verify nonce for security
+        if (!wp_verify_nonce($_POST['nonce'], 'moneybag_nonce')) {
+            wp_send_json_error('Security check failed');
+            return;
+        }
+        
+        $recaptcha_response = sanitize_text_field($_POST['recaptcha_response'] ?? '');
+        $secret_key = get_option('moneybag_recaptcha_secret_key', '');
+        
+        if (empty($recaptcha_response)) {
+            wp_send_json_error('reCAPTCHA response is required');
+            return;
+        }
+        
+        if (empty($secret_key)) {
+            wp_send_json_error('reCAPTCHA secret key not configured');
+            return;
+        }
+        
+        // Verify reCAPTCHA with Google
+        $verify_url = 'https://www.google.com/recaptcha/api/siteverify';
+        $verify_data = [
+            'secret' => $secret_key,
+            'response' => $recaptcha_response,
+            'remoteip' => $_SERVER['REMOTE_ADDR'] ?? ''
+        ];
+        
+        $response = wp_remote_post($verify_url, [
+            'body' => $verify_data,
+            'timeout' => 30
+        ]);
+        
+        if (is_wp_error($response)) {
+            wp_send_json_error('Failed to verify reCAPTCHA: ' . $response->get_error_message());
+            return;
+        }
+        
+        $response_body = wp_remote_retrieve_body($response);
+        $result = json_decode($response_body, true);
+        
+        if ($result['success']) {
+            wp_send_json_success([
+                'message' => 'reCAPTCHA verified successfully',
+                'score' => $result['score'] ?? null
+            ]);
+        } else {
+            $error_codes = $result['error-codes'] ?? ['unknown-error'];
+            wp_send_json_error([
+                'message' => 'reCAPTCHA verification failed',
+                'error_codes' => $error_codes
+            ]);
+        }
     }
 }
 

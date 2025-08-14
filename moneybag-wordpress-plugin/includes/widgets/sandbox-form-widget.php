@@ -123,7 +123,9 @@ class SandboxFormWidget extends Widget_Base {
             'api_base_url' => !empty($settings['api_base_url']) ? $settings['api_base_url'] : 'https://sandbox.api.moneybag.com.bd/api/v2',
             'redirect_url' => !empty($settings['redirect_url']) ? $settings['redirect_url'] : '',
             'form_title' => !empty($settings['form_title']) ? $settings['form_title'] : __('Sandbox Account Registration', 'moneybag-plugin'),
-            'primary_color' => !empty($settings['primary_color']) ? $settings['primary_color'] : '#f85149'
+            'primary_color' => !empty($settings['primary_color']) ? $settings['primary_color'] : '#f85149',
+            'recaptcha_site_key' => get_option('moneybag_recaptcha_site_key', ''),
+            'plugin_url' => MONEYBAG_PLUGIN_URL
         ];
         ?>
         <div class="moneybag-sandbox-form-wrapper" data-config='<?php echo esc_attr(json_encode($form_config)); ?>'>
