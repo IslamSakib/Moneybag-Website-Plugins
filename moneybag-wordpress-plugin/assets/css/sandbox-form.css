@@ -175,7 +175,7 @@
 }
 
 .moneybag-form-container .right-section .form-content .input-field {
-    margin-bottom: 58px;
+    margin-bottom: 20px;
 }
 
 .moneybag-form-container .input-label {
@@ -278,6 +278,7 @@
 .moneybag-form-container .secondary-btn:hover:not(:disabled) {
     border-radius: 100px;
     background: var(--Primary-Grad1, linear-gradient(96deg, #F46F6F -10.84%, #E20E18 196.74%));
+    color: white;
 }
 
 .moneybag-form-container .secondary-btn:disabled {
@@ -350,6 +351,13 @@
     font-weight: 700;
     line-height: 38px;
     margin: 0 2px;
+}
+
+.moneybag-form-container .otp-sent-message {
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 16px;
+    font-weight: 500;
 }
 
 .moneybag-form-container .otp-text {
@@ -561,7 +569,7 @@
     color: #6b7280;
     line-height: 1.5;
     margin-bottom: 32px;
-    width: 100%;
+    width: 80%;
     margin-top: 0;
 }
 
@@ -991,7 +999,7 @@
     
     .moneybag-form-container .success-info {
         font-size: 13px;
-        width: 100%;
+        width: 80%;
     }
     
     

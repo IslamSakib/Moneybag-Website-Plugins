@@ -5,7 +5,7 @@
     
     const SandboxSignupForm = ({ config }) => {
         const [currentStep, setCurrentStep] = useState(1);
-        const [timeLeft, setTimeLeft] = useState(300);
+        const [timeLeft, setTimeLeft] = useState(60);
         const [timerActive, setTimerActive] = useState(false);
         const [loading, setLoading] = useState(false);
         const [errors, setErrors] = useState({});
@@ -331,7 +331,7 @@
             setCurrentStep(step);
             setErrors({});
             if (step === 2) {
-                setTimeLeft(300);
+                setTimeLeft(60);
                 setTimerActive(true);
             } else {
                 setTimerActive(false);
@@ -349,7 +349,7 @@
                 await apiCall('/sandbox/email-verification', {
                     email: formData.email
                 });
-                setTimeLeft(300);
+                setTimeLeft(60);
                 setTimerActive(true);
             } catch (error) {
                 setErrors(prev => ({ ...prev, otp: error.message }));
@@ -478,12 +478,15 @@
                             )
                         ),
                         createElement('p', { className: 'info-text' },
-                            'Enter the 6-digit verification code sent to your email. Code expires in 5 minutes for security.'
+                            'Enter the 6-digit verification code sent to your email. Code expires in 1 minute for security.'
                         )
                     ),
                     createElement('div', { className: 'section-divider' }),
                     createElement('div', { className: 'right-section' },
                         createElement('div', { className: 'form-content' },
+                            createElement('div', { className: 'otp-sent-message' }, 
+                                `OTP sent to ${formData.email}`
+                            ),
                             createElement('div', { className: 'otp-text' }, 'OTP'),
                             createElement('div', { className: 'otp-input-wrapper' },
                                 createElement('input', {
@@ -575,7 +578,7 @@
                         }),
                         'Creating Account...'
                     ) : createElement('span', { className: 'btn-content' },
-                        'Get My Sandbox Access',
+                        'Get Sandbox Access',
                         createElement('span', { style: { fontSize: '15px', marginLeft: '8px' } }, '→')
                     )
                 )
