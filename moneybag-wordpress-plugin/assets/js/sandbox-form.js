@@ -92,7 +92,18 @@
             const digits = timeString.split('');
             return digits.map((digit, index) => {
                 if (digit === ':') {
-                    return createElement('span', { key: index, style: { margin: '0 2px' } }, ':');
+                    return createElement('span', { 
+                        key: index, 
+                        className: 'countdown-colon',
+                        style: { 
+                            margin: '0 2px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            fontSize: '32px',
+                            fontWeight: '700',
+                            lineHeight: '38px'
+                        } 
+                    }, ':');
                 }
                 return createElement('div', { 
                     key: index, 
@@ -394,8 +405,13 @@
                     }),
                     createElement('span', {
                         className: 'eye-icon',
-                        onClick: () => togglePassword(name)
-                    }, passwordVisible[name] ? '🙈' : '👁')
+                        onClick: () => togglePassword(name),
+                        dangerouslySetInnerHTML: {
+                            __html: passwordVisible[name] ? 
+                                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>' :
+                                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>'
+                        }
+                    })
                 ),
                 errors[name] && createElement('span', { className: 'error-message' }, errors[name])
             );
@@ -442,52 +458,58 @@
             ),
 
             // Step 2: OTP Input
-            currentStep === 2 && createElement('div', { className: 'split-layout' },
-                createElement('div', { className: 'left-section' },
-                    createElement('div', { className: 'icon-container' },
-                        createElement('div', { className: 'envelope-icon' },
-                            createElement('img', {
-                                src: config.plugin_url + 'assets/image/streamline-freehand-color_password-approved.webp',
-                                alt: 'Password approved',
-                                style: { 
-                                    width: '155.625px', 
-                                    height: '120px', 
-                                    aspectRatio: '83/64' 
-                                }
-                            })
+            currentStep === 2 && createElement('div', { className: 'otp-step-wrapper' },
+                createElement('div', { className: 'countdown-top-right' }, 
+                    ...renderCountdown(formatTime(timeLeft))
+                ),
+                createElement('div', { className: 'split-layout' },
+                    createElement('div', { className: 'left-section' },
+                        createElement('div', { className: 'icon-container' },
+                            createElement('div', { className: 'envelope-icon' },
+                                createElement('img', {
+                                    src: config.plugin_url + 'assets/image/streamline-freehand-color_password-approved.webp',
+                                    alt: 'Password approved',
+                                    style: { 
+                                        width: '155.625px', 
+                                        height: '120px', 
+                                        aspectRatio: '83/64' 
+                                    }
+                                })
+                            )
+                        ),
+                        createElement('p', { className: 'info-text' },
+                            'Enter the 6-digit verification code sent to your email. Code expires in 5 minutes for security.'
                         )
                     ),
-                    createElement('p', { className: 'info-text' },
-                        'Enter the 6-digit verification code sent to your email. Code expires in 5 minutes for security.'
-                    )
-                ),
-                createElement('div', { className: 'section-divider' }),
-                createElement('div', { className: 'right-section' },
-                    createElement('div', { className: 'form-content' },
-                        createElement('div', { className: 'countdown' }, ...renderCountdown(formatTime(timeLeft))),
-                        createElement('div', { className: 'otp-text' }, 'OTP'),
-                        createElement('input', {
-                            type: 'text',
-                            className: `input-field ${errors.otp ? 'error' : ''}`,
-                            name: 'otp',
-                            maxLength: 6,
-                            value: formData.otp,
-                            onChange: handleInputChange,
-                            onKeyPress: handleKeyPress,
-                            disabled: loading
-                        }),
-                        errors.otp && createElement('span', { className: 'error-message' }, errors.otp),
-                        createElement('div', { className: 'btn-row' },
-                            createElement('button', {
-                                className: 'primary-btn',
-                                onClick: verifyOTP,
-                                disabled: loading || !formData.otp
-                            }, loading ? 'Verifying...' : 'Verify'),
-                            createElement('button', {
-                                className: 'secondary-btn',
-                                onClick: resendOTP,
-                                disabled: loading || timeLeft > 0
-                            }, loading ? 'Resending...' : 'Resend')
+                    createElement('div', { className: 'section-divider' }),
+                    createElement('div', { className: 'right-section' },
+                        createElement('div', { className: 'form-content' },
+                            createElement('div', { className: 'otp-text' }, 'OTP'),
+                            createElement('div', { className: 'otp-input-wrapper' },
+                                createElement('input', {
+                                    type: 'text',
+                                    className: `input-field ${errors.otp ? 'error' : ''}`,
+                                    name: 'otp',
+                                    maxLength: 6,
+                                    value: formData.otp,
+                                    onChange: handleInputChange,
+                                    onKeyPress: handleKeyPress,
+                                    disabled: loading
+                                }),
+                                errors.otp && createElement('span', { className: 'error-message' }, errors.otp)
+                            ),
+                            createElement('div', { className: 'btn-row' },
+                                createElement('button', {
+                                    className: 'primary-btn',
+                                    onClick: verifyOTP,
+                                    disabled: loading || !formData.otp
+                                }, loading ? 'Verifying...' : 'Verify'),
+                                createElement('button', {
+                                    className: 'secondary-btn',
+                                    onClick: resendOTP,
+                                    disabled: loading || timeLeft > 0
+                                }, loading ? 'Resending...' : 'Resend')
+                            )
                         )
                     )
                 )
@@ -544,8 +566,18 @@
                     onClick: submitBusinessDetails,
                     disabled: loading
                 },
-                    loading ? 'Creating Account...' : 'Get My Sandbox Access',
-                    createElement('span', { style: { fontSize: '15px' } }, '→')
+                    loading ? createElement('span', { className: 'btn-content' },
+                        createElement('span', { 
+                            className: 'spinner',
+                            dangerouslySetInnerHTML: {
+                                __html: '<svg class="spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6-8.485"></path></svg>'
+                            }
+                        }),
+                        'Creating Account...'
+                    ) : createElement('span', { className: 'btn-content' },
+                        'Get My Sandbox Access',
+                        createElement('span', { style: { fontSize: '15px', marginLeft: '8px' } }, '→')
+                    )
                 )
             ),
 
@@ -569,8 +601,8 @@
                     className: 'arrow-btn',
                     onClick: () => window.location.href = 'https://sandbox.moneybag.com.bd/'
                 },
-                    'My Sandbox',
-                    createElement('span', { style: { fontSize: '15px' } }, '→')
+                    'Login To Sandbox',
+                    createElement('span', { style: { fontSize: '15px', marginLeft: '8px' } }, '→')
                 )
             )
         );
