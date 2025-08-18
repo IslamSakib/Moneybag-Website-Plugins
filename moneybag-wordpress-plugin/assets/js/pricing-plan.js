@@ -10,14 +10,12 @@
         const [pricingRules, setPricingRules] = useState(null);
         const [selectedPricing, setSelectedPricing] = useState(null);
         const [selectedDocuments, setSelectedDocuments] = useState([]);
+        const [showAllPricing, setShowAllPricing] = useState(false);
         
         const [formData, setFormData] = useState({
             legalIdentity: '',
             businessCategory: '',
-            monthlyVolume: '',
-            serviceType: '',
             domainName: '',
-            maxAmount: '',
             name: '',
             email: '',
             mobile: ''
@@ -38,12 +36,28 @@
             loadPricingRules();
         }, []);
 
+        // Set default values when pricing rules are loaded
+        useEffect(() => {
+            if (pricingRules && !formData.legalIdentity) {
+                const defaultValues = {
+                    legalIdentity: pricingRules.formOptions?.legalIdentity?.[0]?.value || '',
+                    businessCategory: pricingRules.formOptions?.businessCategory?.[0]?.value || '',
+                    monthlyVolume: pricingRules.formOptions?.monthlyVolume?.[0]?.value || ''
+                };
+                
+                setFormData(prev => ({
+                    ...prev,
+                    ...defaultValues
+                }));
+            }
+        }, [pricingRules, formData.legalIdentity]);
+
         // Calculate pricing and documents based on form data
         useEffect(() => {
-            if (pricingRules && formData.legalIdentity && formData.monthlyVolume && formData.serviceType) {
+            if (pricingRules && formData.legalIdentity && formData.businessCategory) {
                 calculatePricingAndDocuments();
             }
-        }, [pricingRules, formData.legalIdentity, formData.businessCategory, formData.monthlyVolume, formData.serviceType]);
+        }, [pricingRules, formData.legalIdentity, formData.businessCategory]);
 
         const calculatePricingAndDocuments = () => {
             if (!pricingRules) return;
@@ -72,37 +86,18 @@
                 return condition === value;
             };
 
-            // Find matching rule
+            // Find matching rule based on legal identity
             const matchingRule = pricingRules.rules.find(rule => {
                 if (rule.if.any === true) return true;
                 
                 const conditions = rule.if;
                 
-                // Get the label values for comparison
-                const legalIdentityLabel = pricingRules.formOptions?.legalIdentity?.find(opt => opt.value === formData.legalIdentity)?.label || formData.legalIdentity;
-                const businessCategoryLabel = pricingRules.formOptions?.businessCategory?.find(opt => opt.value === formData.businessCategory)?.label || formData.businessCategory;
-                const serviceTypeLabel = pricingRules.formOptions?.serviceType?.find(opt => opt.value === formData.serviceType)?.label || formData.serviceType;
-                
-                // Check all conditions
-                let matches = true;
-                
-                if (conditions.legal_identity && !checkCondition(conditions.legal_identity, legalIdentityLabel)) {
-                    matches = false;
+                // Direct value comparison for legal identity
+                if (conditions.legal_identity) {
+                    return conditions.legal_identity === formData.legalIdentity;
                 }
                 
-                if (conditions.business_category && !checkCondition(conditions.business_category, businessCategoryLabel)) {
-                    matches = false;
-                }
-                
-                if (conditions.monthly_txn_volume && !checkCondition(conditions.monthly_txn_volume, formData.monthlyVolume)) {
-                    matches = false;
-                }
-                
-                if (conditions.service_type && !checkCondition(conditions.service_type, serviceTypeLabel)) {
-                    matches = false;
-                }
-                
-                return matches;
+                return false;
             });
 
             if (matchingRule) {
@@ -114,20 +109,40 @@
                 const documentsData = pricingRules.sets.documents[documentsKey];
                 
                 if (pricingData) {
-                    // Format pricing for display
-                    const selectedService = formData.serviceType;
-                    let rate = '2.3%'; // Default rate
+                    // Format pricing for all service types
+                    const serviceTypes = [
+                        // Popular services first
+                        { key: 'visa', label: 'VISA', category: 'cards' },
+                        { key: 'mastercard', label: 'MasterCard', category: 'cards' },
+                        { key: 'bkash', label: 'bKash', category: 'wallets' },
+                        { key: 'nagad', label: 'Nagad', category: 'wallets' },
+                        // Other services
+                        { key: 'amex', label: 'AMEX', category: 'cards' },
+                        { key: 'nexus_card', label: 'Nexus', category: 'cards' },
+                        { key: 'unionpay', label: 'UnionPay', category: 'cards' },
+                        { key: 'diners_club', label: 'Diners Club', category: 'cards' },
+                        { key: 'upay', label: 'Upay', category: 'wallets' },
+                        { key: 'rocket', label: 'Rocket', category: 'wallets' }
+                    ];
                     
-                    if (pricingData.cards && pricingData.cards[selectedService]) {
-                        rate = (pricingData.cards[selectedService] * 100).toFixed(1) + '%';
-                    } else if (pricingData.wallets && pricingData.wallets[selectedService]) {
-                        rate = (pricingData.wallets[selectedService] * 100).toFixed(1) + '%';
-                    }
+                    const pricingByService = serviceTypes.map(service => {
+                        let rate = '2.3%'; // Default rate
+                        
+                        if (pricingData[service.category] && pricingData[service.category][service.key]) {
+                            rate = (pricingData[service.category][service.key] * 100).toFixed(1) + '%';
+                        }
+                        
+                        return {
+                            key: service.key,
+                            label: service.label,
+                            category: service.category,
+                            rate: rate
+                        };
+                    });
                     
                     setSelectedPricing({
                         name: 'Custom Plan',
-                        cardRate: rate,
-                        walletRate: rate,
+                        services: pricingByService,
                         setupFee: 'Contact for pricing',
                         monthlyFee: (pricingData.monthly_fee * 100).toFixed(1) + '%',
                         negotiable: pricingData.negotiable,
@@ -138,7 +153,7 @@
                 if (documentsData) {
                     // Format documents for display
                     setSelectedDocuments(documentsData.map(doc => 
-                        typeof doc === 'string' ? doc : doc.label + (doc.optional ? ' (Optional)' : '')
+                        doc.label + (doc.optional ? ' (Optional)' : '')
                     ));
                 }
             }
@@ -170,18 +185,8 @@
                 case 'businessCategory':
                     if (!value) error = 'Business category is required';
                     break;
-                case 'monthlyVolume':
-                    if (!value) error = 'Monthly volume is required';
-                    break;
-                case 'serviceType':
-                    if (!value) error = 'Service type is required';
-                    break;
                 case 'domainName':
                     if (value && !validateDomain(value)) error = 'Invalid URL format (e.g., https://example.com)';
-                    break;
-                case 'maxAmount':
-                    if (!value) error = 'Maximum amount is required';
-                    else if (isNaN(value) || parseFloat(value) <= 0) error = 'Amount must be a positive number';
                     break;
                 case 'name':
                     if (!value) error = 'Name is required';
@@ -283,9 +288,6 @@
 - **Legal identity:** ${formData.legalIdentity}
 - **Business category:** ${formData.businessCategory}
 - **Domain:** ${formData.domainName || 'Not provided'}
-- **Monthly volume:** ${formData.monthlyVolume}
-- **Max single txn:** ${formData.maxAmount}
-- **Services needed:** ${formData.serviceType}
 - **Contact:** ${formData.name} – ${formData.email} – ${formData.mobile}
 - **Selected Pricing:** ${selectedPricing?.name || 'Standard Plan'}
 - **Card Rate:** ${selectedPricing?.cardRate || '2.5%'}
@@ -323,7 +325,7 @@
 
         const handleSubmit = async () => {
             // Validate required fields
-            const requiredFields = ['domainName', 'maxAmount', 'name', 'email', 'mobile'];
+            const requiredFields = ['domainName', 'name', 'email', 'mobile'];
             let hasErrors = false;
             
             requiredFields.forEach(field => {
@@ -360,7 +362,6 @@
                     onChange: (e) => handleInputChange(name, e.target.value),
                     disabled: loading
                 },
-                    createElement('option', { value: '' }, placeholder),
                     ...fieldOptions.map(option => 
                         createElement('option', { 
                             key: option.value, 
@@ -395,19 +396,17 @@
                         createElement('h1', null, config.form_title),
                         renderSelect('legalIdentity'),
                         renderSelect('businessCategory'),
-                        renderSelect('monthlyVolume'),
-                        renderSelect('serviceType'),
                         createElement('button', {
                             className: 'primary-button',
                             onClick: () => {
                                 // Validate required fields before proceeding
-                                if (!formData.legalIdentity || !formData.businessCategory || !formData.monthlyVolume || !formData.serviceType) {
+                                if (!formData.legalIdentity || !formData.businessCategory) {
                                     alert('Please fill in all required fields');
                                     return;
                                 }
                                 nextStep();
                             },
-                            disabled: !formData.legalIdentity || !formData.businessCategory || !formData.monthlyVolume || !formData.serviceType
+                            disabled: !formData.legalIdentity || !formData.businessCategory
                         }, 'Get Pricing & Docs')
                     ),
                     createElement('div', { className: 'content-section' },
@@ -429,8 +428,6 @@
                         createElement('h1', null, config.form_title),
                         renderSelect('legalIdentity', [], formData.legalIdentity),
                         renderSelect('businessCategory', [], formData.businessCategory),
-                        renderSelect('monthlyVolume', [], formData.monthlyVolume),
-                        renderSelect('serviceType', [], formData.serviceType),
                         createElement('button', {
                             className: 'primary-button',
                             onClick: nextStep
@@ -453,23 +450,43 @@
                         selectedPricing && createElement('div', { className: 'card' },
                             createElement('h3', { className: 'card-header' }, 'Pricing'),
                             createElement('div', { className: 'pricing-grid' },
-                                createElement('div', { className: 'pricing-row' },
-                                    createElement('span', null, 'Card Rate'),
-                                    createElement('span', null, selectedPricing.cardRate || '2.3%')
+                                // Popular services (first 4)
+                                ...(selectedPricing.services || []).slice(0, 4).map(service =>
+                                    createElement('div', { 
+                                        key: service.key, 
+                                        className: 'pricing-row' 
+                                    },
+                                        createElement('span', null, service.label),
+                                        createElement('span', null, service.rate)
+                                    )
                                 ),
-                                createElement('div', { className: 'pricing-row' },
-                                    createElement('span', null, 'Wallet Rate'),
-                                    createElement('span', null, selectedPricing.walletRate || '2.3%')
+                                // Show more services if expanded
+                                showAllPricing && (selectedPricing.services || []).slice(4).map(service =>
+                                    createElement('div', { 
+                                        key: service.key, 
+                                        className: 'pricing-row' 
+                                    },
+                                        createElement('span', null, service.label),
+                                        createElement('span', null, service.rate)
+                                    )
                                 ),
+                                // Setup Fee
                                 createElement('div', { className: 'pricing-row' },
                                     createElement('span', null, 'Setup Fee'),
                                     createElement('span', null, selectedPricing.setupFee || 'Contact for pricing')
                                 ),
+                                // Monthly Fee
                                 createElement('div', { className: 'pricing-row' },
                                     createElement('span', null, 'Monthly Fee'),
                                     createElement('span', null, selectedPricing.monthlyFee || '2.3%')
                                 )
                             ),
+                            // See more/less button
+                            (selectedPricing.services && selectedPricing.services.length > 4) && 
+                            createElement('button', {
+                                className: 'see-more-button',
+                                onClick: () => setShowAllPricing(!showAllPricing)
+                            }, showAllPricing ? 'See Less' : 'See More'),
                             createElement('p', { className: 'contact-text' },
                                 createElement('a', { 
                                     href: 'https://moneybag.com.bd/support/', 
@@ -498,8 +515,6 @@
                                     renderSelect('businessCategory', [], formData.businessCategory),
                                     renderInput('domainName', 'url', 'https://example.com'),
                                     renderSelect('monthlyVolume', [], formData.monthlyVolume),
-                                    renderInput('maxAmount', 'number', '10000'),
-                                    renderSelect('serviceType', [], formData.serviceType),
                                     renderInput('name', 'text', 'Full Name'),
                                     renderInput('email', 'email', 'your@email.com'),
                                     renderInput('mobile', 'tel', '+8801XXXXXXXXX')
