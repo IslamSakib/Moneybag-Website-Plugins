@@ -92,8 +92,8 @@ class AdminSettings {
             'moneybag_general_section',
             [
                 'option_name' => 'moneybag_recaptcha_site_key',
-                'default' => '6LeH1jEqAAAAALzgHRj-E4TGKbpGEs2K_P3_XcM8',
-                'description' => 'Your Google reCAPTCHA v2 Site Key (public key)'
+                'default' => '6LdDuakrAAAAAMMfFGjW9-DiuqV7oqK2ElIXkqcx',
+                'description' => 'Your Google reCAPTCHA v3 Site Key (public key)'
             ]
         );
         
@@ -105,8 +105,8 @@ class AdminSettings {
             'moneybag_general_section',
             [
                 'option_name' => 'moneybag_recaptcha_secret_key',
-                'default' => '6LeH1jEqAAAAALzgHRj-E4TGKbpGEs2K_P3_XcM8',
-                'description' => 'Your Google reCAPTCHA v2 Secret Key (private key)'
+                'default' => '6LdDuakrAAAAAByGOiQI6oPujSh-3v2g1G931sdL',
+                'description' => 'Your Google reCAPTCHA v3 Secret Key (private key)'
             ]
         );
         
@@ -192,8 +192,9 @@ class AdminSettings {
     
     public function password_field_callback($args) {
         $option_name = $args['option_name'];
+        $default = $args['default'] ?? '';
         $description = $args['description'] ?? '';
-        $value = get_option($option_name, '');
+        $value = get_option($option_name, $default);
         
         echo '<input type="password" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="regular-text" />';
         echo '<button type="button" class="button button-secondary" onclick="togglePassword(\'' . esc_attr($option_name) . '\')">Show/Hide</button>';
@@ -262,6 +263,13 @@ class AdminSettings {
             margin-bottom: 8px;
         }
         </style>
+        
+        <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+        </script>
         <?php
     }
     

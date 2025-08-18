@@ -39,87 +39,7 @@ class PricingPlanWidget extends Widget_Base {
     }
     
     protected function register_controls() {
-        $this->start_controls_section(
-            'content_section',
-            [
-                'label' => __('Pricing Plan Settings', 'moneybag-plugin'),
-                'tab' => Controls_Manager::TAB_CONTENT,
-            ]
-        );
         
-        $this->add_control(
-            'form_title',
-            [
-                'label' => __('Form Title', 'moneybag-plugin'),
-                'type' => Controls_Manager::TEXT,
-                'default' => __('Pricing & Requirements', 'moneybag-plugin'),
-                'placeholder' => __('Enter form title', 'moneybag-plugin'),
-            ]
-        );
-        
-        $this->add_control(
-            'crm_api_url',
-            [
-                'label' => __('CRM API Base URL', 'moneybag-plugin'),
-                'type' => Controls_Manager::TEXT,
-                'default' => 'https://crm.dummy-dev.tubeonai.com/rest',
-                'placeholder' => __('CRM API base URL', 'moneybag-plugin'),
-            ]
-        );
-        
-        $this->add_control(
-            'success_redirect_url',
-            [
-                'label' => __('Success Redirect URL', 'moneybag-plugin'),
-                'type' => Controls_Manager::TEXT,
-                'default' => '',
-                'placeholder' => __('Enter redirect URL after successful submission', 'moneybag-plugin'),
-            ]
-        );
-        
-        $this->add_control(
-            'consultation_duration',
-            [
-                'label' => __('Consultation Duration (minutes)', 'moneybag-plugin'),
-                'type' => Controls_Manager::NUMBER,
-                'default' => 50,
-                'min' => 15,
-                'max' => 120,
-            ]
-        );
-        
-        $this->end_controls_section();
-        
-        $this->start_controls_section(
-            'crm_section',
-            [
-                'label' => __('CRM Integration', 'moneybag-plugin'),
-                'tab' => Controls_Manager::TAB_CONTENT,
-            ]
-        );
-        
-        $this->add_control(
-            'crm_api_key',
-            [
-                'label' => __('CRM API Key', 'moneybag-plugin'),
-                'type' => Controls_Manager::TEXT,
-                'default' => '',
-                'placeholder' => __('Enter CRM API Key', 'moneybag-plugin'),
-                'description' => __('API key for CRM integration. Configure in WordPress Admin → Moneybag Settings', 'moneybag-plugin'),
-            ]
-        );
-        
-        $this->add_control(
-            'opportunity_name',
-            [
-                'label' => __('Opportunity Name Template', 'moneybag-plugin'),
-                'type' => Controls_Manager::TEXT,
-                'default' => 'TubeOnAI – merchant onboarding',
-                'placeholder' => __('Opportunity name template', 'moneybag-plugin'),
-            ]
-        );
-        
-        $this->end_controls_section();
         
         $this->start_controls_section(
             'style_section',
@@ -173,20 +93,19 @@ class PricingPlanWidget extends Widget_Base {
         $widget_id = $this->get_id();
         $form_config = [
             'widget_id' => !empty($widget_id) ? $widget_id : 'default',
-            'form_title' => !empty($settings['form_title']) ? $settings['form_title'] : __('Pricing & Requirements', 'moneybag-plugin'),
-            'crm_api_url' => !empty($settings['crm_api_url']) ? $settings['crm_api_url'] : 'https://crm.dummy-dev.tubeonai.com/rest',
-            'crm_api_key' => !empty($settings['crm_api_key']) ? $settings['crm_api_key'] : get_option('moneybag_crm_api_key', ''),
-            'success_redirect_url' => !empty($settings['success_redirect_url']) ? $settings['success_redirect_url'] : '',
-            'consultation_duration' => !empty($settings['consultation_duration']) ? $settings['consultation_duration'] : 50,
-            'opportunity_name' => !empty($settings['opportunity_name']) ? $settings['opportunity_name'] : 'TubeOnAI – merchant onboarding',
-            'primary_color' => !empty($settings['primary_color']) ? $settings['primary_color'] : '#ff6b6b'
+            'form_title' => __('Pricing & Requirements', 'moneybag-plugin'),
+            'crm_api_url' => get_option('moneybag_crm_api_url', 'https://crm.dummy-dev.tubeonai.com/rest'),
+            'crm_api_key' => get_option('moneybag_crm_api_key', ''),
+            'success_redirect_url' => get_option('moneybag_default_redirect_url', ''),
+            'consultation_duration' => 15,
+            'opportunity_name' => get_option('moneybag_crm_opportunity_name', 'TubeOnAI – merchant onboarding'),
+            'primary_color' => '#ff6b6b',
+            'recaptcha_site_key' => get_option('moneybag_recaptcha_site_key', '6LdDuakrAAAAAMMfFGjW9-DiuqV7oqK2ElIXkqcx'),
+            'recaptcha_secret_key' => get_option('moneybag_recaptcha_secret_key', '6LdDuakrAAAAAByGOiQI6oPujSh-3v2g1G931sdL')
         ];
         ?>
         <div class="moneybag-pricing-plan-wrapper" data-config='<?php echo esc_attr(json_encode($form_config)); ?>'>
             <div id="moneybag-pricing-plan-<?php echo esc_attr($widget_id); ?>">
-                <div class="pricing-plan-loading">
-                    <p><?php echo __('Loading pricing form...', 'moneybag-plugin'); ?></p>
-                </div>
             </div>
         </div>
         <?php

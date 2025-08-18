@@ -40,45 +40,108 @@
 
         // Calculate pricing and documents based on form data
         useEffect(() => {
-            if (pricingRules && formData.legalIdentity && formData.monthlyVolume) {
+            if (pricingRules && formData.legalIdentity && formData.monthlyVolume && formData.serviceType) {
                 calculatePricingAndDocuments();
             }
-        }, [pricingRules, formData.legalIdentity, formData.businessCategory, formData.monthlyVolume]);
+        }, [pricingRules, formData.legalIdentity, formData.businessCategory, formData.monthlyVolume, formData.serviceType]);
 
         const calculatePricingAndDocuments = () => {
             if (!pricingRules) return;
 
+            // Helper function to check if value matches condition
+            const checkCondition = (condition, value) => {
+                if (!condition || condition.any === true) return true;
+                
+                // Check for between condition (for monthly volume)
+                if (condition.between) {
+                    const [min, max] = condition.between;
+                    // Parse the value to get the numeric range
+                    const valueParts = value.split('-');
+                    let numValue;
+                    if (valueParts.length === 2) {
+                        numValue = parseInt(valueParts[0]);
+                    } else if (value.includes('+')) {
+                        numValue = parseInt(value.replace('+', ''));
+                    } else {
+                        numValue = parseInt(value);
+                    }
+                    return numValue >= min && numValue <= max;
+                }
+                
+                // Direct string comparison
+                return condition === value;
+            };
+
             // Find matching rule
             const matchingRule = pricingRules.rules.find(rule => {
-                const conditions = rule.conditions;
+                if (rule.if.any === true) return true;
+                
+                const conditions = rule.if;
+                
+                // Get the label values for comparison
+                const legalIdentityLabel = pricingRules.formOptions?.legalIdentity?.find(opt => opt.value === formData.legalIdentity)?.label || formData.legalIdentity;
+                const businessCategoryLabel = pricingRules.formOptions?.businessCategory?.find(opt => opt.value === formData.businessCategory)?.label || formData.businessCategory;
+                const serviceTypeLabel = pricingRules.formOptions?.serviceType?.find(opt => opt.value === formData.serviceType)?.label || formData.serviceType;
                 
                 // Check all conditions
                 let matches = true;
                 
-                if (conditions.legalIdentity && conditions.legalIdentity !== formData.legalIdentity) {
+                if (conditions.legal_identity && !checkCondition(conditions.legal_identity, legalIdentityLabel)) {
                     matches = false;
                 }
                 
-                if (conditions.businessCategory && conditions.businessCategory !== formData.businessCategory) {
+                if (conditions.business_category && !checkCondition(conditions.business_category, businessCategoryLabel)) {
                     matches = false;
                 }
                 
-                if (conditions.monthlyVolume && conditions.monthlyVolume !== '*' && conditions.monthlyVolume !== formData.monthlyVolume) {
+                if (conditions.monthly_txn_volume && !checkCondition(conditions.monthly_txn_volume, formData.monthlyVolume)) {
+                    matches = false;
+                }
+                
+                if (conditions.service_type && !checkCondition(conditions.service_type, serviceTypeLabel)) {
                     matches = false;
                 }
                 
                 return matches;
             });
 
-            // Get pricing and documents
-            const pricingKey = matchingRule ? matchingRule.pricing : pricingRules.defaultPricing;
-            const documentsKey = matchingRule ? matchingRule.documents : pricingRules.defaultDocuments;
-            
-            setSelectedPricing({
-                ...pricingRules.sets.pricing[pricingKey],
-                specialOffer: matchingRule?.specialOffer
-            });
-            setSelectedDocuments(pricingRules.sets.documents[documentsKey]);
+            if (matchingRule) {
+                // Get pricing and documents from the matched rule
+                const pricingKey = matchingRule.show.pricing_set;
+                const documentsKey = matchingRule.show.documents_set;
+                
+                const pricingData = pricingRules.sets.pricing[pricingKey];
+                const documentsData = pricingRules.sets.documents[documentsKey];
+                
+                if (pricingData) {
+                    // Format pricing for display
+                    const selectedService = formData.serviceType;
+                    let rate = '2.3%'; // Default rate
+                    
+                    if (pricingData.cards && pricingData.cards[selectedService]) {
+                        rate = (pricingData.cards[selectedService] * 100).toFixed(1) + '%';
+                    } else if (pricingData.wallets && pricingData.wallets[selectedService]) {
+                        rate = (pricingData.wallets[selectedService] * 100).toFixed(1) + '%';
+                    }
+                    
+                    setSelectedPricing({
+                        name: 'Custom Plan',
+                        cardRate: rate,
+                        walletRate: rate,
+                        setupFee: 'Contact for pricing',
+                        monthlyFee: (pricingData.monthly_fee * 100).toFixed(1) + '%',
+                        negotiable: pricingData.negotiable,
+                        negotiation_text: pricingData.negotiation_text
+                    });
+                }
+                
+                if (documentsData) {
+                    // Format documents for display
+                    setSelectedDocuments(documentsData.map(doc => 
+                        typeof doc === 'string' ? doc : doc.label + (doc.optional ? ' (Optional)' : '')
+                    ));
+                }
+            }
         };
 
         const validateEmail = (email) => {
@@ -93,8 +156,8 @@
 
         const validateDomain = (domain) => {
             if (!domain) return true; // Optional field
-            const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-            return domainRegex.test(domain);
+            const urlRegex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
+            return urlRegex.test(domain);
         };
 
         const validateField = (name, value) => {
@@ -114,7 +177,7 @@
                     if (!value) error = 'Service type is required';
                     break;
                 case 'domainName':
-                    if (value && !validateDomain(value)) error = 'Invalid domain format (e.g., example.com)';
+                    if (value && !validateDomain(value)) error = 'Invalid URL format (e.g., https://example.com)';
                     break;
                 case 'maxAmount':
                     if (!value) error = 'Maximum amount is required';
@@ -277,13 +340,6 @@
             try {
                 await createCRMEntries();
                 nextStep(); // Go to thank you page
-                
-                // Redirect if configured
-                if (config.success_redirect_url) {
-                    setTimeout(() => {
-                        window.location.href = config.success_redirect_url;
-                    }, 3000);
-                }
             } catch (error) {
                 setErrors(prev => ({ ...prev, submit: error.message }));
             } finally {
@@ -343,18 +399,21 @@
                         renderSelect('serviceType'),
                         createElement('button', {
                             className: 'primary-button',
-                            onClick: nextStep,
+                            onClick: () => {
+                                // Validate required fields before proceeding
+                                if (!formData.legalIdentity || !formData.businessCategory || !formData.monthlyVolume || !formData.serviceType) {
+                                    alert('Please fill in all required fields');
+                                    return;
+                                }
+                                nextStep();
+                            },
                             disabled: !formData.legalIdentity || !formData.businessCategory || !formData.monthlyVolume || !formData.serviceType
                         }, 'Get Pricing & Docs')
                     ),
                     createElement('div', { className: 'content-section' },
                         createElement('div', { className: 'content-text' },
                             createElement('h2', null,
-                                'Share your business details for a ',
-                                createElement('span', { className: 'highlight' }, 'customized'),
-                                ' Moneybag pricing ',
-                                createElement('span', { className: 'highlight' }, 'quote'),
-                                ' and the exact documents needed to start accepting payments seamlessly.'
+                                'Share your business details for a customized Moneybag pricing quote and the exact documents needed to start accepting payments seamlessly.'
                             )
                         )
                     )
@@ -378,56 +437,48 @@
                         }, 'Book an Appointment →')
                     ),
                     
-                    createElement('div', { className: 'card' },
-                        createElement('h3', { className: 'card-header' }, 'Required Documents'),
-                        createElement('div', { className: 'checklist' },
-                            selectedDocuments.map((doc, index) =>
-                                createElement('div', { 
-                                    key: index, 
-                                    className: 'checklist-item' 
-                                }, doc)
-                            )
-                        )
-                    ),
-                    
-                    selectedPricing && createElement('div', { className: 'card' },
-                        createElement('h3', { className: 'card-header' }, 'Pricing'),
-                        createElement('div', { className: 'pricing-grid' },
-                            createElement('div', { className: 'pricing-row' },
-                                createElement('span', null, 'Plan'),
-                                createElement('span', null, selectedPricing.name)
-                            ),
-                            createElement('div', { className: 'pricing-row' },
-                                createElement('span', null, 'Card Rate'),
-                                createElement('span', null, selectedPricing.cardRate)
-                            ),
-                            createElement('div', { className: 'pricing-row' },
-                                createElement('span', null, 'Wallet Rate'),
-                                createElement('span', null, selectedPricing.walletRate)
-                            ),
-                            createElement('div', { className: 'pricing-row' },
-                                createElement('span', null, 'Setup Fee'),
-                                createElement('span', null, selectedPricing.setupFee)
-                            ),
-                            createElement('div', { className: 'pricing-row' },
-                                createElement('span', null, 'Monthly Fee'),
-                                createElement('span', null, selectedPricing.monthlyFee === '0' ? 'FREE' : `${selectedPricing.monthlyFee} BDT`)
+                    createElement('div', { className: 'cards-container' },
+                        createElement('div', { className: 'card' },
+                            createElement('h3', { className: 'card-header' }, 'Required Documents'),
+                            createElement('div', { className: 'checklist' },
+                                selectedDocuments.map((doc, index) =>
+                                    createElement('div', { 
+                                        key: index, 
+                                        className: 'checklist-item' 
+                                    }, doc)
+                                )
                             )
                         ),
-                        selectedPricing.features && createElement('div', { style: { marginTop: '16px' } },
-                            selectedPricing.features.map((feature, index) =>
-                                createElement('div', { 
-                                    key: index,
-                                    className: 'checklist-item',
-                                    style: { fontSize: '12px' }
-                                }, feature)
+                        
+                        selectedPricing && createElement('div', { className: 'card' },
+                            createElement('h3', { className: 'card-header' }, 'Pricing'),
+                            createElement('div', { className: 'pricing-grid' },
+                                createElement('div', { className: 'pricing-row' },
+                                    createElement('span', null, 'Card Rate'),
+                                    createElement('span', null, selectedPricing.cardRate || '2.3%')
+                                ),
+                                createElement('div', { className: 'pricing-row' },
+                                    createElement('span', null, 'Wallet Rate'),
+                                    createElement('span', null, selectedPricing.walletRate || '2.3%')
+                                ),
+                                createElement('div', { className: 'pricing-row' },
+                                    createElement('span', null, 'Setup Fee'),
+                                    createElement('span', null, selectedPricing.setupFee || 'Contact for pricing')
+                                ),
+                                createElement('div', { className: 'pricing-row' },
+                                    createElement('span', null, 'Monthly Fee'),
+                                    createElement('span', null, selectedPricing.monthlyFee || '2.3%')
+                                )
+                            ),
+                            createElement('p', { className: 'contact-text' },
+                                createElement('a', { 
+                                    href: 'https://moneybag.com.bd/support/', 
+                                    target: '_blank',
+                                    rel: 'noopener noreferrer',
+                                    style: { color: 'inherit', textDecoration: 'underline' }
+                                }, 'Contact us'),
+                                ' to discuss your needs and negotiate a better price.'
                             )
-                        ),
-                        selectedPricing.specialOffer && createElement('div', { className: 'special-offer' },
-                            selectedPricing.specialOffer
-                        ),
-                        createElement('p', { className: 'contact-text' },
-                            'Contact us to discuss your needs and negotiate a better price.'
                         )
                     )
                 )
@@ -438,40 +489,50 @@
         if (currentStep === 3) {
             return createElement('div', { className: 'pricing-plan-container' },
                 createElement('div', { className: 'consultation-container' },
-                    createElement('h1', null, `${config.consultation_duration} minutes`, createElement('br'), 'Expert Consultation'),
-                    createElement('div', { className: 'consultation-content' },
-                        createElement('div', { className: 'consultation-form' },
-                            createElement('div', { className: 'form-grid' },
-                                renderSelect('legalIdentity', [], formData.legalIdentity),
-                                renderSelect('businessCategory', [], formData.businessCategory),
-                                renderInput('domainName', 'text', 'example.com'),
-                                renderSelect('monthlyVolume', [], formData.monthlyVolume),
-                                renderInput('maxAmount', 'number', '10000'),
-                                renderSelect('serviceType', [], formData.serviceType),
-                                renderInput('name', 'text', 'Full Name'),
-                                renderInput('email', 'email', 'your@email.com'),
-                                renderInput('mobile', 'tel', '+8801XXXXXXXXX')
+                    createElement('div', { className: 'consultation-wrapper' },
+                        createElement('h1', null, `${config.consultation_duration} minutes`, createElement('br'), 'Expert Consultation'),
+                        createElement('div', { className: 'consultation-content' },
+                            createElement('div', { className: 'consultation-form' },
+                                createElement('div', { className: 'form-grid' },
+                                    renderSelect('legalIdentity', [], formData.legalIdentity),
+                                    renderSelect('businessCategory', [], formData.businessCategory),
+                                    renderInput('domainName', 'url', 'https://example.com'),
+                                    renderSelect('monthlyVolume', [], formData.monthlyVolume),
+                                    renderInput('maxAmount', 'number', '10000'),
+                                    renderSelect('serviceType', [], formData.serviceType),
+                                    renderInput('name', 'text', 'Full Name'),
+                                    renderInput('email', 'email', 'your@email.com'),
+                                    renderInput('mobile', 'tel', '+8801XXXXXXXXX')
+                                ),
+                                errors.submit && createElement('div', { className: 'submit-error' }, errors.submit),
+                                createElement('button', {
+                                    className: 'primary-button',
+                                    onClick: handleSubmit,
+                                    disabled: loading
+                                }, loading ? 'Submitting...' : 'Submit')
                             ),
-                            errors.submit && createElement('div', { className: 'submit-error' }, errors.submit),
-                            createElement('button', {
-                                className: 'primary-button',
-                                onClick: handleSubmit,
-                                disabled: loading
-                            }, loading ? 'Submitting...' : 'Submit')
-                        ),
-                        
-                        createElement('div', { className: 'illustration' },
-                            createElement('div', { className: 'meeting-illustration' },
-                                createElement('div', { className: 'wifi-logo' },
-                                    createElement('span', { className: 'logo-m' }, 'M'),
-                                    createElement('div', { className: 'wifi-signals' },
-                                        createElement('div', { className: 'signal signal-1' }),
-                                        createElement('div', { className: 'signal signal-2' }),
-                                        createElement('div', { className: 'signal signal-3' })
+                            
+                            createElement('div', { className: 'illustration' },
+                                createElement('div', { className: 'meeting-illustration' },
+                                    createElement('div', { className: 'wifi-logo' },
+                                        createElement('span', { className: 'logo-m' }, 'M'),
+                                        createElement('div', { className: 'wifi-signals' },
+                                            createElement('div', { className: 'signal signal-1' }),
+                                            createElement('div', { className: 'signal signal-2' }),
+                                            createElement('div', { className: 'signal signal-3' })
+                                        )
                                     )
                                 )
                             )
                         )
+                    ),
+                    
+                    createElement('div', { className: 'consultation-image-container' },
+                        createElement('img', {
+                            src: `${window.location.origin}/wp-content/plugins/moneybag-wordpress-plugin/assets/image/Right.webp`,
+                            alt: 'Consultation illustration',
+                            loading: 'lazy'
+                        })
                     )
                 )
             );
@@ -479,20 +540,16 @@
 
         // Step 4: Thank You
         if (currentStep === 4) {
-            return createElement('div', { className: 'pricing-plan-container' },
-                createElement('div', { className: 'thank-you-container' },
-                    createElement('div', { className: 'wifi-logo large' },
-                        createElement('span', { className: 'logo-m' }, 'M'),
-                        createElement('div', { className: 'wifi-signals' },
-                            createElement('div', { className: 'signal signal-1' }),
-                            createElement('div', { className: 'signal signal-2' }),
-                            createElement('div', { className: 'signal signal-3' })
-                        )
-                    ),
-                    createElement('h1', null, 'Thank You!'),
-                    createElement('p', null, 
-                        `All set! Our team will reach out within 24 hours to schedule your ${config.consultation_duration}-minute consultation. Meanwhile, check your inbox for next steps.`
-                    )
+            return createElement('div', { className: 'thank-you-container' },
+                createElement('img', {
+                    src: `${window.location.origin}/wp-content/plugins/moneybag-wordpress-plugin/assets/image/icon_moneybag.webp`,
+                    alt: 'Moneybag icon',
+                    className: 'moneybag-icon',
+                    loading: 'lazy'
+                }),
+                createElement('h1', null, 'Thank You!'),
+                createElement('p', null, 
+                    `All set! Our team will reach out within 24 hours to schedule your ${config.consultation_duration}-minute consultation. Meanwhile, check your inbox for next steps.`
                 )
             );
         }
@@ -514,7 +571,7 @@
                 crm_api_url: config.crm_api_url || 'https://crm.dummy-dev.tubeonai.com/rest',
                 crm_api_key: config.crm_api_key || '',
                 success_redirect_url: config.success_redirect_url || '',
-                consultation_duration: config.consultation_duration || 50,
+                consultation_duration: config.consultation_duration || 15,
                 opportunity_name: config.opportunity_name || 'TubeOnAI – merchant onboarding',
                 primary_color: config.primary_color || '#ff6b6b',
                 ...config

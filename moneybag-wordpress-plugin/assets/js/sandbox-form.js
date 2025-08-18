@@ -58,28 +58,42 @@
             }
             
             const script = document.createElement('script');
-            script.src = `https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit`;
+            script.src = `https://www.google.com/recaptcha/api.js?render=${config.recaptcha_site_key}`;
             script.async = true;
             script.defer = true;
             
-            window.onRecaptchaLoad = () => {
+            script.onload = () => {
                 setRecaptchaLoaded(true);
             };
             
             document.head.appendChild(script);
         };
         
-        const renderRecaptcha = () => {
-            if (window.grecaptcha && config.recaptcha_site_key) {
-                const recaptchaDiv = document.getElementById('recaptcha-container');
-                if (recaptchaDiv && !recaptchaDiv.hasChildNodes()) {
-                    window.grecaptcha.render('recaptcha-container', {
-                        'sitekey': config.recaptcha_site_key,
-                        'callback': (response) => setRecaptchaResponse(response),
-                        'expired-callback': () => setRecaptchaResponse('')
+        const executeRecaptcha = () => {
+            return new Promise((resolve, reject) => {
+                if (window.grecaptcha && config.recaptcha_site_key) {
+                    window.grecaptcha.ready(() => {
+                        try {
+                            window.grecaptcha.execute(config.recaptcha_site_key, { action: 'submit' })
+                                .then(token => {
+                                    setRecaptchaResponse(token);
+                                    resolve(token);
+                                })
+                                .catch(error => {
+                                    console.error('reCAPTCHA execute error:', error);
+                                    setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA verification failed. Please refresh the page.' }));
+                                    reject(error);
+                                });
+                        } catch (error) {
+                            console.error('reCAPTCHA execute error:', error);
+                            setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA verification failed. Please refresh the page.' }));
+                            reject(error);
+                        }
                     });
+                } else {
+                    resolve(null);
                 }
-            }
+            });
         };
 
         const formatTime = (seconds) => {
@@ -291,15 +305,20 @@
                 hasErrors = true;
             }
             
-            if (!recaptchaResponse && config.recaptcha_site_key) {
-                setErrors(prev => ({ ...prev, recaptcha: 'Please complete the reCAPTCHA verification' }));
-                hasErrors = true;
-            }
-            
             if (hasErrors) return;
             
             setLoading(true);
             try {
+                // Execute reCAPTCHA v3 before submission
+                let recaptchaToken = null;
+                if (config.recaptcha_site_key) {
+                    recaptchaToken = await executeRecaptcha();
+                    if (!recaptchaToken) {
+                        setLoading(false);
+                        return;
+                    }
+                }
+                
                 const requestData = {
                     business_name: formData.businessName,
                     business_website: formData.website || '',
@@ -311,8 +330,8 @@
                     session_id: sessionId
                 };
                 
-                if (config.recaptcha_site_key && recaptchaResponse) {
-                    requestData.recaptcha_response = recaptchaResponse;
+                if (config.recaptcha_site_key && recaptchaToken) {
+                    requestData.recaptcha_response = recaptchaToken;
                 }
                 
                 const response = await apiCall('/sandbox/merchants/business-details', requestData);
@@ -337,10 +356,7 @@
                 setTimerActive(false);
             }
             
-            // Render reCAPTCHA when moving to step 3
-            if (step === 3 && config.recaptcha_site_key) {
-                setTimeout(renderRecaptcha, 100);
-            }
+            // reCAPTCHA v3 loads automatically, no manual rendering needed
         };
 
         const resendOTP = async () => {
@@ -556,12 +572,9 @@
                     renderPasswordField('password', 'Password'),
                     renderPasswordField('confirmPassword', 'Confirm Password')
                 ),
-                config.recaptcha_site_key && createElement('div', { className: 'recaptcha-section' },
-                    createElement('div', { 
-                        id: 'recaptcha-container',
-                        style: { marginBottom: '15px' }
-                    }),
-                    errors.recaptcha && createElement('span', { className: 'error-message' }, errors.recaptcha)
+                // reCAPTCHA v3 is invisible, only show error if any
+                errors.recaptcha && createElement('div', { className: 'recaptcha-error' },
+                    createElement('span', { className: 'error-message' }, errors.recaptcha)
                 ),
                 errors.submit && createElement('div', { className: 'error-message submit-error' }, errors.submit),
                 createElement('button', {
