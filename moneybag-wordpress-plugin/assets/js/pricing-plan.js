@@ -15,6 +15,7 @@
         const [formData, setFormData] = useState({
             legalIdentity: '',
             businessCategory: '',
+            monthlyVolume: '',
             domainName: '',
             name: '',
             email: '',
@@ -38,11 +39,17 @@
 
         // Set default values when pricing rules are loaded
         useEffect(() => {
-            if (pricingRules && !formData.legalIdentity) {
+            if (pricingRules && !formData.businessCategory) {
+                // Get first business category
+                const firstBusinessCategory = Object.keys(pricingRules.businessCategories || {})[0] || '';
+                
+                // Get first legal identity for that business category
+                const firstLegalIdentity = Object.keys(pricingRules.businessCategories?.[firstBusinessCategory]?.identities || {})[0] || '';
+                
                 const defaultValues = {
-                    legalIdentity: pricingRules.formOptions?.legalIdentity?.[0]?.value || '',
-                    businessCategory: pricingRules.formOptions?.businessCategory?.[0]?.value || '',
-                    monthlyVolume: pricingRules.formOptions?.monthlyVolume?.[0]?.value || ''
+                    businessCategory: firstBusinessCategory,
+                    legalIdentity: firstLegalIdentity,
+                    monthlyVolume: '0-100000' // Default monthly volume
                 };
                 
                 setFormData(prev => ({
@@ -50,7 +57,7 @@
                     ...defaultValues
                 }));
             }
-        }, [pricingRules, formData.legalIdentity]);
+        }, [pricingRules, formData.businessCategory]);
 
         // Calculate pricing and documents based on form data
         useEffect(() => {
@@ -59,104 +66,92 @@
             }
         }, [pricingRules, formData.legalIdentity, formData.businessCategory]);
 
+        // Reset legal identity when business category changes
+        useEffect(() => {
+            if (pricingRules && formData.businessCategory) {
+                // Get available legal identities for selected business category
+                const availableLegalIdentities = Object.keys(pricingRules.businessCategories?.[formData.businessCategory]?.identities || {});
+                
+                // If current legal identity is not available for selected business category, reset it
+                if (availableLegalIdentities.length > 0 && !availableLegalIdentities.includes(formData.legalIdentity)) {
+                    setFormData(prev => ({
+                        ...prev,
+                        legalIdentity: availableLegalIdentities[0]
+                    }));
+                }
+            }
+        }, [formData.businessCategory, pricingRules]);
+
+        // Force update pricing and documents when business category or legal identity changes (for Step 2)
+        useEffect(() => {
+            if (pricingRules && formData.businessCategory && formData.legalIdentity) {
+                // Small delay to ensure state updates are processed
+                const timer = setTimeout(() => {
+                    calculatePricingAndDocuments();
+                }, 10);
+                return () => clearTimeout(timer);
+            }
+        }, [formData.businessCategory, formData.legalIdentity, pricingRules]);
+
         const calculatePricingAndDocuments = () => {
             if (!pricingRules) return;
 
-            // Helper function to check if value matches condition
-            const checkCondition = (condition, value) => {
-                if (!condition || condition.any === true) return true;
-                
-                // Check for between condition (for monthly volume)
-                if (condition.between) {
-                    const [min, max] = condition.between;
-                    // Parse the value to get the numeric range
-                    const valueParts = value.split('-');
-                    let numValue;
-                    if (valueParts.length === 2) {
-                        numValue = parseInt(valueParts[0]);
-                    } else if (value.includes('+')) {
-                        numValue = parseInt(value.replace('+', ''));
-                    } else {
-                        numValue = parseInt(value);
-                    }
-                    return numValue >= min && numValue <= max;
-                }
-                
-                // Direct string comparison
-                return condition === value;
-            };
-
-            // Find matching rule based on legal identity
-            const matchingRule = pricingRules.rules.find(rule => {
-                if (rule.if.any === true) return true;
-                
-                const conditions = rule.if;
-                
-                // Direct value comparison for legal identity
-                if (conditions.legal_identity) {
-                    return conditions.legal_identity === formData.legalIdentity;
-                }
-                
-                return false;
-            });
-
-            if (matchingRule) {
-                // Get pricing and documents from the matched rule
-                const pricingKey = matchingRule.show.pricing_set;
-                const documentsKey = matchingRule.show.documents_set;
-                
-                const pricingData = pricingRules.sets.pricing[pricingKey];
-                const documentsData = pricingRules.sets.documents[documentsKey];
-                
-                if (pricingData) {
-                    // Format pricing for all service types
-                    const serviceTypes = [
-                        // Popular services first
-                        { key: 'visa', label: 'VISA', category: 'cards' },
-                        { key: 'mastercard', label: 'MasterCard', category: 'cards' },
-                        { key: 'bkash', label: 'bKash', category: 'wallets' },
-                        { key: 'nagad', label: 'Nagad', category: 'wallets' },
-                        // Other services
-                        { key: 'amex', label: 'AMEX', category: 'cards' },
-                        { key: 'nexus_card', label: 'Nexus', category: 'cards' },
-                        { key: 'unionpay', label: 'UnionPay', category: 'cards' },
-                        { key: 'diners_club', label: 'Diners Club', category: 'cards' },
-                        { key: 'upay', label: 'Upay', category: 'wallets' },
-                        { key: 'rocket', label: 'Rocket', category: 'wallets' }
-                    ];
-                    
-                    const pricingByService = serviceTypes.map(service => {
-                        let rate = '2.3%'; // Default rate
-                        
-                        if (pricingData[service.category] && pricingData[service.category][service.key]) {
-                            rate = (pricingData[service.category][service.key] * 100).toFixed(1) + '%';
-                        }
-                        
-                        return {
-                            key: service.key,
-                            label: service.label,
-                            category: service.category,
-                            rate: rate
-                        };
-                    });
-                    
-                    setSelectedPricing({
-                        name: 'Custom Plan',
-                        services: pricingByService,
-                        setupFee: 'Contact for pricing',
-                        monthlyFee: (pricingData.monthly_fee * 100).toFixed(1) + '%',
-                        negotiable: pricingData.negotiable,
-                        negotiation_text: pricingData.negotiation_text
-                    });
-                }
-                
-                if (documentsData) {
-                    // Format documents for display
-                    setSelectedDocuments(documentsData.map(doc => 
-                        doc.label + (doc.optional ? ' (Optional)' : '')
-                    ));
-                }
+            // Get documents from businessCategories structure based on both category and identity
+            const businessCategoryData = pricingRules.businessCategories?.[formData.businessCategory];
+            const legalIdentityData = businessCategoryData?.identities?.[formData.legalIdentity];
+            
+            if (legalIdentityData && legalIdentityData.required_documents) {
+                // Set documents from the selected combination
+                setSelectedDocuments(legalIdentityData.required_documents);
+            } else {
+                // Clear documents if no data found
+                setSelectedDocuments([]);
             }
+            
+            // Set default pricing (you can customize this based on business category if needed)
+            const serviceTypes = [
+                // Popular services first
+                { key: 'visa', label: 'VISA', category: 'cards' },
+                { key: 'mastercard', label: 'MasterCard', category: 'cards' },
+                { key: 'bkash', label: 'bKash', category: 'wallets' },
+                { key: 'nagad', label: 'Nagad', category: 'wallets' },
+                // Other services
+                { key: 'amex', label: 'AMEX', category: 'cards' },
+                { key: 'nexus_card', label: 'Nexus', category: 'cards' },
+                { key: 'unionpay', label: 'UnionPay', category: 'cards' },
+                { key: 'diners_club', label: 'Diners Club', category: 'cards' },
+                { key: 'upay', label: 'Upay', category: 'wallets' },
+                { key: 'rocket', label: 'Rocket', category: 'wallets' }
+            ];
+            
+            // Default pricing rates - can be customized based on business category
+            const isEducational = formData.businessCategory === 'Educational Institution';
+            const defaultRate = isEducational ? 0.023 : 0.025;
+            
+            const pricingByService = serviceTypes.map(service => {
+                let rate = (defaultRate * 100).toFixed(1) + '%';
+                
+                // Special rate for AMEX
+                if (service.key === 'amex' && !isEducational) {
+                    rate = '3.5%';
+                }
+                
+                return {
+                    key: service.key,
+                    label: service.label,
+                    category: service.category,
+                    rate: rate
+                };
+            });
+            
+            setSelectedPricing({
+                name: 'Custom Plan',
+                services: pricingByService,
+                setupFee: 'Contact for pricing',
+                monthlyFee: (defaultRate * 100).toFixed(1) + '%',
+                negotiable: true,
+                negotiation_text: 'Contact us for custom pricing'
+            });
         };
 
         const validateEmail = (email) => {
@@ -352,7 +347,34 @@
         const renderSelect = (name, options, placeholder = 'Select') => {
             if (!pricingRules) return null;
             
-            const fieldOptions = pricingRules.formOptions[name] || options || [];
+            let fieldOptions = [];
+            
+            if (name === 'businessCategory') {
+                // Business category options - all available categories
+                fieldOptions = Object.keys(pricingRules.businessCategories || {}).map(category => ({
+                    value: category,
+                    label: category
+                }));
+            } else if (name === 'legalIdentity') {
+                // Legal identity options based on selected business category
+                const selectedBusinessCategory = formData.businessCategory;
+                const availableIdentities = Object.keys(pricingRules.businessCategories?.[selectedBusinessCategory]?.identities || {});
+                fieldOptions = availableIdentities.map(identity => ({
+                    value: identity,
+                    label: identity
+                }));
+            } else if (name === 'monthlyVolume') {
+                // Monthly volume options
+                fieldOptions = [
+                    { value: '0-100000', label: '0 - 100,000 BDT' },
+                    { value: '100000-500000', label: '100,000 - 500,000 BDT' },
+                    { value: '500000-600000', label: '500,000 - 600,000 BDT' },
+                    { value: '600000-1000000', label: '600,000 - 1,000,000 BDT' },
+                    { value: '1000000-5000000', label: '1,000,000 - 5,000,000 BDT' },
+                    { value: '5000000-10000000', label: '5,000,000 - 10,000,000 BDT' },
+                    { value: '10000000+', label: '10,000,000+ BDT' }
+                ];
+            }
             
             return createElement('div', { className: 'form-group' },
                 createElement('label', null, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
@@ -362,6 +384,10 @@
                     onChange: (e) => handleInputChange(name, e.target.value),
                     disabled: loading
                 },
+                    createElement('option', { 
+                        key: 'placeholder', 
+                        value: '' 
+                    }, `Select ${name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}`),
                     ...fieldOptions.map(option => 
                         createElement('option', { 
                             key: option.value, 
@@ -394,8 +420,8 @@
                 createElement('div', { className: 'step-container' },
                     createElement('div', { className: 'form-section' },
                         createElement('h1', null, config.form_title),
-                        renderSelect('legalIdentity'),
                         renderSelect('businessCategory'),
+                        renderSelect('legalIdentity'),
                         createElement('button', {
                             className: 'primary-button',
                             onClick: () => {
@@ -426,8 +452,8 @@
                 createElement('div', { className: 'step-container-three-col' },
                     createElement('div', { className: 'form-section' },
                         createElement('h1', null, config.form_title),
-                        renderSelect('legalIdentity', [], formData.legalIdentity),
-                        renderSelect('businessCategory', [], formData.businessCategory),
+                        renderSelect('businessCategory'),
+                        renderSelect('legalIdentity'),
                         createElement('button', {
                             className: 'primary-button',
                             onClick: nextStep
@@ -511,10 +537,10 @@
                         createElement('div', { className: 'consultation-content' },
                             createElement('div', { className: 'consultation-form' },
                                 createElement('div', { className: 'form-grid' },
-                                    renderSelect('legalIdentity', [], formData.legalIdentity),
-                                    renderSelect('businessCategory', [], formData.businessCategory),
+                                    renderSelect('businessCategory'),
+                                    renderSelect('legalIdentity'),
                                     renderInput('domainName', 'url', 'https://example.com'),
-                                    renderSelect('monthlyVolume', [], formData.monthlyVolume),
+                                    renderSelect('monthlyVolume'),
                                     renderInput('name', 'text', 'Full Name'),
                                     renderInput('email', 'email', 'your@email.com'),
                                     renderInput('mobile', 'tel', '+8801XXXXXXXXX')
@@ -571,6 +597,9 @@
 
         return null;
     };
+
+    // Expose component globally for testing
+    window.PricingPlanForm = PricingPlanForm;
 
     // Initialize forms when DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
