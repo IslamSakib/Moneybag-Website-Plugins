@@ -1,0 +1,352 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-08-21",
+  "businessCategories": {
+    "E-Commerce & Online Business": {
+      "value": "ecommerce_online",
+      "identities": {
+        "Sole Proprietorship": {
+          "value": "sole_proprietorship",
+          "description": "Individual owner business"
+        },
+        "Partnership": {
+          "value": "partnership",
+          "description": "Business owned by two or more partners"
+        },
+        "Private Limited Company": {
+          "value": "private_limited",
+          "description": "Private limited liability company"
+        },
+        "Public Limited Company": {
+          "value": "public_limited",
+          "description": "Public limited liability company"
+        },
+        "Corporation": {
+          "value": "corporation",
+          "description": "Incorporated business entity"
+        }
+      }
+    },
+    "Social Commerce (F-Commerce)": {
+      "value": "social_commerce",
+      "identities": {
+        "Sole Proprietorship": {
+          "value": "sole_proprietorship",
+          "description": "Individual social seller"
+        },
+        "Partnership": {
+          "value": "partnership",
+          "description": "Partnership for social commerce"
+        },
+        "Private Limited Company": {
+          "value": "private_limited",
+          "description": "Private company for social commerce"
+        }
+      }
+    },
+    "Education & Training": {
+      "value": "education",
+      "identities": {
+        "Educational Institution": {
+          "value": "educational_institution",
+          "description": "School, College, University"
+        },
+        "Training Center": {
+          "value": "training_center",
+          "description": "Professional training organization"
+        },
+        "Private Tutoring": {
+          "value": "private_tutoring",
+          "description": "Individual tutoring services"
+        },
+        "Educational Trust": {
+          "value": "educational_trust",
+          "description": "Educational trust organization"
+        }
+      }
+    },
+    "Healthcare & Medical Services": {
+      "value": "healthcare",
+      "identities": {
+        "Hospital/Clinic": {
+          "value": "hospital_clinic",
+          "description": "Medical facility"
+        },
+        "Private Practice": {
+          "value": "private_practice",
+          "description": "Individual medical practitioner"
+        },
+        "Diagnostic Center": {
+          "value": "diagnostic_center",
+          "description": "Medical testing facility"
+        },
+        "Pharmacy": {
+          "value": "pharmacy",
+          "description": "Medicine retail business"
+        }
+      }
+    },
+    "Non-Profit & Social Organizations": {
+      "value": "nonprofit",
+      "identities": {
+        "NGO": {
+          "value": "ngo",
+          "description": "Non-governmental organization"
+        },
+        "Trust": {
+          "value": "trust",
+          "description": "Charitable trust"
+        },
+        "Foundation": {
+          "value": "foundation",
+          "description": "Charitable foundation"
+        },
+        "Association": {
+          "value": "association",
+          "description": "Member association or club"
+        }
+      }
+    },
+    "Retail & Physical Stores": {
+      "value": "retail",
+      "identities": {
+        "Sole Proprietorship": {
+          "value": "sole_proprietorship",
+          "description": "Individual shop owner"
+        },
+        "Partnership": {
+          "value": "partnership",
+          "description": "Partnership retail business"
+        },
+        "Private Limited Company": {
+          "value": "private_limited",
+          "description": "Private retail company"
+        },
+        "Chain Store": {
+          "value": "chain_store",
+          "description": "Multiple location retail"
+        }
+      }
+    },
+    "Services & Consulting": {
+      "value": "services",
+      "identities": {
+        "Freelancer/Individual": {
+          "value": "freelancer",
+          "description": "Individual service provider"
+        },
+        "Consulting Firm": {
+          "value": "consulting_firm",
+          "description": "Professional consulting company"
+        },
+        "Agency": {
+          "value": "agency",
+          "description": "Service agency"
+        },
+        "Partnership": {
+          "value": "partnership",
+          "description": "Service partnership"
+        }
+      }
+    },
+    "Manufacturing & Production": {
+      "value": "manufacturing",
+      "identities": {
+        "Factory": {
+          "value": "factory",
+          "description": "Manufacturing facility"
+        },
+        "Workshop": {
+          "value": "workshop",
+          "description": "Small production unit"
+        },
+        "Private Limited Company": {
+          "value": "private_limited",
+          "description": "Manufacturing company"
+        },
+        "Public Limited Company": {
+          "value": "public_limited",
+          "description": "Public manufacturing company"
+        }
+      }
+    },
+    "Import & Export": {
+      "value": "import_export",
+      "identities": {
+        "Trading Company": {
+          "value": "trading_company",
+          "description": "Import/Export business"
+        },
+        "Sole Proprietorship": {
+          "value": "sole_proprietorship",
+          "description": "Individual trader"
+        },
+        "Private Limited Company": {
+          "value": "private_limited",
+          "description": "Private trading company"
+        },
+        "Corporation": {
+          "value": "corporation",
+          "description": "Large trading corporation"
+        }
+      }
+    },
+    "Technology & Software": {
+      "value": "technology",
+      "identities": {
+        "Startup": {
+          "value": "startup",
+          "description": "Technology startup"
+        },
+        "Software Company": {
+          "value": "software_company",
+          "description": "Software development company"
+        },
+        "IT Services": {
+          "value": "it_services",
+          "description": "IT service provider"
+        },
+        "SaaS Business": {
+          "value": "saas",
+          "description": "Software as a Service"
+        }
+      }
+    },
+    "Travel & Hospitality": {
+      "value": "travel_hospitality",
+      "identities": {
+        "Travel Agency": {
+          "value": "travel_agency",
+          "description": "Travel booking services"
+        },
+        "Hotel/Resort": {
+          "value": "hotel_resort",
+          "description": "Accommodation services"
+        },
+        "Tour Operator": {
+          "value": "tour_operator",
+          "description": "Tour organizing company"
+        },
+        "Restaurant": {
+          "value": "restaurant",
+          "description": "Food service business"
+        }
+      }
+    },
+    "Media & Entertainment": {
+      "value": "media_entertainment",
+      "identities": {
+        "Production House": {
+          "value": "production_house",
+          "description": "Media production company"
+        },
+        "Publishing": {
+          "value": "publishing",
+          "description": "Publishing business"
+        },
+        "Event Management": {
+          "value": "event_management",
+          "description": "Event organizing company"
+        },
+        "Digital Media": {
+          "value": "digital_media",
+          "description": "Online media platform"
+        }
+      }
+    }
+  },
+  "serviceTypes": [
+    {
+      "category": "Card Payments",
+      "options": [
+        { "value": "visa", "label": "Visa" },
+        { "value": "mastercard", "label": "Mastercard" },
+        { "value": "amex", "label": "American Express" },
+        { "value": "unionpay", "label": "UnionPay" },
+        { "value": "diners", "label": "Diners Club" },
+        { "value": "dbbl_nexus", "label": "DBBL-Nexus" }
+      ]
+    },
+    {
+      "category": "Mobile Financial Services",
+      "options": [
+        { "value": "bkash", "label": "bKash" },
+        { "value": "nagad", "label": "Nagad" },
+        { "value": "rocket", "label": "Rocket" },
+        { "value": "upay", "label": "Upay" },
+        { "value": "surecash", "label": "SureCash" },
+        { "value": "mcash", "label": "mCash" }
+      ]
+    },
+    {
+      "category": "Bank Transfer",
+      "options": [
+        { "value": "bank_transfer", "label": "Direct Bank Transfer" },
+        { "value": "internet_banking", "label": "Internet Banking" },
+        { "value": "mobile_banking", "label": "Mobile Banking" }
+      ]
+    },
+    {
+      "category": "International Payments",
+      "options": [
+        { "value": "paypal", "label": "PayPal" },
+        { "value": "stripe", "label": "Stripe" },
+        { "value": "wise", "label": "Wise" }
+      ]
+    }
+  ],
+  "monthlyVolumes": [
+    {
+      "value": "10000-50000",
+      "label": "৳10,000 - ৳50,000",
+      "description": "Starter"
+    },
+    {
+      "value": "50000-100000",
+      "label": "৳50,000 - ৳100,000",
+      "description": "Small Business"
+    },
+    {
+      "value": "100000-500000",
+      "label": "৳100,000 - ৳500,000",
+      "description": "Growing Business"
+    },
+    {
+      "value": "500000-1000000",
+      "label": "৳500,000 - ৳1,000,000",
+      "description": "Medium Business"
+    },
+    {
+      "value": "1000000-5000000",
+      "label": "৳1,000,000 - ৳5,000,000",
+      "description": "Large Business"
+    },
+    {
+      "value": "5000000+",
+      "label": "৳5,000,000+",
+      "description": "Enterprise"
+    }
+  ],
+  "currencies": [
+    {
+      "value": "BDT",
+      "label": "BDT - Bangladeshi Taka",
+      "symbol": "৳"
+    },
+    {
+      "value": "USD",
+      "label": "USD - US Dollar",
+      "symbol": "$"
+    },
+    {
+      "value": "EUR",
+      "label": "EUR - Euro",
+      "symbol": "€"
+    },
+    {
+      "value": "GBP",
+      "label": "GBP - British Pound",
+      "symbol": "£"
+    }
+  ]
+}

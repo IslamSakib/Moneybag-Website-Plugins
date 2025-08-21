@@ -5,7 +5,9 @@
       "Bash(python:*)",
       "Bash(rm:*)",
       "Bash(node:*)",
-      "Bash(dir data)"
+      "Bash(dir data)",
+      "Bash(grep:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
