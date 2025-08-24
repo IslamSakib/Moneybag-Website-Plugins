@@ -46,8 +46,6 @@
 .pricing-plan-container .step-container-three-col .form-section {
     width: 539px;
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
 }
 
 /* Cards Container */
@@ -189,6 +187,58 @@
     font-size: 14px;
 }
 
+/* Quick Contact Section */
+.thank-you-container .quick-contact-section {
+    margin-top: 40px;
+    padding: 30px;
+}
+
+.thank-you-container .quick-contact-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.thank-you-container .contact-items {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.thank-you-container .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.thank-you-container .contact-icon {
+    flex-shrink: 0;
+}
+
+.thank-you-container .contact-link {
+    color: #2d3748;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.thank-you-container .contact-link:hover {
+    color: #3b82f6;
+    transform: translateX(2px);
+}
+
+.thank-you-container .contact-description {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.5;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
 /* Form Section */
 .pricing-plan-container .form-section {
     padding: 0 40px 0 0;
@@ -199,7 +249,7 @@
     font-size: 36px;
     font-weight: 700;
     color: #2d3748;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     line-height: 1.2;
 }
 
@@ -235,7 +285,7 @@
 
 /* Form Elements */
 .pricing-plan-container .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 12px;
 }
 
 .pricing-plan-container .form-group label {
@@ -243,17 +293,15 @@
     font-size: 14px;
     font-weight: 500;
     color: #2d3748;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .pricing-plan-container .form-select,
 .pricing-plan-container .form-input {
     width: 100%;
-    display: flex;
+    display: block;
     padding: 12px 24px;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
+    margin-bottom: 20px;
     border-radius: 100px;
     border: 1px solid #3B3F42;
     background: transparent;
@@ -675,6 +723,22 @@
 
 /* Responsive Design */
 
+/* Ensure two columns on all laptop devices (1024px and above) */
+@media (min-width: 1024px) {
+    .pricing-plan-container .step-container {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 40px;
+    }
+}
+
+/* Laptop devices - smaller text */
+@media (min-width: 1024px) and (max-width: 1440px) {
+    .pricing-plan-container .content-text h2 {
+        font-size: 24px;
+        line-height: 1.3;
+    }
+}
+
 /* Large Desktop (1650px and below) */
 @media (max-width: 1650px) {
     .pricing-plan-container .step-container {
@@ -723,13 +787,13 @@
     }
 }
 
-/* Small Laptop (1200px and below) */
+/* Small Laptop (1200px and below) - Keep two columns */
 @media (max-width: 1200px) {
     .pricing-plan-container .step-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: 40px;
         max-width: 1031px;
-        padding: 40px 0;
+        padding: 40px 20px;
     }
     
     .pricing-plan-container .step-container-three-col {
@@ -798,9 +862,9 @@
     }
     
     .thank-you-container {
-        width: 80%;
-        padding: 30px 20px;
-        margin: 0 auto;
+        width: 100%;
+        padding: 20px;
+        margin: 0;
     }
     
     .thank-you-container h1 {
@@ -819,6 +883,25 @@
         width: 70px;
         height: 70px;
         margin-bottom: 15px;
+    }
+    
+    .thank-you-container .quick-contact-section {
+        padding: 20px;
+        margin-top: 30px;
+    }
+    
+    .thank-you-container .quick-contact-title {
+        font-size: 20px;
+    }
+    
+    .thank-you-container .contact-items {
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .thank-you-container .contact-link {
+        font-size: 14px;
     }
     
     .pricing-plan-container .step-container {
@@ -986,8 +1069,9 @@
     }
     
     .thank-you-container {
-        padding: 25px 15px;
-        margin: 0 10px;
+        width: 100%;
+        padding: 15px;
+        margin: 0;
         border-radius: 12px;
     }
     
@@ -1017,10 +1101,26 @@
     }
     
     .thank-you-container {
-        width: 80%;
-        padding: 20px 10px;
-        margin: 0 auto;
+        width: 100%;
+        padding: 10px;
+        margin: 0;
         border-radius: 10px;
+    }
+    
+    .thank-you-container .quick-contact-section {
+        padding: 15px 0;
+        margin-top: 20px;
+    }
+    
+    .thank-you-container .contact-items {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+    
+    .thank-you-container .contact-item {
+        justify-content: center;
     }
     
     .thank-you-container h1 {

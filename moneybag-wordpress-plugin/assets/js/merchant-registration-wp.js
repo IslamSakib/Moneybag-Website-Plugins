@@ -50,15 +50,15 @@
         const steps = [
             { id: 1, title: 'Business Info' },
             { id: 2, title: 'Online Presence' },
-            { id: 3, title: 'Point Of Contact' },
-            { id: 4, title: 'Documents' }
+            { id: 3, title: 'Point Of Contact' }
+            // { id: 4, title: 'Documents' } // Temporarily disabled
         ];
         
         const progressPercentage = {
-            1: 25,
-            2: 50,
-            3: 75,
-            4: 100
+            1: 33,
+            2: 66,
+            3: 100
+            // 4: 100 // Temporarily disabled
         };
         
         // Load registration options on mount
@@ -101,9 +101,12 @@
         }, [formData]);
         
         const isStep2Complete = useCallback(() => {
+            // Validate domain URL starts with http:// or https://
+            const urlRegex = /^https?:\/\/.+/i;
             return formData.merchantName.trim() && 
                    formData.tradingName.trim() && 
-                   formData.domainName.trim();
+                   formData.domainName.trim() &&
+                   urlRegex.test(formData.domainName.trim());
         }, [formData]);
         
         const isStep3Complete = useCallback(() => {
@@ -127,10 +130,10 @@
                 case 1: return isStep1Complete();
                 case 2: return isStep2Complete();
                 case 3: return isStep3Complete();
-                case 4: return isStep4Complete();
+                // case 4: return isStep4Complete(); // Temporarily disabled
                 default: return false;
             }
-        }, [isStep1Complete, isStep2Complete, isStep3Complete, isStep4Complete]);
+        }, [isStep1Complete, isStep2Complete, isStep3Complete]); // Removed isStep4Complete
         
         const getStepStatus = useCallback((stepNumber) => {
             if (stepNumber < currentStep) {
@@ -151,12 +154,12 @@
         
         const getProgressHeight = useCallback(() => {
             let completedSteps = 0;
-            for (let i = 1; i <= currentStep && i <= 4; i++) {
+            for (let i = 1; i <= currentStep && i <= 3; i++) { // Changed from 4 to 3
                 if (i < currentStep || (i === currentStep && isStepComplete(i))) {
                     completedSteps++;
                 }
             }
-            return (completedSteps / 4) * 100;
+            return (completedSteps / 3) * 100; // Changed from 4 to 3
         }, [currentStep, isStepComplete]);
         
         // Phone number validation - must start with 01
@@ -270,6 +273,9 @@
                 // Only allow digits, spaces, hyphens, plus signs, and parentheses
                 const cleanValue = value.replace(/[^\d\s\-\+\(\)]/g, '');
                 setFormData(prev => ({ ...prev, [field]: cleanValue }));
+            } else if (field === 'domainName') {
+                // For domain name, trim spaces
+                setFormData(prev => ({ ...prev, [field]: value.trim() }));
             } else {
                 setFormData(prev => ({ ...prev, [field]: value }));
             }
@@ -313,7 +319,7 @@
         }, []);
         
         // Navigation handlers
-        const handleNext = useCallback(() => {
+        const handleNext = useCallback(async () => {
             const canProceed = isStepComplete(currentStep);
             
             if (!canProceed) {
@@ -328,9 +334,11 @@
                     if (!formData.monthlyVolume) missingFields.push('Monthly Volume');
                     if (formData.serviceTypes.length === 0) missingFields.push('Service Types');
                 } else if (currentStep === 2) {
+                    const urlRegex = /^https?:\/\/.+/i;
                     if (!formData.merchantName.trim()) missingFields.push('Business Name');
                     if (!formData.tradingName.trim()) missingFields.push('Trading Name');
                     if (!formData.domainName.trim()) missingFields.push('Website/Domain');
+                    else if (!urlRegex.test(formData.domainName.trim())) missingFields.push('Valid URL (must start with http:// or https://)');
                 } else if (currentStep === 3) {
                     if (!formData.contactName.trim()) missingFields.push('Contact Name');
                     if (!formData.designation.trim()) missingFields.push('Designation');
@@ -350,10 +358,15 @@
             
             setInlineError(null);
             
-            if (currentStep < 4) {
-                setCurrentStep(prev => prev + 1);
+            if (currentStep < 3) { // Changed from 4 to 3
+                // Show loading briefly for step navigation
+                setLoading(true);
+                setTimeout(() => {
+                    setCurrentStep(prev => prev + 1);
+                    setLoading(false);
+                }, 300); // Brief delay for visual feedback
             } else {
-                // Submit on step 4 after file uploads
+                // Submit on step 3 (was step 4)
                 handleSubmit();
             }
         }, [currentStep, formData, isStepComplete]);
@@ -496,43 +509,63 @@
                 h('div', { className: 'merchant-form-content' },
                     h('div', { className: 'success-layout' },
                         h('div', { className: 'success-sidebar' },
-                            h('h3', { className: 'success-sidebar-title' }, 'Registration Complete'),
-                            h('p', { className: 'success-sidebar-subtitle' }, 'Your application has been submitted successfully and is now under review.'),
-                            h('div', { className: 'success-illustration' },
-                                h('div', { className: 'success-checkmark' },
-                                    h('svg', { 
-                                        width: '80', 
-                                        height: '80', 
-                                        viewBox: '0 0 80 80',
-                                        fill: 'none'
-                                    },
-                                        h('circle', {
-                                            cx: '40',
-                                            cy: '40', 
-                                            r: '40',
-                                            fill: 'url(#successGradient)'
-                                        }),
-                                        h('path', {
-                                            d: 'M25 40L35 50L55 30',
-                                            stroke: 'white',
-                                            strokeWidth: '4',
-                                            strokeLinecap: 'round',
-                                            strokeLinejoin: 'round'
-                                        }),
-                                        h('defs', null,
-                                            h('linearGradient', {
-                                                id: 'successGradient',
-                                                x1: '0%',
-                                                y1: '0%',
-                                                x2: '100%',
-                                                y2: '100%'
-                                            },
-                                                h('stop', { offset: '0%', stopColor: '#10b981' }),
-                                                h('stop', { offset: '100%', stopColor: '#059669' })
-                                            )
-                                        )
+                            h('div', { className: 'success-sidebar-content' },
+                                h('h3', { className: 'success-sidebar-title' }, 'Registration Complete'),
+                                h('p', { className: 'success-sidebar-subtitle' }, 'Your application has been submitted successfully and is now under review.'),
+                                h('div', { className: 'contact-info-section' },
+                                    h('h4', { className: 'contact-section-title' }, 'Quick Contact'),
+                                    h('div', { className: 'contact-item' },
+                                        h('svg', { 
+                                            className: 'contact-icon',
+                                            width: '20', 
+                                            height: '20', 
+                                            viewBox: '0 0 24 24',
+                                            fill: 'none',
+                                            stroke: 'currentColor',
+                                            strokeWidth: '2'
+                                        },
+                                            h('path', {
+                                                d: 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z'
+                                            })
+                                        ),
+                                        h('a', { 
+                                            href: 'tel:+8801958109228',
+                                            className: 'contact-link'
+                                        }, '+880 1958 109 228')
+                                    ),
+                                    h('div', { className: 'contact-item' },
+                                        h('svg', { 
+                                            className: 'contact-icon',
+                                            width: '20', 
+                                            height: '20', 
+                                            viewBox: '0 0 24 24',
+                                            fill: 'none',
+                                            stroke: 'currentColor',
+                                            strokeWidth: '2'
+                                        },
+                                            h('path', {
+                                                d: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'
+                                            }),
+                                            h('polyline', {
+                                                points: '22,6 12,13 2,6'
+                                            })
+                                        ),
+                                        h('a', { 
+                                            href: 'mailto:info@moneybag.com.bd',
+                                            className: 'contact-link'
+                                        }, 'info@moneybag.com.bd')
+                                    ),
+                                    h('p', { className: 'contact-description' }, 
+                                        'For any inquiries, feel free to reach out via phone or email. Our support team is here to assist you with any questions or service-related requests.'
                                     )
                                 )
+                            ),
+                            h('div', { className: 'success-illustration' },
+                                h('img', {
+                                    src: `${config.plugin_url}assets/image/img_join now.webp`,
+                                    alt: 'Success',
+                                    className: 'illustration-image'
+                                })
                             )
                         ),
                         h('div', { className: 'success-main-content' },
@@ -741,11 +774,12 @@
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
-                            type: 'text',
-                            className: `form-input ${formData.domainName.trim() ? 'valid' : ''}`,
+                            type: 'url',
+                            className: `form-input ${formData.domainName.trim() && /^https?:\/\/.+/i.test(formData.domainName.trim()) ? 'valid' : ''}`,
                             value: formData.domainName,
                             onChange: (e) => handleInputChange('domainName', e.target.value),
-                            placeholder: 'https://www.example.com'
+                            placeholder: 'https://www.example.com',
+                            pattern: 'https?://.+'
                         }),
                         h('small', { className: 'form-hint' }, 'Enter your website URL starting with http:// or https://')
                     )
@@ -898,7 +932,7 @@
                 case 1: return renderStep1();
                 case 2: return renderStep2();
                 case 3: return renderStep3();
-                case 4: return renderStep4();
+                // case 4: return renderStep4(); // Temporarily disabled
                 default: return null;
             }
         };
@@ -958,8 +992,8 @@
                 2: [
                     '• Enter your official business name as registered with government authorities',
                     '• Trading name is what customers see (your shop/brand name)',
-                    '• Domain Name should be your complete website URL',
-                    '• If you don\'t have a website yet, enter your social media page',
+                    '• Domain Name must start with http:// or https://',
+                    '• If you don\'t have a website yet, enter your social media page URL',
                     '• Double-check spelling - this information will appear on your merchant account',
                     '• These details will be used for payment gateway integration'
                 ],
@@ -967,10 +1001,11 @@
                     '• Provide details of the primary contact person for this merchant account',
                     '• This person will receive all account-related communications',
                     '• Email must be valid and actively monitored',
-                    '• Mobile number must be a Bangladesh number',
+                    '• Mobile number must be a Bangladesh number starting with 01',
                     '• Phone number is optional but recommended for urgent support',
                     '• This contact will have admin access to the merchant dashboard'
-                ],
+                ]
+                /* Step 4 temporarily disabled
                 4: [
                     '• Company Logo - Square format (500x500px recommended), PNG preferred',
                     '• Trade License: Current and valid trade license document',
@@ -980,6 +1015,7 @@
                     '• Accepted formats: JPG, JPEG, PNG, PDF (max 1MB per file)',
                     '• All file uploads are optional but recommended for faster approval'
                 ]
+                */
             };
             
             return h('div', { className: 'instructions-panel' },
@@ -1046,12 +1082,14 @@
                                             onClick: handleNext,
                                             disabled: loading
                                         }, 
-                                            loading && currentStep === 4 
+                                            loading 
                                                 ? h('span', { className: 'button-spinner-wrapper' },
                                                     h('span', { className: 'button-spinner' }),
-                                                    h('span', null, 'Submitting...')
+                                                    h('span', null, 
+                                                        currentStep === 3 ? 'Submitting...' : 'Processing...'
+                                                    )
                                                   )
-                                                : (currentStep === 4 ? 'Submit' : 'Save & Next')
+                                                : (currentStep === 3 ? 'Submit' : 'Save & Next')
                                         )
                                     )
                                 )

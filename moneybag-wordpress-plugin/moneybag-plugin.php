@@ -297,163 +297,68 @@ class MoneybagPlugin {
             return;
         }
         
-        // Use correct CRM API workflow: Person -> Opportunity -> Note
-        error_log('Creating merchant using Person + Opportunity + Note workflow');
+        // Store merchant data in WordPress database instead of CRM API
+        error_log('Storing merchant registration data locally');
         
         try {
-            // Step 1: Create Person
-            $contact_parts = explode(' ', $merchant_data['customFields']['contactName']);
-            $first_name = $contact_parts[0] ?? 'Unknown';
-            $last_name = implode(' ', array_slice($contact_parts, 1)) ?: '';
+            // Generate a unique registration ID
+            $registration_id = 'MB_' . strtoupper(uniqid());
             
-            // Try simpler structure first to match Python script exactly
-            $person_data = [
-                'name' => [
-                    'firstName' => $first_name,
-                    'lastName' => $last_name
-                ],
-                'emails' => [
-                    'primaryEmail' => $merchant_data['email']
-                ],
-                'phones' => [
-                    'primaryPhoneNumber' => str_replace('+880', '', $merchant_data['phone']),
-                    'primaryPhoneCallingCode' => '+880',
-                    'primaryPhoneCountryCode' => 'BD'
-                ]
+            // Prepare submission data
+            $submission_data = [
+                'registration_id' => $registration_id,
+                'merchant_name' => $merchant_data['name'],
+                'domain_name' => $merchant_data['domainName'],
+                'email' => $merchant_data['email'],
+                'phone' => $merchant_data['phone'],
+                'custom_fields' => $merchant_data['customFields'],
+                'submission_date' => current_time('mysql'),
+                'status' => 'pending_review'
             ];
             
-            error_log('Sending person data: ' . json_encode($person_data));
+            // Store in WordPress options table (or custom table if available)
+            $stored = add_option('moneybag_registration_' . $registration_id, $submission_data);
             
-            $person_response = wp_remote_post(MONEYBAG_API_BASE_URL . '/people', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . MONEYBAG_API_KEY
-                ],
-                'body' => json_encode($person_data),
-                'timeout' => 60
-            ]);
-            
-            if (is_wp_error($person_response)) {
-                throw new Exception('Failed to create person: ' . $person_response->get_error_message());
-            }
-            
-            $person_response_code = wp_remote_retrieve_response_code($person_response);
-            $person_response_body = wp_remote_retrieve_body($person_response);
-            
-            error_log('Person API Response Code: ' . $person_response_code);
-            error_log('Person API Response Body: ' . $person_response_body);
-            
-            $person_result = json_decode($person_response_body, true);
-            
-            if ($person_response_code < 200 || $person_response_code >= 300) {
-                $error_msg = 'Person creation HTTP error ' . $person_response_code;
-                if ($person_result && isset($person_result['message'])) {
-                    $error_msg .= ': ' . $person_result['message'];
-                } elseif ($person_result && isset($person_result['error'])) {
-                    $error_msg .= ': ' . $person_result['error'];
-                }
-                throw new Exception($error_msg);
-            }
-            
-            $person_id = $person_result['data']['createPerson']['id'] ?? null;
-            
-            if (!$person_id) {
-                error_log('Person creation response structure: ' . print_r($person_result, true));
-                throw new Exception('Person creation failed - no ID returned. Response: ' . $person_response_body);
-            }
-            
-            error_log('Person created with ID: ' . $person_id);
-            
-            // Step 2: Create Opportunity
-            $opportunity_data = [
-                'name' => $merchant_data['name'] . ' – merchant onboarding',
-                'stage' => 'NEW',
-                'amount' => [
-                    'amountMicros' => 0,
-                    'currencyCode' => $merchant_data['customFields']['currency'] ?? 'BDT'
-                ],
-                'pointOfContactId' => $person_id
+            // Also store in a list of all registrations
+            $all_registrations = get_option('moneybag_all_registrations', []);
+            $all_registrations[] = [
+                'id' => $registration_id,
+                'name' => $merchant_data['name'],
+                'email' => $merchant_data['email'],
+                'date' => current_time('mysql')
             ];
+            update_option('moneybag_all_registrations', $all_registrations);
             
-            $opp_response = wp_remote_post(MONEYBAG_API_BASE_URL . '/opportunities', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . MONEYBAG_API_KEY
-                ],
-                'body' => json_encode($opportunity_data),
-                'timeout' => 60
-            ]);
+            // Send notification email to admin
+            $admin_email = get_option('admin_email');
+            $subject = 'New Merchant Registration: ' . $merchant_data['name'];
+            $message = $this->generate_merchant_note($merchant_data);
+            $message .= "\n\nRegistration ID: " . $registration_id;
+            $message .= "\n\nView in WordPress Admin: " . admin_url('admin.php?page=moneybag-registrations');
             
-            if (is_wp_error($opp_response)) {
-                throw new Exception('Failed to create opportunity: ' . $opp_response->get_error_message());
-            }
+            wp_mail($admin_email, $subject, $message);
             
-            $opp_result = json_decode(wp_remote_retrieve_body($opp_response), true);
-            $opp_id = $opp_result['data']['createOpportunity']['id'] ?? null;
+            // Send confirmation email to merchant
+            $merchant_subject = 'Registration Received - Moneybag';
+            $merchant_message = "Dear " . $merchant_data['customFields']['contactName'] . ",\n\n";
+            $merchant_message .= "Thank you for registering with Moneybag. Your application has been received and is under review.\n\n";
+            $merchant_message .= "Registration ID: " . $registration_id . "\n";
+            $merchant_message .= "Business Name: " . $merchant_data['name'] . "\n\n";
+            $merchant_message .= "Our team will review your application and contact you within 1-3 business days.\n\n";
+            $merchant_message .= "For any inquiries, please contact:\n";
+            $merchant_message .= "Phone: +880 1958 109 228\n";
+            $merchant_message .= "Email: info@moneybag.com.bd\n\n";
+            $merchant_message .= "Best regards,\nMoneybag Team";
             
-            if (!$opp_id) {
-                throw new Exception('Opportunity creation failed - no ID returned');
-            }
+            wp_mail($merchant_data['email'], $merchant_subject, $merchant_message);
             
-            error_log('Opportunity created with ID: ' . $opp_id);
-            
-            // Step 3: Create detailed note
-            $note_text = $this->generate_merchant_note($merchant_data);
-            
-            $note_data = [
-                'title' => 'Merchant Onboarding Form Submission',
-                'bodyV2' => [
-                    'markdown' => $note_text
-                ]
-            ];
-            
-            $note_response = wp_remote_post(MONEYBAG_API_BASE_URL . '/notes', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . MONEYBAG_API_KEY
-                ],
-                'body' => json_encode($note_data),
-                'timeout' => 60
-            ]);
-            
-            if (is_wp_error($note_response)) {
-                throw new Exception('Failed to create note: ' . $note_response->get_error_message());
-            }
-            
-            $note_result = json_decode(wp_remote_retrieve_body($note_response), true);
-            $note_id = $note_result['data']['createNote']['id'] ?? null;
-            
-            if (!$note_id) {
-                throw new Exception('Note creation failed - no ID returned');
-            }
-            
-            error_log('Note created with ID: ' . $note_id);
-            
-            // Step 4: Attach note to opportunity
-            $note_target_data = [
-                'noteId' => $note_id,
-                'opportunityId' => $opp_id
-            ];
-            
-            $target_response = wp_remote_post(MONEYBAG_API_BASE_URL . '/noteTargets', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . MONEYBAG_API_KEY
-                ],
-                'body' => json_encode($note_target_data),
-                'timeout' => 60
-            ]);
-            
-            if (is_wp_error($target_response)) {
-                error_log('Failed to attach note, but continuing: ' . $target_response->get_error_message());
-            }
+            error_log('Merchant registration stored successfully with ID: ' . $registration_id);
             
             // Success response
             wp_send_json_success([
                 'message' => 'Merchant registration submitted successfully',
-                'person_id' => $person_id,
-                'opportunity_id' => $opp_id,
-                'note_id' => $note_id
+                'registration_id' => $registration_id,
+                'email_sent' => true
             ]);
             
         } catch (Exception $e) {

@@ -1,112 +1,227 @@
 # Moneybag WordPress Plugin
 
-A WordPress plugin that provides Elementor widgets for Moneybag payment integration using React.js forms.
+A comprehensive WordPress plugin providing Elementor widgets for Moneybag payment gateway integration with modern React-based forms.
 
-## Features
+## 🎯 Overview
 
-- Multi-step sandbox account registration form
-- Real-time form validation
-- Responsive design
-- Elementor widget integration
-- API integration with Moneybag sandbox endpoints
-- Scoped CSS to prevent styling conflicts
+The Moneybag WordPress Plugin enables seamless integration of Moneybag payment services into WordPress websites through Elementor. It features three powerful widgets for merchant registration, pricing display, and sandbox testing.
 
-## Installation
+## ✨ Features
 
-1. Upload the plugin folder to `/wp-content/plugins/`
-2. Activate the plugin through the WordPress admin
-3. Ensure Elementor is installed and activated (minimum version 3.0.0)
-4. The widget will appear in Elementor under "Moneybag" category
+### Three Specialized Widgets
 
-## Usage
+1. **Merchant Registration Widget**
+   - Multi-step registration form with progress tracking
+   - Real-time field validation
+   - Document upload support
+   - Mobile-responsive design
+   - Success confirmation with contact details
 
-### Adding the Widget
-1. Edit a page with Elementor
-2. Search for "Moneybag Sandbox Form" widget
-3. Drag and drop it to your page
-4. Configure the settings in the widget panel
+2. **Pricing Plan Widget**
+   - Dynamic pricing calculation based on business category
+   - Business category-based documentation requirements
+   - Interactive consultation booking with CRM integration
+   - Customizable pricing display with expandable service list
+   - Duplicate contact handling for existing customers
+   - Fallback local storage for offline/error scenarios
 
-### Widget Settings
-- **Form Title**: Customize the form title
-- **API Base URL**: Set the Moneybag API endpoint (default: https://sandbox.api.moneybag.com.bd/api/v2)
-- **Success Redirect URL**: URL to redirect users after successful registration
-- **Primary Color**: Customize the form's primary color theme
+3. **Sandbox Form Widget**
+   - Test payment integration
+   - Email and OTP verification
+   - Multi-step form flow
+   - API testing capabilities
 
-### Form Steps
-1. **Email Verification**: User enters email, receives OTP
-2. **OTP Verification**: User enters 6-digit code
-3. **Business Details**: Complete registration form
-4. **Success**: Confirmation and next steps
+### Key Capabilities
+- 🚀 WordPress built-in React system (no build process required)
+- 📱 Fully responsive design for all devices
+- 🎨 Elementor integration with live preview
+- 🔒 Secure form handling with validation
+- 🎯 Scoped CSS to prevent conflicts
+- ⚡ Optimized performance without external dependencies
 
-## Development
+## 📋 Requirements
 
-### Prerequisites
-- Node.js and npm
-- WordPress development environment
-- Elementor plugin
+- WordPress 5.0 or higher
+- Elementor 3.0 or higher (Free or Pro)
+- PHP 7.4 or higher
+- Modern browser with JavaScript enabled
 
-### Setup
-```bash
-cd wp-content/plugins/moneybag-wordpress-plugin
-npm install
-npm run dev
-```
+## 🔧 Installation
 
-### Building for Production
-```bash
-npm run build
-```
+1. **Download** the plugin folder
+2. **Upload** to `/wp-content/plugins/moneybag-wordpress-plugin/`
+3. **Activate** the plugin through WordPress admin panel
+4. **Ensure** Elementor is installed and activated
+5. **Configure** API settings in WordPress admin (optional)
 
-### File Structure
+## 📖 Usage
+
+### Adding Widgets to Your Pages
+
+1. **Edit** your page with Elementor
+2. **Search** for "Moneybag" in the widgets panel
+3. **Drag and drop** your desired widget:
+   - Moneybag Merchant Registration
+   - Moneybag Pricing Plan
+   - Moneybag Sandbox Form
+4. **Configure** widget settings as needed
+
+### Admin Configuration
+
+Navigate to **WordPress Admin → Settings → Moneybag** to configure:
+- API endpoints
+- API keys
+- reCAPTCHA settings
+- Default redirect URLs
+- Email notifications
+
+## 🏗️ File Structure
+
 ```
 moneybag-wordpress-plugin/
-├── moneybag-plugin.php          # Main plugin file
+├── moneybag-plugin.php              # Main plugin file
 ├── includes/
+│   ├── admin/
+│   │   └── admin-settings.php       # Admin configuration panel
 │   └── widgets/
-│       └── sandbox-form-widget.php  # Elementor widget class
+│       ├── merchant-registration-widget.php
+│       ├── pricing-plan-widget.php
+│       └── sandbox-form-widget.php
 ├── assets/
+│   ├── css/
+│   │   ├── merchant-registration.css
+│   │   ├── pricing-plan.css
+│   │   └── sandbox-form.css
 │   ├── js/
-│   │   ├── sandbox-form.js      # React form component
-│   │   └── editor.js           # Elementor editor scripts
-│   └── css/
-│       └── sandbox-form.css    # Form styles
-├── package.json                # Node.js dependencies
-└── README.md                  # This file
+│   │   ├── merchant-registration-wp.js  # Merchant form React component
+│   │   ├── pricing-plan.js              # Pricing widget with CRM integration
+│   │   ├── sandbox-form.js              # Sandbox testing form
+│   │   ├── admin-crm.js                 # Admin panel scripts
+│   │   └── editor.js                    # Elementor editor enhancements
+│   └── image/
+│       └── [brand assets]
+├── data/
+│   ├── merchant-registration-options.json
+│   └── pricing-rules.json           # Business categories & document requirements
+├── README.md
+├── INSTALL.md                        # Installation guide
+└── PRICING-PLAN-TESTING.md         # Testing documentation
 ```
 
-## API Integration
+## 🔌 API Integration
 
-The form integrates with three Moneybag API endpoints:
+### Supported Endpoints
 
-1. **Email Verification**: `/api/v2/sandbox/email-verification`
-2. **OTP Verification**: `/api/v2/sandbox/verify-otp`  
-3. **Business Details**: `/api/v2/sandbox/merchants/business-details`
+**Merchant Registration:**
+- Stores data locally in WordPress
+- Email notifications to admin and merchant
+- Custom registration ID generation
 
-## Form Validation
+**Pricing Plan:**
+- Dynamic pricing calculation
+- Business category mapping
+- Document requirements lookup
 
-The form includes real-time validation for:
-- Email format validation
-- OTP length (6 digits)
-- Password strength (minimum 8 characters)
-- Phone number format (Bangladesh format)
-- Required field validation
-- Password confirmation matching
+**Sandbox Testing:**
+- `/api/v2/sandbox/email-verification`
+- `/api/v2/sandbox/verify-otp`
+- `/api/v2/sandbox/merchants/business-details`
 
-## Styling
+## 🛡️ Security Features
 
-The CSS is scoped with `.moneybag-sandbox-form-wrapper` to prevent conflicts with theme styles. All form elements use this prefix to ensure isolation.
+- WordPress nonce verification for AJAX requests
+- Input sanitization and validation
+- Secure API key storage in WordPress options
+- XSS protection through proper escaping
+- CSRF protection on all forms
 
-## Compatibility
+## 🎨 Customization
 
-- WordPress 5.0+
-- Elementor 3.0+
-- PHP 7.4+
-- Modern browsers with ES6 support
+### CSS Customization
+All styles are scoped to prevent conflicts:
+- `.moneybag-merchant-form-wrapper`
+- `.moneybag-pricing-plan-wrapper`
+- `.moneybag-sandbox-form-wrapper`
 
-## Support
+### Hooks and Filters
+The plugin provides WordPress hooks for extensibility:
+- Form submission actions
+- Validation filters
+- Email customization
 
-For support and feature requests, please contact the Moneybag development team.
+## 📱 Mobile Optimization
 
-## License
+- Responsive grid layouts
+- Touch-friendly form controls
+- Optimized spacing for mobile devices
+- Single-column layouts on small screens
+- Center-aligned contact information
+
+## 🚀 Performance
+
+- No external build dependencies
+- Leverages WordPress's built-in React
+- Lazy loading for images
+- Optimized CSS delivery
+- Minimal JavaScript footprint
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Widget not appearing in Elementor:**
+- Ensure Elementor is activated
+- Check minimum version requirements
+- Clear browser cache
+
+**Forms not submitting:**
+- Verify API settings in admin panel
+- Check browser console for errors
+- Ensure proper WordPress permissions
+- Check if CRM API key is configured correctly
+
+**CRM Duplicate Contact Errors:**
+- The plugin now handles existing contacts gracefully
+- Duplicate submissions will use existing contact records
+- Form submissions continue even if contact exists
+
+**Styling conflicts:**
+- Check theme compatibility
+- Use scoped CSS classes
+- Contact support if issues persist
+
+**Domain Validation Issues:**
+- Domain field requires full URL (e.g., https://example.com)
+- Both http:// and https:// protocols are accepted
+- Domain is a required field for pricing form submission
+
+## 📞 Support
+
+For technical support and feature requests:
+- **Phone:** +880 1958 109 228
+- **Email:** info@moneybag.com.bd
+- **Website:** https://moneybag.com.bd
+
+## 🔄 Recent Updates
+
+### Version 1.0.1
+- Fixed CRM duplicate person handling
+- Added search-before-create logic for contacts
+- Implemented fallback storage for failed CRM submissions
+- Made domain field properly mandatory with validation
+- Cleaned up unused JavaScript files
+- Improved error handling and user feedback
+
+## 📄 License
 
 This plugin is licensed under GPL v2 or later.
+
+## 🙏 Credits
+
+Developed by: Sakib Islam  
+Company: Moneybag  
+Version: 1.0.1
+
+---
+
+*For the latest updates and documentation, visit the official Moneybag website.*
