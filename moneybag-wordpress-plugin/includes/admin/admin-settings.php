@@ -36,9 +36,13 @@ class AdminSettings {
     }
     
     public function register_settings() {
-        // General Settings
-        register_setting('moneybag_settings', 'moneybag_sandbox_api_url');
-        register_setting('moneybag_settings', 'moneybag_default_redirect_url');
+        // General Settings with URL sanitization
+        register_setting('moneybag_settings', 'moneybag_sandbox_api_url', [
+            'sanitize_callback' => [$this, 'sanitize_url_setting']
+        ]);
+        register_setting('moneybag_settings', 'moneybag_default_redirect_url', [
+            'sanitize_callback' => [$this, 'sanitize_url_setting']
+        ]);
         
         // reCAPTCHA Settings
         register_setting('moneybag_settings', 'moneybag_recaptcha_site_key');
@@ -46,7 +50,9 @@ class AdminSettings {
         
         // CRM Settings
         register_setting('moneybag_crm_settings', 'moneybag_crm_api_key');
-        register_setting('moneybag_crm_settings', 'moneybag_crm_api_url');
+        register_setting('moneybag_crm_settings', 'moneybag_crm_api_url', [
+            'sanitize_callback' => [$this, 'sanitize_url_setting']
+        ]);
         register_setting('moneybag_crm_settings', 'moneybag_crm_opportunity_name');
         register_setting('moneybag_crm_settings', 'moneybag_crm_default_stage');
         
@@ -138,7 +144,7 @@ class AdminSettings {
             'moneybag_crm_section',
             [
                 'option_name' => 'moneybag_crm_api_url',
-                'default' => 'https://crm.dummy-dev.tubeonai.com/rest',
+                'default' => 'https://api.example.com/crm',
                 'description' => 'Base URL for your CRM API'
             ]
         );
@@ -151,7 +157,7 @@ class AdminSettings {
             'moneybag_crm_section',
             [
                 'option_name' => 'moneybag_crm_opportunity_name',
-                'default' => 'TubeOnAI – merchant onboarding',
+                'default' => 'Payment Gateway – merchant onboarding',
                 'description' => 'Template for opportunity names in CRM'
             ]
         );
@@ -178,13 +184,74 @@ class AdminSettings {
         echo '<p>' . __('Configure CRM integration settings. Test your connection below after saving.', 'moneybag-plugin') . '</p>';
     }
     
+    /**
+     * Sanitize URL settings to prevent security vulnerabilities
+     */
+    public function sanitize_url_setting($url) {
+        if (empty($url)) {
+            return '';
+        }
+        
+        // Sanitize the URL
+        $url = esc_url_raw($url);
+        
+        // Additional validation - only allow HTTP/HTTPS URLs
+        $parsed = wp_parse_url($url);
+        
+        if (!$parsed || !isset($parsed['scheme']) || !in_array($parsed['scheme'], ['http', 'https'])) {
+            add_settings_error(
+                'moneybag_settings',
+                'invalid_url',
+                __('Invalid URL format. Only HTTP and HTTPS URLs are allowed.', 'moneybag-plugin')
+            );
+            return '';
+        }
+        
+        // Prevent localhost/internal network access for security
+        if (isset($parsed['host'])) {
+            $host = strtolower($parsed['host']);
+            $blocked_hosts = ['localhost', '127.0.0.1', '::1', '0.0.0.0'];
+            
+            foreach ($blocked_hosts as $blocked) {
+                if ($host === $blocked || strpos($host, $blocked) !== false) {
+                    add_settings_error(
+                        'moneybag_settings',
+                        'blocked_host',
+                        __('Localhost and internal network URLs are not allowed for security reasons.', 'moneybag-plugin')
+                    );
+                    return '';
+                }
+            }
+            
+            // Block private IP ranges
+            if (filter_var($host, FILTER_VALIDATE_IP)) {
+                if (!filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    add_settings_error(
+                        'moneybag_settings',
+                        'private_ip',
+                        __('Private IP addresses are not allowed for security reasons.', 'moneybag-plugin')
+                    );
+                    return '';
+                }
+            }
+        }
+        
+        return $url;
+    }
+    
     public function text_field_callback($args) {
         $option_name = $args['option_name'];
         $default = $args['default'] ?? '';
         $description = $args['description'] ?? '';
         $value = get_option($option_name, $default);
         
-        echo '<input type="text" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="regular-text" />';
+        // Determine input type based on field name
+        $input_type = 'text';
+        if (strpos($option_name, '_url') !== false) {
+            $input_type = 'url';
+        }
+        
+        echo '<input type="' . esc_attr($input_type) . '" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="regular-text" placeholder="' . esc_attr($default) . '" />';
         if ($description) {
             echo '<p class="description">' . esc_html($description) . '</p>';
         }
@@ -197,7 +264,6 @@ class AdminSettings {
         $value = get_option($option_name, $default);
         
         echo '<input type="password" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="regular-text" />';
-        echo '<button type="button" class="button button-secondary" onclick="togglePassword(\'' . esc_attr($option_name) . '\')">Show/Hide</button>';
         if ($description) {
             echo '<p class="description">' . esc_html($description) . '</p>';
         }
@@ -205,7 +271,7 @@ class AdminSettings {
     
     public function settings_page() {
         ?>
-        <div class="wrap">
+        <div class="wrap moneybag-admin-settings">
             <h1><?php echo __('Moneybag Settings', 'moneybag-plugin'); ?></h1>
             
             <form method="post" action="options.php">
@@ -216,66 +282,14 @@ class AdminSettings {
                 ?>
             </form>
             
-            <div class="moneybag-info-cards">
-                <div class="card">
-                    <h3>📋 Plugin Status</h3>
-                    <ul>
-                        <li><strong>Sandbox Form Widget:</strong> ✅ Active</li>
-                        <li><strong>Pricing Plan Widget:</strong> ✅ Active</li>
-                        <li><strong>Elementor Integration:</strong> <?php echo class_exists('\Elementor\Plugin') ? '✅ Active' : '❌ Not Found'; ?></li>
-                    </ul>
-                </div>
-                
-                <div class="card">
-                    <h3>🔗 Quick Links</h3>
-                    <ul>
-                        <li><a href="<?php echo admin_url('admin.php?page=moneybag-crm'); ?>">CRM Integration</a></li>
-                        <li><a href="https://sandbox.moneybag.com.bd/" target="_blank">Moneybag Sandbox</a></li>
-                        <li><a href="https://docs.moneybag.com.bd/" target="_blank">Documentation</a></li>
-                    </ul>
-                </div>
-            </div>
+            <div id="moneybag-info-cards-container"></div>
         </div>
-        
-        <style>
-        .moneybag-info-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .moneybag-info-cards .card {
-            background: white;
-            border: 1px solid #ccd0d4;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .moneybag-info-cards .card h3 {
-            margin-top: 0;
-            color: #23282d;
-        }
-        .moneybag-info-cards .card ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .moneybag-info-cards .card li {
-            margin-bottom: 8px;
-        }
-        </style>
-        
-        <script>
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            field.type = field.type === 'password' ? 'text' : 'password';
-        }
-        </script>
         <?php
     }
     
     public function crm_settings_page() {
         ?>
-        <div class="wrap">
+        <div class="wrap moneybag-admin-settings">
             <h1><?php echo __('CRM Integration', 'moneybag-plugin'); ?></h1>
             
             <form method="post" action="options.php">
@@ -286,100 +300,9 @@ class AdminSettings {
                 ?>
             </form>
             
-            <div class="crm-test-section">
-                <h2>🧪 Test CRM Connection</h2>
-                <p>Test your CRM API connection with sample data. Make sure to save your settings first.</p>
-                
-                <button type="button" id="test-crm-btn" class="button button-primary">
-                    Test CRM Connection
-                </button>
-                
-                <div id="crm-test-results" style="margin-top: 20px;"></div>
-            </div>
-            
-            <div class="crm-info-section">
-                <h3>📚 CRM Integration Information</h3>
-                <div class="crm-info-grid">
-                    <div class="info-card">
-                        <h4>What gets created:</h4>
-                        <ol>
-                            <li><strong>Person</strong> - Contact details</li>
-                            <li><strong>Opportunity</strong> - Linked to the person</li>
-                            <li><strong>Note</strong> - Form submission details</li>
-                            <li><strong>Note Target</strong> - Links note to opportunity</li>
-                        </ol>
-                    </div>
-                    
-                    <div class="info-card">
-                        <h4>Required CRM API Permissions:</h4>
-                        <ul>
-                            <li>Create People</li>
-                            <li>Create Opportunities</li>
-                            <li>Create Notes</li>
-                            <li>Create Note Targets</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            <div id="crm-test-container"></div>
+            <div id="crm-info-container"></div>
         </div>
-        
-        <style>
-        .crm-test-section {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 30px 0;
-        }
-        
-        .crm-info-section {
-            margin-top: 30px;
-        }
-        
-        .crm-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
-        }
-        
-        .info-card {
-            background: white;
-            border: 1px solid #ccd0d4;
-            border-radius: 8px;
-            padding: 20px;
-        }
-        
-        .info-card h4 {
-            margin-top: 0;
-            color: #0073aa;
-        }
-        
-        #crm-test-results {
-            padding: 15px;
-            border-radius: 4px;
-            display: none;
-        }
-        
-        .success-result {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-        
-        .error-result {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-        </style>
-        
-        <script>
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            field.type = field.type === 'password' ? 'text' : 'password';
-        }
-        </script>
         <?php
     }
     
@@ -391,10 +314,42 @@ class AdminSettings {
         }
         
         $api_key = get_option('moneybag_crm_api_key');
-        $api_url = get_option('moneybag_crm_api_url', 'https://crm.dummy-dev.tubeonai.com/rest');
+        $api_url = get_option('moneybag_crm_api_url', 'https://crm.example.com/rest');
         
         if (empty($api_key)) {
             wp_send_json_error('CRM API key is not configured');
+        }
+        
+        // Validate API URL for security
+        if (empty($api_url)) {
+            wp_send_json_error('CRM API URL is not configured');
+        }
+        
+        // Additional security validation for the URL
+        $api_url = esc_url_raw($api_url);
+        $parsed = wp_parse_url($api_url);
+        
+        if (!$parsed || !isset($parsed['scheme']) || !in_array($parsed['scheme'], ['http', 'https'])) {
+            wp_send_json_error('Invalid CRM API URL format');
+        }
+        
+        // Prevent SSRF attacks by blocking internal/local URLs
+        if (isset($parsed['host'])) {
+            $host = strtolower($parsed['host']);
+            $blocked_hosts = ['localhost', '127.0.0.1', '::1', '0.0.0.0', '10.', '192.168.', '172.'];
+            
+            foreach ($blocked_hosts as $blocked) {
+                if ($host === $blocked || strpos($host, $blocked) === 0) {
+                    wp_send_json_error('Invalid CRM API URL - internal addresses not allowed');
+                }
+            }
+            
+            // Block private IP ranges
+            if (filter_var($host, FILTER_VALIDATE_IP)) {
+                if (!filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    wp_send_json_error('Invalid CRM API URL - private IP addresses not allowed');
+                }
+            }
         }
         
         // Test data
@@ -454,18 +409,33 @@ class AdminSettings {
     }
     
     public function enqueue_admin_scripts($hook_suffix) {
-        if ($hook_suffix === 'moneybag_page_moneybag-crm') {
+        // Enqueue on both main settings and CRM pages
+        if (in_array($hook_suffix, ['toplevel_page_moneybag-settings', 'moneybag_page_moneybag-crm'])) {
+            // Enqueue WordPress React dependencies
+            wp_enqueue_script('wp-element');
+            wp_enqueue_script('wp-api-fetch');
+            
+            // Enqueue global CSS
+            wp_enqueue_style(
+                'moneybag-global-css',
+                MONEYBAG_PLUGIN_URL . 'assets/css/moneybag-global.css',
+                [],
+                MONEYBAG_PLUGIN_VERSION
+            );
+            
+            // Enqueue new React-based admin settings
             wp_enqueue_script(
-                'moneybag-admin-crm',
-                MONEYBAG_PLUGIN_URL . 'assets/js/admin-crm.js',
-                ['jquery'],
+                'moneybag-admin-settings',
+                MONEYBAG_PLUGIN_URL . 'assets/js/admin-settings.js',
+                ['wp-element', 'wp-api-fetch'],
                 MONEYBAG_PLUGIN_VERSION,
                 true
             );
             
-            wp_localize_script('moneybag-admin-crm', 'moneybagAdmin', [
-                'ajaxurl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('moneybag_admin_nonce')
+            wp_localize_script('moneybag-admin-settings', 'moneybagAdminSettings', [
+                'ajaxUrl' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('moneybag_admin_nonce'),
+                'crmPageUrl' => admin_url('admin.php?page=moneybag-crm')
             ]);
         }
     }

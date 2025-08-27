@@ -714,7 +714,7 @@
                 form_title: config.form_title || 'Pricing & Requirements',
                 success_redirect_url: config.success_redirect_url || '',
                 consultation_duration: config.consultation_duration || 15,
-                opportunity_name: config.opportunity_name || 'TubeOnAI – merchant onboarding',
+                opportunity_name: config.opportunity_name || 'Payment Gateway – merchant onboarding',
                 primary_color: config.primary_color || '#ff6b6b',
                 ...config
             };

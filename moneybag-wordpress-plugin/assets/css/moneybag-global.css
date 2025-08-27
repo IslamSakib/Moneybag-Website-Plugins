@@ -4209,3 +4209,104 @@
     height: auto;
     border-radius: 8px;
 }
+
+/* ========================================
+   MONEYBAG ADMIN SETTINGS STYLES
+   ======================================== */
+
+/* Admin settings info cards */
+.moneybag-admin-settings .moneybag-info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.moneybag-admin-settings .moneybag-info-cards .card {
+    background: white;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.moneybag-admin-settings .moneybag-info-cards .card h3 {
+    margin-top: 0;
+    color: #23282d;
+}
+
+.moneybag-admin-settings .moneybag-info-cards .card ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.moneybag-admin-settings .moneybag-info-cards .card li {
+    margin-bottom: 8px;
+}
+
+/* CRM settings styles */
+.moneybag-admin-settings .crm-test-section {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 30px 0;
+}
+
+.moneybag-admin-settings .crm-info-section {
+    margin-top: 30px;
+}
+
+.moneybag-admin-settings .crm-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.moneybag-admin-settings .info-card {
+    background: white;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.moneybag-admin-settings .info-card h4 {
+    margin-top: 0;
+    color: #0073aa;
+}
+
+.moneybag-admin-settings #crm-test-results {
+    padding: 15px;
+    border-radius: 4px;
+    display: none;
+}
+
+.moneybag-admin-settings .success-result {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.moneybag-admin-settings .error-result {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+/* Responsive design for admin settings */
+@media (max-width: 768px) {
+    .moneybag-admin-settings .moneybag-info-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .moneybag-admin-settings .crm-info-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .moneybag-admin-settings .crm-test-section {
+        padding: 15px;
+    }
+}

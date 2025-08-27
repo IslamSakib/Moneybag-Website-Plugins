@@ -49,7 +49,7 @@ class PricingPlanWidget extends Widget_Base {
             'form_title' => __('Pricing & Requirements', 'moneybag-plugin'),
             'success_redirect_url' => get_option('moneybag_default_redirect_url', ''),
             'consultation_duration' => 15,
-            'opportunity_name' => get_option('moneybag_crm_opportunity_name', 'TubeOnAI – merchant onboarding'),
+            'opportunity_name' => get_option('moneybag_crm_opportunity_name', 'Payment Gateway – merchant onboarding'),
             'primary_color' => '#ff6b6b',
             'recaptcha_site_key' => get_option('moneybag_recaptcha_site_key', '')
         ];
