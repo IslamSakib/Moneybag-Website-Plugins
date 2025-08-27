@@ -283,13 +283,11 @@ class MoneybagPlugin {
     }
     
     public function submit_merchant_registration() {
-        // Debug: Log received data
-        error_log('Received AJAX request for merchant registration');
-        error_log('POST data: ' . print_r($_POST, true));
+        // Process merchant registration request
         
         // Verify nonce for security
         if (!wp_verify_nonce($_POST['nonce'], 'moneybag_merchant_nonce')) {
-            error_log('Nonce verification failed');
+            // Nonce verification failed
             wp_send_json_error('Security check failed');
             return;
         }
@@ -297,19 +295,18 @@ class MoneybagPlugin {
         $merchant_data = json_decode(stripslashes($_POST['merchant_data']), true);
         
         if (!$merchant_data) {
-            error_log('Invalid merchant data received');
+            // Invalid merchant data received
             wp_send_json_error('Invalid merchant data');
             return;
         }
         
-        // Debug: Log processed data
-        error_log('Processed merchant data: ' . print_r($merchant_data, true));
+        // Process merchant data
         
         // Validate required fields for simplified company structure
         $required_fields = ['name', 'email', 'phone'];
         foreach ($required_fields as $field) {
             if (empty($merchant_data[$field])) {
-                error_log("Missing required field: $field");
+                // Missing required field
                 wp_send_json_error("Missing required field: $field");
                 return;
             }
@@ -317,13 +314,12 @@ class MoneybagPlugin {
         
         // Validate custom fields exist
         if (empty($merchant_data['customFields']) || !is_array($merchant_data['customFields'])) {
-            error_log("Missing or invalid customFields data");
+            // Missing or invalid customFields data
             wp_send_json_error("Missing custom fields information");
             return;
         }
         
         // Store merchant data in WordPress database instead of CRM API
-        error_log('Storing merchant registration data locally');
         
         try {
             // Generate a unique registration ID
@@ -377,7 +373,7 @@ class MoneybagPlugin {
             
             wp_mail($merchant_data['email'], $merchant_subject, $merchant_message);
             
-            error_log('Merchant registration stored successfully with ID: ' . $registration_id);
+            // Merchant registration stored successfully
             
             // Success response
             wp_send_json_success([
@@ -387,7 +383,7 @@ class MoneybagPlugin {
             ]);
             
         } catch (Exception $e) {
-            error_log('Merchant registration error: ' . $e->getMessage());
+            // Merchant registration error
             wp_send_json_error($e->getMessage());
         }
     }
@@ -538,13 +534,7 @@ class MoneybagPlugin {
                     $recaptcha_result = \MoneybagPlugin\MoneybagAPI::verify_recaptcha($sanitized['recaptcha_response']);
                     
                     // Log the result for monitoring
-                    if (defined('WP_DEBUG') && WP_DEBUG) {
-                        error_log('reCAPTCHA v3 result: ' . json_encode([
-                            'success' => $recaptcha_result['success'],
-                            'score' => $recaptcha_result['score'] ?? 'N/A',
-                            'message' => $recaptcha_result['message'] ?? ''
-                        ]));
-                    }
+                    // reCAPTCHA v3 result logged only in debug mode
                     
                     // For v3, the verify_recaptcha function already handles scoring
                     // and will return success=true for most legitimate users

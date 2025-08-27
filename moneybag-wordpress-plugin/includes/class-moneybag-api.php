@@ -90,10 +90,7 @@ class MoneybagAPI {
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
         
-        // Log errors for debugging (only in development)
-        if ($status_code >= 400 && defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('Moneybag API Error: ' . $endpoint . ' - Status: ' . $status_code . ' - Response: ' . $body);
-        }
+        // API errors logged only in debug mode
         
         // Handle different response formats
         if ($data === null) {
@@ -313,7 +310,7 @@ class MoneybagAPI {
         
         if (is_wp_error($response)) {
             // Don't block on network errors for v3
-            error_log('reCAPTCHA network error: ' . $response->get_error_message());
+            // reCAPTCHA network error
             return [
                 'success' => true,
                 'message' => 'reCAPTCHA network error, allowing submission',
@@ -330,15 +327,11 @@ class MoneybagAPI {
             $score_threshold = floatval(get_option('moneybag_recaptcha_score_threshold', 0.3));
             
             if (isset($result['score'])) {
-                // Log the score for monitoring
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log('reCAPTCHA v3 score: ' . $result['score']);
-                }
+                // reCAPTCHA v3 score logged only in debug mode
                 
                 // Only block very low scores (likely bots)
                 if ($result['score'] < $score_threshold) {
-                    // Still log but don't necessarily block
-                    error_log('Low reCAPTCHA score: ' . $result['score'] . ' (threshold: ' . $score_threshold . ')');
+                    // Low reCAPTCHA score detected
                     
                     // For sandbox/testing, be more permissive
                     if (strpos($_SERVER['HTTP_HOST'] ?? '', 'sandbox') !== false || 
@@ -365,8 +358,7 @@ class MoneybagAPI {
             ];
         }
         
-        // Log the error but don't block for v3
-        error_log('reCAPTCHA verification failed: ' . json_encode($result['error-codes'] ?? []));
+        // reCAPTCHA verification failed but not blocking
         
         // For v3, we should rarely block completely
         return [

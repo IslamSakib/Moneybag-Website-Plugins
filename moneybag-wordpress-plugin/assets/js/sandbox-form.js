@@ -75,14 +75,14 @@
             return new Promise((resolve, reject) => {
                 // If no reCAPTCHA key configured, don't try to execute
                 if (!config.recaptcha_site_key) {
-                    console.log('reCAPTCHA not configured, skipping');
+                    // reCAPTCHA not configured, skipping
                     resolve(null);
                     return;
                 }
                 
                 // Check if grecaptcha is loaded
                 if (!window.grecaptcha) {
-                    console.log('reCAPTCHA library not loaded, skipping');
+                    // reCAPTCHA library not loaded, skipping
                     resolve(null);
                     return;
                 }
@@ -95,12 +95,12 @@
                                 resolve(token);
                             })
                             .catch(error => {
-                                console.warn('reCAPTCHA execute failed:', error);
+                                // reCAPTCHA execute failed
                                 // Don't set error message, just resolve with null
                                 resolve(null);
                             });
                     } catch (error) {
-                        console.warn('reCAPTCHA execute error:', error);
+                        // reCAPTCHA execute error
                         // Don't set error message, just resolve with null
                         resolve(null);
                     }
@@ -180,16 +180,16 @@
                 
                 const responseData = await response.json();
                 
-                console.log(`API Call [${action}] response:`, responseData); // Debug log
+                // API call response received
                 
                 if (!responseData.success) {
-                    console.error(`API Call [${action}] failed:`, responseData.data);
+                    // API call failed
                     throw new Error(responseData.data || 'API request failed');
                 }
                 
                 return responseData.data;
             } catch (error) {
-                console.error(`API Call [${action}] error:`, error);
+                // API call error
                 throw error;
             }
         };
@@ -205,7 +205,7 @@
                     email: formData.email
                 });
                 
-                console.log('Email verification response:', response); // Debug log
+                // Email verification response received
                 
                 // The response should contain session_id
                 if (response && response.session_id) {
@@ -218,7 +218,7 @@
                     goToStep(2);
                 }
             } catch (error) {
-                console.error('Email verification error:', error); // Debug log
+                // Email verification error
                 setErrors(prev => ({ ...prev, email: error.message }));
             } finally {
                 setLoading(false);
@@ -234,7 +234,7 @@
                     session_id: sessionId
                 });
                 
-                console.log('OTP verification response:', response); // Debug log
+                // OTP verification response received
                 
                 // If we get a response without error, consider it successful
                 if (response) {
@@ -245,7 +245,7 @@
                     goToStep(3);
                 }
             } catch (error) {
-                console.error('OTP verification error:', error); // Debug log
+                // OTP verification error
                 setErrors(prev => ({ ...prev, otp: error.message }));
             } finally {
                 setVerifyingOTP(false);
@@ -263,7 +263,7 @@
                     try {
                         recaptchaToken = await executeRecaptcha();
                     } catch (error) {
-                        console.log('reCAPTCHA failed, proceeding without it:', error);
+                        // reCAPTCHA failed, proceeding without it
                         // Don't block form submission if reCAPTCHA fails
                     }
                 }
@@ -542,7 +542,7 @@
                         errors.legalIdType && createElement('span', { className: 'error-message' }, errors.legalIdType)
                     ),
                     renderInput('businessName', 'text', ''),
-                    renderInput('website', 'url', 'https://')
+                    renderInput('website', 'text', 'example.com')
                 ),
                 createElement('div', { className: 'input-row-2' },
                     renderPasswordField('password', 'Password'),

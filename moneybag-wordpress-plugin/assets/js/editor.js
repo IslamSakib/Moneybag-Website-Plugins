@@ -5,7 +5,7 @@
     jQuery(window).on('elementor:init', function() {
         elementor.hooks.addAction('panel/open_editor/widget/moneybag-sandbox-form', function(panel, model, view) {
             // Add any editor-specific functionality here
-            console.log('Moneybag Sandbox Form widget opened in editor');
+            // Moneybag Sandbox Form widget opened in editor
         });
     });
     

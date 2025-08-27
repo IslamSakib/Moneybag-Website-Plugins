@@ -106,10 +106,18 @@
         },
         url: {
             required: true,
-            pattern: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
+            pattern: /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
             messages: {
-                required: 'Website URL is required',
-                pattern: 'Please enter a valid website URL starting with http:// or https://'
+                required: 'Domain name is required',
+                pattern: 'Please enter a valid domain name (e.g., example.com or www.example.com)'
+            }
+        },
+        domain: {
+            required: true,
+            pattern: /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
+            messages: {
+                required: 'Domain name is required',
+                pattern: 'Please enter a valid domain name (e.g., example.com or www.example.com)'
             }
         },
         businessCategory: {
@@ -367,7 +375,7 @@
                        formData.domainName && formData.domainName.trim() &&
                        !validateField('businessName', formData.merchantName) &&
                        !validateField('businessName', formData.tradingName) &&
-                       !validateField('url', formData.domainName);
+                       !validateField('domain', formData.domainName);
             
             case 3:
                 return formData.contactName && formData.contactName.trim() &&
@@ -409,7 +417,7 @@
             case 2:
                 const merchantNameError = validateField('businessName', formData.merchantName);
                 const tradingNameError = validateField('businessName', formData.tradingName);
-                const domainError = validateField('url', formData.domainName);
+                const domainError = validateField('domain', formData.domainName);
                 
                 if (merchantNameError) errors.merchantName = merchantNameError;
                 if (tradingNameError) errors.tradingName = tradingNameError;
@@ -449,7 +457,6 @@
         rules: validationRules
     };
 
-    // For debugging
-    console.log('Moneybag Validation loaded successfully');
+    // Moneybag Validation loaded successfully
 
 })(window);

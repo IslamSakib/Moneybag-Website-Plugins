@@ -90,7 +90,7 @@
                 
                 return result.data;
             } catch (error) {
-                console.error('API call failed:', error);
+                // API call failed
                 throw error;
             }
         };
@@ -105,24 +105,11 @@
                         const data = await response.json();
                         setRegistrationOptions(data);
                         
-                        // Set default values immediately (like pricing form)
-                        if (!formData.businessCategory && data.businessCategories) {
-                            const firstBusinessCategory = Object.values(data.businessCategories)[0]?.value || '';
-                            const firstBusinessCategoryData = Object.values(data.businessCategories)[0];
-                            const firstLegalIdentity = firstBusinessCategoryData ? 
-                                Object.values(firstBusinessCategoryData.identities)[0]?.value || '' : '';
-                            const firstMonthlyVolume = data.monthlyVolumes?.[0]?.value || '';
-                            
-                            setFormData(prev => ({
-                                ...prev,
-                                businessCategory: firstBusinessCategory,
-                                legalIdentity: firstLegalIdentity,
-                                monthlyVolume: firstMonthlyVolume
-                            }));
-                        }
+                        // Don't set default values - let placeholders show instead
+                        // Users should explicitly select their options
                     }
                 } catch (error) {
-                    console.error('Error loading registration options:', error);
+                    // Error loading registration options
                 }
             };
             loadRegistrationOptions();
@@ -146,7 +133,7 @@
         // Use global validation for step completion
         const isStepComplete = useCallback((stepNumber) => {
             if (!window.MoneybagValidation) {
-                console.warn('MoneybagValidation not loaded');
+                // MoneybagValidation not loaded
                 return false;
             }
             return window.MoneybagValidation.validateMerchantStep(stepNumber, formData);
@@ -182,7 +169,7 @@
         // Use global validation system
         const validateField = (fieldName, value) => {
             if (!window.MoneybagValidation) {
-                console.warn('MoneybagValidation not loaded');
+                // MoneybagValidation not loaded
                 return '';
             }
             return window.MoneybagValidation.validateField(fieldName, value);
@@ -191,7 +178,7 @@
         // Validate individual field and update error state
         const validateAndSetFieldError = (fieldName, value, formFieldName = null) => {
             if (!window.MoneybagValidation) {
-                console.warn('MoneybagValidation not loaded');
+                // MoneybagValidation not loaded
                 return '';
             }
             
@@ -220,7 +207,7 @@
             
             const documentType = documentTypeMap[field];
             if (!documentType) {
-                console.error('Invalid field for file upload:', field);
+                // Invalid field for file upload
                 return;
             }
             
@@ -229,13 +216,13 @@
             const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
             
             if (file.size > maxSize) {
-                console.error('File size must be less than 1MB');
+                // File size must be less than 1MB
                 alert('File size must be less than 1MB');
                 return;
             }
             
             if (!allowedTypes.includes(file.type)) {
-                console.error('Only JPG, PNG, and PDF files are allowed');
+                // Only JPG, PNG, and PDF files are allowed
                 alert('Only JPG, PNG, and PDF files are allowed');
                 return;
             }
@@ -256,7 +243,7 @@
                     merchant_id: sessionId
                 });
                 
-                console.log('Upload response:', result);
+                // Upload response received
                 
                 if (result) {
                     // Store uploaded file info
@@ -278,12 +265,12 @@
                         [field]: fileInfo.url
                     }));
                     
-                    console.log(`${file.name} uploaded successfully!`);
+                    // File uploaded successfully
                 } else {
                     throw new Error(result.error?.message || 'Upload failed');
                 }
             } catch (error) {
-                console.error('File upload error:', error);
+                // File upload error
                 alert(`Failed to upload ${file.name}: ${error.message}`);
             } finally {
                 setUploadingFiles(prev => ({ ...prev, [field]: false }));
@@ -305,7 +292,7 @@
                     'merchantName': { validation: 'businessName', filter: 'businessName' },
                     'tradingName': { validation: 'businessName', filter: 'businessName' },
                     'contactName': { validation: 'name', filter: 'name' },
-                    'domainName': { validation: 'url', filter: 'text' },
+                    'domainName': { validation: 'domain', filter: 'text' },
                     'mobile': { validation: 'mobile', filter: 'phone' },
                     'phone': { validation: 'phone', filter: 'phone' },
                     'email': { validation: 'email', filter: 'text' },
@@ -485,14 +472,12 @@
                     }
                 };
                 
-                // Debug: Log submission data
-                console.log('Submitting merchant data:', submitData);
+                // Submitting merchant data
                 
                 // Use global API system for merchant registration
                 const result = await apiCall('submit_merchant_registration', submitData);
                 
-                // Debug: Log API response
-                console.log('API Response:', result);
+                // API response received
                 
                 setLoading(false);
                 
@@ -526,7 +511,7 @@
                     displayMessage = 'Registration failed. Please try again.';
                 }
                 
-                console.error('Submission error:', error);
+                // Submission error
                 alert(displayMessage);
             }
         };
@@ -668,12 +653,15 @@
                         },
                             !registrationOptions?.businessCategories 
                                 ? h('option', { value: '', disabled: true }, 'Loading business categories...')
-                                : Object.entries(registrationOptions.businessCategories).map(([name, data]) =>
-                                    h('option', { 
-                                        key: data.value, 
-                                        value: data.value
-                                    }, name)
-                                )
+                                : [
+                                    h('option', { value: '', disabled: true, selected: !formData.businessCategory, hidden: true }, 'Select Business Category'),
+                                    ...Object.entries(registrationOptions.businessCategories).map(([name, data]) =>
+                                        h('option', { 
+                                            key: data.value, 
+                                            value: data.value
+                                        }, name)
+                                    )
+                                ]
                         ),
                         fieldErrors.businessCategory && h('span', { className: 'error-message' }, fieldErrors.businessCategory)
                     ),
@@ -690,12 +678,15 @@
                         },
                             !formData.businessCategory 
                                 ? h('option', { value: '', disabled: true }, 'Please select Business Category first')
-                                : availableLegalIdentities.map(([name, data]) =>
-                                    h('option', { 
-                                        key: data.value, 
-                                        value: data.value
-                                    }, name)
-                                )
+                                : [
+                                    h('option', { value: '', disabled: true, selected: !formData.legalIdentity, hidden: true }, 'Select Legal Identity'),
+                                    ...availableLegalIdentities.map(([name, data]) =>
+                                        h('option', { 
+                                            key: data.value, 
+                                            value: data.value
+                                        }, name)
+                                    )
+                                ]
                         ),
                         fieldErrors.legalIdentity && h('span', { className: 'error-message' }, fieldErrors.legalIdentity)
                     )
@@ -714,12 +705,15 @@
                         },
                             !registrationOptions?.monthlyVolumes 
                                 ? h('option', { value: '', disabled: true }, 'Loading volume options...')
-                                : registrationOptions.monthlyVolumes.map((volume) =>
-                                    h('option', { 
-                                        key: volume.value, 
-                                        value: volume.value
-                                    }, volume.label)
-                                )
+                                : [
+                                    h('option', { value: '', disabled: true, selected: !formData.monthlyVolume, hidden: true }, 'Select Monthly Volume'),
+                                    ...registrationOptions.monthlyVolumes.map((volume) =>
+                                        h('option', { 
+                                            key: volume.value, 
+                                            value: volume.value
+                                        }, volume.label)
+                                    )
+                                ]
                         ),
                         fieldErrors.monthlyVolume && h('span', { className: 'error-message' }, fieldErrors.monthlyVolume)
                     ),
@@ -825,16 +819,15 @@
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
-                            type: 'url',
-                            className: `input-field ${fieldErrors.domainName ? 'error' : ''} ${formData.domainName.trim() && /^https?:\/\/.+/i.test(formData.domainName.trim()) ? 'valid' : ''}`,
+                            type: 'text',
+                            className: `input-field ${fieldErrors.domainName ? 'error' : ''} ${formData.domainName.trim() ? 'valid' : ''}`,
                             value: formData.domainName,
                             onChange: (e) => handleInputChange('domainName', e.target.value),
-                            onBlur: (e) => validateAndSetFieldError('url', e.target.value, 'domainName'),
-                            placeholder: 'https://www.example.com',
-                            pattern: 'https?://.+'
+                            onBlur: (e) => validateAndSetFieldError('domain', e.target.value, 'domainName'),
+                            placeholder: 'example.com or www.example.com'
                         }),
                         fieldErrors.domainName && h('span', { className: 'error-message' }, fieldErrors.domainName),
-                        h('small', { className: 'form-hint' }, 'Enter your website URL starting with http:// or https://')
+                        h('small', { className: 'form-hint' }, 'Enter your domain name (e.g., example.com)')
                     )
                 )
             );
@@ -1055,8 +1048,8 @@
                 2: [
                     '• Enter your official business name as registered with government authorities',
                     '• Trading name is what customers see (your shop/brand name)',
-                    '• Domain Name must start with http:// or https://',
-                    '• If you don\'t have a website yet, enter your social media page URL',
+                    '• Enter your domain name without http:// or https://',
+                    '• If you don\'t have a website yet, enter your social media domain',
                     '• Double-check spelling - this information will appear on your merchant account',
                     '• These details will be used for payment gateway integration'
                 ],

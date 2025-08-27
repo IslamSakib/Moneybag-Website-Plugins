@@ -30,7 +30,7 @@
                     const rules = await response.json();
                     setPricingRules(rules);
                 } catch (error) {
-                    console.error('Failed to load pricing rules:', error);
+                    // Failed to load pricing rules
                 }
             };
             
@@ -155,7 +155,7 @@
         // Use global form validator
         const validateFieldInstantly = (name, value) => {
             if (!window.MoneybagValidation) {
-                console.warn('MoneybagValidation not loaded');
+                // MoneybagValidation not loaded
                 return '';
             }
             
@@ -559,8 +559,10 @@
                             }, showAllPricing ? 'See Less' : 'See More'),
                             createElement('p', { className: 'contact-text' },
                                 createElement('a', { 
-                                    href: 'tel:+8801958109228',
-                                    style: { color: 'inherit', textDecoration: 'underline' }
+                                    href: 'https://tidycal.com/moneybag-pso/15-minute-meeting',
+                                    target: '_blank',
+                                    rel: 'noopener noreferrer',
+                                    className: 'book-call-link'
                                 }, 'Book FREE Call'),
                                 ' to discuss your needs and negotiate a better price.'
                             )
@@ -580,7 +582,7 @@
                                 createElement('div', { className: 'input-row' },
                                     renderSelect('businessCategory'),
                                     renderSelect('legalIdentity'),
-                                    renderInput('domainName', 'url', 'https://example.com'),
+                                    renderInput('domainName', 'text', 'example.com'),
                                     renderSelect('monthlyVolume'),
                                     renderInput('name', 'text', 'Full Name'),
                                     renderInput('email', 'email', 'your@email.com'),
