@@ -43,6 +43,7 @@
         });
         
         const [validationErrors, setValidationErrors] = useState({});
+        const [fieldErrors, setFieldErrors] = useState({});
         const [uploadingFiles, setUploadingFiles] = useState({});
         const [uploadedFiles, setUploadedFiles] = useState({});
         
@@ -61,14 +62,64 @@
             // 4: 100 // Temporarily disabled
         };
         
-        // Load registration options on mount
+        // Global API call system - similar to sandbox form
+        const apiCall = async (action, data) => {
+            const formData = new FormData();
+            formData.append('action', 'moneybag_merchant_api');
+            formData.append('nonce', window.moneybagMerchantAjax.nonce);
+            formData.append('api_action', action);
+            formData.append('data', JSON.stringify(data));
+            
+            try {
+                const response = await fetch(window.moneybagMerchantAjax.ajaxurl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.data || 'API call failed');
+                }
+                
+                return result.data;
+            } catch (error) {
+                console.error('API call failed:', error);
+                throw error;
+            }
+        };
+
+        // Load registration options directly from JSON (like pricing form)
         useEffect(() => {
             const loadRegistrationOptions = async () => {
                 try {
+                    // Load directly from JSON file for faster rendering
                     const response = await fetch(config.plugin_url + 'data/merchant-registration-options.json');
                     if (response.ok) {
                         const data = await response.json();
                         setRegistrationOptions(data);
+                        
+                        // Set default values immediately (like pricing form)
+                        if (!formData.businessCategory && data.businessCategories) {
+                            const firstBusinessCategory = Object.values(data.businessCategories)[0]?.value || '';
+                            const firstBusinessCategoryData = Object.values(data.businessCategories)[0];
+                            const firstLegalIdentity = firstBusinessCategoryData ? 
+                                Object.values(firstBusinessCategoryData.identities)[0]?.value || '' : '';
+                            const firstMonthlyVolume = data.monthlyVolumes?.[0]?.value || '';
+                            
+                            setFormData(prev => ({
+                                ...prev,
+                                businessCategory: firstBusinessCategory,
+                                legalIdentity: firstLegalIdentity,
+                                monthlyVolume: firstMonthlyVolume
+                            }));
+                        }
                     }
                 } catch (error) {
                     console.error('Error loading registration options:', error);
@@ -92,48 +143,14 @@
             }
         }, [formData.businessCategory, registrationOptions]);
         
-        // Validation functions
-        const isStep1Complete = useCallback(() => {
-            return formData.legalIdentity && 
-                   formData.businessCategory && 
-                   formData.serviceTypes.length > 0 &&
-                   formData.monthlyVolume;
-        }, [formData]);
-        
-        const isStep2Complete = useCallback(() => {
-            // Validate domain URL starts with http:// or https://
-            const urlRegex = /^https?:\/\/.+/i;
-            return formData.merchantName.trim() && 
-                   formData.tradingName.trim() && 
-                   formData.domainName.trim() &&
-                   urlRegex.test(formData.domainName.trim());
-        }, [formData]);
-        
-        const isStep3Complete = useCallback(() => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const cleanMobile = formData.mobile.replace(/[\s\-\+\(\)]/g, '');
-            const phoneRegex = /^01[3-9][0-9]{8}$/;
-            return formData.contactName.trim() && 
-                   formData.designation.trim() && 
-                   formData.email.trim() && 
-                   emailRegex.test(formData.email) &&
-                   formData.mobile.trim() &&
-                   phoneRegex.test(cleanMobile);
-        }, [formData]);
-        
-        const isStep4Complete = useCallback(() => {
-            return true; // All file uploads are optional
-        }, []);
-        
+        // Use global validation for step completion
         const isStepComplete = useCallback((stepNumber) => {
-            switch(stepNumber) {
-                case 1: return isStep1Complete();
-                case 2: return isStep2Complete();
-                case 3: return isStep3Complete();
-                // case 4: return isStep4Complete(); // Temporarily disabled
-                default: return false;
+            if (!window.MoneybagValidation) {
+                console.warn('MoneybagValidation not loaded');
+                return false;
             }
-        }, [isStep1Complete, isStep2Complete, isStep3Complete]); // Removed isStep4Complete
+            return window.MoneybagValidation.validateMerchantStep(stepNumber, formData);
+        }, [formData]);
         
         const getStepStatus = useCallback((stepNumber) => {
             if (stepNumber < currentStep) {
@@ -162,16 +179,34 @@
             return (completedSteps / 3) * 100; // Changed from 4 to 3
         }, [currentStep, isStepComplete]);
         
-        // Phone number validation - must start with 01
-        const validatePhoneNumber = (phone) => {
-            // Remove all spaces and special characters
-            const cleanPhone = phone.replace(/[\s\-\+\(\)]/g, '');
-            // Must start with 01 and be exactly 11 digits
-            const phoneRegex = /^01[3-9][0-9]{8}$/;
-            return phoneRegex.test(cleanPhone);
+        // Use global validation system
+        const validateField = (fieldName, value) => {
+            if (!window.MoneybagValidation) {
+                console.warn('MoneybagValidation not loaded');
+                return '';
+            }
+            return window.MoneybagValidation.validateField(fieldName, value);
+        };
+        
+        // Validate individual field and update error state
+        const validateAndSetFieldError = (fieldName, value, formFieldName = null) => {
+            if (!window.MoneybagValidation) {
+                console.warn('MoneybagValidation not loaded');
+                return '';
+            }
+            
+            const error = window.MoneybagValidation.validateField(fieldName, value);
+            const errorKey = formFieldName || fieldName;
+            
+            setFieldErrors(prev => ({
+                ...prev,
+                [errorKey]: error || ''
+            }));
+            
+            return error;
         };
 
-        // File upload handler using the new file upload API
+        // File upload handler using global API system
         const handleFileUpload = useCallback(async (field, file) => {
             if (!file) return;
             
@@ -194,23 +229,18 @@
             const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
             
             if (file.size > maxSize) {
-                setInlineError({
-                    message: 'File size must be less than 1MB',
-                    type: 'error'
-                });
+                console.error('File size must be less than 1MB');
+                alert('File size must be less than 1MB');
                 return;
             }
             
             if (!allowedTypes.includes(file.type)) {
-                setInlineError({
-                    message: 'Only JPG, PNG, and PDF files are allowed',
-                    type: 'error'
-                });
+                console.error('Only JPG, PNG, and PDF files are allowed');
+                alert('Only JPG, PNG, and PDF files are allowed');
                 return;
             }
             
             setUploadingFiles(prev => ({ ...prev, [field]: true }));
-            setInlineError(null);
             
             try {
                 // Create form data for file upload
@@ -219,68 +249,92 @@
                 formData.append('type', documentType);
                 formData.append('description', `${documentType} for merchant registration`);
                 
-                // Upload to file API
-                const response = await fetch('https://crm.moneybag.com.bd/files/upload', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNmVjMjllMS1jNjg5LTRhZmItODViNi0xNWI3NzA2Mzk4MjAiLCJ0eXBlIjoiQVBJX0tFWSIsIndvcmtzcGFjZUlkIjoiMDZlYzI5ZTEtYzY4OS00YWZiLTg1YjYtMTViNzcwNjM5ODIwIiwiaWF0IjoxNzU1NDEyODEzLCJleHAiOjQ5MDkwMTI4MTIsImp0aSI6IjliZGEwMDY4LTFmODAtNDAwMS1iN2E0LWRiNTVhMGRmYTQ4MSJ9.HOPJJTd3mXz2HbcWxDnNc2eaWEW9FbM-K-6DmlezeIo'
-                    },
-                    body: formData
+                // Use global API system for secure file upload
+                const result = await apiCall('upload_file', {
+                    file: file,
+                    document_type: documentType,
+                    merchant_id: sessionId
                 });
                 
-                const result = await response.json();
+                console.log('Upload response:', result);
                 
-                if (result.success) {
+                if (result) {
                     // Store uploaded file info
+                    const fileInfo = {
+                        url: result.file_url || result.url,
+                        filename: file.name,
+                        size: file.size,
+                        uploadId: result.id || result.file_id
+                    };
+                    
                     setUploadedFiles(prev => ({
                         ...prev,
-                        [field]: {
-                            file_id: result.data.file_id,
-                            url: result.data.url,
-                            original_name: result.data.original_name,
-                            document_type: result.data.document_type
-                        }
+                        [field]: fileInfo
                     }));
                     
-                    // Update form data with file name
+                    // Update form data with file URL
                     setFormData(prev => ({
                         ...prev,
-                        [field]: result.data.original_name
+                        [field]: fileInfo.url
                     }));
                     
-                    setInlineError({
-                        message: `${file.name} uploaded successfully!`,
-                        type: 'success'
-                    });
+                    console.log(`${file.name} uploaded successfully!`);
                 } else {
                     throw new Error(result.error?.message || 'Upload failed');
                 }
             } catch (error) {
                 console.error('File upload error:', error);
-                setInlineError({
-                    message: `Failed to upload ${file.name}: ${error.message}`,
-                    type: 'error'
-                });
+                alert(`Failed to upload ${file.name}: ${error.message}`);
             } finally {
                 setUploadingFiles(prev => ({ ...prev, [field]: false }));
             }
         }, []);
         
-        // Handle form input changes
+        // Handle form input changes with global validation
         const handleInputChange = useCallback((field, value) => {
-            // For mobile and phone fields, validate and format
-            if (field === 'mobile' || field === 'phone') {
-                // Only allow digits, spaces, hyphens, plus signs, and parentheses
-                const cleanValue = value.replace(/[^\d\s\-\+\(\)]/g, '');
-                setFormData(prev => ({ ...prev, [field]: cleanValue }));
-            } else if (field === 'domainName') {
-                // For domain name, trim spaces
-                setFormData(prev => ({ ...prev, [field]: value.trim() }));
+            // Use global validation system for input filtering
+            let processedValue = value;
+            
+            if (window.MoneybagValidation) {
+                // Map merchant form fields to validation field names and filter types
+                const fieldMap = {
+                    'businessCategory': { validation: 'businessCategory', filter: 'text' },
+                    'legalIdentity': { validation: 'legalIdentity', filter: 'text' },
+                    'monthlyVolume': { validation: 'monthlyVolume', filter: 'text' },
+                    'serviceTypes': { validation: 'serviceTypes', filter: 'array' },
+                    'merchantName': { validation: 'businessName', filter: 'businessName' },
+                    'tradingName': { validation: 'businessName', filter: 'businessName' },
+                    'contactName': { validation: 'name', filter: 'name' },
+                    'domainName': { validation: 'url', filter: 'text' },
+                    'mobile': { validation: 'mobile', filter: 'phone' },
+                    'phone': { validation: 'phone', filter: 'phone' },
+                    'email': { validation: 'email', filter: 'text' },
+                    'designation': { validation: 'designation', filter: 'designation' },
+                    'maxAmount': { validation: 'maxAmount', filter: 'amount' }
+                };
+                
+                const mappedField = fieldMap[field];
+                if (mappedField) {
+                    processedValue = window.MoneybagValidation.filterInput(value, mappedField.filter);
+                }
             } else {
-                setFormData(prev => ({ ...prev, [field]: value }));
+                // Fallback basic filtering
+                if (field === 'mobile' || field === 'phone') {
+                    processedValue = value.replace(/[^\d\s\-\+\(\)]/g, '');
+                } else if (field === 'domainName') {
+                    processedValue = value.trim();
+                }
             }
             
-            // Clear validation error for this field
+            setFormData(prev => ({ ...prev, [field]: processedValue }));
+            
+            // Clear any existing validation errors for this field
+            setFieldErrors(prev => ({
+                ...prev,
+                [field]: ''
+            }));
+            
+            // Clear old validation errors as well
             setValidationErrors(prev => {
                 const newErrors = { ...prev };
                 delete newErrors[field];
@@ -289,6 +343,12 @@
             
             // If business category changes, reset legal identity if not available
             if (field === 'businessCategory') {
+                // Clear legal identity error when category changes
+                setFieldErrors(prev => ({
+                    ...prev,
+                    legalIdentity: ''
+                }));
+                
                 const isAvailable = availableLegalIdentities.some(([name, data]) => 
                     data.value === formData.legalIdentity
                 );
@@ -300,73 +360,81 @@
         
         // Handle service type selection
         const handleServiceToggle = useCallback((service) => {
+            const newServiceTypes = formData.serviceTypes.includes(service)
+                ? formData.serviceTypes.filter(s => s !== service)
+                : [...formData.serviceTypes, service];
+                
+            // Update form data
             setFormData(prev => ({
                 ...prev,
-                serviceTypes: prev.serviceTypes.includes(service)
-                    ? prev.serviceTypes.filter(s => s !== service)
-                    : [...prev.serviceTypes, service]
+                serviceTypes: newServiceTypes
             }));
-        }, []);
+            
+            // Immediate validation and error clearing
+            if (window.MoneybagValidation) {
+                const error = window.MoneybagValidation.validateField('serviceTypes', newServiceTypes);
+                setFieldErrors(prev => ({
+                    ...prev,
+                    serviceTypes: error || ''
+                }));
+            }
+        }, [formData.serviceTypes]);
         
         const handleSelectAllServices = useCallback((isChecked) => {
             // Use proper API values instead of labels
             const allServiceValues = ['visa', 'mastercard', 'amex', 'dbbl_nexus', 'bkash', 
                                     'nagad', 'unionpay', 'rocket', 'diners', 'upay'];
+            const newServiceTypes = isChecked ? [...allServiceValues] : [];
+            
+            // Update form data
             setFormData(prev => ({
                 ...prev,
-                serviceTypes: isChecked ? [...allServiceValues] : []
+                serviceTypes: newServiceTypes
             }));
+            
+            // Immediate validation and error clearing
+            if (window.MoneybagValidation) {
+                const error = window.MoneybagValidation.validateField('serviceTypes', newServiceTypes);
+                setFieldErrors(prev => ({
+                    ...prev,
+                    serviceTypes: error || ''
+                }));
+            }
         }, []);
         
         // Navigation handlers
         const handleNext = useCallback(async () => {
+            // Use global validation to get all field errors for current step
+            if (window.MoneybagValidation) {
+                const stepErrors = window.MoneybagValidation.validateMerchantStepFields(currentStep, formData);
+                
+                // Set all field errors at once
+                setFieldErrors(prev => ({
+                    ...prev,
+                    ...stepErrors
+                }));
+                
+                // Don't proceed if there are validation errors
+                if (Object.keys(stepErrors).length > 0) {
+                    return;
+                }
+            }
+            
             const canProceed = isStepComplete(currentStep);
             
             if (!canProceed) {
-                let missingFields = [];
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const cleanMobile = formData.mobile.replace(/[\s\-\+\(\)]/g, '');
-                const phoneRegex = /^01[3-9][0-9]{8}$/;
-                
-                if (currentStep === 1) {
-                    if (!formData.businessCategory) missingFields.push('Business Category');
-                    if (!formData.legalIdentity) missingFields.push('Legal Identity');
-                    if (!formData.monthlyVolume) missingFields.push('Monthly Volume');
-                    if (formData.serviceTypes.length === 0) missingFields.push('Service Types');
-                } else if (currentStep === 2) {
-                    const urlRegex = /^https?:\/\/.+/i;
-                    if (!formData.merchantName.trim()) missingFields.push('Business Name');
-                    if (!formData.tradingName.trim()) missingFields.push('Trading Name');
-                    if (!formData.domainName.trim()) missingFields.push('Website/Domain');
-                    else if (!urlRegex.test(formData.domainName.trim())) missingFields.push('Valid URL (must start with http:// or https://)');
-                } else if (currentStep === 3) {
-                    if (!formData.contactName.trim()) missingFields.push('Contact Name');
-                    if (!formData.designation.trim()) missingFields.push('Designation');
-                    if (!formData.email.trim()) missingFields.push('Email');
-                    else if (!emailRegex.test(formData.email)) missingFields.push('Valid Email');
-                    if (!formData.mobile.trim()) missingFields.push('Mobile Number (must start with 01)');
-                    else if (!phoneRegex.test(cleanMobile)) missingFields.push('Valid Mobile Number (01XXXXXXXXX format)');
-                }
-                
-                const errorMsg = missingFields.length > 0 
-                    ? `Please fill: ${missingFields.join(', ')}` 
-                    : 'Please fill all required fields before proceeding to the next step.';
-                    
-                setInlineError({ message: errorMsg, type: 'error' });
-                return;
+                return; // Don't proceed if validation fails
             }
             
-            setInlineError(null);
-            
-            if (currentStep < 3) { // Changed from 4 to 3
+            if (currentStep < 3) {
                 // Show loading briefly for step navigation
                 setLoading(true);
                 setTimeout(() => {
                     setCurrentStep(prev => prev + 1);
                     setLoading(false);
-                }, 300); // Brief delay for visual feedback
+                }, 300);
             } else {
-                // Submit on step 3 (was step 4)
+                // Submit on step 3
                 handleSubmit();
             }
         }, [currentStep, formData, isStepComplete]);
@@ -374,19 +442,12 @@
         const handlePrevious = useCallback(() => {
             if (currentStep > 1) {
                 setCurrentStep(prev => prev - 1);
-                setInlineError(null);
             }
         }, [currentStep]);
         
         const handleStepClick = useCallback((stepId) => {
             if (canNavigateToStep(stepId)) {
                 setCurrentStep(stepId);
-                setInlineError(null);
-            } else {
-                setInlineError({ 
-                    message: 'Please complete the current step before proceeding.', 
-                    type: 'warning' 
-                });
             }
         }, [canNavigateToStep]);
         
@@ -427,32 +488,16 @@
                 // Debug: Log submission data
                 console.log('Submitting merchant data:', submitData);
                 
-                // Use WordPress AJAX to avoid CORS issues
-                const ajaxData = new FormData();
-                ajaxData.append('action', 'moneybag_submit_merchant_registration');
-                ajaxData.append('nonce', window.moneybagMerchantAjax.nonce);
-                ajaxData.append('merchant_data', JSON.stringify(submitData));
-
-                const response = await fetch(window.moneybagMerchantAjax.ajaxurl, {
-                    method: 'POST',
-                    body: ajaxData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const result = await response.json();
+                // Use global API system for merchant registration
+                const result = await apiCall('submit_merchant_registration', submitData);
                 
                 // Debug: Log API response
                 console.log('API Response:', result);
                 
                 setLoading(false);
                 
-                if (result.success) {
+                // Global API system returns data directly on success
+                if (result) {
                     setIsSubmitted(true);
                     if (config.redirect_url) {
                         setTimeout(() => {
@@ -460,18 +505,7 @@
                         }, 3000);
                     }
                 } else {
-                    // Better error handling for different response formats
-                    let errorMessage = 'Registration failed';
-                    if (typeof result.data === 'string') {
-                        errorMessage = result.data;
-                    } else if (typeof result.data === 'object' && result.data.message) {
-                        errorMessage = result.data.message;
-                    } else if (typeof result.data === 'object' && result.data.error) {
-                        errorMessage = result.data.error;
-                    } else if (result.data) {
-                        errorMessage = JSON.stringify(result.data);
-                    }
-                    throw new Error(errorMessage);
+                    throw new Error('Registration failed - no response data');
                 }
             } catch (error) {
                 setLoading(false);
@@ -493,11 +527,7 @@
                 }
                 
                 console.error('Submission error:', error);
-                
-                setInlineError({ 
-                    message: displayMessage, 
-                    type: 'error' 
-                });
+                alert(displayMessage);
             }
         };
         
@@ -589,11 +619,11 @@
                                         h('p', null, 'If you have any questions, feel free to contact our support team.'),
                                         h('div', { className: 'success-actions' },
                                             h('button', { 
-                                                className: 'btn btn-secondary',
+                                                className: 'secondary-btn',
                                                 onClick: () => window.open('https://moneybag.com.bd/support/#faq', '_blank', 'noopener,noreferrer')
                                             }, 'FAQ'),
                                             h('button', { 
-                                                className: 'btn btn-primary',
+                                                className: 'primary-btn',
                                                 onClick: () => window.location.reload()
                                             }, 'Submit New Application')
                                         )
@@ -625,77 +655,91 @@
             
             return h('div', { className: 'step-content-1' },
                 h('div', { className: 'form-row' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Business Category ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('select', {
-                            className: `form-select ${formData.businessCategory ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.businessCategory ? 'error' : ''} ${formData.businessCategory ? 'valid' : ''}`,
                             value: formData.businessCategory,
-                            onChange: (e) => handleInputChange('businessCategory', e.target.value)
+                            onChange: (e) => handleInputChange('businessCategory', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('businessCategory', e.target.value, 'businessCategory')
                         },
-                            h('option', { value: '', disabled: true, hidden: true }, 'Select Business Category'),
-                            registrationOptions?.businessCategories && 
-                                Object.entries(registrationOptions.businessCategories).map(([name, data]) =>
-                                    h('option', { key: data.value, value: data.value }, name)
+                            !registrationOptions?.businessCategories 
+                                ? h('option', { value: '', disabled: true }, 'Loading business categories...')
+                                : Object.entries(registrationOptions.businessCategories).map(([name, data]) =>
+                                    h('option', { 
+                                        key: data.value, 
+                                        value: data.value
+                                    }, name)
                                 )
-                        )
+                        ),
+                        fieldErrors.businessCategory && h('span', { className: 'error-message' }, fieldErrors.businessCategory)
                     ),
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Legal Identity ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('select', {
-                            className: `form-select ${formData.legalIdentity ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.legalIdentity ? 'error' : ''} ${formData.legalIdentity ? 'valid' : ''}`,
                             value: formData.legalIdentity,
-                            onChange: (e) => handleInputChange('legalIdentity', e.target.value)
+                            onChange: (e) => handleInputChange('legalIdentity', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('legalIdentity', e.target.value, 'legalIdentity')
                         },
                             !formData.businessCategory 
                                 ? h('option', { value: '', disabled: true }, 'Please select Business Category first')
-                                : [
-                                    h('option', { value: '', disabled: true, hidden: true }, 'Select Legal Identity'),
-                                    ...availableLegalIdentities.map(([name, data]) =>
-                                        h('option', { key: data.value, value: data.value }, name)
-                                    )
-                                ]
-                        )
+                                : availableLegalIdentities.map(([name, data]) =>
+                                    h('option', { 
+                                        key: data.value, 
+                                        value: data.value
+                                    }, name)
+                                )
+                        ),
+                        fieldErrors.legalIdentity && h('span', { className: 'error-message' }, fieldErrors.legalIdentity)
                     )
                 ),
                 h('div', { className: 'form-row' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Monthly Transaction Volume ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('select', {
-                            className: `form-select ${formData.monthlyVolume ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.monthlyVolume ? 'error' : ''} ${formData.monthlyVolume ? 'valid' : ''}`,
                             value: formData.monthlyVolume,
-                            onChange: (e) => handleInputChange('monthlyVolume', e.target.value)
+                            onChange: (e) => handleInputChange('monthlyVolume', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('monthlyVolume', e.target.value, 'monthlyVolume')
                         },
-                            h('option', { value: '', disabled: true, hidden: true }, 'Select Monthly Volume'),
-                            registrationOptions?.monthlyVolumes?.map(volume =>
-                                h('option', { key: volume.value, value: volume.value }, volume.label)
-                            )
-                        )
+                            !registrationOptions?.monthlyVolumes 
+                                ? h('option', { value: '', disabled: true }, 'Loading volume options...')
+                                : registrationOptions.monthlyVolumes.map((volume) =>
+                                    h('option', { 
+                                        key: volume.value, 
+                                        value: volume.value
+                                    }, volume.label)
+                                )
+                        ),
+                        fieldErrors.monthlyVolume && h('span', { className: 'error-message' }, fieldErrors.monthlyVolume)
                     ),
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' }, 'Maximum Amount in a Single Transaction'),
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' }, 'Maximum Amount in a Single Transaction'),
                         h('input', {
                             type: 'number',
-                            className: 'form-input',
+                            className: `input-field ${fieldErrors.maxAmount ? 'error' : ''}`,
                             value: formData.maxAmount,
                             onChange: (e) => handleInputChange('maxAmount', e.target.value),
                             placeholder: 'Enter amount',
                             min: '0',
                             step: 'any'
-                        })
+                        }),
+                        fieldErrors.maxAmount && h('span', { className: 'error-message' }, fieldErrors.maxAmount)
                     )
                 ),
                 h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Type of Service Needed ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
@@ -706,6 +750,7 @@
                                     className: 'select-all-checkbox',
                                     id: 'select-all-services',
                                     checked: formData.serviceTypes.length === allServiceValues.length,
+                                    'data-checked': formData.serviceTypes.length === allServiceValues.length ? 'true' : 'false',
                                     onChange: (e) => handleSelectAllServices(e.target.checked)
                                 }),
                                 h('label', { 
@@ -720,6 +765,7 @@
                                         className: 'service-checkbox',
                                         id: `service-${serviceValue}`,
                                         checked: formData.serviceTypes.includes(serviceValue),
+                                        'data-checked': formData.serviceTypes.includes(serviceValue) ? 'true' : 'false',
                                         onChange: () => handleServiceToggle(serviceValue)
                                     }),
                                     h('label', {
@@ -728,7 +774,8 @@
                                     }, serviceMap[serviceValue])
                                 )
                             )
-                        )
+                        ),
+                        fieldErrors.serviceTypes && h('span', { className: 'error-message' }, fieldErrors.serviceTypes)
                     )
                 )
             );
@@ -738,49 +785,55 @@
         const renderStep2 = () => {
             return h('div', { className: 'step-content-2' },
                 h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Merchant Registered Name ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'text',
-                            className: `form-input ${formData.merchantName.trim() ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.merchantName ? 'error' : ''} ${formData.merchantName.trim() ? 'valid' : ''}`,
                             value: formData.merchantName,
                             onChange: (e) => handleInputChange('merchantName', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('businessName', e.target.value, 'merchantName'),
                             placeholder: 'Enter registered business name'
-                        })
+                        }),
+                        fieldErrors.merchantName && h('span', { className: 'error-message' }, fieldErrors.merchantName)
                     )
                 ),
                 h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Trading Name (Name on the Shop) ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'text',
-                            className: `form-input ${formData.tradingName.trim() ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.tradingName ? 'error' : ''} ${formData.tradingName.trim() ? 'valid' : ''}`,
                             value: formData.tradingName,
                             onChange: (e) => handleInputChange('tradingName', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('businessName', e.target.value, 'tradingName'),
                             placeholder: 'Enter trading/shop name'
-                        })
+                        }),
+                        fieldErrors.tradingName && h('span', { className: 'error-message' }, fieldErrors.tradingName)
                     )
                 ),
                 h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Domain Name ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'url',
-                            className: `form-input ${formData.domainName.trim() && /^https?:\/\/.+/i.test(formData.domainName.trim()) ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.domainName ? 'error' : ''} ${formData.domainName.trim() && /^https?:\/\/.+/i.test(formData.domainName.trim()) ? 'valid' : ''}`,
                             value: formData.domainName,
                             onChange: (e) => handleInputChange('domainName', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('url', e.target.value, 'domainName'),
                             placeholder: 'https://www.example.com',
                             pattern: 'https?://.+'
                         }),
+                        fieldErrors.domainName && h('span', { className: 'error-message' }, fieldErrors.domainName),
                         h('small', { className: 'form-hint' }, 'Enter your website URL starting with http:// or https://')
                     )
                 )
@@ -791,72 +844,82 @@
         const renderStep3 = () => {
             return h('div', { className: 'step-content-3' },
                 h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Contact Name ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'text',
-                            className: `form-input ${formData.contactName.trim() ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.contactName ? 'error' : ''} ${formData.contactName.trim() ? 'valid' : ''}`,
                             value: formData.contactName,
                             onChange: (e) => handleInputChange('contactName', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('name', e.target.value, 'contactName'),
                             placeholder: 'Full name'
-                        })
+                        }),
+                        fieldErrors.contactName && h('span', { className: 'error-message' }, fieldErrors.contactName)
                     )
                 ),
                 h('div', { className: 'form-row' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Designation ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'text',
-                            className: `form-input ${formData.designation.trim() ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.designation ? 'error' : ''} ${formData.designation.trim() ? 'valid' : ''}`,
                             value: formData.designation,
                             onChange: (e) => handleInputChange('designation', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('designation', e.target.value, 'designation'),
                             placeholder: 'Job title/position'
-                        })
+                        }),
+                        fieldErrors.designation && h('span', { className: 'error-message' }, fieldErrors.designation)
                     ),
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Email ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'email',
-                            className: `form-input ${formData.email.trim() ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.email ? 'error' : ''} ${formData.email.trim() ? 'valid' : ''}`,
                             value: formData.email,
                             onChange: (e) => handleInputChange('email', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('email', e.target.value, 'email'),
                             placeholder: 'email@example.com'
-                        })
+                        }),
+                        fieldErrors.email && h('span', { className: 'error-message' }, fieldErrors.email)
                     )
                 ),
                 h('div', { className: 'form-row' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             'Mobile Number ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'text',
-                            className: `form-input ${formData.mobile.trim() ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.mobile ? 'error' : ''} ${formData.mobile.trim() ? 'valid' : ''}`,
                             value: formData.mobile,
                             onChange: (e) => handleInputChange('mobile', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('mobile', e.target.value, 'mobile'),
                             placeholder: '01XXXXXXXXX'
                         }),
+                        fieldErrors.mobile && h('span', { className: 'error-message' }, fieldErrors.mobile),
                         h('small', { className: 'form-hint' }, 'Bangladesh mobile number starting with 01 (11 digits total)')
                     ),
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' }, 'Phone Number (Optional)'),
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' }, 'Phone Number (Optional)'),
                         h('input', {
                             type: 'text',
-                            className: 'form-input',
+                            className: `input-field ${fieldErrors.phone ? 'error' : ''}`,
                             value: formData.phone,
                             onChange: (e) => handleInputChange('phone', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('phone', e.target.value, 'phone'),
                             placeholder: 'Office/landline number'
-                        })
+                        }),
+                        fieldErrors.phone && h('span', { className: 'error-message' }, fieldErrors.phone)
                     )
                 )
             );
@@ -866,8 +929,8 @@
         const renderStep4 = () => {
             const renderFileUpload = (field, label, required = false) => {
                 return h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'form-group' },
-                        h('label', { className: 'form-label' },
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
                             label,
                             ' ',
                             required 
@@ -1029,7 +1092,7 @@
         };
         
         // Main render
-        return h('div', { className: 'merchant-form-container' },
+        return h('div', { className: 'merchant-form-container moneybag-form' },
             h('div', { className: 'merchant-form-content' },
                 // Main content wrapper for sidebar, form, and instructions
                 h('div', { className: 'merchant-form-layout' },
@@ -1057,39 +1120,33 @@
                         // Content wrapper for form and instructions
                         h('div', { className: 'form-main-content' },
                             h('div', { className: 'form-card' },
-                                inlineError && h('div', { className: `inline-error inline-error-${inlineError.type}` },
-                                    h('div', { className: 'inline-error-content' },
-                                        h('span', { className: 'inline-error-icon' },
-                                            inlineError.type === 'error' ? '⚠' :
-                                            inlineError.type === 'success' ? '✓' : 'ℹ'
-                                        ),
-                                        h('span', { className: 'inline-error-message' }, inlineError.message)
-                                    )
-                                ),
                                 getCurrentStepContent(),
                                 h('div', { className: 'form-navigation' },
                                     h('div', null,
                                         currentStep > 1 
                                             ? h('button', {
-                                                className: 'btn btn-secondary',
+                                                className: 'secondary-btn',
                                                 onClick: handlePrevious
                                             }, 'Previous')
                                             : h('div')
                                     ),
                                     h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
                                         h('button', {
-                                            className: `btn btn-primary btn-next ${loading ? 'loading' : ''}`,
+                                            className: `primary-btn ${loading ? 'loading' : ''}`,
                                             onClick: handleNext,
                                             disabled: loading
                                         }, 
                                             loading 
-                                                ? h('span', { className: 'button-spinner-wrapper' },
-                                                    h('span', { className: 'button-spinner' }),
-                                                    h('span', null, 
-                                                        currentStep === 3 ? 'Submitting...' : 'Processing...'
-                                                    )
-                                                  )
-                                                : (currentStep === 3 ? 'Submit' : 'Save & Next')
+                                                ? h('span', { className: 'btn-content' },
+                                                    h('span', { 
+                                                        className: 'spinner',
+                                                        dangerouslySetInnerHTML: {
+                                                            __html: '<svg class="spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6-8.485"></path></svg>'
+                                                        }
+                                                    }),
+                                                    currentStep === 3 ? 'Submitting...' : 'Processing...'
+                                                )
+                                                : h('span', { className: 'btn-content' }, currentStep === 3 ? 'Submit' : 'Save & Next')
                                         )
                                     )
                                 )

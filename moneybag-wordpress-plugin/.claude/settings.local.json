@@ -10,9 +10,18 @@
       "Bash(curl:*)",
       "Bash(npm install)",
       "Bash(npm run build:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(composer:*)",
+      "Bash(php:*)",
+      "Bash(del \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\assets\\css\\merchant-registration-global.css\")",
+      "Bash(del \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\assets\\css\\merchant-registration.css\")",
+      "Bash(tree:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "C:\\laragon\\www\\Moneybag-Website\\wp-content",
+      "C:\\laragon\\www\\Moneybag-Website"
+    ]
   }
 }

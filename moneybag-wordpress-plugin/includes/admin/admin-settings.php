@@ -385,8 +385,9 @@ class AdminSettings {
     
     public function test_crm_connection() {
         // Verify nonce for security
-        if (!wp_verify_nonce($_POST['nonce'], 'test_crm_nonce')) {
-            wp_die('Security check failed');
+        if (!wp_verify_nonce($_POST['nonce'] ?? '', 'moneybag_admin_nonce')) {
+            wp_send_json_error('Security check failed');
+            return;
         }
         
         $api_key = get_option('moneybag_crm_api_key');
@@ -464,7 +465,7 @@ class AdminSettings {
             
             wp_localize_script('moneybag-admin-crm', 'moneybagAdmin', [
                 'ajaxurl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('test_crm_nonce')
+                'nonce' => wp_create_nonce('moneybag_admin_nonce')
             ]);
         }
     }

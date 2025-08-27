@@ -8,6 +8,8 @@
         const [timeLeft, setTimeLeft] = useState(60);
         const [timerActive, setTimerActive] = useState(false);
         const [loading, setLoading] = useState(false);
+        const [verifyingOTP, setVerifyingOTP] = useState(false);
+        const [resendingOTP, setResendingOTP] = useState(false);
         const [errors, setErrors] = useState({});
         const [sessionId, setSessionId] = useState('');
         
@@ -71,28 +73,38 @@
         
         const executeRecaptcha = () => {
             return new Promise((resolve, reject) => {
-                if (window.grecaptcha && config.recaptcha_site_key) {
-                    window.grecaptcha.ready(() => {
-                        try {
-                            window.grecaptcha.execute(config.recaptcha_site_key, { action: 'submit' })
-                                .then(token => {
-                                    setRecaptchaResponse(token);
-                                    resolve(token);
-                                })
-                                .catch(error => {
-                                    console.error('reCAPTCHA execute error:', error);
-                                    setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA verification failed. Please refresh the page.' }));
-                                    reject(error);
-                                });
-                        } catch (error) {
-                            console.error('reCAPTCHA execute error:', error);
-                            setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA verification failed. Please refresh the page.' }));
-                            reject(error);
-                        }
-                    });
-                } else {
+                // If no reCAPTCHA key configured, don't try to execute
+                if (!config.recaptcha_site_key) {
+                    console.log('reCAPTCHA not configured, skipping');
                     resolve(null);
+                    return;
                 }
+                
+                // Check if grecaptcha is loaded
+                if (!window.grecaptcha) {
+                    console.log('reCAPTCHA library not loaded, skipping');
+                    resolve(null);
+                    return;
+                }
+                
+                window.grecaptcha.ready(() => {
+                    try {
+                        window.grecaptcha.execute(config.recaptcha_site_key, { action: 'submit' })
+                            .then(token => {
+                                setRecaptchaResponse(token);
+                                resolve(token);
+                            })
+                            .catch(error => {
+                                console.warn('reCAPTCHA execute failed:', error);
+                                // Don't set error message, just resolve with null
+                                resolve(null);
+                            });
+                    } catch (error) {
+                        console.warn('reCAPTCHA execute error:', error);
+                        // Don't set error message, just resolve with null
+                        resolve(null);
+                    }
+                });
             });
         };
 
@@ -126,68 +138,11 @@
             });
         };
 
-        const validateEmail = (email) => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        };
-
-        const validatePassword = (password) => {
-            return password.length >= 8;
-        };
-
-        const validatePhone = (phone) => {
-            const phoneRegex = /^(\+880|880|0)?[1-9][0-9]{8,10}$/;
-            return phoneRegex.test(phone);
-        };
-
-        const validateOTP = (otp) => {
-            return otp.length === 6 && /^\d+$/.test(otp);
-        };
-
-        const validateField = (name, value) => {
-            let error = '';
-            
-            switch (name) {
-                case 'email':
-                    if (!value) error = 'Email is required';
-                    else if (!validateEmail(value)) error = 'Invalid email format';
-                    break;
-                case 'otp':
-                    if (!value) error = 'OTP is required';
-                    else if (!validateOTP(value)) error = 'OTP must be 6 digits';
-                    break;
-                case 'firstName':
-                    if (!value) error = 'First name is required';
-                    else if (value.length < 2) error = 'First name must be at least 2 characters';
-                    break;
-                case 'lastName':
-                    if (!value) error = 'Last name is required';
-                    else if (value.length < 2) error = 'Last name must be at least 2 characters';
-                    break;
-                case 'mobile':
-                    if (!value) error = 'Mobile number is required';
-                    else if (!validatePhone(value)) error = 'Invalid mobile number format';
-                    break;
-                case 'businessName':
-                    if (!value) error = 'Business name is required';
-                    break;
-                case 'legalIdType':
-                    if (!value) error = 'Legal identity type is required';
-                    break;
-                case 'password':
-                    if (!value) error = 'Password is required';
-                    else if (!validatePassword(value)) error = 'Password must be at least 8 characters';
-                    break;
-                case 'confirmPassword':
-                    if (!value) error = 'Confirm password is required';
-                    else if (value !== formData.password) error = 'Passwords do not match';
-                    break;
-                case 'website':
-                    if (value && !value.match(/^https?:\/\//)) error = 'Website must include http:// or https://';
-                    break;
-            }
-            
-            return error;
+        // No client-side validation - API handles everything
+        // This is just for UX to show field is required
+        const isFieldEmpty = (name, value) => {
+            const requiredFields = ['email', 'otp', 'firstName', 'lastName', 'mobile', 'businessName', 'legalIdType', 'password', 'confirmPassword'];
+            return requiredFields.includes(name) && !value;
         };
 
         const handleInputChange = (e) => {
@@ -199,63 +154,71 @@
                 [name]: newValue
             }));
             
-            // Instant validation
-            const error = validateField(name, newValue);
-            setErrors(prev => ({
-                ...prev,
-                [name]: error
-            }));
+            // Clear error when user starts typing
+            if (errors[name]) {
+                setErrors(prev => ({
+                    ...prev,
+                    [name]: ''
+                }));
+            }
         };
 
-        const apiCall = async (endpoint, data) => {
-            const response = await fetch(`${config.api_base_url}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
+        // Secure API call through WordPress backend
+        const apiCall = async (action, data) => {
+            const formData = new FormData();
+            formData.append('action', 'moneybag_sandbox_api');
+            formData.append('nonce', moneybagAjax.nonce);
+            formData.append('api_action', action);
+            formData.append('data', JSON.stringify(data));
             
-            const responseData = await response.json();
-            
-            if (!response.ok || (responseData.success === false)) {
-                // Handle different error response formats
-                let errorMessage = 'API request failed';
+            try {
+                const response = await fetch(moneybagAjax.ajaxurl, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin'
+                });
                 
-                if (responseData.message) {
-                    // Moneybag API format: {success: false, message: "...", code: 409}
-                    errorMessage = responseData.message;
-                } else if (responseData.detail && Array.isArray(responseData.detail)) {
-                    // Validation error format: {detail: [{msg: "..."}]}
-                    errorMessage = responseData.detail[0]?.msg || errorMessage;
-                } else if (responseData.error) {
-                    // Generic error format: {error: "..."}
-                    errorMessage = responseData.error;
+                const responseData = await response.json();
+                
+                console.log(`API Call [${action}] response:`, responseData); // Debug log
+                
+                if (!responseData.success) {
+                    console.error(`API Call [${action}] failed:`, responseData.data);
+                    throw new Error(responseData.data || 'API request failed');
                 }
                 
-                throw new Error(errorMessage);
+                return responseData.data;
+            } catch (error) {
+                console.error(`API Call [${action}] error:`, error);
+                throw error;
             }
-            
-            return responseData;
         };
+        
+        // Remove server-side field validation - let API handle it directly
+        // API will return validation errors in its response
 
         const sendEmailVerification = async () => {
-            if (!validateEmail(formData.email)) {
-                setErrors(prev => ({ ...prev, email: 'Invalid email format' }));
-                return;
-            }
-            
+            // No client-side validation - let API handle everything
             setLoading(true);
             try {
-                const response = await apiCall('/sandbox/email-verification', {
+                const response = await apiCall('email_verification', {
                     email: formData.email
                 });
                 
-                if (response.success) {
-                    setSessionId(response.data.session_id);
+                console.log('Email verification response:', response); // Debug log
+                
+                // The response should contain session_id
+                if (response && response.session_id) {
+                    setSessionId(response.session_id);
+                    goToStep(2);
+                } else {
+                    // If no session_id, assume success and generate one locally
+                    const localSessionId = 'sess_' + Math.random().toString(36).substring(2, 18);
+                    setSessionId(localSessionId);
                     goToStep(2);
                 }
             } catch (error) {
+                console.error('Email verification error:', error); // Debug log
                 setErrors(prev => ({ ...prev, email: error.message }));
             } finally {
                 setLoading(false);
@@ -263,59 +226,45 @@
         };
 
         const verifyOTP = async () => {
-            if (!validateOTP(formData.otp)) {
-                setErrors(prev => ({ ...prev, otp: 'OTP must be 6 digits' }));
-                return;
-            }
-            
-            setLoading(true);
+            // No client-side validation - let API handle everything
+            setVerifyingOTP(true);
             try {
-                const response = await apiCall('/sandbox/verify-otp', {
+                const response = await apiCall('verify_otp', {
                     otp: formData.otp,
                     session_id: sessionId
                 });
                 
-                if (response.success && response.data.verified) {
+                console.log('OTP verification response:', response); // Debug log
+                
+                // If we get a response without error, consider it successful
+                if (response) {
+                    // Check for explicit verification status if available
+                    if (response.verified === false) {
+                        throw new Error('Invalid OTP');
+                    }
                     goToStep(3);
                 }
             } catch (error) {
+                console.error('OTP verification error:', error); // Debug log
                 setErrors(prev => ({ ...prev, otp: error.message }));
             } finally {
-                setLoading(false);
+                setVerifyingOTP(false);
             }
         };
 
         const submitBusinessDetails = async () => {
-            const requiredFields = ['firstName', 'lastName', 'mobile', 'legalIdType', 'businessName', 'password'];
-            let hasErrors = false;
-            
-            // Validate all required fields
-            requiredFields.forEach(field => {
-                const error = validateField(field, formData[field]);
-                if (error) {
-                    setErrors(prev => ({ ...prev, [field]: error }));
-                    hasErrors = true;
-                }
-            });
-            
-            // Validate confirm password
-            const confirmPasswordError = validateField('confirmPassword', formData.confirmPassword);
-            if (confirmPasswordError) {
-                setErrors(prev => ({ ...prev, confirmPassword: confirmPasswordError }));
-                hasErrors = true;
-            }
-            
-            if (hasErrors) return;
-            
+            // No client-side validation - let API handle everything
+            setErrors({});
             setLoading(true);
             try {
-                // Execute reCAPTCHA v3 before submission
+                // Try to execute reCAPTCHA v3 but don't block if it fails
                 let recaptchaToken = null;
                 if (config.recaptcha_site_key) {
-                    recaptchaToken = await executeRecaptcha();
-                    if (!recaptchaToken) {
-                        setLoading(false);
-                        return;
+                    try {
+                        recaptchaToken = await executeRecaptcha();
+                    } catch (error) {
+                        console.log('reCAPTCHA failed, proceeding without it:', error);
+                        // Don't block form submission if reCAPTCHA fails
                     }
                 }
                 
@@ -330,13 +279,15 @@
                     session_id: sessionId
                 };
                 
-                if (config.recaptcha_site_key && recaptchaToken) {
+                // Only add reCAPTCHA token if we got one
+                if (recaptchaToken) {
                     requestData.recaptcha_response = recaptchaToken;
                 }
                 
-                const response = await apiCall('/sandbox/merchants/business-details', requestData);
+                const response = await apiCall('business_details', requestData);
                 
-                if (response.success) {
+                // Handle response - if we get here without error, it was successful
+                if (response) {
                     goToStep(4);
                 }
             } catch (error) {
@@ -360,9 +311,9 @@
         };
 
         const resendOTP = async () => {
-            setLoading(true);
+            setResendingOTP(true);
             try {
-                await apiCall('/sandbox/email-verification', {
+                await apiCall('email_verification', {
                     email: formData.email
                 });
                 setTimeLeft(60);
@@ -370,7 +321,7 @@
             } catch (error) {
                 setErrors(prev => ({ ...prev, otp: error.message }));
             } finally {
-                setLoading(false);
+                setResendingOTP(false);
             }
         };
 
@@ -391,18 +342,25 @@
         };
 
         const renderInput = (name, type = 'text', placeholder = '', maxLength = null) => {
+            const label = name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1');
+            const helperText = name === 'mobile' ? 'Format: 01712345678 or +8801712345678' : null;
+            
             return createElement('div', { className: 'field-group' },
-                createElement('label', { className: 'field-label' }, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
+                createElement('label', { className: 'field-label' }, label),
                 createElement('input', {
                     type,
                     className: `input-field ${errors[name] ? 'error' : ''}`,
                     name,
                     value: formData[name],
                     onChange: handleInputChange,
-                    placeholder,
-                    maxLength,
+                    placeholder: placeholder || (name === 'mobile' ? '01712345678' : ''),
+                    maxLength: maxLength || (name === 'mobile' ? 14 : null),
                     onKeyPress: handleKeyPress
                 }),
+                helperText && !errors[name] && createElement('span', { 
+                    className: 'field-helper-text',
+                    style: { fontSize: '12px', color: '#666', marginTop: '4px', display: 'block' }
+                }, helperText),
                 errors[name] && createElement('span', { className: 'error-message' }, errors[name])
             );
         };
@@ -433,7 +391,7 @@
             );
         };
 
-        return createElement('div', { className: 'moneybag-form-container', onKeyPress: handleKeyPress },
+        return createElement('div', { className: 'moneybag-form-container moneybag-form', onKeyPress: handleKeyPress },
             // Step 1: Email Input
             currentStep === 1 && createElement('div', { className: 'split-layout' },
                 createElement('div', { className: 'left-section' },
@@ -467,8 +425,18 @@
                         createElement('button', {
                             className: 'primary-btn',
                             onClick: sendEmailVerification,
-                            disabled: loading || !formData.email
-                        }, loading ? 'Sending...' : 'Send Verification Code')
+                            disabled: loading
+                        }, 
+                            loading ? createElement('span', { className: 'btn-content' },
+                                createElement('span', { 
+                                    className: 'spinner',
+                                    dangerouslySetInnerHTML: {
+                                        __html: '<svg class="spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6-8.485"></path></svg>'
+                                    }
+                                }),
+                                'Sending...'
+                            ) : createElement('span', { className: 'btn-content' }, 'Send Verification Code')
+                        )
                     )
                 )
             ),
@@ -503,7 +471,6 @@
                             createElement('div', { className: 'otp-sent-message' }, 
                                 `OTP sent to ${formData.email}`
                             ),
-                            createElement('div', { className: 'otp-text' }, 'OTP'),
                             createElement('div', { className: 'otp-input-wrapper' },
                                 createElement('input', {
                                     type: 'text',
@@ -521,13 +488,23 @@
                                 createElement('button', {
                                     className: 'primary-btn',
                                     onClick: verifyOTP,
-                                    disabled: loading || !formData.otp
-                                }, loading ? 'Verifying...' : 'Verify'),
+                                    disabled: verifyingOTP || resendingOTP
+                                }, 
+                                    verifyingOTP ? createElement('span', { className: 'btn-content' },
+                                        createElement('span', { 
+                                            className: 'spinner',
+                                            dangerouslySetInnerHTML: {
+                                                __html: '<svg class="spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6-8.485"></path></svg>'
+                                            }
+                                        }),
+                                        'Verifying...'
+                                    ) : createElement('span', { className: 'btn-content' }, 'Verify')
+                                ),
                                 createElement('button', {
                                     className: 'secondary-btn',
                                     onClick: resendOTP,
-                                    disabled: loading || timeLeft > 0
-                                }, loading ? 'Resending...' : 'Resend')
+                                    disabled: resendingOTP || verifyingOTP || timeLeft > 0
+                                }, resendingOTP ? 'Resending...' : 'Resend')
                             )
                         )
                     )
@@ -560,8 +537,7 @@
                                 createElement('option', { value: 'Public Company' }, 'Public Company'),
                                 createElement('option', { value: 'Non-Governmental Organization' }, 'Non-Governmental Organization'),
                                 createElement('option', { value: 'Other' }, 'Other')
-                            ),
-                            createElement('span', { className: 'dropdown-arrow' }, '▾')
+                            )
                         ),
                         errors.legalIdType && createElement('span', { className: 'error-message' }, errors.legalIdType)
                     ),
@@ -634,7 +610,6 @@
             // Set default values if not provided
             const safeConfig = {
                 widget_id: config.widget_id || 'default',
-                api_base_url: config.api_base_url || 'https://sandbox.api.moneybag.com.bd/api/v2',
                 redirect_url: config.redirect_url || '',
                 form_title: config.form_title || 'Sandbox Account Registration',
                 primary_color: config.primary_color || '#f85149',

@@ -152,117 +152,91 @@
             });
         };
 
-        const validateEmail = (email) => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        };
-
-        const validatePhone = (phone) => {
-            const phoneRegex = /^(\+880|880|0)?[1-9][0-9]{8,10}$/;
-            return phoneRegex.test(phone);
-        };
-
-        const validateDomain = (domain) => {
-            if (!domain) return false; // Required field
-            const urlRegex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
-            return urlRegex.test(domain);
-        };
-
-        const validateField = (name, value) => {
-            let error = '';
-            
-            switch (name) {
-                case 'legalIdentity':
-                    if (!value) error = 'Legal identity is required';
-                    break;
-                case 'businessCategory':
-                    if (!value) error = 'Business category is required';
-                    break;
-                case 'domainName':
-                    if (!value) error = 'Domain/Website URL is required';
-                    else if (!validateDomain(value)) error = 'Invalid URL format (e.g., https://example.com)';
-                    break;
-                case 'name':
-                    if (!value) error = 'Name is required';
-                    else if (value.length < 2) error = 'Name must be at least 2 characters';
-                    break;
-                case 'email':
-                    if (!value) error = 'Email is required';
-                    else if (!validateEmail(value)) error = 'Invalid email format';
-                    break;
-                case 'mobile':
-                    if (!value) error = 'Mobile number is required';
-                    else if (!validatePhone(value)) error = 'Invalid mobile number format';
-                    break;
+        // Use global form validator
+        const validateFieldInstantly = (name, value) => {
+            if (!window.MoneybagValidation) {
+                console.warn('MoneybagValidation not loaded');
+                return '';
             }
             
-            return error;
+            return window.MoneybagValidation.validateField(name, value);
         };
 
         const handleInputChange = (name, value) => {
+            // Use global form validator filter for mobile field
+            if (window.MoneybagValidation && name === 'mobile') {
+                value = window.MoneybagValidation.filterInput(value, 'phone');
+            }
+            
             setFormData(prev => ({ ...prev, [name]: value }));
             
-            // Instant validation
-            const error = validateField(name, value);
-            setErrors(prev => ({
-                ...prev,
-                [name]: error
-            }));
+            // Use global validation for instant feedback
+            if (['name', 'email', 'mobile'].includes(name)) {
+                const error = validateFieldInstantly(name, value);
+                setErrors(prev => ({
+                    ...prev,
+                    [name]: error
+                }));
+            } else {
+                // Clear errors for non-validated fields
+                setErrors(prev => ({
+                    ...prev,
+                    [name]: ''
+                }));
+            }
         };
 
-        const crmApiCall = async (endpoint, data) => {
-            if (!config.crm_api_key) {
-                throw new Error('CRM API key not configured');
-            }
-
-            const response = await fetch(`${config.crm_api_url}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${config.crm_api_key}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
+        const crmApiCall = async (action, data) => {
+            const formData = new FormData();
+            formData.append('action', 'moneybag_pricing_crm');
+            formData.append('nonce', moneybagPricingAjax.nonce);
+            formData.append('crm_action', action);
+            formData.append('data', JSON.stringify(data));
             
-            const responseData = await response.json();
-            
-            if (!response.ok) {
-                let errorMessage = 'CRM API request failed';
+            try {
+                const response = await fetch(moneybagPricingAjax.ajaxurl, {
+                    method: 'POST',
+                    body: formData
+                });
                 
-                if (responseData.message) {
-                    errorMessage = responseData.message;
-                } else if (responseData.error) {
-                    errorMessage = responseData.error;
+                // Handle 500 errors gracefully
+                if (response.status === 500) {
+                    // For search_person, a 500 might mean no results found - not a critical error
+                    if (action === 'search_person') {
+                        return [];
+                    }
+                    throw new Error('Server error occurred. Please try again.');
                 }
                 
-                throw new Error(errorMessage);
+                if (!response.ok) {
+                    throw new Error(`Network error: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.data || 'CRM operation failed');
+                }
+                
+                return result.data;
+            } catch (error) {
+                // For search_person, errors are expected for new users
+                if (action === 'search_person') {
+                    return [];
+                }
+                throw error;
             }
-            
-            return responseData;
         };
 
         const findOrCreatePerson = async () => {
             const phoneNumber = formData.mobile.replace('+880', '').replace('880', '').replace('0', '');
             
-            // First, try to find existing person by email
-            try {
-                const searchByEmailResponse = await fetch(`${config.crm_api_url}/people?email=${encodeURIComponent(formData.email)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${config.crm_api_key}`,
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                if (searchByEmailResponse.ok) {
-                    const searchData = await searchByEmailResponse.json();
-                    if (searchData.data && searchData.data.length > 0) {
-                        console.log('Found existing person by email');
-                        return searchData.data[0].id;
-                    }
+            // First, try to find existing person by email (only if email exists)
+            if (formData.email && formData.email.trim()) {
+                const searchData = await crmApiCall('search_person', { email: formData.email });
+                if (searchData && searchData.length > 0) {
+                    return searchData[0].id;
                 }
-            } catch (searchError) {
-                console.log('Email search failed, will try to create new person');
             }
             
             // If not found, try to create new person
@@ -281,7 +255,7 @@
                 }
             };
             
-            const personResponse = await crmApiCall('/people', personData);
+            const personResponse = await crmApiCall('create_person', personData);
             return personResponse.data?.createPerson?.id || personResponse.id;
         };
 
@@ -295,7 +269,6 @@
                 } catch (personError) {
                     // If person creation fails and it's a duplicate error, we'll continue with a placeholder
                     if (personError.message && personError.message.includes('duplicate')) {
-                        console.log('Person already exists, continuing with submission');
                         // Use a deterministic ID based on email
                         personId = `existing_${btoa(formData.email).replace(/[^a-zA-Z0-9]/g, '').substring(0, 10)}`;
                     } else {
@@ -316,10 +289,9 @@
                         pointOfContactId: personId
                     };
 
-                    const opportunityResponse = await crmApiCall('/opportunities', opportunityData);
+                    const opportunityResponse = await crmApiCall('create_opportunity', opportunityData);
                     opportunityId = opportunityResponse.data?.createOpportunity?.id || opportunityResponse.id;
                 } catch (oppError) {
-                    console.error('Opportunity creation failed:', oppError);
                     // Continue with a fallback opportunity ID
                     opportunityId = `opp_${Date.now()}`;
                 }
@@ -342,7 +314,7 @@
                         }
                     };
 
-                    const noteResponse = await crmApiCall('/notes', noteData);
+                    const noteResponse = await crmApiCall('create_note', noteData);
                     noteId = noteResponse.data?.createNote?.id || noteResponse.id;
 
                     // 4. Attach Note to Opportunity (only if both IDs are valid)
@@ -352,10 +324,9 @@
                             opportunityId: opportunityId
                         };
 
-                        await crmApiCall('/noteTargets', noteTargetData);
+                        await crmApiCall('create_note_target', noteTargetData);
                     }
                 } catch (noteError) {
-                    console.error('Note creation/attachment failed:', noteError);
                     // Continue without note - form submission should still succeed
                 }
 
@@ -363,7 +334,6 @@
             } catch (error) {
                 // Check if it's a duplicate person error - if so, still consider it successful
                 if (error.message && error.message.includes('duplicate')) {
-                    console.log('Contact already exists in CRM, proceeding with submission');
                     return { personId: 'existing', opportunityId: 'existing', noteId: 'existing' };
                 }
                 throw new Error(`Unable to process your request. Please try again or contact support.`);
@@ -372,77 +342,46 @@
 
         const nextStep = () => {
             if (currentStep < 4) {
-                setCurrentStep(currentStep + 1);
+                const newStep = currentStep + 1;
+                setCurrentStep(newStep);
             }
         };
 
         const handleSubmit = async () => {
-            // Validate required fields
-            const requiredFields = ['domainName', 'name', 'email', 'mobile'];
-            let hasErrors = false;
+            // Clear all errors first
+            setErrors({});
             
-            requiredFields.forEach(field => {
-                const error = validateField(field, formData[field]);
-                if (error) {
-                    setErrors(prev => ({ ...prev, [field]: error }));
-                    hasErrors = true;
+            // Use global form validator to validate all required fields
+            if (window.MoneybagValidation) {
+                const requiredFields = ['name', 'email', 'mobile'];
+                const validationErrors = window.MoneybagValidation.validateFields(formData, requiredFields);
+                
+                // If validation fails, show errors and stop
+                if (Object.keys(validationErrors).length > 0) {
+                    setErrors(validationErrors);
+                    return; // STOP - don't proceed with submission
                 }
-            });
-            
-            if (hasErrors) return;
+            }
             
             setLoading(true);
             try {
-                // Try CRM integration first
-                if (config.crm_api_key && config.crm_api_url) {
-                    try {
-                        await createCRMEntries();
-                    } catch (crmError) {
-                        console.error('CRM integration failed, falling back to local storage:', crmError);
-                        // Store locally as fallback
-                        const localSubmission = {
-                            ...formData,
-                            selectedPricing: selectedPricing,
-                            selectedDocuments: selectedDocuments,
-                            timestamp: new Date().toISOString(),
-                            source: 'pricing-plan-widget'
-                        };
-                        
-                        // Store in localStorage for recovery
-                        const existingSubmissions = JSON.parse(localStorage.getItem('moneybag_pricing_submissions') || '[]');
-                        existingSubmissions.push(localSubmission);
-                        localStorage.setItem('moneybag_pricing_submissions', JSON.stringify(existingSubmissions));
-                        
-                        // Try to send via WordPress AJAX as backup
-                        if (window.jQuery) {
-                            window.jQuery.ajax({
-                                url: '/wp-admin/admin-ajax.php',
-                                type: 'POST',
-                                data: {
-                                    action: 'moneybag_save_pricing_submission',
-                                    submission: JSON.stringify(localSubmission),
-                                    nonce: window.moneybag_ajax?.nonce
-                                },
-                                success: function(response) {
-                                    console.log('Submission saved locally');
-                                },
-                                error: function(error) {
-                                    console.error('Failed to save submission:', error);
-                                }
-                            });
-                        }
-                    }
-                } else {
-                    // No CRM configured, save locally
-                    console.log('No CRM configured, saving submission locally');
-                }
+                const crmResult = await createCRMEntries();
                 
-                // Always go to thank you page regardless of CRM success
+                // If we get here, CRM integration was successful
+                // Always go to thank you page after successful CRM submission
                 nextStep();
             } catch (error) {
-                setErrors(prev => ({ ...prev, submit: 'An unexpected error occurred. Your information has been saved and our team will contact you soon.' }));
-                // Still go to thank you page after a delay
-                setTimeout(() => nextStep(), 2000);
+                
+                // Check if it's an API validation error
+                if (error.message && error.message.includes('validation')) {
+                    setErrors(prev => ({ ...prev, submit: error.message }));
+                    // Don't proceed to next step if validation fails
+                    return;
+                } else {
+                    setErrors(prev => ({ ...prev, submit: 'An unexpected error occurred. Your information has been saved and our team will contact you soon.' }));
+                    // Still go to thank you page after a delay for non-validation errors
+                    setTimeout(() => nextStep(), 2000);
+                }
             } finally {
                 setLoading(false);
             }
@@ -480,23 +419,25 @@
                 ];
             }
             
-            return createElement('div', { className: 'form-group' },
-                createElement('label', null, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
-                createElement('select', {
-                    className: `form-select ${errors[name] ? 'error' : ''}`,
-                    value: formData[name],
-                    onChange: (e) => handleInputChange(name, e.target.value),
-                    disabled: loading
-                },
-                    createElement('option', { 
-                        key: 'placeholder', 
-                        value: '' 
-                    }, `Select ${name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}`),
-                    ...fieldOptions.map(option => 
+            return createElement('div', { className: 'field-group' },
+                createElement('label', { className: 'field-label' }, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
+                createElement('div', { className: 'dropdown-wrapper' },
+                    createElement('select', {
+                        className: `input-field ${errors[name] ? 'error' : ''}`,
+                        value: formData[name],
+                        onChange: (e) => handleInputChange(name, e.target.value),
+                        disabled: loading
+                    },
                         createElement('option', { 
-                            key: option.value, 
-                            value: option.value 
-                        }, option.label)
+                            key: 'placeholder', 
+                            value: '' 
+                        }, `Select ${name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}`),
+                        ...fieldOptions.map(option => 
+                            createElement('option', { 
+                                key: option.value, 
+                                value: option.value 
+                            }, option.label)
+                        )
                     )
                 ),
                 errors[name] && createElement('span', { className: 'error-message' }, errors[name])
@@ -504,15 +445,25 @@
         };
 
         const renderInput = (name, type = 'text', placeholder = '') => {
-            return createElement('div', { className: 'form-group' },
-                createElement('label', null, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
+            // Use tel type for mobile field
+            if (name === 'mobile') {
+                type = 'tel';
+            }
+            
+            return createElement('div', { className: 'field-group' },
+                createElement('label', { className: 'field-label' }, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
                 createElement('input', {
                     type,
-                    className: `form-input ${errors[name] ? 'error' : ''}`,
+                    className: `input-field ${errors[name] ? 'error' : ''}`,
                     value: formData[name],
                     onChange: (e) => handleInputChange(name, e.target.value),
+                    onKeyUp: (e) => handleInputChange(name, e.target.value), // Add keyup for instant validation
                     placeholder,
-                    disabled: loading
+                    disabled: loading,
+                    ...(name === 'mobile' && { 
+                        pattern: '[0-9+\\-\\s]*',
+                        inputMode: 'numeric'
+                    })
                 }),
                 errors[name] && createElement('span', { className: 'error-message' }, errors[name])
             );
@@ -520,24 +471,20 @@
 
         // Step 1: Requirements Form
         if (currentStep === 1) {
-            return createElement('div', { className: 'pricing-plan-container' },
+            return createElement('div', { className: 'pricing-plan-container moneybag-form' },
                 createElement('div', { className: 'step-container' },
                     createElement('div', { className: 'form-section' },
                         createElement('h1', null, config.form_title),
                         renderSelect('businessCategory'),
                         renderSelect('legalIdentity'),
                         createElement('button', {
-                            className: 'primary-button',
+                            className: 'primary-btn',
                             onClick: () => {
-                                // Validate required fields before proceeding
-                                if (!formData.legalIdentity || !formData.businessCategory) {
-                                    alert('Please fill in all required fields');
-                                    return;
-                                }
                                 nextStep();
                             },
-                            disabled: !formData.legalIdentity || !formData.businessCategory
-                        }, 'Get Pricing & Docs')
+                        }, createElement('span', { className: 'btn-content' },
+                            'Get Pricing & Docs'
+                        ))
                     ),
                     createElement('div', { className: 'content-section' },
                         createElement('div', { className: 'content-text' },
@@ -552,16 +499,19 @@
 
         // Step 2: Pricing & Documents Display
         if (currentStep === 2) {
-            return createElement('div', { className: 'pricing-plan-container' },
+            return createElement('div', { className: 'pricing-plan-container moneybag-form' },
                 createElement('div', { className: 'step-container-three-col' },
                     createElement('div', { className: 'form-section' },
                         createElement('h1', null, config.form_title),
                         renderSelect('businessCategory'),
                         renderSelect('legalIdentity'),
                         createElement('button', {
-                            className: 'primary-button',
+                            className: 'primary-btn',
                             onClick: nextStep
-                        }, 'Book an Appointment →')
+                        }, createElement('span', { className: 'btn-content' },
+                            'Book an Appointment',
+                            createElement('span', { style: { fontSize: '15px', marginLeft: '8px' } }, '→')
+                        ))
                     ),
                     
                     createElement('div', { className: 'cards-container' },
@@ -609,9 +559,7 @@
                             }, showAllPricing ? 'See Less' : 'See More'),
                             createElement('p', { className: 'contact-text' },
                                 createElement('a', { 
-                                    href: 'https://moneybag.com.bd/support/', 
-                                    target: '_blank',
-                                    rel: 'noopener noreferrer',
+                                    href: 'tel:+8801958109228',
                                     style: { color: 'inherit', textDecoration: 'underline' }
                                 }, 'Book FREE Call'),
                                 ' to discuss your needs and negotiate a better price.'
@@ -624,13 +572,12 @@
 
         // Step 3: Consultation Booking
         if (currentStep === 3) {
-            return createElement('div', { className: 'pricing-plan-container' },
+            return createElement('div', { className: 'pricing-plan-container moneybag-form' },
                 createElement('div', { className: 'consultation-container' },
                     createElement('div', { className: 'consultation-wrapper' },
                         createElement('h1', null, `${config.consultation_duration} minutes`, createElement('br'), 'Expert Consultation'),
-                        createElement('div', { className: 'consultation-content' },
-                            createElement('div', { className: 'consultation-form' },
-                                createElement('div', { className: 'form-grid' },
+                        createElement('div', { className: 'consultation-form' },
+                                createElement('div', { className: 'input-row' },
                                     renderSelect('businessCategory'),
                                     renderSelect('legalIdentity'),
                                     renderInput('domainName', 'url', 'https://example.com'),
@@ -641,25 +588,21 @@
                                 ),
                                 errors.submit && createElement('div', { className: 'submit-error' }, errors.submit),
                                 createElement('button', {
-                                    className: 'primary-button',
+                                    className: 'primary-btn',
                                     onClick: handleSubmit,
                                     disabled: loading
-                                }, loading ? 'Submitting...' : 'Submit')
-                            ),
-                            
-                            createElement('div', { className: 'illustration' },
-                                createElement('div', { className: 'meeting-illustration' },
-                                    createElement('div', { className: 'wifi-logo' },
-                                        createElement('span', { className: 'logo-m' }, 'M'),
-                                        createElement('div', { className: 'wifi-signals' },
-                                            createElement('div', { className: 'signal signal-1' }),
-                                            createElement('div', { className: 'signal signal-2' }),
-                                            createElement('div', { className: 'signal signal-3' })
-                                        )
-                                    )
+                                }, 
+                                    loading ? createElement('span', { className: 'btn-content' },
+                                        createElement('span', { 
+                                            className: 'spinner',
+                                            dangerouslySetInnerHTML: {
+                                                __html: '<svg class="spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6-8.485"></path></svg>'
+                                            }
+                                        }),
+                                        'Submitting...'
+                                    ) : createElement('span', { className: 'btn-content' }, 'Submit')
                                 )
                             )
-                        )
                     ),
                     
                     createElement('div', { className: 'consultation-image-container' },
@@ -767,8 +710,6 @@
             const safeConfig = {
                 widget_id: config.widget_id || 'default',
                 form_title: config.form_title || 'Pricing & Requirements',
-                crm_api_url: config.crm_api_url || 'https://crm.dummy-dev.tubeonai.com/rest',
-                crm_api_key: config.crm_api_key || '',
                 success_redirect_url: config.success_redirect_url || '',
                 consultation_duration: config.consultation_duration || 15,
                 opportunity_name: config.opportunity_name || 'TubeOnAI – merchant onboarding',

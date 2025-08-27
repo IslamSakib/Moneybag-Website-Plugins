@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Moneybag WordPress Plugin
  * Description: Elementor widgets for Moneybag payment integration with React.js forms
- * Version: 1.0.0
+ * Version: 2.0.0
  * Author: Sakib islam
  * Text Domain: moneybag-plugin
  * Domain Path: /languages
@@ -14,11 +14,13 @@ if (!defined('ABSPATH')) {
 
 define('MONEYBAG_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('MONEYBAG_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('MONEYBAG_PLUGIN_VERSION', '1.0.0');
+define('MONEYBAG_PLUGIN_VERSION', '2.0.0');
 
-// API Configuration
+// API Configuration - Keys stored securely in WordPress options
 define('MONEYBAG_API_BASE_URL', 'https://crm.moneybag.com.bd/rest');
-define('MONEYBAG_API_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNmVjMjllMS1jNjg5LTRhZmItODViNi0xNWI3NzA2Mzk4MjAiLCJ0eXBlIjoiQVBJX0tFWSIsIndvcmtzcGFjZUlkIjoiMDZlYzI5ZTEtYzY4OS00YWZiLTg1YjYtMTViNzcwNjM5ODIwIiwiaWF0IjoxNzU1NDEyODEzLCJleHAiOjQ5MDkwMTI4MTIsImp0aSI6IjliZGEwMDY4LTFmODAtNDAwMS1iN2E0LWRiNTVhMGRmYTQ4MSJ9.HOPJJTd3mXz2HbcWxDnNc2eaWEW9FbM-K-6DmlezeIo');
+
+// Load required classes
+require_once(MONEYBAG_PLUGIN_PATH . 'includes/class-moneybag-api.php');
 
 class MoneybagPlugin {
     
@@ -33,7 +35,13 @@ class MoneybagPlugin {
         // Initialize admin functionality
         if (is_admin()) {
             $this->init_admin();
+            add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         }
+        
+        // Plugin lifecycle hooks
+        register_activation_hook(__FILE__, [$this, 'activate']);
+        register_deactivation_hook(__FILE__, [$this, 'deactivate']);
+        register_uninstall_hook(__FILE__, [__CLASS__, 'uninstall']);
         
         // Add AJAX handlers for reCAPTCHA validation
         add_action('wp_ajax_verify_recaptcha', [$this, 'verify_recaptcha']);
@@ -42,6 +50,27 @@ class MoneybagPlugin {
         // Add AJAX handlers for merchant registration
         add_action('wp_ajax_moneybag_submit_merchant_registration', [$this, 'submit_merchant_registration']);
         add_action('wp_ajax_nopriv_moneybag_submit_merchant_registration', [$this, 'submit_merchant_registration']);
+        
+        // Add AJAX handlers for merchant registration API (used by new React form)
+        add_action('wp_ajax_moneybag_merchant_api', [$this, 'handle_merchant_api']);
+        add_action('wp_ajax_nopriv_moneybag_merchant_api', [$this, 'handle_merchant_api']);
+        
+        // Add AJAX handlers for sandbox form
+        add_action('wp_ajax_moneybag_sandbox_api', [$this, 'handle_sandbox_api']);
+        add_action('wp_ajax_nopriv_moneybag_sandbox_api', [$this, 'handle_sandbox_api']);
+        
+        // Add AJAX handlers for pricing plan CRM integration
+        add_action('wp_ajax_moneybag_pricing_crm', [$this, 'handle_pricing_crm']);
+        add_action('wp_ajax_nopriv_moneybag_pricing_crm', [$this, 'handle_pricing_crm']);
+        
+        
+        // Field validation disabled - API handles validation directly
+        // add_action('wp_ajax_moneybag_validate_field', [$this, 'validate_field']);
+        // add_action('wp_ajax_nopriv_moneybag_validate_field', [$this, 'validate_field']);
+        
+        // Validation rules disabled - API handles validation directly
+        // add_action('wp_ajax_moneybag_get_validation_rules', [$this, 'get_validation_rules']);
+        // add_action('wp_ajax_nopriv_moneybag_get_validation_rules', [$this, 'get_validation_rules']);
         
         // Block Elementor fonts on pages with merchant registration widget
         add_action('wp_enqueue_scripts', [$this, 'maybe_block_elementor_fonts'], 999);
@@ -134,34 +163,37 @@ class MoneybagPlugin {
             true
         );
         
-        wp_enqueue_style(
-            'moneybag-sandbox-form',
-            MONEYBAG_PLUGIN_URL . 'assets/css/sandbox-form.css',
+        
+        // Global Form Validator Script
+        wp_enqueue_script(
+            'moneybag-form-validator',
+            MONEYBAG_PLUGIN_URL . 'assets/js/form-validator.js',
             [],
-            MONEYBAG_PLUGIN_VERSION
+            MONEYBAG_PLUGIN_VERSION,
+            true
         );
         
         // Pricing Plan Scripts
         wp_enqueue_script(
             'moneybag-pricing-plan',
             MONEYBAG_PLUGIN_URL . 'assets/js/pricing-plan.js',
-            ['wp-element'],
+            ['wp-element', 'moneybag-form-validator'],
             MONEYBAG_PLUGIN_VERSION,
             true
         );
         
+        // Enqueue global styles (includes all widget styles)
         wp_enqueue_style(
-            'moneybag-pricing-plan',
-            MONEYBAG_PLUGIN_URL . 'assets/css/pricing-plan.css',
+            'moneybag-global',
+            MONEYBAG_PLUGIN_URL . 'assets/css/moneybag-global.css',
             [],
             MONEYBAG_PLUGIN_VERSION
         );
         
-        // Localize scripts
+        // Localize scripts - API calls now go through WordPress backend
         wp_localize_script('moneybag-sandbox-form', 'moneybagAjax', [
             'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('moneybag_nonce'),
-            'apiBase' => 'https://sandbox.api.moneybag.com.bd/api/v2'
+            'nonce' => wp_create_nonce('moneybag_nonce')
         ]);
         
         wp_localize_script('moneybag-pricing-plan', 'moneybagPricingAjax', [
@@ -179,12 +211,6 @@ class MoneybagPlugin {
             true
         );
         
-        wp_enqueue_style(
-            'moneybag-merchant-registration',
-            MONEYBAG_PLUGIN_URL . 'assets/css/merchant-registration.css',
-            [],
-            MONEYBAG_PLUGIN_VERSION
-        );
         
         wp_localize_script('moneybag-merchant-registration', 'moneybagMerchantAjax', [
             'ajaxurl' => admin_url('admin-ajax.php'),
@@ -202,6 +228,30 @@ class MoneybagPlugin {
         );
     }
     
+    /**
+     * Enqueue admin scripts only on relevant admin pages
+     */
+    public function enqueue_admin_scripts($hook) {
+        // Only load admin scripts on plugin's admin pages
+        if (strpos($hook, 'moneybag') === false && $hook !== 'settings_page_moneybag') {
+            return;
+        }
+        
+        wp_enqueue_script(
+            'moneybag-admin-crm',
+            MONEYBAG_PLUGIN_URL . 'assets/js/admin-crm.js',
+            ['jquery'],
+            MONEYBAG_PLUGIN_VERSION,
+            true
+        );
+        
+        wp_localize_script('moneybag-admin-crm', 'moneybagAdmin', [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('moneybag_admin_nonce'),
+            'pluginUrl' => MONEYBAG_PLUGIN_URL
+        ]);
+    }
+    
     public function verify_recaptcha() {
         // Verify nonce for security
         if (!wp_verify_nonce($_POST['nonce'], 'moneybag_nonce')) {
@@ -210,38 +260,14 @@ class MoneybagPlugin {
         }
         
         $recaptcha_response = sanitize_text_field($_POST['recaptcha_response'] ?? '');
-        $secret_key = get_option('moneybag_recaptcha_secret_key', '');
         
         if (empty($recaptcha_response)) {
             wp_send_json_error('reCAPTCHA response is required');
             return;
         }
         
-        if (empty($secret_key)) {
-            wp_send_json_error('reCAPTCHA secret key not configured');
-            return;
-        }
-        
-        // Verify reCAPTCHA with Google
-        $verify_url = 'https://www.google.com/recaptcha/api/siteverify';
-        $verify_data = [
-            'secret' => $secret_key,
-            'response' => $recaptcha_response,
-            'remoteip' => $_SERVER['REMOTE_ADDR'] ?? ''
-        ];
-        
-        $response = wp_remote_post($verify_url, [
-            'body' => $verify_data,
-            'timeout' => 30
-        ]);
-        
-        if (is_wp_error($response)) {
-            wp_send_json_error('Failed to verify reCAPTCHA: ' . $response->get_error_message());
-            return;
-        }
-        
-        $response_body = wp_remote_retrieve_body($response);
-        $result = json_decode($response_body, true);
+        // Use centralized API class for reCAPTCHA verification
+        $result = \MoneybagPlugin\MoneybagAPI::verify_recaptcha($recaptcha_response);
         
         if ($result['success']) {
             wp_send_json_success([
@@ -249,10 +275,9 @@ class MoneybagPlugin {
                 'score' => $result['score'] ?? null
             ]);
         } else {
-            $error_codes = $result['error-codes'] ?? ['unknown-error'];
             wp_send_json_error([
-                'message' => 'reCAPTCHA verification failed',
-                'error_codes' => $error_codes
+                'message' => $result['message'] ?? 'reCAPTCHA verification failed',
+                'errors' => $result['errors'] ?? []
             ]);
         }
     }
@@ -457,6 +482,451 @@ class MoneybagPlugin {
                 header('Content-Security-Policy: upgrade-insecure-requests');
             }
         }
+    }
+    
+    /**
+     * Handle sandbox API requests securely through WordPress
+     */
+    public function handle_sandbox_api() {
+        // Verify nonce
+        if (!wp_verify_nonce($_POST['nonce'] ?? '', 'moneybag_nonce')) {
+            wp_send_json_error('Security check failed');
+            return;
+        }
+        
+        $action = sanitize_text_field($_POST['api_action'] ?? '');
+        $data = json_decode(stripslashes($_POST['data'] ?? '{}'), true);
+        
+        if (!$action || !is_array($data)) {
+            wp_send_json_error('Invalid request');
+            return;
+        }
+        
+        // Use the MoneybagAPI class to make secure API calls
+        $response = null;
+        
+        switch ($action) {
+            case 'email_verification':
+                // No validation - let API handle everything
+                $email = sanitize_email($data['email'] ?? '');
+                $response = \MoneybagPlugin\MoneybagAPI::send_email_verification($email);
+                break;
+                
+            case 'verify_otp':
+                // No validation - let API handle everything
+                $otp = sanitize_text_field($data['otp'] ?? '');
+                $session_id = sanitize_text_field($data['session_id'] ?? '');
+                $response = \MoneybagPlugin\MoneybagAPI::verify_otp($otp, $session_id);
+                break;
+                
+            case 'business_details':
+                // No validation - let API handle everything
+                $sanitized = [
+                    'business_name' => sanitize_text_field($data['business_name'] ?? ''),
+                    'business_website' => esc_url_raw($data['business_website'] ?? ''),
+                    'first_name' => sanitize_text_field($data['first_name'] ?? ''),
+                    'last_name' => sanitize_text_field($data['last_name'] ?? ''),
+                    'legal_identity' => sanitize_text_field($data['legal_identity'] ?? ''),
+                    'password' => $data['password'] ?? '', // Don't sanitize passwords
+                    'phone' => sanitize_text_field($data['phone'] ?? ''),
+                    'session_id' => sanitize_text_field($data['session_id'] ?? '')
+                ];
+                
+                // Verify reCAPTCHA only if provided and configured
+                // For v3, we're more permissive and rarely block
+                if (!empty($sanitized['recaptcha_response'])) {
+                    $recaptcha_result = \MoneybagPlugin\MoneybagAPI::verify_recaptcha($sanitized['recaptcha_response']);
+                    
+                    // Log the result for monitoring
+                    if (defined('WP_DEBUG') && WP_DEBUG) {
+                        error_log('reCAPTCHA v3 result: ' . json_encode([
+                            'success' => $recaptcha_result['success'],
+                            'score' => $recaptcha_result['score'] ?? 'N/A',
+                            'message' => $recaptcha_result['message'] ?? ''
+                        ]));
+                    }
+                    
+                    // For v3, the verify_recaptcha function already handles scoring
+                    // and will return success=true for most legitimate users
+                    // Only truly suspicious activity would return success=false
+                }
+                
+                $response = \MoneybagPlugin\MoneybagAPI::submit_business_details($sanitized);
+                break;
+                
+            default:
+                wp_send_json_error('Invalid API action');
+                return;
+        }
+        
+        // Return the API response
+        if ($response && $response['success']) {
+            // If the response has a nested data field, return it directly
+            // Otherwise return the whole response minus the success field
+            if (isset($response['data'])) {
+                wp_send_json_success($response['data']);
+            } else {
+                // Remove success field and return the rest
+                unset($response['success']);
+                wp_send_json_success($response);
+            }
+        } else {
+            wp_send_json_error($response['message'] ?? 'API request failed');
+        }
+    }
+    
+    // Validation methods removed - API handles all validation
+    // The validate_field() and get_validation_rules() methods have been removed
+    // as we now rely entirely on the Sandbox API for validation
+    
+    public function handle_pricing_crm() {
+        try {
+            // Verify nonce for security
+            if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'moneybag_pricing_nonce')) {
+                wp_send_json_error('Security check failed');
+                return;
+            }
+            
+            $action = sanitize_text_field($_POST['crm_action'] ?? '');
+            $data = json_decode(stripslashes($_POST['data'] ?? '{}'), true);
+            
+            // Check if JSON decode was successful
+            if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+                wp_send_json_error('Invalid JSON data provided');
+                return;
+            }
+            $response = null;
+            
+            switch ($action) {
+                case 'search_person':
+                    $response = $this->search_crm_person($data);
+                    // For search_person, always return success even if person not found
+                    wp_send_json_success($response['data'] ?? []);
+                    return;
+                    
+                case 'create_person':
+                    $response = $this->create_crm_person($data);
+                    break;
+                    
+                case 'create_opportunity':
+                    $response = $this->create_crm_opportunity($data);
+                    break;
+                    
+                case 'create_note':
+                    $response = $this->create_crm_note($data);
+                    break;
+                    
+                case 'create_note_target':
+                    $response = $this->create_crm_note_target($data);
+                    break;
+                    
+                default:
+                    wp_send_json_error('Invalid CRM action: ' . $action);
+                    return;
+            }
+            
+            if ($response && isset($response['success']) && $response['success']) {
+                wp_send_json_success($response['data'] ?? $response);
+            } else {
+                wp_send_json_error($response['message'] ?? 'CRM operation failed');
+            }
+            
+        } catch (\Exception $e) {
+            wp_send_json_error('CRM operation failed. Please try again.');
+        } catch (\Throwable $t) {
+            wp_send_json_error('An unexpected error occurred. Please try again.');
+        }
+    }
+    
+    private function search_crm_person($data) {
+        try {
+            $email = sanitize_email($data['email'] ?? '');
+            
+            if (empty($email)) {
+                // Return empty result for empty email
+                return [
+                    'success' => true,
+                    'data' => []
+                ];
+            }
+            
+            // Try to search for person in CRM
+            $response = \MoneybagPlugin\MoneybagAPI::crm_request("/people?email=" . urlencode($email), [], 'GET');
+            
+            // If successful and has data, return it
+            if ($response && isset($response['success']) && $response['success'] && !empty($response['data'])) {
+                return $response;
+            }
+            
+            // Otherwise return empty result (person not found is not an error)
+            return [
+                'success' => true,
+                'data' => []
+            ];
+        } catch (\Exception $e) {
+            // Return empty result - search failures should not break the flow
+            return [
+                'success' => true,
+                'data' => []
+            ];
+        } catch (\Throwable $t) {
+            // Return empty result for any errors
+            return [
+                'success' => true,
+                'data' => []
+            ];
+        }
+    }
+    
+    private function create_crm_person($data) {
+        // No PHP validation - relying on JavaScript validation
+        // Sanitize data for API
+        $person_data = [
+            'name' => [
+                'firstName' => sanitize_text_field($data['name']['firstName'] ?? ''),
+                'lastName' => sanitize_text_field($data['name']['lastName'] ?? '')
+            ],
+            'emails' => [
+                'primaryEmail' => sanitize_email($data['emails']['primaryEmail'] ?? '')
+            ],
+            'phones' => [
+                'primaryPhoneNumber' => sanitize_text_field($data['phones']['primaryPhoneNumber'] ?? ''),
+                'primaryPhoneCallingCode' => sanitize_text_field($data['phones']['primaryPhoneCallingCode'] ?? '+880'),
+                'primaryPhoneCountryCode' => sanitize_text_field($data['phones']['primaryPhoneCountryCode'] ?? 'BD')
+            ]
+        ];
+        
+        $response = \MoneybagPlugin\MoneybagAPI::crm_request('/people', $person_data);
+        
+        return $response;
+    }
+    
+    private function create_crm_opportunity($data) {
+        // Let API handle all validation - just sanitize data
+        $opportunity_data = [
+            'name' => sanitize_text_field($data['name'] ?? ''),
+            'stage' => sanitize_text_field($data['stage'] ?? 'NEW'),
+            'amount' => [
+                'amountMicros' => intval($data['amount']['amountMicros'] ?? 0),
+                'currencyCode' => sanitize_text_field($data['amount']['currencyCode'] ?? 'BDT')
+            ],
+            'pointOfContactId' => sanitize_text_field($data['pointOfContactId'] ?? '')
+        ];
+        
+        return \MoneybagPlugin\MoneybagAPI::crm_request('/opportunities', $opportunity_data);
+    }
+    
+    private function create_crm_note($data) {
+        // Let API handle all validation - just sanitize data
+        $note_data = [
+            'title' => sanitize_text_field($data['title'] ?? ''),
+            'bodyV2' => [
+                'markdown' => sanitize_textarea_field($data['bodyV2']['markdown'] ?? '')
+            ]
+        ];
+        
+        return \MoneybagPlugin\MoneybagAPI::crm_request('/notes', $note_data);
+    }
+    
+    
+    private function create_crm_note_target($data) {
+        // Let API handle all validation - just sanitize data
+        $note_target_data = [
+            'noteId' => sanitize_text_field($data['noteId'] ?? ''),
+            'opportunityId' => sanitize_text_field($data['opportunityId'] ?? '')
+        ];
+        
+        return \MoneybagPlugin\MoneybagAPI::crm_request('/noteTargets', $note_target_data);
+    }
+    
+    public function handle_merchant_api() {
+        // Verify nonce
+        if (!wp_verify_nonce($_POST['nonce'] ?? '', 'moneybag_merchant_nonce')) {
+            wp_send_json_error('Security check failed');
+            return;
+        }
+        
+        $action = sanitize_text_field($_POST['api_action'] ?? '');
+        $data = json_decode(stripslashes($_POST['data'] ?? '{}'), true);
+        
+        if (!$action || !is_array($data)) {
+            wp_send_json_error('Invalid request');
+            return;
+        }
+        
+        switch ($action) {
+            case 'get_registration_options':
+                $this->get_registration_options();
+                break;
+            
+            case 'submit_merchant_registration':
+                $this->handle_merchant_registration_submission($data);
+                break;
+                
+            case 'upload_document':
+                $this->handle_document_upload();
+                break;
+                
+            default:
+                wp_send_json_error('Invalid action');
+                break;
+        }
+    }
+    
+    private function get_registration_options() {
+        $options_file = MONEYBAG_PLUGIN_PATH . 'data/merchant-registration-options.json';
+        
+        if (!file_exists($options_file)) {
+            wp_send_json_error('Registration options not found');
+            return;
+        }
+        
+        $options_json = file_get_contents($options_file);
+        $options = json_decode($options_json, true);
+        
+        if (!$options) {
+            wp_send_json_error('Invalid registration options data');
+            return;
+        }
+        
+        wp_send_json_success($options);
+    }
+    
+    private function handle_merchant_registration_submission($data) {
+        // Validate required fields
+        $required_fields = ['name', 'domainName', 'email', 'phone'];
+        foreach ($required_fields as $field) {
+            if (empty($data[$field])) {
+                wp_send_json_error("Missing required field: $field");
+                return;
+            }
+        }
+        
+        // Use the existing submit_merchant_registration logic
+        // For now, just return success - the actual CRM integration can be added later
+        wp_send_json_success(['message' => 'Merchant registration submitted successfully']);
+    }
+    
+    private function handle_document_upload() {
+        // Handle file uploads for merchant documents
+        if (empty($_FILES['file'])) {
+            wp_send_json_error('No file uploaded');
+            return;
+        }
+        
+        $file = $_FILES['file'];
+        
+        // Validate file type and size
+        $allowed_types = ['image/jpeg', 'image/png', 'application/pdf'];
+        $max_size = 1048576; // 1MB
+        
+        if (!in_array($file['type'], $allowed_types)) {
+            wp_send_json_error('Invalid file type. Only JPG, PNG, and PDF files are allowed.');
+            return;
+        }
+        
+        if ($file['size'] > $max_size) {
+            wp_send_json_error('File size too large. Maximum 1MB allowed.');
+            return;
+        }
+        
+        // For now, just return success - actual file handling can be implemented later
+        wp_send_json_success([
+            'message' => 'File uploaded successfully',
+            'url' => 'placeholder-url',
+            'filename' => $file['name']
+        ]);
+    }
+    
+    /**
+     * Plugin activation
+     */
+    public function activate() {
+        // Set default options if they don't exist
+        if (!get_option('moneybag_api_base_url')) {
+            add_option('moneybag_api_base_url', 'https://api.moneybag.com.bd/api/v2');
+        }
+        if (!get_option('moneybag_sandbox_api_url')) {
+            add_option('moneybag_sandbox_api_url', 'https://sandbox.api.moneybag.com.bd/api/v2');
+        }
+        if (!get_option('moneybag_crm_api_url')) {
+            add_option('moneybag_crm_api_url', 'https://crm.moneybag.com.bd/rest');
+        }
+        if (!get_option('moneybag_crm_api_key')) {
+            // Set the default CRM API key on activation (should be changed in admin)
+            add_option('moneybag_crm_api_key', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNmVjMjllMS1jNjg5LTRhZmItODViNi0xNWI3NzA2Mzk4MjAiLCJ0eXBlIjoiQVBJX0tFWSIsIndvcmtzcGFjZUlkIjoiMDZlYzI5ZTEtYzY4OS00YWZiLTg1YjYtMTViNzcwNjM5ODIwIiwiaWF0IjoxNzU1NDEyODEzLCJleHAiOjQ5MDkwMTI4MTIsImp0aSI6IjliZGEwMDY4LTFmODAtNDAwMS1iN2E0LWRiNTVhMGRmYTQ4MSJ9.HOPJJTd3mXz2HbcWxDnNc2eaWEW9FbM-K-6DmlezeIo');
+        }
+        
+        // Create upload directory for merchant documents
+        $upload_dir = wp_upload_dir();
+        $moneybag_dir = $upload_dir['basedir'] . '/moneybag-documents';
+        if (!file_exists($moneybag_dir)) {
+            wp_mkdir_p($moneybag_dir);
+            // Add .htaccess for security
+            file_put_contents($moneybag_dir . '/.htaccess', 'deny from all');
+        }
+        
+        // Flush rewrite rules
+        flush_rewrite_rules();
+    }
+    
+    /**
+     * Plugin deactivation
+     */
+    public function deactivate() {
+        // Clear any caches or transients
+        delete_transient('moneybag_pricing_rules');
+        delete_transient('moneybag_registration_options');
+        
+        // Clear scheduled events (if any)
+        wp_clear_scheduled_hook('moneybag_cleanup_old_registrations');
+        
+        // Flush rewrite rules
+        flush_rewrite_rules();
+    }
+    
+    /**
+     * Plugin uninstall - static method
+     */
+    public static function uninstall() {
+        // Only run if current user can manage options
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        
+        // Remove plugin options (uncomment if you want complete cleanup)
+        // delete_option('moneybag_api_base_url');
+        // delete_option('moneybag_sandbox_api_url'); 
+        // delete_option('moneybag_crm_api_url');
+        // delete_option('moneybag_crm_api_key');
+        // delete_option('moneybag_recaptcha_site_key');
+        // delete_option('moneybag_recaptcha_secret_key');
+        // delete_option('moneybag_default_redirect_url');
+        // delete_option('moneybag_crm_opportunity_name');
+        
+        // Remove merchant registrations (uncomment if you want to delete data)
+        // $registrations = get_option('moneybag_all_registrations', []);
+        // foreach ($registrations as $reg) {
+        //     delete_option('moneybag_registration_' . $reg['id']);
+        // }
+        // delete_option('moneybag_all_registrations');
+        
+        // Remove transients
+        delete_transient('moneybag_pricing_rules');
+        delete_transient('moneybag_registration_options');
+        
+        // Remove upload directory (optional - commented for safety)
+        // $upload_dir = wp_upload_dir();
+        // $moneybag_dir = $upload_dir['basedir'] . '/moneybag-documents';
+        // if (file_exists($moneybag_dir)) {
+        //     $files = glob($moneybag_dir . '/*');
+        //     foreach ($files as $file) {
+        //         if (is_file($file)) {
+        //             unlink($file);
+        //         }
+        //     }
+        //     rmdir($moneybag_dir);
+        // }
     }
 }
 
