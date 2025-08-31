@@ -150,6 +150,33 @@
             messages: {
                 required: 'Please select at least one service type'
             }
+        },
+        identifier: {
+            required: true,
+            customValidator: function(value) {
+                if (!value || !value.trim()) {
+                    return 'Email or phone number is required';
+                }
+                
+                const trimmedValue = value.trim();
+                
+                // Check if it's a valid email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValidEmail = emailRegex.test(trimmedValue);
+                
+                // Check if it's a valid Bangladesh phone number
+                const phoneRegex = /^(\+880|880|0)?1[0-9]{9}$/;
+                const isValidPhone = phoneRegex.test(trimmedValue.replace(/[\s\-]/g, ''));
+                
+                if (!isValidEmail && !isValidPhone) {
+                    return 'Please enter a valid email address or phone number (e.g., user@example.com or 01712345678)';
+                }
+                
+                return ''; // Valid
+            },
+            messages: {
+                required: 'Email or phone number is required'
+            }
         }
     };
 
@@ -370,20 +397,18 @@
                        !validateField('serviceTypes', formData.serviceTypes);
             
             case 2:
-                return formData.merchantName && formData.merchantName.trim() &&
-                       formData.tradingName && formData.tradingName.trim() &&
-                       formData.domainName && formData.domainName.trim() &&
-                       !validateField('businessName', formData.merchantName) &&
-                       !validateField('businessName', formData.tradingName) &&
-                       !validateField('domain', formData.domainName);
+                // For no-auth API: businessName is required, domainName is optional
+                return formData.businessName && formData.businessName.trim() &&
+                       !validateField('businessName', formData.businessName);
             
             case 3:
-                return formData.contactName && formData.contactName.trim() &&
-                       formData.designation && formData.designation.trim() &&
+                // For no-auth API: firstName, lastName, email, mobile are required
+                return formData.firstName && formData.firstName.trim() &&
+                       formData.lastName && formData.lastName.trim() &&
                        formData.email && formData.email.trim() &&
                        formData.mobile && formData.mobile.trim() &&
-                       !validateField('name', formData.contactName) &&
-                       !validateField('designation', formData.designation) &&
+                       !validateField('name', formData.firstName) &&
+                       !validateField('name', formData.lastName) &&
                        !validateField('email', formData.email) &&
                        !validateField('mobile', formData.mobile);
             
@@ -415,23 +440,23 @@
                 break;
                 
             case 2:
-                const merchantNameError = validateField('businessName', formData.merchantName);
-                const tradingNameError = validateField('businessName', formData.tradingName);
-                const domainError = validateField('domain', formData.domainName);
+                // For no-auth API: businessName is required, domainName is optional
+                const businessNameError = validateField('businessName', formData.businessName);
+                const domainError = formData.domainName ? validateField('domain', formData.domainName) : null;
                 
-                if (merchantNameError) errors.merchantName = merchantNameError;
-                if (tradingNameError) errors.tradingName = tradingNameError;
+                if (businessNameError) errors.businessName = businessNameError;
                 if (domainError) errors.domainName = domainError;
                 break;
                 
             case 3:
-                const nameError = validateField('name', formData.contactName);
-                const designationError = validateField('designation', formData.designation);
+                // For no-auth API: firstName, lastName, email, mobile are required
+                const firstNameError = validateField('name', formData.firstName);
+                const lastNameError = validateField('name', formData.lastName);
                 const emailError = validateField('email', formData.email);
                 const mobileError = validateField('mobile', formData.mobile);
                 
-                if (nameError) errors.contactName = nameError;
-                if (designationError) errors.designation = designationError;
+                if (firstNameError) errors.firstName = firstNameError;
+                if (lastNameError) errors.lastName = lastNameError;
                 if (emailError) errors.email = emailError;
                 if (mobileError) errors.mobile = mobileError;
                 break;

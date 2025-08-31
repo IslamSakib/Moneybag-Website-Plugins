@@ -1,29 +1,41 @@
 {
   "version": "1.0",
-  "last_updated": "2025-08-21",
+  "last_updated": "2025-08-31",
   "businessCategories": {
     "E-Commerce & Online Business": {
       "value": "ecommerce_online",
       "identities": {
         "Sole Proprietorship": {
-          "value": "sole_proprietorship",
+          "value": "Sole Proprietorship",
           "description": "Individual owner business"
         },
         "Partnership": {
-          "value": "partnership",
+          "value": "Partnership",
           "description": "Business owned by two or more partners"
         },
-        "Private Limited Company": {
-          "value": "private_limited",
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
           "description": "Private limited liability company"
         },
-        "Public Limited Company": {
-          "value": "public_limited",
+        "Public Company": {
+          "value": "Public Company",
           "description": "Public limited liability company"
         },
         "Corporation": {
-          "value": "corporation",
+          "value": "Corporation",
           "description": "Incorporated business entity"
+        },
+        "Non-Governmental Organization": {
+          "value": "Non-Governmental Organization",
+          "description": "NGO or non-profit organization"
+        },
+        "Educational Institution": {
+          "value": "Educational Institution",
+          "description": "School, College, University"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other business type"
         }
       }
     },
@@ -31,16 +43,24 @@
       "value": "social_commerce",
       "identities": {
         "Sole Proprietorship": {
-          "value": "sole_proprietorship",
+          "value": "Sole Proprietorship",
           "description": "Individual social seller"
         },
         "Partnership": {
-          "value": "partnership",
+          "value": "Partnership",
           "description": "Partnership for social commerce"
         },
-        "Private Limited Company": {
-          "value": "private_limited",
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
           "description": "Private company for social commerce"
+        },
+        "Corporation": {
+          "value": "Corporation",
+          "description": "Corporation for social commerce"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other business type"
         }
       }
     },
@@ -48,62 +68,78 @@
       "value": "education",
       "identities": {
         "Educational Institution": {
-          "value": "educational_institution",
+          "value": "Educational Institution",
           "description": "School, College, University"
         },
-        "Training Center": {
-          "value": "training_center",
-          "description": "Professional training organization"
+        "Sole Proprietorship": {
+          "value": "Sole Proprietorship",
+          "description": "Individual educator/trainer"
         },
-        "Private Tutoring": {
-          "value": "private_tutoring",
-          "description": "Individual tutoring services"
+        "Partnership": {
+          "value": "Partnership",
+          "description": "Partnership education business"
         },
-        "Educational Trust": {
-          "value": "educational_trust",
-          "description": "Educational trust organization"
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
+          "description": "Private education company"
+        },
+        "Non-Governmental Organization": {
+          "value": "Non-Governmental Organization",
+          "description": "Educational NGO"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other education entity"
         }
       }
     },
     "Healthcare & Medical Services": {
       "value": "healthcare",
       "identities": {
-        "Hospital/Clinic": {
-          "value": "hospital_clinic",
-          "description": "Medical facility"
-        },
-        "Private Practice": {
-          "value": "private_practice",
+        "Sole Proprietorship": {
+          "value": "Sole Proprietorship",
           "description": "Individual medical practitioner"
         },
-        "Diagnostic Center": {
-          "value": "diagnostic_center",
-          "description": "Medical testing facility"
+        "Partnership": {
+          "value": "Partnership",
+          "description": "Medical partnership"
         },
-        "Pharmacy": {
-          "value": "pharmacy",
-          "description": "Medicine retail business"
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
+          "description": "Private healthcare company"
+        },
+        "Public Company": {
+          "value": "Public Company",
+          "description": "Public healthcare company"
+        },
+        "Corporation": {
+          "value": "Corporation",
+          "description": "Healthcare corporation"
+        },
+        "Non-Governmental Organization": {
+          "value": "Non-Governmental Organization",
+          "description": "Healthcare NGO"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other healthcare entity"
         }
       }
     },
     "Non-Profit & Social Organizations": {
       "value": "nonprofit",
       "identities": {
-        "NGO": {
-          "value": "ngo",
-          "description": "Non-governmental organization"
+        "Non-Governmental Organization": {
+          "value": "Non-Governmental Organization",
+          "description": "Registered NGO"
         },
-        "Trust": {
-          "value": "trust",
-          "description": "Charitable trust"
+        "Educational Institution": {
+          "value": "Educational Institution",
+          "description": "Non-profit educational institution"
         },
-        "Foundation": {
-          "value": "foundation",
-          "description": "Charitable foundation"
-        },
-        "Association": {
-          "value": "association",
-          "description": "Member association or club"
+        "Other": {
+          "value": "Other",
+          "description": "Other non-profit entity"
         }
       }
     },
@@ -111,146 +147,198 @@
       "value": "retail",
       "identities": {
         "Sole Proprietorship": {
-          "value": "sole_proprietorship",
+          "value": "Sole Proprietorship",
           "description": "Individual shop owner"
         },
         "Partnership": {
-          "value": "partnership",
+          "value": "Partnership",
           "description": "Partnership retail business"
         },
-        "Private Limited Company": {
-          "value": "private_limited",
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
           "description": "Private retail company"
         },
-        "Chain Store": {
-          "value": "chain_store",
-          "description": "Multiple location retail"
+        "Public Company": {
+          "value": "Public Company",
+          "description": "Public retail company"
+        },
+        "Corporation": {
+          "value": "Corporation",
+          "description": "Retail corporation"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other retail entity"
         }
       }
     },
     "Services & Consulting": {
       "value": "services",
       "identities": {
-        "Freelancer/Individual": {
-          "value": "freelancer",
+        "Sole Proprietorship": {
+          "value": "Sole Proprietorship",
           "description": "Individual service provider"
         },
-        "Consulting Firm": {
-          "value": "consulting_firm",
-          "description": "Professional consulting company"
-        },
-        "Agency": {
-          "value": "agency",
-          "description": "Service agency"
-        },
         "Partnership": {
-          "value": "partnership",
+          "value": "Partnership",
           "description": "Service partnership"
+        },
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
+          "description": "Private service company"
+        },
+        "Corporation": {
+          "value": "Corporation",
+          "description": "Service corporation"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other service entity"
         }
       }
     },
     "Manufacturing & Production": {
       "value": "manufacturing",
       "identities": {
-        "Factory": {
-          "value": "factory",
-          "description": "Manufacturing facility"
+        "Sole Proprietorship": {
+          "value": "Sole Proprietorship",
+          "description": "Individual manufacturer"
         },
-        "Workshop": {
-          "value": "workshop",
-          "description": "Small production unit"
+        "Partnership": {
+          "value": "Partnership",
+          "description": "Manufacturing partnership"
         },
-        "Private Limited Company": {
-          "value": "private_limited",
-          "description": "Manufacturing company"
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
+          "description": "Private manufacturing company"
         },
-        "Public Limited Company": {
-          "value": "public_limited",
+        "Public Company": {
+          "value": "Public Company",
           "description": "Public manufacturing company"
+        },
+        "Corporation": {
+          "value": "Corporation",
+          "description": "Manufacturing corporation"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other manufacturing entity"
         }
       }
     },
     "Import & Export": {
       "value": "import_export",
       "identities": {
-        "Trading Company": {
-          "value": "trading_company",
-          "description": "Import/Export business"
-        },
         "Sole Proprietorship": {
-          "value": "sole_proprietorship",
+          "value": "Sole Proprietorship",
           "description": "Individual trader"
         },
-        "Private Limited Company": {
-          "value": "private_limited",
+        "Partnership": {
+          "value": "Partnership",
+          "description": "Trading partnership"
+        },
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
           "description": "Private trading company"
         },
+        "Public Company": {
+          "value": "Public Company",
+          "description": "Public trading company"
+        },
         "Corporation": {
-          "value": "corporation",
-          "description": "Large trading corporation"
+          "value": "Corporation",
+          "description": "Trading corporation"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other trading entity"
         }
       }
     },
     "Technology & Software": {
       "value": "technology",
       "identities": {
-        "Startup": {
-          "value": "startup",
-          "description": "Technology startup"
+        "Sole Proprietorship": {
+          "value": "Sole Proprietorship",
+          "description": "Individual developer/consultant"
         },
-        "Software Company": {
-          "value": "software_company",
-          "description": "Software development company"
+        "Partnership": {
+          "value": "Partnership",
+          "description": "Tech partnership"
         },
-        "IT Services": {
-          "value": "it_services",
-          "description": "IT service provider"
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
+          "description": "Private tech company"
         },
-        "SaaS Business": {
-          "value": "saas",
-          "description": "Software as a Service"
+        "Public Company": {
+          "value": "Public Company",
+          "description": "Public tech company"
+        },
+        "Corporation": {
+          "value": "Corporation",
+          "description": "Tech corporation"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other tech entity"
         }
       }
     },
     "Travel & Hospitality": {
       "value": "travel_hospitality",
       "identities": {
-        "Travel Agency": {
-          "value": "travel_agency",
-          "description": "Travel booking services"
+        "Sole Proprietorship": {
+          "value": "Sole Proprietorship",
+          "description": "Individual travel business"
         },
-        "Hotel/Resort": {
-          "value": "hotel_resort",
-          "description": "Accommodation services"
+        "Partnership": {
+          "value": "Partnership",
+          "description": "Travel partnership"
         },
-        "Tour Operator": {
-          "value": "tour_operator",
-          "description": "Tour organizing company"
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
+          "description": "Private travel company"
         },
-        "Restaurant": {
-          "value": "restaurant",
-          "description": "Food service business"
+        "Public Company": {
+          "value": "Public Company",
+          "description": "Public travel company"
+        },
+        "Corporation": {
+          "value": "Corporation",
+          "description": "Travel corporation"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other travel entity"
         }
       }
     },
     "Media & Entertainment": {
       "value": "media_entertainment",
       "identities": {
-        "Production House": {
-          "value": "production_house",
-          "description": "Media production company"
+        "Sole Proprietorship": {
+          "value": "Sole Proprietorship",
+          "description": "Individual media professional"
         },
-        "Publishing": {
-          "value": "publishing",
-          "description": "Publishing business"
+        "Partnership": {
+          "value": "Partnership",
+          "description": "Media partnership"
         },
-        "Event Management": {
-          "value": "event_management",
-          "description": "Event organizing company"
+        "Limited Liability Company": {
+          "value": "Limited Liability Company",
+          "description": "Private media company"
         },
-        "Digital Media": {
-          "value": "digital_media",
-          "description": "Online media platform"
+        "Public Company": {
+          "value": "Public Company",
+          "description": "Public media company"
+        },
+        "Corporation": {
+          "value": "Corporation",
+          "description": "Media corporation"
+        },
+        "Other": {
+          "value": "Other",
+          "description": "Other media entity"
         }
       }
     }

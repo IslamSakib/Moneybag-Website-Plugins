@@ -54,7 +54,9 @@ class MerchantRegistrationWidget extends Widget_Base {
             'warning_color' => '#f59e0b',
             'enable_captcha' => true,
             'recaptcha_site_key' => get_option('moneybag_recaptcha_site_key', ''),
-            'plugin_url' => MONEYBAG_PLUGIN_URL
+            'plugin_url' => MONEYBAG_PLUGIN_URL,
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('moneybag_merchant_nonce')
         ];
         ?>
         <div class="moneybag-merchant-form-wrapper" data-config='<?php echo esc_attr(json_encode($form_config)); ?>'>

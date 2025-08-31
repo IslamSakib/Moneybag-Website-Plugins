@@ -7,6 +7,7 @@
         // State management
         const [currentStep, setCurrentStep] = useState(1);
         const [isSubmitted, setIsSubmitted] = useState(false);
+        const [apiResponse, setApiResponse] = useState(null);
         const [registrationOptions, setRegistrationOptions] = useState(null);
         const [availableLegalIdentities, setAvailableLegalIdentities] = useState([]);
         const [sessionId] = useState('sess_' + Math.random().toString(36).substring(2, 18));
@@ -15,31 +16,25 @@
         
         // Form data state
         const [formData, setFormData] = useState({
-            // Step 1 - Business Info
-            legalIdentity: '',
+            // Step 1 - Business Info (simplified for no-auth API)
             businessCategory: '',
-            monthlyVolume: '',
-            maxAmount: '',
-            currencyType: 'BDT',
+            legalIdentity: '',
             serviceTypes: [],
             
-            // Step 2 - Online Presence  
-            merchantName: '',
-            tradingName: '',
-            domainName: '',
+            // Step 2 - Business Details  
+            businessName: '', // Replaces "Trading Name" - business_name for API
+            domainName: '', // Optional business website
             
-            // Step 3 - Point of Contact
-            contactName: '',
-            designation: '',
-            email: '',
-            mobile: '',
-            phone: '',
+            // Step 3 - Contact Information (required for API)
+            firstName: '', // Representative first name - splits "Merchant Registered Name" 
+            lastName: '', // Representative last name - splits "Merchant Registered Name"
+            email: '', // Required - email for API
+            mobile: '', // Required - phone for API
             
-            // Step 4 - Documents (all optional)
-            logo: '',
-            tradeLicense: '',
-            idDocument: '',
-            tinCertificate: ''
+            // Keep for backward compatibility but simplified
+            monthlyVolume: '',
+            maxAmount: '',
+            currencyType: 'BDT'
         });
         
         const [validationErrors, setValidationErrors] = useState({});
@@ -47,12 +42,11 @@
         const [uploadingFiles, setUploadingFiles] = useState({});
         const [uploadedFiles, setUploadedFiles] = useState({});
         
-        // Steps configuration
+        // Simplified steps configuration for no-auth API
         const steps = [
-            { id: 1, title: 'Business Info' },
-            { id: 2, title: 'Online Presence' },
-            { id: 3, title: 'Point Of Contact' }
-            // { id: 4, title: 'Documents' } // Temporarily disabled
+            { id: 1, title: 'Business Information' },
+            { id: 2, title: 'Business Details' },
+            { id: 3, title: 'Contact Information' }
         ];
         
         const progressPercentage = {
@@ -289,14 +283,13 @@
                     'legalIdentity': { validation: 'legalIdentity', filter: 'text' },
                     'monthlyVolume': { validation: 'monthlyVolume', filter: 'text' },
                     'serviceTypes': { validation: 'serviceTypes', filter: 'array' },
-                    'merchantName': { validation: 'businessName', filter: 'businessName' },
-                    'tradingName': { validation: 'businessName', filter: 'businessName' },
-                    'contactName': { validation: 'name', filter: 'name' },
+                    'businessName': { validation: 'businessName', filter: 'businessName' },
+                    'firstName': { validation: 'name', filter: 'name' },
+                    'lastName': { validation: 'name', filter: 'name' },
                     'domainName': { validation: 'domain', filter: 'text' },
                     'mobile': { validation: 'mobile', filter: 'phone' },
                     'phone': { validation: 'phone', filter: 'phone' },
                     'email': { validation: 'email', filter: 'text' },
-                    'designation': { validation: 'designation', filter: 'designation' },
                     'maxAmount': { validation: 'maxAmount', filter: 'amount' }
                 };
                 
@@ -438,36 +431,218 @@
             }
         }, [canNavigateToStep]);
         
+        // Helper function to generate BlockNote content format
+        const generateBlocknoteContent = (data) => {
+            return JSON.stringify([
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Merchant Registration Form Submission", styles: { bold: true } }
+                    ]
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Business Information" }
+                    ]
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: `• Business Name: ${data.businessName || 'N/A'}` }
+                    ]
+                },
+                {
+                    type: "paragraph", 
+                    content: [
+                        { type: "text", text: `• Legal Identity: ${data.legalIdentity || 'N/A'}` }
+                    ]
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: "Contact Information" }
+                    ]
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: `• Name: ${data.firstName || 'N/A'} ${data.lastName || 'N/A'}` }
+                    ]
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: `• Email: ${data.email || 'N/A'}` }
+                    ]
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: `• Phone: ${data.mobile || data.phone || 'N/A'}` }
+                    ]
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: `• Website: ${data.businessWebsite || 'N/A'}` }
+                    ]
+                },
+                {
+                    type: "paragraph",
+                    content: [
+                        { type: "text", text: `Source: WordPress Plugin (No-Auth) - ${new Date().toLocaleDateString()}` }
+                    ]
+                }
+            ]);
+        };
+
+        // CRM Integration
+        const sendToCRM = async (data) => {
+            try {
+                // CRM API call helper
+                const crmApiCall = async (action, crmData) => {
+                    const formData = new FormData();
+                    formData.append('action', 'moneybag_pricing_crm');
+                    formData.append('crm_action', action);
+                    formData.append('nonce', config.nonce || window.moneybagMerchantAjax?.nonce);
+                    formData.append('data', JSON.stringify(crmData));
+                    
+                    const response = await fetch(config.ajax_url || window.moneybagMerchantAjax?.ajaxurl, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    if (!result.success) {
+                        throw new Error(result.data || 'CRM operation failed');
+                    }
+                    return result.data;
+                };
+                
+                // 1. Find or create person in CRM
+                let personId;
+                try {
+                    // Search for existing person
+                    const searchData = await crmApiCall('search_person', { email: data.email });
+                    
+                    if (searchData?.contact_summary?.id) {
+                        personId = searchData.contact_summary.id;
+                    } else {
+                        // Create new person
+                        const personData = {
+                            name: `${data.firstName} ${data.lastName}`,
+                            email: data.email,
+                            mobile: data.mobile,
+                            businessName: data.businessName
+                        };
+                        const personResponse = await crmApiCall('create_person', personData);
+                        personId = personResponse?.data?.createPerson?.id || personResponse?.id;
+                    }
+                } catch (error) {
+                    console.error('Person creation/search failed:', error);
+                    // Use email hash as fallback
+                    personId = `merchant_${btoa(data.email).replace(/[^a-zA-Z0-9]/g, '').substring(0, 10)}`;
+                }
+                
+                // 2. Create Opportunity
+                let opportunityId;
+                try {
+                    const opportunityData = {
+                        name: `Merchant Registration - ${data.businessName}`,
+                        stage: 'NEW',
+                        amount: {
+                            amountMicros: 0,
+                            currencyCode: 'BDT'
+                        },
+                        pointOfContactId: personId
+                    };
+                    const opportunityResponse = await crmApiCall('create_opportunity', opportunityData);
+                    opportunityId = opportunityResponse?.data?.createOpportunity?.id || opportunityResponse?.id;
+                } catch (error) {
+                    console.error('Opportunity creation failed:', error);
+                    opportunityId = `opp_merchant_${Date.now()}`;
+                }
+                
+                // 3. Create Note with registration details
+                try {
+                    const serviceTypesList = data.customFields?.serviceTypes?.join(', ') || 'Not specified';
+                    const noteText = `## Merchant Registration (No-Auth API)
+                    
+- **Business Name:** ${data.businessName}
+- **Legal Identity:** ${data.legalIdentity}
+- **Business Category:** ${data.customFields?.businessCategory || 'Not specified'}
+- **Business Website:** ${data.domainName || 'Not provided'}
+
+### Contact Information
+- **Name:** ${data.firstName} ${data.lastName}
+- **Email:** ${data.email}
+- **Mobile:** ${data.mobile}
+
+### Business Details
+- **Monthly Volume:** ${data.customFields?.monthlyVolume || 'Not specified'}
+- **Service Types:** ${serviceTypesList}
+- **Max Transaction Amount:** ${data.customFields?.maxAmount || 'Not specified'}
+- **Currency:** ${data.customFields?.currency || 'BDT'}
+
+### Submission Info
+- **Source:** WordPress Plugin (No-Auth)
+- **Timestamp:** ${data.customFields?.timestamp || new Date().toISOString()}
+- **Session ID:** ${data.customFields?.sessionId || 'N/A'}`;
+                    
+                    const noteData = {
+                        title: 'Merchant Registration Form Submission',
+                        bodyV2: {
+                            markdown: noteText,
+                            blocknote: generateBlocknoteContent(data)
+                        }
+                    };
+                    
+                    const noteResponse = await crmApiCall('create_note', noteData);
+                    const noteId = noteResponse?.data?.createNote?.id || noteResponse?.id;
+                    
+                    // Note: Note linking has been disabled as it was causing issues
+                    // The note is created independently and can be found in the CRM notes section
+                    // It contains all merchant registration details including the opportunity name
+                } catch (error) {
+                    console.error('Note creation failed:', error);
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('CRM submission error:', error);
+                // Don't throw - let the main submission succeed even if CRM fails
+                return false;
+            }
+        };
+        
         // Submit handler
         const handleSubmit = async () => {
             try {
                 setLoading(true);
                 
-                // Format data according to CRM API requirements
+                // Format data according to no-auth API requirements
                 const submitData = {
-                    // Basic company information only (minimal required fields)
-                    name: formData.merchantName,
-                    domainName: formData.domainName,
+                    // Required fields for no-auth API (mapped to new field names)
+                    businessName: formData.businessName, // Maps to business_name
+                    legalIdentity: formData.legalIdentity, // Maps to legal_identity  
+                    firstName: formData.firstName, // Maps to first_name
+                    lastName: formData.lastName, // Maps to last_name
+                    email: formData.email, // Maps to email
+                    mobile: formData.mobile, // Maps to phone (cleaned)
                     
-                    // Contact information (flatten the structure)
-                    email: formData.email,
-                    phone: formData.mobile.replace(/[\s\-\+\(\)]/g, ''),
+                    // Optional field
+                    domainName: formData.domainName, // Maps to business_website
                     
-                    // Extended properties in a custom field
+                    // Extended properties for logging/analytics (not sent to API)
                     customFields: {
-                        tradingName: formData.tradingName,
                         businessCategory: formData.businessCategory,
-                        legalIdentity: formData.legalIdentity,
-                        monthlyVolume: formData.monthlyVolume,
-                        maxTransactionAmount: formData.maxAmount || '0',
-                        currency: formData.currencyType,
                         serviceTypes: formData.serviceTypes,
-                        contactName: formData.contactName,
-                        designation: formData.designation,
-                        officePhone: formData.phone || '',
-                        documents: uploadedFiles,
+                        monthlyVolume: formData.monthlyVolume,
+                        maxAmount: formData.maxAmount || '0',
+                        currency: formData.currencyType,
                         sessionId: sessionId,
-                        source: 'wordpress_plugin',
+                        source: 'wordpress_plugin_no_auth',
                         timestamp: new Date().toISOString()
                     }
                 };
@@ -483,6 +658,15 @@
                 
                 // Global API system returns data directly on success
                 if (result) {
+                    // Store the API response data (contains merchant_id, api_key, etc.)
+                    setApiResponse(result.data || result);
+                    
+                    // Send data to CRM asynchronously (don't block the success flow)
+                    sendToCRM(submitData).catch(error => {
+                        console.error('CRM submission failed:', error);
+                        // Don't fail the whole submission if CRM fails
+                    });
+                    
                     setIsSubmitted(true);
                     if (config.redirect_url) {
                         setTimeout(() => {
@@ -575,7 +759,7 @@
                                     )
                                 )
                             ),
-                            h('div', { className: 'success-illustration' },
+                            h('div', { className: 'steps-illustration' },
                                 h('img', {
                                     src: `${config.plugin_url}assets/image/img_join now.webp`,
                                     alt: 'Success',
@@ -587,16 +771,83 @@
                             h('div', { className: 'success-card' },
                                 h('h1', { className: 'success-title' }, 'Thank You for Your Application!'),
                                 h('p', { className: 'success-description' }, 
-                                    'Your merchant registration has been submitted successfully. Our team will review your application and contact you within 1-3 business days.'
+                                    'Your merchant registration has been submitted successfully. While we review your application, you can start testing with our sandbox environment right away!'
                                 ),
                                 h('div', { className: 'success-details' },
-                                    h('div', { className: 'success-detail-item' },
-                                        h('h4', null, 'What\'s Next?'),
-                                        h('ul', null,
-                                            h('li', null, '• We will review your application thoroughly'),
-                                            h('li', null, '• You will receive a confirmation email shortly'),
-                                            h('li', null, '• Our team may contact you for additional information'),
-                                            h('li', null, '• Account activation typically takes 1-3 business days')
+                                    (apiResponse && (apiResponse.redirect_url || apiResponse.dashboard_url)) ? (
+                                        h('div', { className: 'success-detail-item sandbox-access' },
+                                            h('h4', { className: 'sandbox-title' }, 
+                                                h('span', { className: 'sandbox-icon' }, '🚀'),
+                                                ' Your Sandbox is Ready!'
+                                            ),
+                                            h('div', { className: 'sandbox-login-container' },
+                                                h('p', { className: 'sandbox-intro' }, 
+                                                    'Your sandbox account has been created successfully! Click below to access your sandbox dashboard with automatic login.'
+                                                ),
+                                                h('div', { className: 'sandbox-login-action' },
+                                                    h('a', { 
+                                                        href: apiResponse.redirect_url || apiResponse.dashboard_url || apiResponse.magic_link_url,
+                                                        target: '_blank',
+                                                        rel: 'noopener noreferrer',
+                                                        className: 'sandbox-login-card'
+                                                    }, 
+                                                        h('div', { className: 'login-card-content' },
+                                                            h('div', { className: 'login-card-icon' },
+                                                                h('svg', { 
+                                                                    width: '32', 
+                                                                    height: '32', 
+                                                                    viewBox: '0 0 24 24',
+                                                                    fill: 'none',
+                                                                    stroke: 'currentColor',
+                                                                    strokeWidth: '1.5'
+                                                                },
+                                                                    h('rect', { x: '3', y: '3', width: '18', height: '18', rx: '2', ry: '2' }),
+                                                                    h('path', { d: 'M9 3v18' }),
+                                                                    h('path', { d: 'M16 10l-3 3-3-3' })
+                                                                )
+                                                            ),
+                                                            h('div', { className: 'login-card-text' },
+                                                                h('span', { className: 'login-card-title' }, 'Open Sandbox Dashboard'),
+                                                                h('span', { className: 'login-card-subtitle' }, 'Click to auto-login to your sandbox account')
+                                                            ),
+                                                            h('div', { className: 'login-card-arrow' },
+                                                                h('svg', { 
+                                                                    width: '20', 
+                                                                    height: '20', 
+                                                                    viewBox: '0 0 24 24',
+                                                                    fill: 'none',
+                                                                    stroke: 'currentColor',
+                                                                    strokeWidth: '2'
+                                                                },
+                                                                    h('path', { d: 'M5 12h14M12 5l7 7-7 7' })
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                ),
+                                                apiResponse.payment_methods_configured && apiResponse.payment_methods_configured.length > 0 && 
+                                                h('div', { className: 'payment-methods' },
+                                                    h('span', { className: 'payment-methods-label' }, 'Pre-configured Payment Methods:'),
+                                                    h('div', { className: 'payment-methods-list' },
+                                                        apiResponse.payment_methods_configured.map((method, index) => 
+                                                            h('span', { 
+                                                                key: index,
+                                                                className: 'payment-method-tag' 
+                                                            }, method)
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    ) : (
+                                        h('div', { className: 'success-detail-item' },
+                                            h('h4', null, 'What\'s Next?'),
+                                            h('ul', null,
+                                                h('li', null, '• We will review your application thoroughly'),
+                                                h('li', null, '• You will receive a confirmation email shortly'),
+                                                h('li', null, '• Our team may contact you for additional information'),
+                                                h('li', null, '• Account activation typically takes 1-3 business days')
+                                            )
                                         )
                                     ),
                                     h('div', { className: 'success-detail-item' },
@@ -775,100 +1026,83 @@
             );
         };
         
-        // Step 2 Content
+        // Step 2 Content - Business Details (Simplified for no-auth API)
         const renderStep2 = () => {
             return h('div', { className: 'step-content-2' },
                 h('div', { className: 'form-row full-width' },
                     h('div', { className: 'field-group' },
                         h('label', { className: 'field-label' },
-                            'Merchant Registered Name ',
+                            'Business Name ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'text',
-                            className: `input-field ${fieldErrors.merchantName ? 'error' : ''} ${formData.merchantName.trim() ? 'valid' : ''}`,
-                            value: formData.merchantName,
-                            onChange: (e) => handleInputChange('merchantName', e.target.value),
-                            onBlur: (e) => validateAndSetFieldError('businessName', e.target.value, 'merchantName'),
-                            placeholder: 'Enter registered business name'
+                            className: `input-field ${fieldErrors.businessName ? 'error' : ''} ${formData.businessName ? 'valid' : ''}`,
+                            value: formData.businessName,
+                            onChange: (e) => handleInputChange('businessName', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('businessName', e.target.value, 'businessName'),
+                            placeholder: 'Enter your business name'
                         }),
-                        fieldErrors.merchantName && h('span', { className: 'error-message' }, fieldErrors.merchantName)
+                        fieldErrors.businessName && h('span', { className: 'error-message' }, fieldErrors.businessName)
                     )
                 ),
                 h('div', { className: 'form-row full-width' },
                     h('div', { className: 'field-group' },
                         h('label', { className: 'field-label' },
-                            'Trading Name (Name on the Shop) ',
-                            h('span', { className: 'required-indicator' }, '*')
+                            'Business Website ',
+                            h('span', { className: 'optional-text' }, '(Optional)')
                         ),
                         h('input', {
-                            type: 'text',
-                            className: `input-field ${fieldErrors.tradingName ? 'error' : ''} ${formData.tradingName.trim() ? 'valid' : ''}`,
-                            value: formData.tradingName,
-                            onChange: (e) => handleInputChange('tradingName', e.target.value),
-                            onBlur: (e) => validateAndSetFieldError('businessName', e.target.value, 'tradingName'),
-                            placeholder: 'Enter trading/shop name'
-                        }),
-                        fieldErrors.tradingName && h('span', { className: 'error-message' }, fieldErrors.tradingName)
-                    )
-                ),
-                h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'field-group' },
-                        h('label', { className: 'field-label' },
-                            'Domain Name ',
-                            h('span', { className: 'required-indicator' }, '*')
-                        ),
-                        h('input', {
-                            type: 'text',
-                            className: `input-field ${fieldErrors.domainName ? 'error' : ''} ${formData.domainName.trim() ? 'valid' : ''}`,
+                            type: 'url',
+                            className: `input-field ${fieldErrors.domainName ? 'error' : ''} ${formData.domainName ? 'valid' : ''}`,
                             value: formData.domainName,
                             onChange: (e) => handleInputChange('domainName', e.target.value),
                             onBlur: (e) => validateAndSetFieldError('domain', e.target.value, 'domainName'),
-                            placeholder: 'example.com or www.example.com'
+                            placeholder: 'https://www.example.com'
                         }),
                         fieldErrors.domainName && h('span', { className: 'error-message' }, fieldErrors.domainName),
-                        h('small', { className: 'form-hint' }, 'Enter your domain name (e.g., example.com)')
+                        h('small', { className: 'form-hint' }, 'Enter your business website URL (optional)')
                     )
                 )
             );
         };
         
-        // Step 3 Content
+        // Step 3 Content - Point of Contact (Updated for no-auth API)
         const renderStep3 = () => {
             return h('div', { className: 'step-content-3' },
-                h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'field-group' },
-                        h('label', { className: 'field-label' },
-                            'Contact Name ',
-                            h('span', { className: 'required-indicator' }, '*')
-                        ),
-                        h('input', {
-                            type: 'text',
-                            className: `input-field ${fieldErrors.contactName ? 'error' : ''} ${formData.contactName.trim() ? 'valid' : ''}`,
-                            value: formData.contactName,
-                            onChange: (e) => handleInputChange('contactName', e.target.value),
-                            onBlur: (e) => validateAndSetFieldError('name', e.target.value, 'contactName'),
-                            placeholder: 'Full name'
-                        }),
-                        fieldErrors.contactName && h('span', { className: 'error-message' }, fieldErrors.contactName)
-                    )
-                ),
                 h('div', { className: 'form-row' },
                     h('div', { className: 'field-group' },
                         h('label', { className: 'field-label' },
-                            'Designation ',
+                            'First Name ',
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('input', {
                             type: 'text',
-                            className: `input-field ${fieldErrors.designation ? 'error' : ''} ${formData.designation.trim() ? 'valid' : ''}`,
-                            value: formData.designation,
-                            onChange: (e) => handleInputChange('designation', e.target.value),
-                            onBlur: (e) => validateAndSetFieldError('designation', e.target.value, 'designation'),
-                            placeholder: 'Job title/position'
+                            className: `input-field ${fieldErrors.firstName ? 'error' : ''} ${formData.firstName ? 'valid' : ''}`,
+                            value: formData.firstName,
+                            onChange: (e) => handleInputChange('firstName', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('name', e.target.value, 'firstName'),
+                            placeholder: 'First name'
                         }),
-                        fieldErrors.designation && h('span', { className: 'error-message' }, fieldErrors.designation)
+                        fieldErrors.firstName && h('span', { className: 'error-message' }, fieldErrors.firstName)
                     ),
+                    h('div', { className: 'field-group' },
+                        h('label', { className: 'field-label' },
+                            'Last Name ',
+                            h('span', { className: 'required-indicator' }, '*')
+                        ),
+                        h('input', {
+                            type: 'text',
+                            className: `input-field ${fieldErrors.lastName ? 'error' : ''} ${formData.lastName ? 'valid' : ''}`,
+                            value: formData.lastName,
+                            onChange: (e) => handleInputChange('lastName', e.target.value),
+                            onBlur: (e) => validateAndSetFieldError('name', e.target.value, 'lastName'),
+                            placeholder: 'Last name'
+                        }),
+                        fieldErrors.lastName && h('span', { className: 'error-message' }, fieldErrors.lastName)
+                    )
+                ),
+                h('div', { className: 'form-row' },
                     h('div', { className: 'field-group' },
                         h('label', { className: 'field-label' },
                             'Email ',
@@ -876,16 +1110,14 @@
                         ),
                         h('input', {
                             type: 'email',
-                            className: `input-field ${fieldErrors.email ? 'error' : ''} ${formData.email.trim() ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.email ? 'error' : ''} ${formData.email ? 'valid' : ''}`,
                             value: formData.email,
                             onChange: (e) => handleInputChange('email', e.target.value),
                             onBlur: (e) => validateAndSetFieldError('email', e.target.value, 'email'),
                             placeholder: 'email@example.com'
                         }),
                         fieldErrors.email && h('span', { className: 'error-message' }, fieldErrors.email)
-                    )
-                ),
-                h('div', { className: 'form-row' },
+                    ),
                     h('div', { className: 'field-group' },
                         h('label', { className: 'field-label' },
                             'Mobile Number ',
@@ -893,7 +1125,7 @@
                         ),
                         h('input', {
                             type: 'text',
-                            className: `input-field ${fieldErrors.mobile ? 'error' : ''} ${formData.mobile.trim() ? 'valid' : ''}`,
+                            className: `input-field ${fieldErrors.mobile ? 'error' : ''} ${formData.mobile ? 'valid' : ''}`,
                             value: formData.mobile,
                             onChange: (e) => handleInputChange('mobile', e.target.value),
                             onBlur: (e) => validateAndSetFieldError('mobile', e.target.value, 'mobile'),
@@ -901,18 +1133,6 @@
                         }),
                         fieldErrors.mobile && h('span', { className: 'error-message' }, fieldErrors.mobile),
                         h('small', { className: 'form-hint' }, 'Bangladesh mobile number starting with 01 (11 digits total)')
-                    ),
-                    h('div', { className: 'field-group' },
-                        h('label', { className: 'field-label' }, 'Phone Number (Optional)'),
-                        h('input', {
-                            type: 'text',
-                            className: `input-field ${fieldErrors.phone ? 'error' : ''}`,
-                            value: formData.phone,
-                            onChange: (e) => handleInputChange('phone', e.target.value),
-                            onBlur: (e) => validateAndSetFieldError('phone', e.target.value, 'phone'),
-                            placeholder: 'Office/landline number'
-                        }),
-                        fieldErrors.phone && h('span', { className: 'error-message' }, fieldErrors.phone)
                     )
                 )
             );
@@ -1123,7 +1343,7 @@
                                             }, 'Previous')
                                             : h('div')
                                     ),
-                                    h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+                                    h('div', { className: 'button-group-flex' },
                                         h('button', {
                                             className: `primary-btn ${loading ? 'loading' : ''}`,
                                             onClick: handleNext,

@@ -14,26 +14,22 @@
         const [sessionId, setSessionId] = useState('');
         
         const [formData, setFormData] = useState({
-            email: '',
+            identifier: '', // Can be email or phone
             otp: '',
             firstName: '',
             lastName: '',
+            email: '', // Email address (required when phone was used for verification)
             mobile: '',
             legalIdType: '',
             businessName: '',
             website: '',
-            password: '',
-            confirmPassword: '',
             humanVerified: false
         });
         
         const [recaptchaResponse, setRecaptchaResponse] = useState('');
         const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
         
-        const [passwordVisible, setPasswordVisible] = useState({
-            password: false,
-            confirmPassword: false
-        });
+        // Password fields removed - no longer required by API
 
         useEffect(() => {
             let interval = null;
@@ -120,15 +116,7 @@
                 if (digit === ':') {
                     return createElement('span', { 
                         key: index, 
-                        className: 'countdown-colon',
-                        style: { 
-                            margin: '0 2px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            fontSize: '32px',
-                            fontWeight: '700',
-                            lineHeight: '38px'
-                        } 
+                        className: 'countdown-colon'
                     }, ':');
                 }
                 return createElement('div', { 
@@ -141,8 +129,18 @@
         // No client-side validation - API handles everything
         // This is just for UX to show field is required
         const isFieldEmpty = (name, value) => {
-            const requiredFields = ['email', 'otp', 'firstName', 'lastName', 'mobile', 'businessName', 'legalIdType', 'password', 'confirmPassword'];
+            const requiredFields = ['identifier', 'otp', 'firstName', 'lastName', 'mobile', 'businessName', 'legalIdType'];
             return requiredFields.includes(name) && !value;
+        };
+        
+        // Helper function to detect if identifier is email or phone
+        const isEmail = (identifier) => {
+            return identifier.includes('@') && identifier.includes('.');
+        };
+        
+        const isPhone = (identifier) => {
+            const phoneRegex = /^(\+8801|01)[0-9]{9}$/;
+            return phoneRegex.test(identifier.replace(/\s/g, ''));
         };
 
         const handleInputChange = (e) => {
@@ -197,29 +195,31 @@
         // Remove server-side field validation - let API handle it directly
         // API will return validation errors in its response
 
-        const sendEmailVerification = async () => {
+        const sendIdentifierVerification = async () => {
             // No client-side validation - let API handle everything
             setLoading(true);
             try {
                 const response = await apiCall('email_verification', {
-                    email: formData.email
+                    identifier: formData.identifier
                 });
                 
-                // Email verification response received
+                // Identifier verification response received
                 
-                // The response should contain session_id
-                if (response && response.session_id) {
+                // The response should contain session_id in the data field
+                if (response && response.data && response.data.session_id) {
+                    setSessionId(response.data.session_id);
+                    goToStep(2);
+                } else if (response && response.session_id) {
+                    // Fallback for direct session_id
                     setSessionId(response.session_id);
                     goToStep(2);
                 } else {
-                    // If no session_id, assume success and generate one locally
-                    const localSessionId = 'sess_' + Math.random().toString(36).substring(2, 18);
-                    setSessionId(localSessionId);
-                    goToStep(2);
+                    // If no session_id, throw error
+                    throw new Error('No session ID received from server');
                 }
             } catch (error) {
-                // Email verification error
-                setErrors(prev => ({ ...prev, email: error.message }));
+                // Identifier verification error
+                setErrors(prev => ({ ...prev, identifier: error.message }));
             } finally {
                 setLoading(false);
             }
@@ -257,31 +257,24 @@
             setErrors({});
             setLoading(true);
             try {
-                // Try to execute reCAPTCHA v3 but don't block if it fails
-                let recaptchaToken = null;
-                if (config.recaptcha_site_key) {
-                    try {
-                        recaptchaToken = await executeRecaptcha();
-                    } catch (error) {
-                        // reCAPTCHA failed, proceeding without it
-                        // Don't block form submission if reCAPTCHA fails
-                    }
-                }
-                
                 const requestData = {
                     business_name: formData.businessName,
                     business_website: formData.website || '',
                     first_name: formData.firstName,
                     last_name: formData.lastName,
                     legal_identity: formData.legalIdType,
-                    password: formData.password,
-                    phone: formData.mobile,
                     session_id: sessionId
                 };
                 
-                // Only add reCAPTCHA token if we got one
-                if (recaptchaToken) {
-                    requestData.recaptcha_response = recaptchaToken;
+                // Dynamic email/phone based on verification method
+                if (isEmail(formData.identifier)) {
+                    // Email was used for verification, phone comes from form
+                    requestData.email = formData.identifier;
+                    requestData.phone = formData.mobile;
+                } else {
+                    // Phone was used for verification, email comes from form  
+                    requestData.phone = formData.identifier;
+                    requestData.email = formData.email;
                 }
                 
                 const response = await apiCall('business_details', requestData);
@@ -314,7 +307,7 @@
             setResendingOTP(true);
             try {
                 await apiCall('email_verification', {
-                    email: formData.email
+                    identifier: formData.identifier
                 });
                 setTimeLeft(60);
                 setTimerActive(true);
@@ -325,17 +318,12 @@
             }
         };
 
-        const togglePassword = (field) => {
-            setPasswordVisible(prev => ({
-                ...prev,
-                [field]: !prev[field]
-            }));
-        };
+        // Password toggle function removed - passwords no longer needed
 
         const handleKeyPress = (e) => {
             if (e.key === 'Enter' && !loading) {
                 e.preventDefault();
-                if (currentStep === 1) sendEmailVerification();
+                if (currentStep === 1) sendIdentifierVerification();
                 else if (currentStep === 2) verifyOTP();
                 else if (currentStep === 3) submitBusinessDetails();
             }
@@ -343,53 +331,37 @@
 
         const renderInput = (name, type = 'text', placeholder = '', maxLength = null) => {
             const label = name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1');
-            const helperText = name === 'mobile' ? 'Format: 01712345678 or +8801712345678' : null;
+            let helperText = null;
+            
+            if (name === 'mobile') {
+                helperText = 'Format: 01712345678 or +8801712345678';
+            } else if (name === 'identifier') {
+                helperText = 'Enter your email address or phone number';
+            }
             
             return createElement('div', { className: 'field-group' },
-                createElement('label', { className: 'field-label' }, label),
+                createElement('label', { className: 'field-label' }, 
+                    name === 'identifier' ? 'Email or Phone' : label
+                ),
                 createElement('input', {
                     type,
                     className: `input-field ${errors[name] ? 'error' : ''}`,
                     name,
                     value: formData[name],
                     onChange: handleInputChange,
-                    placeholder: placeholder || (name === 'mobile' ? '01712345678' : ''),
-                    maxLength: maxLength || (name === 'mobile' ? 14 : null),
+                    placeholder: placeholder || (name === 'mobile' ? '01712345678' : 
+                        name === 'identifier' ? 'user@example.com or 01712345678' : ''),
+                    maxLength: maxLength || (name === 'mobile' ? 14 : name === 'identifier' ? 50 : null),
                     onKeyPress: handleKeyPress
                 }),
                 helperText && !errors[name] && createElement('span', { 
-                    className: 'field-helper-text',
-                    style: { fontSize: '12px', color: '#666', marginTop: '4px', display: 'block' }
+                    className: 'field-helper-text'
                 }, helperText),
                 errors[name] && createElement('span', { className: 'error-message' }, errors[name])
             );
         };
 
-        const renderPasswordField = (name, label) => {
-            return createElement('div', { className: 'field-group' },
-                createElement('label', { className: 'field-label' }, label),
-                createElement('div', { className: 'password-field' },
-                    createElement('input', {
-                        type: passwordVisible[name] ? 'text' : 'password',
-                        className: `input-field ${errors[name] ? 'error' : ''}`,
-                        name,
-                        value: formData[name],
-                        onChange: handleInputChange,
-                        onKeyPress: handleKeyPress
-                    }),
-                    createElement('span', {
-                        className: 'eye-icon',
-                        onClick: () => togglePassword(name),
-                        dangerouslySetInnerHTML: {
-                            __html: passwordVisible[name] ? 
-                                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>' :
-                                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>'
-                        }
-                    })
-                ),
-                errors[name] && createElement('span', { className: 'error-message' }, errors[name])
-            );
-        };
+        // Password field render function removed - passwords no longer needed
 
         return createElement('div', { className: 'moneybag-form-container moneybag-form', onKeyPress: handleKeyPress },
             // Step 1: Email Input
@@ -400,31 +372,32 @@
                             createElement('img', {
                                 src: config.plugin_url + 'assets/image/emojione_e-mail.webp',
                                 alt: 'Email verification',
-                                style: { width: '120px', height: '120px' }
+                                className: 'illustration-small'
                             })
                         )
                     ),
                     createElement('p', { className: 'info-text' },
-                        'Secure email verification ensures your sandbox credentials are delivered safely to the right person.'
+                        'Secure verification ensures your sandbox credentials are delivered safely. We support both email and phone verification.'
                     )
                 ),
                 createElement('div', { className: 'section-divider' }),
                 createElement('div', { className: 'right-section' },
                     createElement('div', { className: 'form-content' },
-                        createElement('label', { className: 'input-label' }, 'Email'),
+                        createElement('label', { className: 'input-label' }, 'Email or Phone'),
                         createElement('input', {
-                            type: 'email',
-                            className: `input-field ${errors.email ? 'error' : ''}`,
-                            name: 'email',
-                            value: formData.email,
+                            type: 'text',
+                            className: `input-field ${errors.identifier ? 'error' : ''}`,
+                            name: 'identifier',
+                            value: formData.identifier,
                             onChange: handleInputChange,
                             onKeyPress: handleKeyPress,
+                            placeholder: 'user@example.com or 01712345678',
                             disabled: loading
                         }),
-                        errors.email && createElement('span', { className: 'error-message' }, errors.email),
+                        errors.identifier && createElement('span', { className: 'error-message' }, errors.identifier),
                         createElement('button', {
                             className: 'primary-btn',
-                            onClick: sendEmailVerification,
+                            onClick: sendIdentifierVerification,
                             disabled: loading
                         }, 
                             loading ? createElement('span', { className: 'btn-content' },
@@ -453,23 +426,19 @@
                                 createElement('img', {
                                     src: config.plugin_url + 'assets/image/streamline-freehand-color_password-approved.webp',
                                     alt: 'Password approved',
-                                    style: { 
-                                        width: '155.625px', 
-                                        height: '120px', 
-                                        aspectRatio: '83/64' 
-                                    }
+                                    className: 'illustration-password'
                                 })
                             )
                         ),
                         createElement('p', { className: 'info-text' },
-                            'Enter the 6-digit verification code sent to your email. Code expires in 1 minute for security.'
+                            `Enter the 6-digit verification code sent to your ${isEmail(formData.identifier) ? 'email' : 'phone'}. Code expires in 1 minute for security.`
                         )
                     ),
                     createElement('div', { className: 'section-divider' }),
                     createElement('div', { className: 'right-section' },
                         createElement('div', { className: 'form-content' },
                             createElement('div', { className: 'otp-sent-message' }, 
-                                `OTP sent to ${formData.email}`
+                                `OTP sent to ${formData.identifier}`
                             ),
                             createElement('div', { className: 'otp-input-wrapper' },
                                 createElement('input', {
@@ -516,7 +485,16 @@
                 createElement('div', { className: 'input-row' },
                     renderInput('firstName', 'text', ''),
                     renderInput('lastName', 'text', ''),
-                    renderInput('mobile', 'tel', '')
+                    // Dynamic field based on verification method
+                    isEmail(formData.identifier) 
+                        ? renderInput('mobile', 'tel', '', {
+                            placeholder: 'Enter your mobile number',
+                            required: true
+                        })
+                        : renderInput('email', 'email', '', {
+                            placeholder: 'Enter your email address',
+                            required: true
+                        })
                 ),
                 createElement('div', { className: 'input-row' },
                     createElement('div', { className: 'field-group' },
@@ -544,10 +522,6 @@
                     renderInput('businessName', 'text', ''),
                     renderInput('website', 'text', 'example.com')
                 ),
-                createElement('div', { className: 'input-row-2' },
-                    renderPasswordField('password', 'Password'),
-                    renderPasswordField('confirmPassword', 'Confirm Password')
-                ),
                 // reCAPTCHA v3 is invisible, only show error if any
                 errors.recaptcha && createElement('div', { className: 'recaptcha-error' },
                     createElement('span', { className: 'error-message' }, errors.recaptcha)
@@ -568,7 +542,7 @@
                         'Creating Account...'
                     ) : createElement('span', { className: 'btn-content' },
                         'Get Sandbox Access',
-                        createElement('span', { style: { fontSize: '15px', marginLeft: '8px' } }, '→')
+                        createElement('span', { className: 'btn-arrow' }, '→')
                     )
                 )
             ),
@@ -580,21 +554,21 @@
                         createElement('img', {
                             src: config.plugin_url + 'assets/image/emojione_e-mail.webp',
                             alt: 'Email sent',
-                            style: { width: '120px', height: '120px' }
+                            className: 'illustration-small'
                         })
                     )
                 ),
                 createElement('h2', { className: 'success-heading' }, "You're almost there! We sent an email to"),
-                createElement('div', { className: 'email-display' }, formData.email || 'user@memberstack.com'),
+                createElement('div', { className: 'email-display' }, formData.identifier || 'user@example.com'),
                 createElement('p', { className: 'success-info' },
-                    'Check your inbox for your sandbox API credentials and documentation links.'
+                    `Check your ${isEmail(formData.identifier) ? 'inbox' : 'messages'} for your sandbox API credentials and documentation links.`
                 ),
                 createElement('button', {
                     className: 'arrow-btn',
                     onClick: () => window.location.href = 'https://sandbox.moneybag.com.bd/'
                 },
                     'Login To Sandbox',
-                    createElement('span', { style: { fontSize: '15px', marginLeft: '8px' } }, '→')
+                    createElement('span', { className: 'btn-arrow' }, '→')
                 )
             )
         );

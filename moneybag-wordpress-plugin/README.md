@@ -14,6 +14,7 @@ The Moneybag WordPress Plugin enables seamless integration of Moneybag payment s
    - Multi-step registration form with progress tracking
    - Real-time field validation with visual feedback
    - Document upload support
+   - **Full CRM Integration** - automatic contact, opportunity, and notes creation
    - Mobile-responsive design with 2-column service layout
    - Success confirmation with contact details
    - No customization controls - uses global styling
@@ -42,6 +43,7 @@ The Moneybag WordPress Plugin enables seamless integration of Moneybag payment s
 - 🎯 Unified global CSS system preventing conflicts
 - ⚡ Optimized performance with minimal dependencies
 - 🔧 Simplified widget implementation without customization complexity
+- 🏢 **Full CRM Integration** - automatic contact creation, opportunity tracking, and detailed notes
 
 ## 📋 Requirements
 
@@ -75,6 +77,7 @@ The Moneybag WordPress Plugin enables seamless integration of Moneybag payment s
 Navigate to **WordPress Admin → Settings → Moneybag** to configure:
 - API endpoints
 - API keys
+- **CRM API settings** (URL and API key for contact/opportunity creation)
 - reCAPTCHA settings
 - Default redirect URLs
 - Email notifications
@@ -121,6 +124,11 @@ moneybag-wordpress-plugin/
 
 **Merchant Registration:**
 - Stores data locally in WordPress
+- **Full CRM Integration:**
+  - Automatic contact/person creation with proper data mapping
+  - Business opportunity creation linked to contact
+  - Detailed notes with all registration information
+  - Bangladesh phone number formatting (+880 country code)
 - Email notifications to admin and merchant
 - Custom registration ID generation
 
@@ -225,6 +233,12 @@ For technical support and feature requests:
 ### Version 2.0.0 (Latest)
 - **Major Refactor:** Unified all widget styling into global CSS system
 - **Widget Simplification:** Removed all Elementor customization controls
+- **CRM Integration:** Complete CRM integration for merchant registration
+  - Automatic contact/person creation with proper data structure
+  - Business opportunity creation and tracking
+  - Comprehensive notes with all registration details
+  - Bangladesh phone number formatting (+880)
+  - Graceful error handling for CRM operations
 - **CSS Optimization:** Removed duplicate styles, keyframes, and dead code
 - **Responsive Enhancement:** Improved typography scaling across all devices
 - **Mobile Optimization:** Enhanced mobile layouts and spacing

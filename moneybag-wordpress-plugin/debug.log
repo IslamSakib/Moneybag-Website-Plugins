@@ -1,0 +1,233 @@
+[2025-08-31 10:44:21] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 10:44:21] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 10:44:21] Input data: Array
+(
+    [business_name] => sfcazvfavf
+    [business_website] => 
+    [first_name] => acfaqefcaf
+    [last_name] => caefvfae
+    [legal_identity] => Public Company
+    [email] => dvfaef@GMAIL.COM
+    [phone] => 01565874555
+)
+
+[2025-08-31 10:44:21] Final payload: Array
+(
+    [business_name] => sfcazvfavf
+    [legal_identity] => Public Company
+    [first_name] => acfaqefcaf
+    [last_name] => caefvfae
+    [email] => dvfaef@GMAIL.COM
+    [phone] => +8801565874555
+)
+
+[2025-08-31 10:44:24] Response Status: 201
+[2025-08-31 10:44:24] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDSF58537623","api_key":"3d1ce7d1.dBKdhDMFwOTxgFywt0SpMW13bOLn4aehYo8wviN2qnw","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/a827d640fcc04b81a2ca6585177e71ad","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T16:44:17.508888","status_code":201}}
+[2025-08-31 10:44:24] SUCCESS! Merchant account created
+[2025-08-31 10:49:07] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 10:49:07] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 10:49:07] Input data: Array
+(
+    [business_name] => adfgafg
+    [business_website] => 
+    [first_name] => advfae
+    [last_name] => fgasfvqv
+    [legal_identity] => Limited Liability Company
+    [email] => test22222@gmail.com
+    [phone] => 01236665898
+)
+
+[2025-08-31 10:49:07] Final payload: Array
+(
+    [business_name] => adfgafg
+    [legal_identity] => Limited Liability Company
+    [first_name] => advfae
+    [last_name] => fgasfvqv
+    [email] => test22222@gmail.com
+    [phone] => +8801236665898
+)
+
+[2025-08-31 10:49:10] Response Status: 201
+[2025-08-31 10:49:10] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDAD50837623","api_key":"5ed4515e.wRIxgITowqRz-QeL5wNBbgvkGTycp5V9bO1qu5ang2M","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/637f808e6a864628a81c8b27ba651926","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T16:49:03.937657","status_code":201}}
+[2025-08-31 10:49:10] SUCCESS! Merchant account created
+[2025-08-31 10:52:33] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 10:52:33] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 10:52:33] Input data: Array
+(
+    [business_name] => ascfafv
+    [business_website] => 
+    [first_name] => adfef
+    [last_name] => svcfav
+    [legal_identity] => Public Company
+    [email] => test344@gmail.com
+    [phone] => 01235846856
+)
+
+[2025-08-31 10:52:33] Final payload: Array
+(
+    [business_name] => ascfafv
+    [legal_identity] => Public Company
+    [first_name] => adfef
+    [last_name] => svcfav
+    [email] => test344@gmail.com
+    [phone] => +8801235846856
+)
+
+[2025-08-31 10:52:36] Response Status: 201
+[2025-08-31 10:52:36] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDAS63837623","api_key":"36f523e4.O6nqsENqGvyWEnu20gHEbl_q5SVXsrIar50BFCIq0nA","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/bde2c798063649a8ad9b841be9e3f870","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T16:52:29.337489","status_code":201}}
+[2025-08-31 10:52:36] SUCCESS! Merchant account created
+[2025-08-31 10:55:38] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 10:55:38] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 10:55:38] Input data: Array
+(
+    [business_name] => degag
+    [business_website] => 
+    [first_name] => dvgwesrgvs
+    [last_name] => gvwrsbgbv
+    [legal_identity] => Public Company
+    [email] => test44444@gmail.com
+    [phone] => 01222222222
+)
+
+[2025-08-31 10:55:38] Final payload: Array
+(
+    [business_name] => degag
+    [legal_identity] => Public Company
+    [first_name] => dvgwesrgvs
+    [last_name] => gvwrsbgbv
+    [email] => test44444@gmail.com
+    [phone] => +8801222222222
+)
+
+[2025-08-31 10:55:40] Response Status: 201
+[2025-08-31 10:55:40] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDDE69447623","api_key":"8ea0ecea.NrmRpObj8Q--qgxPbK3iB3v46nhrAoTNimkiAcyA2W4","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/779515809c05414e90750401354cda4d","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T16:55:33.654217","status_code":201}}
+[2025-08-31 10:55:40] SUCCESS! Merchant account created
+[2025-08-31 11:00:14] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 11:00:14] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 11:00:14] Input data: Array
+(
+    [business_name] => ascfafaef
+    [business_website] => 
+    [first_name] => asdvcaevfava
+    [last_name] => dvazveava
+    [legal_identity] => Limited Liability Company
+    [email] => 22222222222test@gmail.com
+    [phone] => 01258858586
+)
+
+[2025-08-31 11:00:14] Final payload: Array
+(
+    [business_name] => ascfafaef
+    [legal_identity] => Limited Liability Company
+    [first_name] => asdvcaevfava
+    [last_name] => dvazveava
+    [email] => 22222222222test@gmail.com
+    [phone] => +8801258858586
+)
+
+[2025-08-31 11:00:16] Response Status: 201
+[2025-08-31 11:00:16] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDAS25377623","api_key":"8fc7c028.h6kcvxl8nJEZAZ8um4iP1xAJIaz3IYaaFiR5FByqTCA","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/1061b9798bd04f03b1451f855f6cf544","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T17:00:09.689983","status_code":201}}
+[2025-08-31 11:00:16] SUCCESS! Merchant account created
+[2025-08-31 11:09:36] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 11:09:36] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 11:09:36] Input data: Array
+(
+    [business_name] => Sakib Islam
+    [business_website] => 
+    [first_name] => Sakib
+    [last_name] => Islam
+    [legal_identity] => Partnership
+    [email] => sakib.islam@oisbd.net
+    [phone] => 01950025990
+)
+
+[2025-08-31 11:09:36] Final payload: Array
+(
+    [business_name] => Sakib Islam
+    [legal_identity] => Partnership
+    [first_name] => Sakib
+    [last_name] => Islam
+    [email] => sakib.islam@oisbd.net
+    [phone] => +8801950025990
+)
+
+[2025-08-31 11:09:36] Response Status: 409
+[2025-08-31 11:09:36] Response Body: {"success":false,"message":"Phone number already exists. Please use a different phone number.","code":409}
+[2025-08-31 11:09:54] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 11:09:54] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 11:09:54] Input data: Array
+(
+    [business_name] => Sakib Islam
+    [business_website] => 
+    [first_name] => Sakib
+    [last_name] => Islam
+    [legal_identity] => Partnership
+    [email] => sakib22222@gmail.com
+    [phone] => 01950029999
+)
+
+[2025-08-31 11:09:54] Final payload: Array
+(
+    [business_name] => Sakib Islam
+    [legal_identity] => Partnership
+    [first_name] => Sakib
+    [last_name] => Islam
+    [email] => sakib22222@gmail.com
+    [phone] => +8801950029999
+)
+
+[2025-08-31 11:09:57] Response Status: 201
+[2025-08-31 11:09:57] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDSA14807623","api_key":"91dde3ac.4iP2gzl6xQL_WzMmYpwoQ0rXzXokAA-YKrJiQN4HvzA","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/cb5965e95307451f9ae957a22572d6cc","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T17:09:50.429875","status_code":201}}
+[2025-08-31 11:09:57] SUCCESS! Merchant account created
+[2025-08-31 11:25:57] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 11:25:57] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 11:25:57] Input data: Array
+(
+    [business_name] => Sakib Islam
+    [business_website] => 
+    [first_name] => Sakib
+    [last_name] => Islam
+    [legal_identity] => Public Company
+    [email] => sakib1111@gmail.com
+    [phone] => 012223568985
+)
+
+[2025-08-31 11:25:57] Final payload: Array
+(
+    [business_name] => Sakib Islam
+    [legal_identity] => Public Company
+    [first_name] => Sakib
+    [last_name] => Islam
+    [email] => sakib1111@gmail.com
+    [phone] => +88012223568985
+)
+
+[2025-08-31 11:26:00] Response Status: 201
+[2025-08-31 11:26:00] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDSA73577623","api_key":"a0217207.iziiWs4ND0M2bgrXGOMx8ImKEik9L88gB7vTR7h205s","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/f3acd0138d04443a86240ce32373e469","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T17:25:53.480644","status_code":201}}
+[2025-08-31 11:26:00] SUCCESS! Merchant account created
+[2025-08-31 11:30:45] ========== MERCHANT REGISTRATION NO-AUTH ==========
+[2025-08-31 11:30:45] URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-08-31 11:30:45] Input data: Array
+(
+    [business_name] => Test Enterprise
+    [business_website] => 
+    [first_name] => Sakib
+    [last_name] => Islam
+    [legal_identity] => Public Company
+    [email] => 55555555sakib@gmail.com
+    [phone] => 01325569880
+)
+
+[2025-08-31 11:30:45] Final payload: Array
+(
+    [business_name] => Test Enterprise
+    [legal_identity] => Public Company
+    [first_name] => Sakib
+    [last_name] => Islam
+    [email] => 55555555sakib@gmail.com
+    [phone] => +8801325569880
+)
+
+[2025-08-31 11:30:47] Response Status: 201
+[2025-08-31 11:30:47] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE94497623","api_key":"7726cde7.cJyYg8_KKv_0qv06bFkLtJrE1AOTblvte4oXvnjxVkg","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/f7d012773aca47db8a01ee74e9fafa5c","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T17:30:40.695264","status_code":201}}
+[2025-08-31 11:30:47] SUCCESS! Merchant account created

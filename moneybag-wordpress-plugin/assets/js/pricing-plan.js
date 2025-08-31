@@ -510,7 +510,7 @@
                             onClick: nextStep
                         }, createElement('span', { className: 'btn-content' },
                             'Book an Appointment',
-                            createElement('span', { style: { fontSize: '15px', marginLeft: '8px' } }, '→')
+                            createElement('span', { className: 'btn-arrow' }, '→')
                         ))
                     ),
                     

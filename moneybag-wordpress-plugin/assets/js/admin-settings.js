@@ -67,9 +67,8 @@
         
         return h('button', {
             type: 'button',
-            className: 'button button-secondary',
-            onClick: togglePassword,
-            style: { marginLeft: '10px' }
+            className: 'button button-secondary admin-toggle-btn',
+            onClick: togglePassword
         }, isVisible ? 'Hide' : 'Show');
     }
     
@@ -134,11 +133,7 @@
             }, isLoading ? 'Testing...' : 'Test CRM Connection'),
             
             testResult && h('div', {
-                className: `${resultType}-result`,
-                style: { 
-                    display: 'block',
-                    marginTop: '20px'
-                }
+                className: `${resultType}-result admin-result-message`
             },
                 h('h4', null, resultType === 'success' ? '✅ ' : '❌ ', testResult.message),
                 resultType === 'success' && testResult.details ? 

@@ -1,27 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir:*)",
-      "Bash(python:*)",
-      "Bash(rm:*)",
-      "Bash(node:*)",
-      "Bash(dir data)",
-      "Bash(grep:*)",
       "Bash(curl:*)",
-      "Bash(npm install)",
-      "Bash(npm run build:*)",
-      "Bash(dir:*)",
-      "Bash(composer:*)",
-      "Bash(php:*)",
-      "Bash(del \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\assets\\css\\merchant-registration-global.css\")",
-      "Bash(del \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\assets\\css\\merchant-registration.css\")",
-      "Bash(tree:*)"
+      "Bash(nslookup:*)",
+      "Bash(ping:*)",
+      "Bash(start test-merchant-registration.html)",
+      "Bash(copy merchant-registration-options.json merchant-registration-options-backup.json)",
+      "Bash(copy merchant-registration-options-fixed.json merchant-registration-options.json)"
     ],
     "deny": [],
-    "ask": [],
-    "additionalDirectories": [
-      "C:\\laragon\\www\\Moneybag-Website\\wp-content",
-      "C:\\laragon\\www\\Moneybag-Website"
-    ]
+    "ask": []
   }
 }
