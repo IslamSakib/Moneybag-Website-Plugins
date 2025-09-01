@@ -210,13 +210,11 @@
             const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
             
             if (file.size > maxSize) {
-                // File size must be less than 1MB
                 alert('File size must be less than 1MB');
                 return;
             }
             
             if (!allowedTypes.includes(file.type)) {
-                // Only JPG, PNG, and PDF files are allowed
                 alert('Only JPG, PNG, and PDF files are allowed');
                 return;
             }
@@ -540,7 +538,6 @@
                         personId = personResponse?.data?.createPerson?.id || personResponse?.id;
                     }
                 } catch (error) {
-                    console.error('Person creation/search failed:', error);
                     // Use email hash as fallback
                     personId = `merchant_${btoa(data.email).replace(/[^a-zA-Z0-9]/g, '').substring(0, 10)}`;
                 }
@@ -560,7 +557,6 @@
                     const opportunityResponse = await crmApiCall('create_opportunity', opportunityData);
                     opportunityId = opportunityResponse?.data?.createOpportunity?.id || opportunityResponse?.id;
                 } catch (error) {
-                    console.error('Opportunity creation failed:', error);
                     opportunityId = `opp_merchant_${Date.now()}`;
                 }
                 
@@ -605,12 +601,10 @@
                     // The note is created independently and can be found in the CRM notes section
                     // It contains all merchant registration details including the opportunity name
                 } catch (error) {
-                    console.error('Note creation failed:', error);
                 }
                 
                 return true;
             } catch (error) {
-                console.error('CRM submission error:', error);
                 // Don't throw - let the main submission succeed even if CRM fails
                 return false;
             }
@@ -663,7 +657,6 @@
                     
                     // Send data to CRM asynchronously (don't block the success flow)
                     sendToCRM(submitData).catch(error => {
-                        console.error('CRM submission failed:', error);
                         // Don't fail the whole submission if CRM fails
                     });
                     
@@ -749,10 +742,9 @@
                                                 points: '22,6 12,13 2,6'
                                             })
                                         ),
-                                        h('a', { 
-                                            href: 'mailto:info@moneybag.com.bd',
-                                            className: 'contact-link'
-                                        }, 'info@moneybag.com.bd')
+                                        h('span', { 
+                                            className: 'contact-info'
+                                        }, 'Contact your API provider for support')
                                     ),
                                     h('p', { className: 'contact-description' }, 
                                         'For any inquiries, feel free to reach out via phone or email. Our support team is here to assist you with any questions or service-related requests.'
@@ -856,7 +848,7 @@
                                         h('div', { className: 'success-actions' },
                                             h('button', { 
                                                 className: 'secondary-btn',
-                                                onClick: () => window.open('https://moneybag.com.bd/support/#faq', '_blank', 'noopener,noreferrer')
+                                                onClick: () => alert('Please contact your API provider for FAQ and support information.')
                                             }, 'FAQ'),
                                             h('button', { 
                                                 className: 'primary-btn',
@@ -1058,7 +1050,7 @@
                             value: formData.domainName,
                             onChange: (e) => handleInputChange('domainName', e.target.value),
                             onBlur: (e) => validateAndSetFieldError('domain', e.target.value, 'domainName'),
-                            placeholder: 'https://www.example.com'
+                            placeholder: 'www.example.com'
                         }),
                         fieldErrors.domainName && h('span', { className: 'error-message' }, fieldErrors.domainName),
                         h('small', { className: 'form-hint' }, 'Enter your business website URL (optional)')
@@ -1317,7 +1309,7 @@
                             h('div', { className: 'merchant-form-header-nav' },
                                 h('button', null, 'Need Assistance?'),
                                 h('button', { 
-                                    onClick: () => window.open('https://moneybag.com.bd/support/#faq', '_blank', 'noopener,noreferrer')
+                                    onClick: () => alert('Please contact your API provider for FAQ and support information.')
                                 }, 'FAQ')
                             ),
                             h('div', { className: 'progress-section' },

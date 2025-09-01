@@ -35,17 +35,15 @@
                     ),
                     h('li', null, 
                         h('a', { 
-                            href: 'https://sandbox.moneybag.com.bd/', 
-                            target: '_blank',
-                            rel: 'noopener noreferrer'
-                        }, 'Moneybag Sandbox')
+                            href: '#', 
+                            onClick: (e) => {
+                                e.preventDefault();
+                                alert('Please configure your Sandbox API URL in the settings above to access your sandbox environment.');
+                            }
+                        }, 'Your Sandbox Environment')
                     ),
                     h('li', null, 
-                        h('a', { 
-                            href: 'https://docs.moneybag.com.bd/', 
-                            target: '_blank',
-                            rel: 'noopener noreferrer'
-                        }, 'Documentation')
+                        h('span', { style: { color: '#666' } }, 'API Documentation - Contact your API provider for documentation')
                     )
                 )
             )
@@ -123,7 +121,9 @@
         
         return h('div', { className: 'crm-test-section' },
             h('h2', null, '🧪 Test CRM Connection'),
-            h('p', null, 'Test your CRM API connection with sample data. Make sure to save your settings first.'),
+            h('div', { className: 'notice notice-info inline' },
+                h('p', null, '💡 ', h('strong', null, 'Important:'), ' Save your CRM settings first, then test the connection with sample data. The test will create a real person in your CRM system.')
+            ),
             
             h('button', {
                 type: 'button',
@@ -137,12 +137,31 @@
             },
                 h('h4', null, resultType === 'success' ? '✅ ' : '❌ ', testResult.message),
                 resultType === 'success' && testResult.details ? 
-                    h('ul', null,
-                        h('li', null, h('strong', null, 'Status Code:'), ' ', testResult.details.status_code),
-                        h('li', null, h('strong', null, 'Test Person ID:'), ' ', testResult.details.person_id),
-                        h('li', null, h('strong', null, 'Test Email:'), ' ', testResult.details.test_email)
+                    h('div', { className: 'success-details' },
+                        h('ul', null,
+                            h('li', null, h('strong', null, 'Status Code:'), ' ', testResult.details.status_code),
+                            h('li', null, h('strong', null, 'Test Person ID:'), ' ', 
+                                h('code', null, testResult.details.person_id)
+                            ),
+                            h('li', null, h('strong', null, 'Test Email:'), ' ', 
+                                h('code', null, testResult.details.test_email)
+                            )
+                        )
                     ) :
-                    h('p', null, h('strong', null, 'Error:'), ' ', testResult.error)
+                    h('div', { className: 'error-details' },
+                        h('p', null, h('strong', null, 'Error Details:'), ' '),
+                        h('code', { 
+                            style: { 
+                                display: 'block', 
+                                background: '#f8f9fa', 
+                                padding: '8px', 
+                                borderRadius: '4px',
+                                marginTop: '8px',
+                                fontSize: '12px',
+                                wordWrap: 'break-word'
+                            }
+                        }, testResult.error)
+                    )
             )
         );
     }

@@ -682,10 +682,9 @@
                                     strokeLinejoin: 'round'
                                 })
                             ),
-                            createElement('a', {
-                                href: 'mailto:info@moneybag.com.bd',
-                                className: 'contact-link'
-                            }, 'info@moneybag.com.bd')
+                            createElement('span', {
+                                className: 'contact-info'
+                            }, 'Contact your API provider for support')
                         )
                     ),
                     createElement('p', { className: 'contact-description' },

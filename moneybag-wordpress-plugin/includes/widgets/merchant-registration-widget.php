@@ -76,16 +76,16 @@ class MerchantRegistrationWidget extends Widget_Base {
             <div class="merchant-form-preview">
                 <h3><?php echo __('Merchant Registration', 'moneybag-plugin'); ?></h3>
                 <p><?php echo __('Moneybag Merchant Registration Form Preview - This will render the React component on frontend', 'moneybag-plugin'); ?></p>
-                <div style="background: #f9fafb; padding: 20px; border-radius: 8px; text-align: center;">
-                    <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 20px rgba(0,0,0,0.08);">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                            <div style="background: #1f2937; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">1</div>
-                            <div style="background: #e5e7eb; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">2</div>
-                            <div style="background: #e5e7eb; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">3</div>
-                            <div style="background: #e5e7eb; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">4</div>
+                <div class="moneybag-widget-placeholder moneybag-widget-placeholder-merchant">
+                    <div class="moneybag-widget-placeholder-inner">
+                        <div class="moneybag-progress-steps">
+                            <div class="moneybag-progress-step moneybag-progress-step-active">1</div>
+                            <div class="moneybag-progress-step moneybag-progress-step-inactive">2</div>
+                            <div class="moneybag-progress-step moneybag-progress-step-inactive">3</div>
+                            <div class="moneybag-progress-step moneybag-progress-step-inactive">4</div>
                         </div>
-                        <p style="color: #6b7280; margin: 0; font-size: 14px;"><?php echo __('Multi-step merchant registration form will appear here', 'moneybag-plugin'); ?></p>
-                        <p style="color: #9ca3af; margin: 10px 0 0 0; font-size: 12px;"><?php echo __('Business Info → Online Presence → Point of Contact → Documents', 'moneybag-plugin'); ?></p>
+                        <p class="moneybag-widget-placeholder-text"><?php echo __('Multi-step merchant registration form will appear here', 'moneybag-plugin'); ?></p>
+                        <p class="moneybag-widget-placeholder-subtext"><?php echo __('Business Info → Online Presence → Point of Contact → Documents', 'moneybag-plugin'); ?></p>
                     </div>
                 </div>
             </div>

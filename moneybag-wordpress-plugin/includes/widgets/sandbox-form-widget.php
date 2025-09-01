@@ -70,9 +70,9 @@ class SandboxFormWidget extends Widget_Base {
             <div class="moneybag-form-preview">
                 <h3><?php echo __('Sandbox Account Registration', 'moneybag-plugin'); ?></h3>
                 <p><?php echo __('Moneybag Sandbox Form Preview - This will render the React component on frontend', 'moneybag-plugin'); ?></p>
-                <div style="background: #f4f6f9; padding: 20px; border-radius: 8px; text-align: center;">
-                    <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 20px rgba(0,0,0,0.08);">
-                        <p style="color: #5f6d7e; margin: 0;"><?php echo __('Multi-step sandbox registration form will appear here', 'moneybag-plugin'); ?></p>
+                <div class="moneybag-widget-placeholder moneybag-widget-placeholder-sandbox">
+                    <div class="moneybag-widget-placeholder-inner">
+                        <p class="moneybag-widget-placeholder-text"><?php echo __('Multi-step sandbox registration form will appear here', 'moneybag-plugin'); ?></p>
                     </div>
                 </div>
             </div>

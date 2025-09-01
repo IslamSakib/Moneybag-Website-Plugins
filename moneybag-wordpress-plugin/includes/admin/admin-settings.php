@@ -40,13 +40,23 @@ class AdminSettings {
         register_setting('moneybag_settings', 'moneybag_sandbox_api_url', [
             'sanitize_callback' => [$this, 'sanitize_url_setting']
         ]);
+        register_setting('moneybag_settings', 'moneybag_api_base_url', [
+            'sanitize_callback' => [$this, 'sanitize_url_setting']
+        ]);
         register_setting('moneybag_settings', 'moneybag_default_redirect_url', [
             'sanitize_callback' => [$this, 'sanitize_url_setting']
         ]);
         
-        // reCAPTCHA Settings
-        register_setting('moneybag_settings', 'moneybag_recaptcha_site_key');
-        register_setting('moneybag_settings', 'moneybag_recaptcha_secret_key');
+        // Security Settings
+        register_setting('moneybag_settings', 'moneybag_recaptcha_site_key', [
+            'sanitize_callback' => 'sanitize_text_field'
+        ]);
+        register_setting('moneybag_settings', 'moneybag_recaptcha_secret_key', [
+            'sanitize_callback' => 'sanitize_text_field'
+        ]);
+        register_setting('moneybag_settings', 'moneybag_recaptcha_score_threshold', [
+            'sanitize_callback' => [$this, 'sanitize_score_threshold']
+        ]);
         
         // CRM Settings
         register_setting('moneybag_crm_settings', 'moneybag_crm_api_key');
@@ -72,8 +82,23 @@ class AdminSettings {
             'moneybag_general_section',
             [
                 'option_name' => 'moneybag_sandbox_api_url',
-                'default' => 'https://sandbox.api.moneybag.com.bd/api/v2',
-                'description' => 'Base URL for Moneybag Sandbox API'
+                'default' => '',
+                'placeholder' => 'https://your-sandbox-api.com/api/v2',
+                'description' => 'Base URL for Sandbox API (required for sandbox testing)'
+            ]
+        );
+        
+        add_settings_field(
+            'moneybag_api_base_url',
+            __('Production API URL', 'moneybag-plugin'),
+            [$this, 'text_field_callback'],
+            'moneybag_settings',
+            'moneybag_general_section',
+            [
+                'option_name' => 'moneybag_api_base_url',
+                'default' => '',
+                'placeholder' => 'https://your-production-api.com/api/v2',
+                'description' => 'Base URL for Production API (required for live transactions)'
             ]
         );
         
@@ -85,8 +110,9 @@ class AdminSettings {
             'moneybag_general_section',
             [
                 'option_name' => 'moneybag_default_redirect_url',
-                'default' => 'https://sandbox.moneybag.com.bd/',
-                'description' => 'Default URL to redirect users after successful form submission'
+                'default' => '',
+                'placeholder' => 'https://your-website.com/success',
+                'description' => 'Default URL to redirect users after successful form submission (optional)'
             ]
         );
         
@@ -98,8 +124,9 @@ class AdminSettings {
             'moneybag_general_section',
             [
                 'option_name' => 'moneybag_recaptcha_site_key',
-                'default' => '6LdDuakrAAAAAMMfFGjW9-DiuqV7oqK2ElIXkqcx',
-                'description' => 'Your Google reCAPTCHA v3 Site Key (public key)'
+                'default' => '',
+                'placeholder' => 'Your reCAPTCHA Site Key',
+                'description' => 'Your Google reCAPTCHA v3 Site Key (public key) - optional but recommended'
             ]
         );
         
@@ -111,8 +138,25 @@ class AdminSettings {
             'moneybag_general_section',
             [
                 'option_name' => 'moneybag_recaptcha_secret_key',
-                'default' => '6LdDuakrAAAAAByGOiQI6oPujSh-3v2g1G931sdL',
-                'description' => 'Your Google reCAPTCHA v3 Secret Key (private key)'
+                'default' => '',
+                'placeholder' => 'Your reCAPTCHA Secret Key',
+                'description' => 'Your Google reCAPTCHA v3 Secret Key (private key) - optional but recommended'
+            ]
+        );
+        
+        add_settings_field(
+            'moneybag_recaptcha_score_threshold',
+            __('reCAPTCHA Score Threshold', 'moneybag-plugin'),
+            [$this, 'number_field_callback'],
+            'moneybag_settings',
+            'moneybag_general_section',
+            [
+                'option_name' => 'moneybag_recaptcha_score_threshold',
+                'default' => '0.3',
+                'description' => 'Minimum score required (0.0-1.0). Lower = more strict',
+                'min' => '0.0',
+                'max' => '1.0',
+                'step' => '0.1'
             ]
         );
         
@@ -144,8 +188,9 @@ class AdminSettings {
             'moneybag_crm_section',
             [
                 'option_name' => 'moneybag_crm_api_url',
-                'default' => 'https://api.example.com/crm',
-                'description' => 'Base URL for your CRM API'
+                'default' => '',
+                'placeholder' => 'https://your-crm-api.com/rest',
+                'description' => 'Base URL for your CRM API (optional - needed only for contact form CRM integration)'
             ]
         );
         
@@ -239,9 +284,20 @@ class AdminSettings {
         return $url;
     }
     
+    /**
+     * Sanitize score threshold to ensure it's between 0.0 and 1.0
+     */
+    public function sanitize_score_threshold($value) {
+        $score = floatval($value);
+        if ($score < 0.0) return '0.0';
+        if ($score > 1.0) return '1.0';
+        return number_format($score, 1);
+    }
+    
     public function text_field_callback($args) {
         $option_name = $args['option_name'];
         $default = $args['default'] ?? '';
+        $placeholder = $args['placeholder'] ?? $default;
         $description = $args['description'] ?? '';
         $value = get_option($option_name, $default);
         
@@ -251,7 +307,7 @@ class AdminSettings {
             $input_type = 'url';
         }
         
-        echo '<input type="' . esc_attr($input_type) . '" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="regular-text" placeholder="' . esc_attr($default) . '" />';
+        echo '<input type="' . esc_attr($input_type) . '" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="regular-text" placeholder="' . esc_attr($placeholder) . '" />';
         if ($description) {
             echo '<p class="description">' . esc_html($description) . '</p>';
         }
@@ -260,10 +316,34 @@ class AdminSettings {
     public function password_field_callback($args) {
         $option_name = $args['option_name'];
         $default = $args['default'] ?? '';
+        $placeholder = $args['placeholder'] ?? $default;
         $description = $args['description'] ?? '';
         $value = get_option($option_name, $default);
         
-        echo '<input type="password" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="regular-text" />';
+        echo '<div class="password-field-wrapper">';
+        echo '<input type="password" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="regular-text" placeholder="' . esc_attr($placeholder) . '" />';
+        echo '<span id="toggle-' . esc_attr($option_name) . '"></span>';
+        echo '</div>';
+        if ($description) {
+            echo '<p class="description">' . esc_html($description) . '</p>';
+        }
+    }
+    
+    public function number_field_callback($args) {
+        $option_name = $args['option_name'];
+        $default = $args['default'] ?? '';
+        $description = $args['description'] ?? '';
+        $min = $args['min'] ?? null;
+        $max = $args['max'] ?? null;
+        $step = $args['step'] ?? null;
+        $value = get_option($option_name, $default);
+        
+        $attrs = [];
+        if ($min !== null) $attrs[] = 'min="' . esc_attr($min) . '"';
+        if ($max !== null) $attrs[] = 'max="' . esc_attr($max) . '"';
+        if ($step !== null) $attrs[] = 'step="' . esc_attr($step) . '"';
+        
+        echo '<input type="number" id="' . esc_attr($option_name) . '" name="' . esc_attr($option_name) . '" value="' . esc_attr($value) . '" class="small-text" ' . implode(' ', $attrs) . ' />';
         if ($description) {
             echo '<p class="description">' . esc_html($description) . '</p>';
         }
@@ -314,7 +394,7 @@ class AdminSettings {
         }
         
         $api_key = get_option('moneybag_crm_api_key');
-        $api_url = get_option('moneybag_crm_api_url', 'https://crm.example.com/rest');
+        $api_url = get_option('moneybag_crm_api_url');
         
         if (empty($api_key)) {
             wp_send_json_error('CRM API key is not configured');
@@ -435,7 +515,13 @@ class AdminSettings {
             wp_localize_script('moneybag-admin-settings', 'moneybagAdminSettings', [
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('moneybag_admin_nonce'),
-                'crmPageUrl' => admin_url('admin.php?page=moneybag-crm')
+                'crmPageUrl' => admin_url('admin.php?page=moneybag-crm'),
+                'pluginVersion' => MONEYBAG_PLUGIN_VERSION,
+                'settings' => [
+                    'sandboxApiUrl' => get_option('moneybag_sandbox_api_url'),
+                    'apiBaseUrl' => get_option('moneybag_api_base_url'),
+                    'crmApiUrl' => get_option('moneybag_crm_api_url')
+                ]
             ]);
         }
     }

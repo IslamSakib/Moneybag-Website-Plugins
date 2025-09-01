@@ -565,7 +565,7 @@
                 ),
                 createElement('button', {
                     className: 'arrow-btn',
-                    onClick: () => window.location.href = 'https://sandbox.moneybag.com.bd/'
+                    onClick: () => alert('Please check your admin settings for the configured redirect URL or contact your API provider.')
                 },
                     'Login To Sandbox',
                     createElement('span', { className: 'btn-arrow' }, '→')

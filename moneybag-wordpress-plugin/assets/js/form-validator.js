@@ -485,3 +485,41 @@
     // Moneybag Validation loaded successfully
 
 })(window);
+
+/**
+ * MoneybagValidator class for backward compatibility
+ * This provides the same interface that other forms are using
+ */
+class MoneybagValidator {
+    constructor() {
+        this.validation = window.MoneybagValidation;
+    }
+    
+    validateRequired(value) {
+        if (Array.isArray(value)) {
+            return value.length > 0;
+        }
+        return value && value.toString().trim().length > 0;
+    }
+    
+    validateEmail(email) {
+        const error = this.validation.validateField('email', email);
+        return !error;
+    }
+    
+    validatePhone(phone) {
+        const error = this.validation.validateField('mobile', phone);
+        return !error;
+    }
+    
+    validateField(fieldName, value) {
+        return this.validation.validateField(fieldName, value);
+    }
+    
+    validateFields(data, fieldsToValidate) {
+        return this.validation.validateFields(data, fieldsToValidate);
+    }
+}
+
+// Make it globally available
+window.MoneybagValidator = MoneybagValidator;

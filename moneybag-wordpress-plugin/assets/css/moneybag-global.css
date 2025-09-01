@@ -1522,6 +1522,269 @@
 
 /* Global disabled/loading button styles now handle all cases */
 
+/* ========================================
+   Contact Form Widget Styles
+   ======================================== */
+
+.contact-form-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.contact-form-container .contact-form-wrapper {
+    width: 100%;
+}
+
+.contact-form-container .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Form status messages - global for all forms */
+.form-status {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    animation: slideDown 0.3s ease;
+}
+
+.form-status.success {
+    background-color: #10b981;
+    color: white;
+}
+
+.form-status.error {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* Contact form specific form status (for backward compatibility) */
+.contact-form-container .form-status {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    animation: slideDown 0.3s ease;
+}
+
+.contact-form-container .form-status.success {
+    background-color: #10b981;
+    color: white;
+}
+
+.contact-form-container .form-status.error {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* Form rows for side-by-side fields */
+.contact-form-container .form-row,
+.contact-form-container.moneybag-form .form-row,
+.moneybag-form .contact-form-wrapper .form-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 0 !important;
+}
+
+.contact-form-container .form-row.two-columns,
+.contact-form-container.moneybag-form .form-row.two-columns,
+.moneybag-form .contact-form-wrapper .form-row.two-columns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 0 !important;
+}
+
+/* Ensure form groups in rows take full width of their column */
+.contact-form-container .form-row > .form-group,
+.moneybag-form .contact-form-wrapper .form-row > .form-group {
+    width: 100%;
+    min-width: 0; /* Prevent overflow */
+    margin-bottom: 0 !important;
+}
+
+/* Form groups */
+.contact-form-container .form-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+/* Input with icon wrapper */
+.contact-form-container .form-group.with-icon .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.contact-form-container .input-icon {
+    position: absolute;
+    left: 16px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Contact form uses global input styles from .moneybag-form */
+.contact-form-container.moneybag-form .input-field {
+    /* Inherits global styles - matching select field radius */
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+}
+
+.contact-form-container.moneybag-form .input-field.with-icon-padding {
+    padding-left: 44px !important;
+}
+
+/* Textarea field - uses global textarea styles */
+.contact-form-container.moneybag-form .textarea-field {
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    min-height: 80px !important;
+    max-height: 120px !important;
+}
+
+/* Select field now uses global .moneybag-form select styling */
+
+/* Error messages */
+.contact-form-container .error-message {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 4px;
+    animation: slideDown 0.2s ease;
+    font-weight: 500;
+}
+
+/* Error state for all form fields */
+.contact-form-container.moneybag-form .input-field.error,
+.contact-form-container.moneybag-form .textarea-field.error,
+.contact-form-container.moneybag-form .dropdown-toggle.error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Submit button - uses global primary button styles */
+.contact-form-container .form-actions {
+    margin-top: 8px;
+}
+
+.contact-form-container.moneybag-form .submit-button,
+.contact-form-container.moneybag-form .primary-btn {
+    /* Uses global .primary-btn styles */
+    width: auto;
+    min-width: 120px;
+}
+
+/* Animations */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design for Contact Form */
+@media (max-width: 768px) {
+    .contact-form-container {
+        padding: 0;
+    }
+    
+    .contact-form-container .form-row,
+    .contact-form-container.moneybag-form .form-row,
+    .contact-form-container .form-row.two-columns,
+    .contact-form-container.moneybag-form .form-row.two-columns {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+    
+    .contact-form-container .input-field,
+    .contact-form-container .textarea-field,
+    .contact-form-container .dropdown-toggle {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .contact-form-container .submit-button {
+        width: 100%;
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+    
+    .contact-form-container .dropdown-menu {
+        max-height: 200px;
+    }
+    
+    .contact-form-container .dropdown-item {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-form-container {
+        padding: 0;
+    }
+    
+    .contact-form-container .contact-form {
+        gap: 20px;
+    }
+    
+    .contact-form-container .input-field,
+    .contact-form-container .textarea-field,
+    .contact-form-container .dropdown-toggle {
+        padding: 10px 14px;
+        font-size: 14px;
+        border-radius: 20px;
+    }
+    
+    .contact-form-container .textarea-field {
+        min-height: 80px !important;
+    }
+    
+    .contact-form-container .error-message {
+        font-size: 12px;
+    }
+    
+    .contact-form-container .form-status {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1024px) {
+    .contact-form-container {
+        max-width: 900px;
+        padding: 0;
+    }
+    
+    .contact-form-container .input-field,
+    .contact-form-container .textarea-field,
+    .contact-form-container .dropdown-toggle {
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+    
+    .contact-form-container .submit-button {
+        padding: 16px 40px;
+        font-size: 17px;
+    }
+}
+
 /* Button alignment */
 .pricing-plan-container .form-section .button-container,
 .pricing-plan-container .consultation-form .button-container {
@@ -3085,6 +3348,15 @@
     background-color: #eff6ff;
     cursor: not-allowed;
     opacity: 0.8;
+}
+
+.file-upload.error {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.file-upload.error .file-upload-text {
+    color: #ef4444;
 }
 
 .file-upload-content {
@@ -5038,4 +5310,89 @@
     .sandbox-features-list li {
         font-size: 12px;
     }
+}
+
+/* Widget Placeholder Styles */
+.moneybag-widget-placeholder {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.moneybag-widget-placeholder-merchant {
+    background: #f9fafb;
+}
+
+.moneybag-widget-placeholder-pricing {
+    background: linear-gradient(135deg, #f5f0f5 0%, #e8f4ff 100%);
+}
+
+.moneybag-widget-placeholder-sandbox {
+    background: #f4f6f9;
+}
+
+.moneybag-widget-placeholder-inner {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+}
+
+.moneybag-widget-placeholder-pricing .moneybag-widget-placeholder-inner {
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.moneybag-widget-placeholder-text {
+    color: #4a5568;
+    margin: 0;
+    font-size: 16px;
+}
+
+.moneybag-widget-placeholder-subtext {
+    color: #718096;
+    margin: 8px 0 0 0;
+    font-size: 14px;
+}
+
+.moneybag-widget-placeholder-merchant .moneybag-widget-placeholder-text {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.moneybag-widget-placeholder-merchant .moneybag-widget-placeholder-subtext {
+    color: #9ca3af;
+    margin: 10px 0 0 0;
+    font-size: 12px;
+}
+
+.moneybag-widget-placeholder-sandbox .moneybag-widget-placeholder-text {
+    color: #5f6d7e;
+}
+
+.moneybag-progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.moneybag-progress-step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.moneybag-progress-step-active {
+    background: #1f2937;
+    color: white;
+}
+
+.moneybag-progress-step-inactive {
+    background: #e5e7eb;
+    color: #6b7280;
 }

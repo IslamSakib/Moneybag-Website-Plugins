@@ -67,10 +67,10 @@ class PricingPlanWidget extends Widget_Base {
             <div class="pricing-plan-preview">
                 <h3><?php echo __('Pricing & Requirements', 'moneybag-plugin'); ?></h3>
                 <p><?php echo __('Moneybag Pricing Plan Form Preview - Multi-step consultation form will appear here', 'moneybag-plugin'); ?></p>
-                <div style="background: linear-gradient(135deg, #f5f0f5 0%, #e8f4ff 100%); padding: 20px; border-radius: 12px; text-align: center;">
-                    <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-                        <p style="color: #4a5568; margin: 0; font-size: 16px;"><?php echo __('4-Step Pricing & Consultation Form', 'moneybag-plugin'); ?></p>
-                        <p style="color: #718096; margin: 8px 0 0 0; font-size: 14px;"><?php echo __('Dynamic pricing based on business requirements', 'moneybag-plugin'); ?></p>
+                <div class="moneybag-widget-placeholder moneybag-widget-placeholder-pricing">
+                    <div class="moneybag-widget-placeholder-inner">
+                        <p class="moneybag-widget-placeholder-text"><?php echo __('4-Step Pricing & Consultation Form', 'moneybag-plugin'); ?></p>
+                        <p class="moneybag-widget-placeholder-subtext"><?php echo __('Dynamic pricing based on business requirements', 'moneybag-plugin'); ?></p>
                     </div>
                 </div>
             </div>

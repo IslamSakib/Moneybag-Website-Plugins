@@ -6,10 +6,10 @@ This documentation is specifically designed for **Claude Code** and other AI ass
 
 ## 📊 Plugin Overview
 
-**Version:** 2.0.0  
+**Version:** 2.0.1  
 **Architecture:** WordPress Plugin + Elementor + React (wp-element)  
 **Security Level:** Enterprise  
-**Performance:** Optimized Global CSS System  
+**Performance:** Optimized Global CSS System (Code Cleaned)  
 
 ## 🏗️ File Structure & Responsibilities
 
@@ -51,19 +51,25 @@ moneybag-wordpress-plugin/
     └── pricing-rules.json                    # Business categories & pricing
 ```
 
-## 🔄 Data Flow Architecture
+## 🔄 Data Flow Architecture (Cleaned & Optimized)
 
-### **API Request Flow:**
+### **Modern API Request Flow:**
 ```
-React Component → WordPress AJAX → class-moneybag-api.php → External API
-                                                         ↓
-WordPress Database ← Sanitized Response ← API Response ←┘
+React Component → WordPress AJAX → handle_merchant_api() → class-moneybag-api.php → External API
+                                                                                ↓
+WordPress Database ← Sanitized Response ← Processed Response ← API Response ←┘
 ```
 
-### **Security Chain:**
+### **Security Chain (Enhanced):**
 ```
-User Input → JS Validation → Nonce Check → PHP Sanitization → API Call → Response Escaping
+User Input → JS Validation → Nonce Verification → Input Sanitization → Centralized API Handler → Response Escaping
 ```
+
+### **Removed Legacy Components:**
+- ❌ `submit_merchant_registration()` (deprecated)
+- ❌ `generate_merchant_note()` (legacy email system)
+- ❌ Duplicate `init_admin()` method
+- ✅ **Modern:** `handle_merchant_api()` with centralized routing
 
 ## 🎨 CSS Architecture (Global System)
 
@@ -268,7 +274,15 @@ add_action('wp_ajax_nopriv_new_action', [$this, 'handle_new_action']);
 
 ## 🎯 Version History Context
 
-### **v2.0.0 (Current - Major Refactor):**
+### **v2.0.1 (Current - Code Cleanup):**
+- **Critical Fixes:** Removed duplicate methods causing fatal errors
+- **API Modernization:** Eliminated legacy `submit_merchant_registration()`
+- **Code Optimization:** Removed 120+ lines of duplicate/legacy code
+- **Method Consolidation:** Fixed duplicate `init_admin()` functions
+- **Performance:** Cleaner memory usage and faster execution
+- **Maintainability:** Streamlined codebase with clear separation
+
+### **v2.0.0 (Major Refactor):**
 - Unified global CSS system
 - Removed all widget customization controls  
 - Centralized API handling
@@ -276,7 +290,7 @@ add_action('wp_ajax_nopriv_new_action', [$this, 'handle_new_action']);
 - Performance optimizations
 - Mobile-first responsive design
 
-### **v1.0.1 (Previous):**
+### **v1.0.1 (Legacy):**
 - Individual widget CSS files
 - Elementor customization controls
 - Basic CRM integration
@@ -307,8 +321,9 @@ add_action('wp_ajax_nopriv_new_action', [$this, 'handle_new_action']);
 
 **For AI Assistants:** This plugin follows enterprise WordPress development standards with React integration. All security, performance, and compatibility requirements have been implemented and tested. When making modifications, preserve the architectural decisions documented above.
 
-**Last Updated:** August 2025 by Claude Code  
-**Plugin Version:** 2.0.0  
+**Last Updated:** September 2025 by Claude Code  
+**Plugin Version:** 2.0.1 (Code Cleaned)  
+**Developer:** Sakib Islam (+8801950025990)  
 **WordPress Compatibility:** 5.0+  
 **Elementor Compatibility:** 3.0+  
 **PHP Compatibility:** 7.4-8.2+

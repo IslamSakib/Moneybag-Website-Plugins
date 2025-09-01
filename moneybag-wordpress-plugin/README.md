@@ -4,11 +4,11 @@ A comprehensive WordPress plugin providing Elementor widgets for Moneybag paymen
 
 ## 🎯 Overview
 
-The Moneybag WordPress Plugin enables seamless integration of Moneybag payment services into WordPress websites through Elementor. It features three streamlined widgets for merchant registration, pricing display, and sandbox testing - all using a unified global CSS system.
+The Moneybag WordPress Plugin enables seamless integration of Moneybag payment services into WordPress websites through Elementor. It features four streamlined widgets for merchant registration, customer contact forms, pricing display, and sandbox testing - all using a unified global CSS system.
 
 ## ✨ Features
 
-### Three Specialized Widgets
+### Four Specialized Widgets
 
 1. **Merchant Registration Widget**
    - Multi-step registration form with progress tracking
@@ -19,7 +19,17 @@ The Moneybag WordPress Plugin enables seamless integration of Moneybag payment s
    - Success confirmation with contact details
    - No customization controls - uses global styling
 
-2. **Pricing Plan Widget**
+2. **Contact Form Widget**
+   - Professional contact form for customer inquiries
+   - **Complete CRM Integration** - creates people, opportunities, and notes
+   - Multiple inquiry types (General, Technical Support, Pricing, etc.)
+   - Required fields: Name, Email, Phone, Company
+   - Optional message field for detailed inquiries
+   - Company information stored in dedicated CRM company fields
+   - Responsive design with consistent styling
+   - No customization controls - uses global styling
+
+3. **Pricing Plan Widget**
    - Dynamic pricing calculation based on business category
    - Business category-based documentation requirements
    - Interactive consultation booking with CRM integration
@@ -28,7 +38,7 @@ The Moneybag WordPress Plugin enables seamless integration of Moneybag payment s
    - Optimized content positioning and spacing
    - No customization controls - uses global styling
 
-3. **Sandbox Form Widget**
+4. **Sandbox Form Widget**
    - Test payment integration
    - Email and OTP verification
    - Multi-step form flow
@@ -68,6 +78,7 @@ The Moneybag WordPress Plugin enables seamless integration of Moneybag payment s
 2. **Search** for "Moneybag" in the widgets panel
 3. **Drag and drop** your desired widget:
    - Moneybag Merchant Registration
+   - Moneybag Contact Form
    - Moneybag Pricing Plan
    - Moneybag Sandbox Form
 4. **No configuration needed** - widgets use optimized global styles automatically
@@ -93,6 +104,7 @@ moneybag-wordpress-plugin/
 │   ├── class-moneybag-api.php       # API integration layer
 │   └── widgets/
 │       ├── merchant-registration-widget.php
+│       ├── contact-form-widget.php
 │       ├── pricing-plan-widget.php
 │       └── sandbox-form-widget.php
 ├── assets/
@@ -100,6 +112,7 @@ moneybag-wordpress-plugin/
 │   │   └── moneybag-global.css      # Unified, optimized global styles
 │   ├── js/
 │   │   ├── merchant-registration-wp.js  # Merchant form React component
+│   │   ├── contact-form.js              # Contact form React component
 │   │   ├── pricing-plan.js              # Pricing widget with CRM integration
 │   │   ├── sandbox-form.js              # Sandbox testing form
 │   │   ├── admin-crm.js                 # Admin panel scripts
@@ -131,6 +144,16 @@ moneybag-wordpress-plugin/
   - Bangladesh phone number formatting (+880 country code)
 - Email notifications to admin and merchant
 - Custom registration ID generation
+
+**Contact Form:**
+- **Complete CRM Integration:**
+  - Creates people in CRM with company information in dedicated company field
+  - Creates opportunities linked to person with company data
+  - Generates detailed notes with all inquiry information
+  - Handles existing contacts gracefully (no duplicates)
+- Multiple inquiry types: General, Account Setup, Technical Support, etc.
+- Required fields validation: Name, Email, Phone, Company
+- Optional detailed message field
 
 **Pricing Plan:**
 - Dynamic pricing calculation
@@ -206,10 +229,12 @@ All widgets now use a unified global CSS system:
 - Ensure proper WordPress permissions
 - Check if CRM API key is configured correctly
 
-**CRM Duplicate Contact Errors:**
-- The plugin handles existing contacts gracefully
-- Duplicate submissions use existing contact records
-- Form submissions continue even if contact exists
+**CRM Integration Issues:**
+- Contact Form and Merchant Registration both require CRM API configuration
+- The plugin handles existing contacts gracefully (no duplicates)
+- Company information is stored in dedicated CRM company fields
+- All form submissions create linked opportunities and detailed notes
+- Check WordPress debug logs for detailed API response information
 
 **Styling issues:**
 - All styling is now handled globally
@@ -224,27 +249,40 @@ All widgets now use a unified global CSS system:
 ## 📞 Support
 
 For technical support and feature requests:
-- **Phone:** +880 1958 109 228
+- **Contact:** +8801950025990
 - **Email:** info@moneybag.com.bd
 - **Website:** https://moneybag.com.bd
 
 ## 🔄 Recent Updates
 
-### Version 2.0.0 (Latest)
-- **Major Refactor:** Unified all widget styling into global CSS system
+### Version 2.0.1 (Latest - Code Cleanup)
+- **Code Cleanup & Optimization:**
+  - Removed duplicate `submit_merchant_registration()` legacy method
+  - Eliminated duplicate `init_admin()` function that caused fatal errors
+  - Fixed method name conflicts in main plugin file
+  - Streamlined AJAX handlers for better maintainability
+- **Architecture Improvements:**
+  - All merchant registration now uses modern `handle_merchant_api` endpoint
+  - Removed legacy email notification system code
+  - Cleaner separation between API methods
+  - Improved error handling and validation flow
+- **Security Enhancements:**
+  - Consolidated API validation in centralized handlers
+  - Removed redundant security checks
+  - Improved nonce verification consistency
+- **Performance Optimizations:**
+  - Reduced plugin file size by removing duplicate code
+  - Faster loading with streamlined function calls
+  - Cleaner memory usage with removed legacy methods
+
+### Version 2.0.0 (Major Release)
+- **New Contact Form Widget:** Professional contact form with complete CRM integration
+- **Major Refactor:** Unified all widget styling into global CSS system  
 - **Widget Simplification:** Removed all Elementor customization controls
-- **CRM Integration:** Complete CRM integration for merchant registration
-  - Automatic contact/person creation with proper data structure
-  - Business opportunity creation and tracking
-  - Comprehensive notes with all registration details
-  - Bangladesh phone number formatting (+880)
-  - Graceful error handling for CRM operations
+- **Enhanced CRM Integration:** Complete CRM integration for both merchant registration and contact forms
 - **CSS Optimization:** Removed duplicate styles, keyframes, and dead code
 - **Responsive Enhancement:** Improved typography scaling across all devices
 - **Mobile Optimization:** Enhanced mobile layouts and spacing
-- **Performance Improvements:** Reduced CSS file size and improved loading
-- **Content Positioning:** Optimized text positioning and container heights
-- **Accessibility:** Improved form field focus states and transitions
 
 ### Previous Updates (v1.0.1)
 - Fixed CRM duplicate person handling
@@ -261,9 +299,10 @@ This plugin is licensed under GPL v2 or later.
 ## 🙏 Credits
 
 **Developed by:** Sakib Islam  
+**Contact:** +8801950025990  
 **Company:** Moneybag  
-**Version:** 2.0.0  
-**Last Updated:** August 2025
+**Version:** 2.0.1  
+**Last Updated:** September 2025
 
 ---
 

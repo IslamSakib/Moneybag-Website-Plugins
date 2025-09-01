@@ -1,7 +1,7 @@
 {
   "name": "moneybag-wordpress-plugin",
-  "version": "2.0.0",
-  "description": "Elementor widgets for Moneybag payment integration with React.js forms using WordPress built-in React",
+  "version": "2.0.1",
+  "description": "Moneybag WordPress Plugin - Elementor widgets for payment integration with React.js forms using WordPress built-in React",
   "main": "assets/js/sandbox-form.js",
   "keywords": [
     "wordpress",
@@ -10,6 +10,9 @@
     "payment",
     "moneybag"
   ],
-  "author": "Moneybag Team",
+  "author": {
+    "name": "Sakib Islam",
+    "phone": "+8801950025990"
+  },
   "license": "GPL-2.0+"
 }
