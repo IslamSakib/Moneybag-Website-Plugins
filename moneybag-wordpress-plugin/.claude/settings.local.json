@@ -31,7 +31,11 @@
       "Bash(start \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-contact-form-wp.php\")",
       "Read(C:\\laragon\\www\\Moneybag-Website\\wp-content/**)",
       "Bash(del:*)",
-      "Read(C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-WordPress-plugin\\assets\\js/**)"
+      "Read(C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-WordPress-plugin\\assets\\js/**)",
+      "Bash(dir)",
+      "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -l moneybag-plugin.php)",
+      "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -v)",
+      "Read(C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins/**)"
     ],
     "deny": [],
     "ask": []

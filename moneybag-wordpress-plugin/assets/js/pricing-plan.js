@@ -229,7 +229,13 @@
         };
 
         const findOrCreatePerson = async () => {
-            const phoneNumber = formData.mobile.replace('+880', '').replace('880', '').replace('0', '');
+            // Clean mobile number: handle +88 format and 01 format
+            let cleanedPhone = formData.mobile.replace(/[\s\-]/g, '');
+            if (cleanedPhone.startsWith('+8801')) {
+                cleanedPhone = cleanedPhone.substring(5); // Remove +8801, keep remaining digits
+            } else if (cleanedPhone.startsWith('01')) {
+                cleanedPhone = cleanedPhone.substring(1); // Remove leading 0, keep 1 and remaining digits
+            }
             
             // First, try to find existing person by email (only if email exists)
             if (formData.email && formData.email.trim()) {
@@ -249,7 +255,7 @@
                     primaryEmail: formData.email
                 },
                 phones: {
-                    primaryPhoneNumber: phoneNumber,
+                    primaryPhoneNumber: cleanedPhone,
                     primaryPhoneCallingCode: '+880',
                     primaryPhoneCountryCode: 'BD'
                 }

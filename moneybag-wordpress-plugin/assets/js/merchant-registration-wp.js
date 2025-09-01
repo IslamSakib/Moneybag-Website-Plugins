@@ -1121,10 +1121,10 @@
                             value: formData.mobile,
                             onChange: (e) => handleInputChange('mobile', e.target.value),
                             onBlur: (e) => validateAndSetFieldError('mobile', e.target.value, 'mobile'),
-                            placeholder: '01XXXXXXXXX'
+                            placeholder: '+8801XXXXXXXXX'
                         }),
                         fieldErrors.mobile && h('span', { className: 'error-message' }, fieldErrors.mobile),
-                        h('small', { className: 'form-hint' }, 'Bangladesh mobile number starting with 01 (11 digits total)')
+                        h('small', { className: 'form-hint' }, 'Bangladesh mobile number format: +8801XXXXXXXXX or 01XXXXXXXXX')
                     )
                 )
             );

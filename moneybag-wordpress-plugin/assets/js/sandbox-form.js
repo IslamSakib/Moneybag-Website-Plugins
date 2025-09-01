@@ -334,7 +334,7 @@
             let helperText = null;
             
             if (name === 'mobile') {
-                helperText = 'Format: 01712345678 or +8801712345678';
+                helperText = 'Format: +8801712345678 or 01712345678';
             } else if (name === 'identifier') {
                 helperText = 'Enter your email address or phone number';
             }
@@ -349,8 +349,8 @@
                     name,
                     value: formData[name],
                     onChange: handleInputChange,
-                    placeholder: placeholder || (name === 'mobile' ? '01712345678' : 
-                        name === 'identifier' ? 'user@example.com or 01712345678' : ''),
+                    placeholder: placeholder || (name === 'mobile' ? '+8801712345678' : 
+                        name === 'identifier' ? 'user@example.com or +8801712345678' : ''),
                     maxLength: maxLength || (name === 'mobile' ? 14 : name === 'identifier' ? 50 : null),
                     onKeyPress: handleKeyPress
                 }),
@@ -391,7 +391,7 @@
                             value: formData.identifier,
                             onChange: handleInputChange,
                             onKeyPress: handleKeyPress,
-                            placeholder: 'user@example.com or 01712345678',
+                            placeholder: 'user@example.com or +8801712345678',
                             disabled: loading
                         }),
                         errors.identifier && createElement('span', { className: 'error-message' }, errors.identifier),

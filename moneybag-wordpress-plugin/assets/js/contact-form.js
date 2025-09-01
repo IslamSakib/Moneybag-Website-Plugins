@@ -325,7 +325,7 @@
                             h('input', {
                                 type: 'tel',
                                 name: 'phone',
-                                placeholder: 'Phone',
+                                placeholder: '+8801XXXXXXXXX',
                                 value: formData.phone,
                                 onChange: handleInputChange,
                                 onBlur: (e) => validateAndSetFieldError('mobile', e.target.value, 'phone'),

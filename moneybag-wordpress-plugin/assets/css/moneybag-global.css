@@ -1540,7 +1540,7 @@
 .contact-form-container .contact-form {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 15px;
 }
 
 /* Form status messages - global for all forms */
@@ -1583,23 +1583,33 @@
     color: white;
 }
 
-/* Form rows for side-by-side fields */
+/* Form rows for side-by-side fields - OVERRIDE ALL GAPS TO 15PX */
 .contact-form-container .form-row,
 .contact-form-container.moneybag-form .form-row,
-.moneybag-form .contact-form-wrapper .form-row {
+.moneybag-form .contact-form-wrapper .form-row,
+.contact-form .form-row,
+.moneybag-form .contact-form .form-row,
+form.contact-form .form-row {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 20px;
+    gap: 15px !important;
+    column-gap: 15px !important;
+    row-gap: 15px !important;
     width: 100%;
     margin-bottom: 0 !important;
 }
 
 .contact-form-container .form-row.two-columns,
 .contact-form-container.moneybag-form .form-row.two-columns,
-.moneybag-form .contact-form-wrapper .form-row.two-columns {
+.moneybag-form .contact-form-wrapper .form-row.two-columns,
+.contact-form .form-row.two-columns,
+.moneybag-form .contact-form .form-row.two-columns,
+form.contact-form .form-row.two-columns {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 20px;
+    gap: 15px !important;
+    column-gap: 15px !important;
+    row-gap: 15px !important;
     width: 100%;
     margin-bottom: 0 !important;
 }
@@ -1706,9 +1716,17 @@
     .contact-form-container .form-row,
     .contact-form-container.moneybag-form .form-row,
     .contact-form-container .form-row.two-columns,
-    .contact-form-container.moneybag-form .form-row.two-columns {
+    .contact-form-container.moneybag-form .form-row.two-columns,
+    .contact-form .form-row,
+    .contact-form .form-row.two-columns,
+    .moneybag-form .contact-form .form-row,
+    .moneybag-form .contact-form .form-row.two-columns,
+    form.contact-form .form-row,
+    form.contact-form .form-row.two-columns {
         grid-template-columns: 1fr !important;
-        gap: 15px;
+        gap: 15px !important;
+        column-gap: 15px !important;
+        row-gap: 15px !important;
     }
     
     .contact-form-container .input-field,
@@ -5395,4 +5413,26 @@
 .moneybag-progress-step-inactive {
     background: #e5e7eb;
     color: #6b7280;
+}
+
+/* CRITICAL OVERRIDE - Contact Form Gap Fix - Always 15px */
+form.contact-form .form-row,
+form.contact-form .form-row.two-columns,
+.contact-form .form-row,
+.contact-form .form-row.two-columns {
+    gap: 15px !important;
+    column-gap: 15px !important;
+    row-gap: 15px !important;
+}
+
+/* Mobile override for contact form gap */
+@media screen and (max-width: 768px) {
+    form.contact-form .form-row,
+    form.contact-form .form-row.two-columns,
+    .contact-form .form-row,
+    .contact-form .form-row.two-columns {
+        gap: 15px !important;
+        column-gap: 15px !important;
+        row-gap: 15px !important;
+    }
 }
