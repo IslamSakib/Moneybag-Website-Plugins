@@ -215,23 +215,15 @@ class MoneybagAPI {
         $url = self::get_crm_api_base() . $endpoint;
         $api_key = self::get_crm_api_key();
         
-<<<<<<< Updated upstream
-        self::debug_log('[CRM Debug] Request URL: ' . $url);
-        self::debug_log('[CRM Debug] Method: ' . $method);
-        self::debug_log('[CRM Debug] API Key present: ' . (!empty($api_key) ? 'Yes' : 'No'));
-=======
         // Add better debug logging
         self::debug_log('[CRM Debug] Request URL: ' . $url);
         self::debug_log('[CRM Debug] Method: ' . $method);
         self::debug_log('[CRM Debug] API Key present: ' . (!empty($api_key) ? 'Yes' : 'No'));
         self::debug_log('[CRM Debug] API Key length: ' . strlen($api_key));
->>>>>>> Stashed changes
         if ($method !== 'GET') {
             self::debug_log('[CRM Debug] Data: ' . json_encode($data));
         }
         
-<<<<<<< Updated upstream
-=======
         // Check if URL or API key is empty
         if (empty($url) || $url === $endpoint) {
             self::debug_log('[CRM Debug] ERROR: CRM API URL not configured');
@@ -251,7 +243,6 @@ class MoneybagAPI {
             ];
         }
         
->>>>>>> Stashed changes
         $args = [
             'method' => $method,
             'timeout' => 30,
@@ -376,22 +367,9 @@ class MoneybagAPI {
             ];
         }
         
-<<<<<<< Updated upstream
-        // Format and validate phone number
-        $phone = self::format_phone_number($data['phone']);
-        if (!$phone) {
-            self::debug_log('Merchant registration failed: Invalid phone number format', 'ERROR');
-            return [
-                'success' => false,
-                'message' => 'Invalid phone number format. Please use Bangladesh mobile number (e.g., 01712345678)',
-                'error' => 'validation_error'
-            ];
-        }
-=======
         // Pass phone number directly to API without validation (API handles its own validation)
         // Just sanitize the input for security
         $phone = sanitize_text_field($data['phone']);
->>>>>>> Stashed changes
         
         // Validate email format
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
@@ -458,43 +436,6 @@ class MoneybagAPI {
         return [];
     }
     
-<<<<<<< Updated upstream
-    /**
-     * Format phone number to Bangladesh standard
-     * @param string $phone Raw phone number
-     * @return string|false Formatted phone number or false if invalid
-     */
-    private static function format_phone_number($phone) {
-        if (empty($phone)) {
-            return false;
-        }
-        
-        // Remove all non-digit characters except +
-        $clean_phone = preg_replace('/[^0-9+]/', '', $phone);
-        
-        // Bangladesh mobile number patterns
-        $patterns = [
-            '/^\+880([17][0-9]{8})$/',      // +880 followed by 1xxxxxxxx or 7xxxxxxxx
-            '/^880([17][0-9]{8})$/',       // 880 followed by 1xxxxxxxx or 7xxxxxxxx  
-            '/^0([17][0-9]{8})$/',         // 0 followed by 1xxxxxxxx or 7xxxxxxxx
-            '/^([17][0-9]{8})$/'           // 1xxxxxxxx or 7xxxxxxxx
-        ];
-        
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $clean_phone, $matches)) {
-                $number = isset($matches[1]) ? $matches[1] : $matches[0];
-                
-                // Ensure it starts with 1 (Bangladesh mobile prefix)
-                if (substr($number, 0, 1) === '1' && strlen($number) === 9) {
-                    return '+880' . $number;
-                }
-            }
-        }
-        
-        return false;
-    }
-=======
->>>>>>> Stashed changes
     
     public static function verify_recaptcha($token, $action = 'submit') {
         $secret_key = get_option('moneybag_recaptcha_secret_key', '');
@@ -573,16 +514,6 @@ class MoneybagAPI {
     }
     
     /**
-<<<<<<< Updated upstream
-     * Contact Form CRM Integration - Use Production CRM API
-     */
-    
-    public static function submit_contact_form($data) {
-        $api_key = self::get_crm_api_key();
-        
-        if (!$api_key) {
-            self::debug_log('Contact form submission failed: CRM API key not configured', 'ERROR');
-=======
      * Global CRM Submission Handler - For all widgets
      * 
      * @param array $data {
@@ -604,7 +535,6 @@ class MoneybagAPI {
         
         if (!$api_key) {
             self::debug_log('CRM submission failed: API key not configured', 'ERROR');
->>>>>>> Stashed changes
             return [
                 'success' => false,
                 'message' => 'CRM API key not configured. Please contact administrator.',
@@ -612,40 +542,6 @@ class MoneybagAPI {
             ];
         }
         
-<<<<<<< Updated upstream
-        // Sanitize input data
-        $sanitized_data = [
-            'name' => sanitize_text_field($data['name'] ?? ''),
-            'email' => sanitize_email($data['email'] ?? ''),
-            'phone' => sanitize_text_field($data['phone'] ?? ''),
-            'company' => sanitize_text_field($data['company'] ?? ''),
-            'inquiry_type' => sanitize_text_field($data['inquiry_type'] ?? 'General Inquiry'),
-            'other_subject' => sanitize_text_field($data['other_subject'] ?? ''),
-            'message' => sanitize_textarea_field($data['message'] ?? '')
-        ];
-        
-        // Validate required fields
-        if (empty($sanitized_data['name']) || empty($sanitized_data['email']) || 
-            empty($sanitized_data['phone']) || empty($sanitized_data['company'])) {
-            return [
-                'success' => false,
-                'message' => 'Please fill in all required fields.'
-            ];
-        }
-        
-        // If inquiry type is "Other", require the subject field
-        if ($sanitized_data['inquiry_type'] === 'Other' && empty($sanitized_data['other_subject'])) {
-            return [
-                'success' => false,
-                'message' => 'Please specify the subject for "Other" inquiry type.'
-            ];
-        }
-        
-        self::debug_log("========== CONTACT FORM SUBMISSION ==========");
-        self::debug_log("Submitting contact form for: " . $sanitized_data['name']);
-        
-        // Create person in CRM
-=======
         $widget_type = $data['widget_type'] ?? 'unknown';
         self::debug_log("========== CRM SUBMISSION FROM {$widget_type} ==========");
         
@@ -666,7 +562,6 @@ class MoneybagAPI {
         }
         
         // 1. Create or find person
->>>>>>> Stashed changes
         $person_result = self::create_person($sanitized_data);
         
         if (!$person_result['success']) {
@@ -674,76 +569,6 @@ class MoneybagAPI {
         }
         
         $person_id = $person_result['person_id'];
-<<<<<<< Updated upstream
-        self::debug_log("Person result: " . json_encode($person_result));
-        
-        // Check if we have a valid person ID
-        if (empty($person_id)) {
-            self::debug_log("WARNING: Person ID is empty, cannot create opportunity");
-        }
-        
-        // Create opportunity
-        $opportunity_subject = $sanitized_data['inquiry_type'] === 'Other' 
-            ? $sanitized_data['other_subject'] 
-            : $sanitized_data['inquiry_type'];
-        
-        self::debug_log("Creating opportunity for person ID: " . ($person_id ?: 'NULL'));
-        
-        // Prepare opportunity title with company name
-        $opportunity_title = 'Contact Form: ' . $opportunity_subject;
-        if (!empty($sanitized_data['company'])) {
-            $opportunity_title .= ' - ' . $sanitized_data['company'];
-        }
-        
-        $opportunity_result = self::create_opportunity([
-            'person_id' => $person_id,
-            'title' => $opportunity_title,
-            'company_name' => $sanitized_data['company'], // Try adding company name
-            'value' => 0,
-            'currency' => 'BDT',
-            'status' => 'open',
-            'stage' => 'NEW'
-        ]);
-        self::debug_log("Opportunity creation result: " . json_encode($opportunity_result));
-        
-        // Create note with all details since opportunity doesn't support description
-        $note_content = "Contact Form Submission\n";
-        $note_content .= "==================\n\n";
-        $note_content .= "**Contact Details:**\n";
-        $note_content .= "- Name: {$sanitized_data['name']}\n";
-        $note_content .= "- Email: {$sanitized_data['email']}\n";
-        $note_content .= "- Phone: {$sanitized_data['phone']}\n";
-        $note_content .= "- Company: {$sanitized_data['company']}\n\n";
-        $note_content .= "**Inquiry Type:** {$opportunity_subject}\n\n";
-        if (!empty($sanitized_data['message'])) {
-            $note_content .= "**Message:**\n{$sanitized_data['message']}\n";
-        }
-        
-        // Make sure we pass the person_id even if opportunity fails
-        $note_data = [
-            'person_id' => $person_id,
-            'content' => $note_content,
-            'title' => 'Contact Form: ' . $opportunity_subject
-        ];
-        
-        // Only add deal_id if opportunity was created successfully
-        if (!empty($opportunity_result['deal_id'])) {
-            $note_data['deal_id'] = $opportunity_result['deal_id'];
-        }
-        
-        $note_result = self::create_note($note_data);
-        
-        return [
-            'success' => true,
-            'message' => 'Your message has been received successfully. We will contact you soon.',
-            'person_id' => $person_id,
-            'opportunity_id' => $opportunity_result['deal_id'] ?? null,
-            'note_id' => $note_result['note_id'] ?? null
-        ];
-    }
-    
-    private static function create_person($data) {
-=======
         self::debug_log("Person created/found with ID: " . $person_id);
         
         // 2. Create opportunity if title is provided
@@ -805,7 +630,6 @@ class MoneybagAPI {
      * @return array ['success', 'person_id', 'existing']
      */
     public static function create_person($data) {
->>>>>>> Stashed changes
         // First, check if person already exists by email
         $email = $data['email'] ?? '';
         if (!empty($email)) {
@@ -977,8 +801,6 @@ class MoneybagAPI {
         } elseif (isset($create_response['id'])) {
             $person_id = $create_response['id'];
             self::debug_log("Found person ID in root id: " . $person_id);
-<<<<<<< Updated upstream
-=======
         } elseif (isset($create_response['data']['person_id'])) {
             $person_id = $create_response['data']['person_id'];
             self::debug_log("Found person ID in data.person_id: " . $person_id);
@@ -990,7 +812,6 @@ class MoneybagAPI {
                 $person_id = $first_key;
                 self::debug_log("Found person ID as array key: " . $person_id);
             }
->>>>>>> Stashed changes
         }
         
         if ($person_id) {
@@ -1003,16 +824,6 @@ class MoneybagAPI {
         // If we still don't have an ID, log the entire response structure
         self::debug_log("ERROR: Could not find person ID in response. Full response: " . json_encode($create_response));
         
-<<<<<<< Updated upstream
-        return [
-            'success' => false,
-            'message' => 'Failed to create contact in CRM.',
-            'error' => 'No person ID returned in response structure'
-        ];
-    }
-    
-    private static function create_opportunity($data) {
-=======
         // Generate a temporary ID to allow the process to continue
         // This allows forms to work even if CRM person creation has issues
         $temp_person_id = 'temp_' . md5($email . time());
@@ -1032,7 +843,6 @@ class MoneybagAPI {
      * @return array ['success', 'deal_id']
      */
     public static function create_opportunity($data) {
->>>>>>> Stashed changes
         $opportunity_data = [
             'name' => $data['title'],
             'pointOfContactId' => $data['person_id'],
@@ -1084,16 +894,12 @@ class MoneybagAPI {
         ];
     }
     
-<<<<<<< Updated upstream
-    private static function create_note($data) {
-=======
     /**
      * Create a note in CRM - Global method for all widgets
      * @param array $data ['title', 'content', 'person_id', 'deal_id']
      * @return array ['success', 'note_id']
      */
     public static function create_note($data) {
->>>>>>> Stashed changes
         $note_data = [
             'title' => $data['title'] ?? 'Contact Form Submission',
             'bodyV2' => [

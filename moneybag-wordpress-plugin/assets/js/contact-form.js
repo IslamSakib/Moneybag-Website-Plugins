@@ -97,86 +97,6 @@
         const validateForm = () => {
             const newErrors = {};
             
-<<<<<<< Updated upstream
-            if (validator) {
-                // Use the initialized validator
-                const nameError = validator.validateField ? 
-                    validator.validateField('name', formData.name) : 
-                    !validator.validateRequired(formData.name) ? 'Name is required' : '';
-                if (nameError) newErrors.name = nameError;
-                
-                const emailError = validator.validateField ? 
-                    validator.validateField('email', formData.email) : 
-                    !validator.validateEmail(formData.email) ? 'Please enter a valid email address' : '';
-                if (emailError) newErrors.email = emailError;
-                
-                // Validate phone using mobile pattern (Bangladesh format)
-                const phoneError = validator.validateField ? 
-                    validator.validateField('mobile', formData.phone) : 
-                    !validator.validatePhone(formData.phone) ? 'Please enter a valid phone number' : '';
-                if (phoneError) newErrors.phone = phoneError;
-                
-                const companyError = validator.validateField ? 
-                    validator.validateField('businessName', formData.company) : 
-                    !validator.validateRequired(formData.company) ? 'Company name is required' : '';
-                if (companyError) newErrors.company = companyError;
-                
-                // Message is optional - only validate if provided
-                if (formData.message.trim() && formData.message.trim().length < 10) {
-                    newErrors.message = 'Message must be at least 10 characters if provided';
-                }
-                
-                // If inquiry type is "Other", require the subject field
-                if (formData.inquiryType === 'Other') {
-                    const subjectError = validator.validateField ? 
-                        validator.validateField('name', formData.otherSubject) : 
-                        !validator.validateRequired(formData.otherSubject) ? 'Please specify the subject' : '';
-                    if (subjectError) newErrors.otherSubject = subjectError;
-                }
-            } else {
-                // Fallback validation when validator is not available
-                if (!formData.name.trim()) {
-                    newErrors.name = 'Name is required';
-                } else if (formData.name.trim().length < 2) {
-                    newErrors.name = 'Name must be at least 2 characters';
-                } else if (!/^[a-zA-Z\\s\\.'\-]+$/.test(formData.name)) {
-                    newErrors.name = 'Name can only contain letters and spaces';
-                }
-                
-                const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-                if (!formData.email.trim()) {
-                    newErrors.email = 'Email is required';
-                } else if (!emailRegex.test(formData.email)) {
-                    newErrors.email = 'Please enter a valid email address';
-                }
-                
-                // Bangladesh phone number pattern
-                const phoneRegex = /^(\\+880|880|0)?1[0-9]{9,10}$/;
-                if (!formData.phone.trim()) {
-                    newErrors.phone = 'Phone number is required';
-                } else if (!phoneRegex.test(formData.phone.replace(/[\\s\\-\\(\\)]/g, ''))) {
-                    newErrors.phone = 'Please enter a valid Bangladesh mobile number';
-                }
-                
-                if (!formData.company.trim()) {
-                    newErrors.company = 'Company name is required';
-                } else if (formData.company.trim().length < 2) {
-                    newErrors.company = 'Company name must be at least 2 characters';
-                }
-                
-                // Message is optional
-                if (formData.message.trim() && formData.message.trim().length < 10) {
-                    newErrors.message = 'Message must be at least 10 characters if provided';
-                }
-                
-                if (formData.inquiryType === 'Other') {
-                    if (!formData.otherSubject.trim()) {
-                        newErrors.otherSubject = 'Please specify the subject';
-                    } else if (formData.otherSubject.trim().length < 2) {
-                        newErrors.otherSubject = 'Subject must be at least 2 characters';
-                    }
-                }
-=======
             // Always use centralized validation from form-validator.js
             if (!window.MoneybagValidation) {
                 console.warn('MoneybagValidation not loaded');
@@ -212,7 +132,6 @@
                     const subjectError = window.MoneybagValidation.validateField('otherSubject', formData.otherSubject);
                     if (subjectError) newErrors.otherSubject = subjectError;
                 }
->>>>>>> Stashed changes
             }
             
             setErrors(newErrors);
@@ -392,11 +311,7 @@
                         placeholder: 'Company Name',
                         value: formData.company,
                         onChange: handleInputChange,
-<<<<<<< Updated upstream
-                        onBlur: (e) => validateAndSetFieldError('businessName', e.target.value, 'company'),
-=======
                         onBlur: (e) => validateAndSetFieldError('company', e.target.value, 'company'),
->>>>>>> Stashed changes
                         className: `input-field ${errors.company ? 'error' : ''} ${formData.company ? 'valid' : ''}`,
                         disabled: isSubmitting
                     }),
@@ -445,11 +360,7 @@
                             placeholder: formData.inquiryType === 'Other' ? 'Please specify subject *' : 'Other Topic Subject',
                             value: formData.otherSubject,
                             onChange: handleInputChange,
-<<<<<<< Updated upstream
-                            onBlur: (e) => formData.inquiryType === 'Other' ? validateAndSetFieldError('name', e.target.value, 'otherSubject') : null,
-=======
                             onBlur: (e) => formData.inquiryType === 'Other' ? validateAndSetFieldError('otherSubject', e.target.value, 'otherSubject') : null,
->>>>>>> Stashed changes
                             className: `input-field ${errors.otherSubject ? 'error' : ''} ${formData.otherSubject && formData.inquiryType === 'Other' ? 'valid' : ''}`,
                             disabled: isSubmitting || (formData.inquiryType !== 'Other'),
                             required: formData.inquiryType === 'Other'

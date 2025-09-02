@@ -15,8 +15,6 @@
             minLength: 2,
             maxLength: 100,
             pattern: /^[a-zA-Z\s\.\'\-]+$/,
-<<<<<<< Updated upstream
-=======
             customValidator: function(value) {
                 if (!value) return '';
                 
@@ -37,7 +35,6 @@
                 
                 return '';
             },
->>>>>>> Stashed changes
             messages: {
                 required: 'Name is required',
                 minLength: 'Name must be at least 2 characters',
@@ -48,13 +45,6 @@
         email: {
             required: true,
             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-<<<<<<< Updated upstream
-            maxLength: 320,
-            messages: {
-                required: 'Email is required',
-                pattern: 'Please enter a valid email address',
-                maxLength: 'Email address is too long'
-=======
             maxLength: 30,  // Database constraint is varchar(30)
             customValidator: function(value) {
                 if (!value) return '';
@@ -88,16 +78,11 @@
                 required: 'Email is required',
                 pattern: 'Please enter a valid email address',
                 maxLength: 'Email must be 30 characters or less'
->>>>>>> Stashed changes
             }
         },
         mobile: {
             required: true,
-<<<<<<< Updated upstream
-            pattern: /^(\+8801|01)[0-9]{9}$/,
-=======
             pattern: /^(\+880|0)?1[3-9]\d{8}$/,
->>>>>>> Stashed changes
             messages: {
                 required: 'Mobile number is required',
                 pattern: 'Please enter a valid Bangladesh mobile number (e.g., +8801712345678 or 01712345678)'
@@ -105,11 +90,7 @@
         },
         phone: {
             required: false,
-<<<<<<< Updated upstream
-            pattern: /^(\+8801|01)[0-9]{9}$/,
-=======
             pattern: /^(\+880|0)?1[3-9]\d{8}$/,
->>>>>>> Stashed changes
             messages: {
                 pattern: 'Please enter a valid Bangladesh phone number (e.g., +8801712345678 or 01712345678)'
             }
@@ -137,8 +118,6 @@
             required: true,
             minLength: 2,
             maxLength: 200,
-<<<<<<< Updated upstream
-=======
             customValidator: function(value) {
                 if (!value) return '';
                 
@@ -161,7 +140,6 @@
                 
                 return '';
             },
->>>>>>> Stashed changes
             messages: {
                 required: 'Business name is required',
                 minLength: 'Business name must be at least 2 characters',
@@ -243,8 +221,6 @@
                 required: 'Please select at least one service type'
             }
         },
-<<<<<<< Updated upstream
-=======
         company: {
             required: true,
             minLength: 2,
@@ -274,7 +250,6 @@
                 maxLength: 'Subject is too long'
             }
         },
->>>>>>> Stashed changes
         identifier: {
             required: true,
             customValidator: function(value) {
@@ -289,11 +264,7 @@
                 const isValidEmail = emailRegex.test(trimmedValue);
                 
                 // Check if it's a valid Bangladesh phone number
-<<<<<<< Updated upstream
-                const phoneRegex = /^(\+8801|01)[0-9]{9}$/;
-=======
                 const phoneRegex = /^(\+880|0)?1[3-9]\d{8}$/;
->>>>>>> Stashed changes
                 const isValidPhone = phoneRegex.test(trimmedValue.replace(/[\s\-]/g, ''));
                 
                 if (!isValidEmail && !isValidPhone) {

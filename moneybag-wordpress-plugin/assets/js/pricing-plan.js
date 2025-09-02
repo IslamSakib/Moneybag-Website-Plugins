@@ -160,41 +160,6 @@
             }
             
             return window.MoneybagValidation.validateField(name, value);
-<<<<<<< Updated upstream
-        };
-
-        const handleInputChange = (name, value) => {
-            // Use global form validator filter for mobile field
-            if (window.MoneybagValidation && name === 'mobile') {
-                value = window.MoneybagValidation.filterInput(value, 'phone');
-            }
-            
-            setFormData(prev => ({ ...prev, [name]: value }));
-            
-            // Use global validation for instant feedback
-            if (['name', 'email', 'mobile'].includes(name)) {
-                const error = validateFieldInstantly(name, value);
-                setErrors(prev => ({
-                    ...prev,
-                    [name]: error
-                }));
-            } else {
-                // Clear errors for non-validated fields
-                setErrors(prev => ({
-                    ...prev,
-                    [name]: ''
-                }));
-            }
-        };
-
-        const crmApiCall = async (action, data) => {
-            const formData = new FormData();
-            formData.append('action', 'moneybag_pricing_crm');
-            formData.append('nonce', moneybagPricingAjax.nonce);
-            formData.append('crm_action', action);
-            formData.append('data', JSON.stringify(data));
-            
-=======
         };
 
         const handleInputChange = (name, value) => {
@@ -247,7 +212,6 @@
             formData.append('crm_action', action);
             formData.append('data', JSON.stringify(data));
             
->>>>>>> Stashed changes
             try {
                 const response = await fetch(moneybagPricingAjax.ajaxurl, {
                     method: 'POST',
@@ -256,13 +220,6 @@
                 
                 // Handle 500 errors gracefully
                 if (response.status === 500) {
-<<<<<<< Updated upstream
-                    // For search_person, a 500 might mean no results found - not a critical error
-                    if (action === 'search_person') {
-                        return [];
-                    }
-=======
->>>>>>> Stashed changes
                     throw new Error('Server error occurred. Please try again.');
                 }
                 
@@ -273,56 +230,6 @@
                 const result = await response.json();
                 
                 if (!result.success) {
-<<<<<<< Updated upstream
-                    throw new Error(result.data || 'CRM operation failed');
-                }
-                
-                return result.data;
-            } catch (error) {
-                // For search_person, errors are expected for new users
-                if (action === 'search_person') {
-                    return [];
-                }
-                throw error;
-            }
-        };
-
-        const findOrCreatePerson = async () => {
-            // Clean mobile number: handle +88 format and 01 format
-            let cleanedPhone = formData.mobile.replace(/[\s\-]/g, '');
-            if (cleanedPhone.startsWith('+8801')) {
-                cleanedPhone = cleanedPhone.substring(5); // Remove +8801, keep remaining digits
-            } else if (cleanedPhone.startsWith('01')) {
-                cleanedPhone = cleanedPhone.substring(1); // Remove leading 0, keep 1 and remaining digits
-            }
-            
-            // First, try to find existing person by email (only if email exists)
-            if (formData.email && formData.email.trim()) {
-                const searchData = await crmApiCall('search_person', { email: formData.email });
-                if (searchData && searchData.length > 0) {
-                    return searchData[0].id;
-                }
-            }
-            
-            // If not found, try to create new person
-            const personData = {
-                name: {
-                    firstName: formData.name.split(' ')[0] || formData.name,
-                    lastName: formData.name.split(' ').slice(1).join(' ') || ''
-                },
-                emails: {
-                    primaryEmail: formData.email
-                },
-                phones: {
-                    primaryPhoneNumber: cleanedPhone,
-                    primaryPhoneCallingCode: '+880',
-                    primaryPhoneCountryCode: 'BD'
-                }
-            };
-            
-            const personResponse = await crmApiCall('create_person', personData);
-            return personResponse.data?.createPerson?.id || personResponse.id;
-=======
                     const errorMessage = result.data?.message || result.data || 'CRM operation failed';
                     
                     // Check for specific CRM configuration issues
@@ -341,7 +248,6 @@
             } catch (error) {
                 throw error;
             }
->>>>>>> Stashed changes
         };
 
         const createCRMEntries = async () => {
@@ -359,81 +265,6 @@
                     services: selectedPricing?.services?.slice(0, 4).map(s => `${s.label}: ${s.rate}`).join(', ') || 'Standard rates'
                 };
                 
-<<<<<<< Updated upstream
-                try {
-                    personId = await findOrCreatePerson();
-                } catch (personError) {
-                    // If person creation fails and it's a duplicate error, we'll continue with a placeholder
-                    if (personError.message && personError.message.includes('duplicate')) {
-                        // Use a deterministic ID based on email
-                        personId = `existing_${btoa(formData.email).replace(/[^a-zA-Z0-9]/g, '').substring(0, 10)}`;
-                    } else {
-                        throw personError;
-                    }
-                }
-
-                // 2. Create Opportunity (with better error handling)
-                let opportunityId;
-                try {
-                    const opportunityData = {
-                        name: config.opportunity_name,
-                        stage: 'NEW',
-                        amount: {
-                            amountMicros: 0,
-                            currencyCode: 'BDT'
-                        },
-                        pointOfContactId: personId
-                    };
-
-                    const opportunityResponse = await crmApiCall('create_opportunity', opportunityData);
-                    opportunityId = opportunityResponse.data?.createOpportunity?.id || opportunityResponse.id;
-                } catch (oppError) {
-                    // Continue with a fallback opportunity ID
-                    opportunityId = `opp_${Date.now()}`;
-                }
-
-                // 3. Create Note (with error handling)
-                let noteId;
-                try {
-                    const noteText = `- **Industry:** ${formData.businessCategory}
-- **Legal identity:** ${formData.legalIdentity}
-- **Business category:** ${formData.businessCategory}
-- **Domain:** ${formData.domainName || 'Not provided'}
-- **Contact:** ${formData.name} – ${formData.email} – ${formData.mobile}
-- **Selected Pricing:** ${selectedPricing?.name || 'Standard Plan'}
-- **Services:** ${selectedPricing?.services?.slice(0, 4).map(s => `${s.label}: ${s.rate}`).join(', ') || 'Standard rates'}`;
-
-                    const noteData = {
-                        title: 'Pricing form submission data',
-                        bodyV2: {
-                            markdown: noteText
-                        }
-                    };
-
-                    const noteResponse = await crmApiCall('create_note', noteData);
-                    noteId = noteResponse.data?.createNote?.id || noteResponse.id;
-
-                    // 4. Attach Note to Opportunity (only if both IDs are valid)
-                    if (noteId && opportunityId && !opportunityId.startsWith('opp_')) {
-                        const noteTargetData = {
-                            noteId: noteId,
-                            opportunityId: opportunityId
-                        };
-
-                        await crmApiCall('create_note_target', noteTargetData);
-                    }
-                } catch (noteError) {
-                    // Continue without note - form submission should still succeed
-                }
-
-                return { personId, opportunityId, noteId };
-            } catch (error) {
-                // Check if it's a duplicate person error - if so, still consider it successful
-                if (error.message && error.message.includes('duplicate')) {
-                    return { personId: 'existing', opportunityId: 'existing', noteId: 'existing' };
-                }
-                throw new Error(`Unable to process your request. Please try again or contact support.`);
-=======
                 const response = await crmApiCall('submit_all', submissionData);
                 
                 return {
@@ -444,7 +275,6 @@
             } catch (error) {
                 // Re-throw the error with its original message for proper handling
                 throw error;
->>>>>>> Stashed changes
             }
         };
 
@@ -461,16 +291,6 @@
             
             // Use global form validator to validate all required fields
             if (window.MoneybagValidation) {
-<<<<<<< Updated upstream
-                const requiredFields = ['name', 'email', 'mobile'];
-                const validationErrors = window.MoneybagValidation.validateFields(formData, requiredFields);
-                
-                // If validation fails, show errors and stop
-                if (Object.keys(validationErrors).length > 0) {
-                    setErrors(validationErrors);
-                    return; // STOP - don't proceed with submission
-                }
-=======
                 const validationErrors = {};
                 
                 // Validate each field
@@ -494,7 +314,6 @@
                     setErrors(validationErrors);
                     return; // STOP - don't proceed with submission
                 }
->>>>>>> Stashed changes
             }
             
             setLoading(true);
@@ -505,19 +324,6 @@
                 // Always go to thank you page after successful CRM submission
                 nextStep();
             } catch (error) {
-<<<<<<< Updated upstream
-                
-                // Check if it's an API validation error
-                if (error.message && error.message.includes('validation')) {
-                    setErrors(prev => ({ ...prev, submit: error.message }));
-                    // Don't proceed to next step if validation fails
-                    return;
-                } else {
-                    setErrors(prev => ({ ...prev, submit: 'An unexpected error occurred. Your information has been saved and our team will contact you soon.' }));
-                    // Still go to thank you page after a delay for non-validation errors
-                    setTimeout(() => nextStep(), 2000);
-                }
-=======
                 console.error('CRM submission error:', error);
                 
                 // Parse error message to determine the field
@@ -541,7 +347,6 @@
                 // DO NOT proceed to next step on error
                 // Form should stay on current step so user can fix the issue
                 return;
->>>>>>> Stashed changes
             } finally {
                 setLoading(false);
             }
@@ -583,11 +388,6 @@
                 createElement('label', { className: 'field-label' }, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
                 createElement('div', { className: 'dropdown-wrapper' },
                     createElement('select', {
-<<<<<<< Updated upstream
-                        className: `input-field ${errors[name] ? 'error' : ''}`,
-                        value: formData[name],
-                        onChange: (e) => handleInputChange(name, e.target.value),
-=======
                         className: `input-field ${errors[name] ? 'error' : ''} ${formData[name] ? 'valid' : ''}`,
                         value: formData[name],
                         onChange: (e) => handleInputChange(name, e.target.value),
@@ -596,7 +396,6 @@
                                 setErrors(prev => ({ ...prev, [name]: `Please select ${name.replace(/([A-Z])/g, ' $1').toLowerCase()}` }));
                             }
                         },
->>>>>>> Stashed changes
                         disabled: loading
                     },
                         createElement('option', { 
@@ -621,8 +420,6 @@
                 type = 'tel';
             }
             
-<<<<<<< Updated upstream
-=======
             // Map field names to validation types
             const validationFieldMap = {
                 'name': 'name',
@@ -633,19 +430,10 @@
             
             const validationField = validationFieldMap[name] || name;
             
->>>>>>> Stashed changes
             return createElement('div', { className: 'field-group' },
                 createElement('label', { className: 'field-label' }, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
                 createElement('input', {
                     type,
-<<<<<<< Updated upstream
-                    className: `input-field ${errors[name] ? 'error' : ''}`,
-                    value: formData[name],
-                    onChange: (e) => handleInputChange(name, e.target.value),
-                    onKeyUp: (e) => handleInputChange(name, e.target.value), // Add keyup for instant validation
-                    placeholder,
-                    disabled: loading,
-=======
                     className: `input-field ${errors[name] ? 'error' : ''} ${formData[name] ? 'valid' : ''}`,
                     value: formData[name],
                     onChange: (e) => handleInputChange(name, e.target.value),
@@ -653,7 +441,6 @@
                     placeholder,
                     disabled: loading,
                     maxLength: name === 'email' ? 30 : null,
->>>>>>> Stashed changes
                     ...(name === 'mobile' && { 
                         pattern: '[0-9+\\-\\s]*',
                         inputMode: 'numeric'

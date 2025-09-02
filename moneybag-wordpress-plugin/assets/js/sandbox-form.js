@@ -127,22 +127,6 @@
         };
 
         // No client-side validation - API handles everything
-<<<<<<< Updated upstream
-        // This is just for UX to show field is required
-        const isFieldEmpty = (name, value) => {
-            const requiredFields = ['identifier', 'otp', 'firstName', 'lastName', 'mobile', 'businessName', 'legalIdType'];
-            return requiredFields.includes(name) && !value;
-        };
-        
-        // Helper function to detect if identifier is email or phone
-        const isEmail = (identifier) => {
-            return identifier.includes('@') && identifier.includes('.');
-        };
-        
-        const isPhone = (identifier) => {
-            const phoneRegex = /^(\+8801|01)[0-9]{9}$/;
-            return phoneRegex.test(identifier.replace(/\s/g, ''));
-=======
         // Use centralized validation
         const validateField = (fieldName, value) => {
             if (!window.MoneybagValidation) {
@@ -166,7 +150,6 @@
             }));
             
             return error;
->>>>>>> Stashed changes
         };
         
         // This is just for UX to show field is required
@@ -410,11 +393,7 @@
             }
         };
 
-<<<<<<< Updated upstream
-        const renderInput = (name, type = 'text', placeholder = '', maxLength = null) => {
-=======
         const renderInput = (name, type = 'text', placeholder = '', options = {}) => {
->>>>>>> Stashed changes
             const label = name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1');
             let helperText = null;
             
@@ -424,8 +403,6 @@
                 helperText = 'Enter your email address or phone number';
             }
             
-<<<<<<< Updated upstream
-=======
             // Map field names to validation field types
             const validationFieldMap = {
                 'identifier': 'identifier',
@@ -439,7 +416,6 @@
             
             const validationField = validationFieldMap[name] || name;
             
->>>>>>> Stashed changes
             return createElement('div', { className: 'field-group' },
                 createElement('label', { className: 'field-label' }, 
                     name === 'identifier' ? 'Email or Phone' : label
@@ -450,19 +426,12 @@
                     name,
                     value: formData[name],
                     onChange: handleInputChange,
-<<<<<<< Updated upstream
-                    placeholder: placeholder || (name === 'mobile' ? '+8801712345678' : 
-                        name === 'identifier' ? 'user@example.com or +8801712345678' : ''),
-                    maxLength: maxLength || (name === 'mobile' ? 14 : name === 'identifier' ? 50 : null),
-                    onKeyPress: handleKeyPress
-=======
                     onBlur: (e) => validateAndSetFieldError(validationField, e.target.value, name),
                     placeholder: options.placeholder || placeholder || (name === 'mobile' ? '+8801712345678' : 
                         name === 'identifier' ? 'user@example.com or +8801712345678' : ''),
                     maxLength: options.maxLength || (name === 'email' ? 30 : name === 'mobile' ? 14 : name === 'identifier' ? 50 : null),
                     onKeyPress: handleKeyPress,
                     required: options.required || false
->>>>>>> Stashed changes
                 }),
                 helperText && !errors[name] && createElement('span', { 
                     className: 'field-helper-text'
@@ -496,11 +465,7 @@
                         createElement('label', { className: 'input-label' }, 'Email or Phone'),
                         createElement('input', {
                             type: 'text',
-<<<<<<< Updated upstream
-                            className: `input-field ${errors.identifier ? 'error' : ''}`,
-=======
                             className: `input-field ${errors.identifier ? 'error' : ''} ${formData.identifier ? 'valid' : ''}`,
->>>>>>> Stashed changes
                             name: 'identifier',
                             value: formData.identifier,
                             onChange: handleInputChange,

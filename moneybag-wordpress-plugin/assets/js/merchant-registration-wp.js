@@ -494,17 +494,10 @@
             ]);
         };
 
-<<<<<<< Updated upstream
-        // CRM Integration
-        const sendToCRM = async (data) => {
-            try {
-                // CRM API call helper
-=======
         // CRM Integration - Using Global System
         const sendToCRM = async (data) => {
             try {
                 // CRM API call helper using unified endpoint
->>>>>>> Stashed changes
                 const crmApiCall = async (action, crmData) => {
                     const formData = new FormData();
                     formData.append('action', 'moneybag_pricing_crm');
@@ -519,101 +512,11 @@
                     
                     const result = await response.json();
                     if (!result.success) {
-<<<<<<< Updated upstream
-                        throw new Error(result.data || 'CRM operation failed');
-=======
                         throw new Error(result.data?.message || result.data || 'CRM operation failed');
->>>>>>> Stashed changes
                     }
                     return result.data;
                 };
                 
-<<<<<<< Updated upstream
-                // 1. Find or create person in CRM
-                let personId;
-                try {
-                    // Search for existing person
-                    const searchData = await crmApiCall('search_person', { email: data.email });
-                    
-                    if (searchData?.contact_summary?.id) {
-                        personId = searchData.contact_summary.id;
-                    } else {
-                        // Create new person
-                        const personData = {
-                            name: `${data.firstName} ${data.lastName}`,
-                            email: data.email,
-                            mobile: data.mobile,
-                            businessName: data.businessName
-                        };
-                        const personResponse = await crmApiCall('create_person', personData);
-                        personId = personResponse?.data?.createPerson?.id || personResponse?.id;
-                    }
-                } catch (error) {
-                    // Use email hash as fallback
-                    personId = `merchant_${btoa(data.email).replace(/[^a-zA-Z0-9]/g, '').substring(0, 10)}`;
-                }
-                
-                // 2. Create Opportunity
-                let opportunityId;
-                try {
-                    const opportunityData = {
-                        name: `Merchant Registration - ${data.businessName}`,
-                        stage: 'NEW',
-                        amount: {
-                            amountMicros: 0,
-                            currencyCode: 'BDT'
-                        },
-                        pointOfContactId: personId
-                    };
-                    const opportunityResponse = await crmApiCall('create_opportunity', opportunityData);
-                    opportunityId = opportunityResponse?.data?.createOpportunity?.id || opportunityResponse?.id;
-                } catch (error) {
-                    opportunityId = `opp_merchant_${Date.now()}`;
-                }
-                
-                // 3. Create Note with registration details
-                try {
-                    const serviceTypesList = data.customFields?.serviceTypes?.join(', ') || 'Not specified';
-                    const noteText = `## Merchant Registration (No-Auth API)
-                    
-- **Business Name:** ${data.businessName}
-- **Legal Identity:** ${data.legalIdentity}
-- **Business Category:** ${data.customFields?.businessCategory || 'Not specified'}
-- **Business Website:** ${data.domainName || 'Not provided'}
-
-### Contact Information
-- **Name:** ${data.firstName} ${data.lastName}
-- **Email:** ${data.email}
-- **Mobile:** ${data.mobile}
-
-### Business Details
-- **Monthly Volume:** ${data.customFields?.monthlyVolume || 'Not specified'}
-- **Service Types:** ${serviceTypesList}
-- **Max Transaction Amount:** ${data.customFields?.maxAmount || 'Not specified'}
-- **Currency:** ${data.customFields?.currency || 'BDT'}
-
-### Submission Info
-- **Source:** WordPress Plugin (No-Auth)
-- **Timestamp:** ${data.customFields?.timestamp || new Date().toISOString()}
-- **Session ID:** ${data.customFields?.sessionId || 'N/A'}`;
-                    
-                    const noteData = {
-                        title: 'Merchant Registration Form Submission',
-                        bodyV2: {
-                            markdown: noteText,
-                            blocknote: generateBlocknoteContent(data)
-                        }
-                    };
-                    
-                    const noteResponse = await crmApiCall('create_note', noteData);
-                    const noteId = noteResponse?.data?.createNote?.id || noteResponse?.id;
-                    
-                    // Note: Note linking has been disabled as it was causing issues
-                    // The note is created independently and can be found in the CRM notes section
-                    // It contains all merchant registration details including the opportunity name
-                } catch (error) {
-                }
-=======
                 // Use the global submit_all action for unified CRM submission
                 const crmSubmissionData = {
                     // Person data
@@ -644,7 +547,6 @@
                     opportunityId, 
                     noteId
                 });
->>>>>>> Stashed changes
                 
                 return true;
             } catch (error) {
@@ -698,17 +600,10 @@
                     // Store the API response data (contains merchant_id, api_key, etc.)
                     setApiResponse(result.data || result);
                     
-<<<<<<< Updated upstream
-                    // Send data to CRM asynchronously (don't block the success flow)
-                    sendToCRM(submitData).catch(error => {
-                        // Don't fail the whole submission if CRM fails
-                    });
-=======
                     // CRM integration disabled - uncomment below if needed
                     // sendToCRM(submitData).catch(error => {
                     //     // Don't fail the whole submission if CRM fails
                     // });
->>>>>>> Stashed changes
                     
                     setIsSubmitted(true);
                     if (config.redirect_url) {
@@ -738,10 +633,6 @@
                     displayMessage = 'Registration failed. Please try again.';
                 }
                 
-<<<<<<< Updated upstream
-                // Submission error
-                alert(displayMessage);
-=======
                 // Check if it's a validation error from the API
                 if (displayMessage.toLowerCase().includes('business name') || 
                     displayMessage.toLowerCase().includes('repeating') ||
@@ -796,7 +687,6 @@
                     // Removed generic inline error - all validation should be field-specific
                 }
                 // Removed non-validation error inline display - let field errors handle everything
->>>>>>> Stashed changes
             }
         };
         
@@ -1213,12 +1103,8 @@
                             value: formData.email,
                             onChange: (e) => handleInputChange('email', e.target.value),
                             onBlur: (e) => validateAndSetFieldError('email', e.target.value, 'email'),
-<<<<<<< Updated upstream
-                            placeholder: 'email@example.com'
-=======
                             placeholder: 'email@example.com',
                             maxLength: 30  // Enforce database constraint
->>>>>>> Stashed changes
                         }),
                         fieldErrors.email && h('span', { className: 'error-message' }, fieldErrors.email)
                     ),

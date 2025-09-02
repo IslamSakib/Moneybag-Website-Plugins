@@ -2,11 +2,7 @@
 /**
  * Plugin Name: Moneybag WordPress Plugin
  * Description: Configuration-driven Elementor widgets for payment gateway integration with React.js forms. Works with any API provider.
-<<<<<<< Updated upstream
- * Version: 2.0.1
-=======
  * Version: 2.1.0
->>>>>>> Stashed changes
  * Author: Sakib Islam
  * Contact: +8801950025990
  * Text Domain: moneybag-wordpress-plugin
@@ -33,11 +29,7 @@ if (!defined('ABSPATH')) {
  */
 define('MONEYBAG_PLUGIN_URL', plugin_dir_url(__FILE__));     // Plugin URL for assets
 define('MONEYBAG_PLUGIN_PATH', plugin_dir_path(__FILE__));   // Plugin path for includes
-<<<<<<< Updated upstream
-define('MONEYBAG_PLUGIN_VERSION', '2.0.1');                 // Plugin version for cache busting
-=======
 define('MONEYBAG_PLUGIN_VERSION', '2.1.0');                 // Plugin version for cache busting
->>>>>>> Stashed changes
 
 /**
  * Security and Configuration Notice
@@ -552,11 +544,7 @@ class MoneybagPlugin {
                 return;
             }
             
-<<<<<<< Updated upstream
-            // Prepare contact form data
-=======
             // Prepare contact form data for global CRM system
->>>>>>> Stashed changes
             $form_data = [
                 'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
@@ -567,13 +555,6 @@ class MoneybagPlugin {
                 'message' => $_POST['message'] ?? ''
             ];
             
-<<<<<<< Updated upstream
-            // Submit to CRM via API handler
-            $result = \MoneybagPlugin\MoneybagAPI::submit_contact_form($form_data);
-            
-            if ($result['success']) {
-                wp_send_json_success($result);
-=======
             // Validate required fields
             $sanitized_data = [
                 'name' => sanitize_text_field($form_data['name']),
@@ -636,7 +617,6 @@ class MoneybagPlugin {
                     'opportunity_id' => $result['opportunity_id'],
                     'note_id' => $result['note_id']
                 ]);
->>>>>>> Stashed changes
             } else {
                 wp_send_json_error($result);
             }
@@ -693,22 +673,9 @@ class MoneybagPlugin {
                     wp_send_json_success($response['data'] ?? []);
                     return;
                     
-<<<<<<< Updated upstream
-                case 'create_person':
-                    $response = $this->create_crm_person($data);
-                    break;
-                    
-                case 'create_opportunity':
-                    $response = $this->create_crm_opportunity($data);
-                    break;
-                    
-                case 'create_note':
-                    $response = $this->create_crm_note($data);
-=======
                 case 'submit_all':
                     // New unified handler for pricing form
                     $response = $this->handle_pricing_crm_submission($data);
->>>>>>> Stashed changes
                     break;
                     
                 case 'create_note_target':
@@ -723,9 +690,6 @@ class MoneybagPlugin {
             if ($response && isset($response['success']) && $response['success']) {
                 wp_send_json_success($response['data'] ?? $response);
             } else {
-<<<<<<< Updated upstream
-                wp_send_json_error($response['message'] ?? 'CRM operation failed');
-=======
                 // Provide more specific error message
                 $error_message = $response['message'] ?? 'CRM operation failed';
                 
@@ -741,7 +705,6 @@ class MoneybagPlugin {
                 }
                 
                 wp_send_json_error(['message' => $error_message]);
->>>>>>> Stashed changes
             }
             
         } catch (\Exception $e) {
@@ -791,80 +754,6 @@ class MoneybagPlugin {
         }
     }
     
-<<<<<<< Updated upstream
-    private function create_crm_person($data) {
-        // Handle different data formats from JavaScript
-        // JavaScript sends: { name: "John Doe", email: "john@example.com", mobile: "01234567890" }
-        
-        // Parse name into first and last name
-        $full_name = sanitize_text_field($data['name'] ?? '');
-        $name_parts = explode(' ', trim($full_name), 2);
-        $first_name = $name_parts[0] ?? '';
-        $last_name = $name_parts[1] ?? '';
-        
-        // Extract email and phone
-        $email = sanitize_email($data['email'] ?? '');
-        $phone = sanitize_text_field($data['mobile'] ?? '');
-        
-        // Format phone number (remove +880 if present, we'll add it in calling code)
-        if (strpos($phone, '+880') === 0) {
-            $phone = substr($phone, 4);
-        } elseif (strpos($phone, '880') === 0) {
-            $phone = substr($phone, 3);
-        }
-        // Remove leading 0 if present
-        if (strpos($phone, '0') === 0) {
-            $phone = substr($phone, 1);
-        }
-        
-        $person_data = [
-            'name' => [
-                'firstName' => $first_name,
-                'lastName' => $last_name
-            ],
-            'emails' => [
-                'primaryEmail' => $email
-            ],
-            'phones' => [
-                'primaryPhoneNumber' => $phone,
-                'primaryPhoneCallingCode' => '+880',
-                'primaryPhoneCountryCode' => 'BD'
-            ]
-        ];
-        
-        $response = \MoneybagPlugin\MoneybagAPI::crm_request('/people', $person_data);
-        
-        return $response;
-    }
-    
-    private function create_crm_opportunity($data) {
-        // Let API handle all validation - just sanitize data
-        $opportunity_data = [
-            'name' => sanitize_text_field($data['name'] ?? ''),
-            'stage' => sanitize_text_field($data['stage'] ?? 'NEW'),
-            'amount' => [
-                'amountMicros' => intval($data['amount']['amountMicros'] ?? 0),
-                'currencyCode' => sanitize_text_field($data['amount']['currencyCode'] ?? 'BDT')
-            ],
-            'pointOfContactId' => sanitize_text_field($data['pointOfContactId'] ?? '')
-        ];
-        
-        return \MoneybagPlugin\MoneybagAPI::crm_request('/opportunities', $opportunity_data);
-    }
-    
-    private function create_crm_note($data) {
-        // Let API handle all validation - just sanitize data
-        $note_data = [
-            'title' => sanitize_text_field($data['title'] ?? ''),
-            'bodyV2' => [
-                'markdown' => sanitize_textarea_field($data['bodyV2']['markdown'] ?? ''),
-                'blocknote' => sanitize_textarea_field($data['bodyV2']['blocknote'] ?? '')
-            ]
-        ];
-        
-        return \MoneybagPlugin\MoneybagAPI::crm_request('/notes', $note_data);
-    }
-=======
     private function handle_pricing_crm_submission($data) {
         // Check if it's a merchant registration or pricing form
         if (isset($data['businessName']) && isset($data['legalIdentity'])) {
@@ -947,7 +836,6 @@ class MoneybagPlugin {
     }
     
     // Individual CRM handlers removed - all forms now use unified submit_all handler
->>>>>>> Stashed changes
     
     
     private function create_crm_note_target($data) {
