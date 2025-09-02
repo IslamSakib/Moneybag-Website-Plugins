@@ -127,6 +127,7 @@
         };
 
         // No client-side validation - API handles everything
+<<<<<<< Updated upstream
         // This is just for UX to show field is required
         const isFieldEmpty = (name, value) => {
             const requiredFields = ['identifier', 'otp', 'firstName', 'lastName', 'mobile', 'businessName', 'legalIdType'];
@@ -141,15 +142,75 @@
         const isPhone = (identifier) => {
             const phoneRegex = /^(\+8801|01)[0-9]{9}$/;
             return phoneRegex.test(identifier.replace(/\s/g, ''));
+=======
+        // Use centralized validation
+        const validateField = (fieldName, value) => {
+            if (!window.MoneybagValidation) {
+                return '';
+            }
+            return window.MoneybagValidation.validateField(fieldName, value);
+        };
+        
+        // Validate and set field error
+        const validateAndSetFieldError = (fieldName, value, formFieldName = null) => {
+            if (!window.MoneybagValidation) {
+                return '';
+            }
+            
+            const error = window.MoneybagValidation.validateField(fieldName, value);
+            const errorKey = formFieldName || fieldName;
+            
+            setErrors(prev => ({
+                ...prev,
+                [errorKey]: error || ''
+            }));
+            
+            return error;
+>>>>>>> Stashed changes
+        };
+        
+        // This is just for UX to show field is required
+        const isFieldEmpty = (name, value) => {
+            const requiredFields = ['identifier', 'otp', 'firstName', 'lastName', 'mobile', 'businessName', 'legalIdType'];
+            return requiredFields.includes(name) && !value;
+        };
+        
+        // Helper function to detect if identifier is email or phone
+        const isEmail = (identifier) => {
+            return identifier.includes('@') && identifier.includes('.');
+        };
+        
+        const isPhone = (identifier) => {
+            const phoneRegex = /^(\+880|0)?1[3-9]\d{8}$/;
+            return phoneRegex.test(identifier.replace(/\s/g, ''));
         };
 
         const handleInputChange = (e) => {
             const { name, value, type, checked } = e.target;
-            const newValue = type === 'checkbox' ? checked : value;
+            let processedValue = type === 'checkbox' ? checked : value;
+            
+            // Use centralized input filtering
+            if (window.MoneybagValidation && type !== 'checkbox') {
+                const fieldMap = {
+                    'identifier': 'text', // Can be email or phone, don't filter
+                    'firstName': 'name',
+                    'lastName': 'name',
+                    'mobile': 'phone',
+                    'email': 'text',
+                    'businessName': 'businessName',
+                    'website': 'text',
+                    'otp': 'text'
+                };
+                
+                const filterType = fieldMap[name];
+                if (filterType) {
+                    processedValue = window.MoneybagValidation.filterInput(value, filterType);
+                }
+            }
             
             setFormData(prev => ({
                 ...prev,
-                [name]: newValue
+                [name]: processedValue
             }));
             
             // Clear error when user starts typing
@@ -284,7 +345,27 @@
                     goToStep(4);
                 }
             } catch (error) {
-                setErrors(prev => ({ ...prev, submit: error.message }));
+                // Parse error message to see if it's a field-specific validation error
+                const errorMsg = error.message.toLowerCase();
+                
+                if (errorMsg.includes('url') || errorMsg.includes('website')) {
+                    setErrors(prev => ({ ...prev, website: 'Please enter a valid website URL (e.g., example.com)' }));
+                } else if (errorMsg.includes('business') || errorMsg.includes('business_name')) {
+                    setErrors(prev => ({ ...prev, businessName: error.message }));
+                } else if (errorMsg.includes('first') || errorMsg.includes('first_name')) {
+                    setErrors(prev => ({ ...prev, firstName: error.message }));
+                } else if (errorMsg.includes('last') || errorMsg.includes('last_name')) {
+                    setErrors(prev => ({ ...prev, lastName: error.message }));
+                } else if (errorMsg.includes('email')) {
+                    setErrors(prev => ({ ...prev, email: error.message }));
+                } else if (errorMsg.includes('phone') || errorMsg.includes('mobile')) {
+                    setErrors(prev => ({ ...prev, mobile: error.message }));
+                } else if (errorMsg.includes('legal') || errorMsg.includes('identity')) {
+                    setErrors(prev => ({ ...prev, legalIdType: error.message }));
+                } else {
+                    // Generic error - could show in a toast or alert instead of submit error
+                    console.error('Submission error:', error.message);
+                }
             } finally {
                 setLoading(false);
             }
@@ -329,7 +410,11 @@
             }
         };
 
+<<<<<<< Updated upstream
         const renderInput = (name, type = 'text', placeholder = '', maxLength = null) => {
+=======
+        const renderInput = (name, type = 'text', placeholder = '', options = {}) => {
+>>>>>>> Stashed changes
             const label = name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1');
             let helperText = null;
             
@@ -339,20 +424,45 @@
                 helperText = 'Enter your email address or phone number';
             }
             
+<<<<<<< Updated upstream
+=======
+            // Map field names to validation field types
+            const validationFieldMap = {
+                'identifier': 'identifier',
+                'firstName': 'name',
+                'lastName': 'name',
+                'mobile': 'mobile',
+                'email': 'email',
+                'businessName': 'businessName',
+                'website': 'website'
+            };
+            
+            const validationField = validationFieldMap[name] || name;
+            
+>>>>>>> Stashed changes
             return createElement('div', { className: 'field-group' },
                 createElement('label', { className: 'field-label' }, 
                     name === 'identifier' ? 'Email or Phone' : label
                 ),
                 createElement('input', {
                     type,
-                    className: `input-field ${errors[name] ? 'error' : ''}`,
+                    className: `input-field ${errors[name] ? 'error' : ''} ${formData[name] ? 'valid' : ''}`,
                     name,
                     value: formData[name],
                     onChange: handleInputChange,
+<<<<<<< Updated upstream
                     placeholder: placeholder || (name === 'mobile' ? '+8801712345678' : 
                         name === 'identifier' ? 'user@example.com or +8801712345678' : ''),
                     maxLength: maxLength || (name === 'mobile' ? 14 : name === 'identifier' ? 50 : null),
                     onKeyPress: handleKeyPress
+=======
+                    onBlur: (e) => validateAndSetFieldError(validationField, e.target.value, name),
+                    placeholder: options.placeholder || placeholder || (name === 'mobile' ? '+8801712345678' : 
+                        name === 'identifier' ? 'user@example.com or +8801712345678' : ''),
+                    maxLength: options.maxLength || (name === 'email' ? 30 : name === 'mobile' ? 14 : name === 'identifier' ? 50 : null),
+                    onKeyPress: handleKeyPress,
+                    required: options.required || false
+>>>>>>> Stashed changes
                 }),
                 helperText && !errors[name] && createElement('span', { 
                     className: 'field-helper-text'
@@ -386,10 +496,15 @@
                         createElement('label', { className: 'input-label' }, 'Email or Phone'),
                         createElement('input', {
                             type: 'text',
+<<<<<<< Updated upstream
                             className: `input-field ${errors.identifier ? 'error' : ''}`,
+=======
+                            className: `input-field ${errors.identifier ? 'error' : ''} ${formData.identifier ? 'valid' : ''}`,
+>>>>>>> Stashed changes
                             name: 'identifier',
                             value: formData.identifier,
                             onChange: handleInputChange,
+                            onBlur: (e) => validateAndSetFieldError('identifier', e.target.value, 'identifier'),
                             onKeyPress: handleKeyPress,
                             placeholder: 'user@example.com or +8801712345678',
                             disabled: loading
@@ -501,10 +616,17 @@
                         createElement('label', { className: 'field-label' }, 'Legal Identity Type'),
                         createElement('div', { className: 'dropdown-wrapper' },
                             createElement('select', {
-                                className: `input-field ${errors.legalIdType ? 'error' : ''}`,
+                                className: `input-field ${errors.legalIdType ? 'error' : ''} ${formData.legalIdType ? 'valid' : ''}`,
                                 name: 'legalIdType',
                                 value: formData.legalIdType,
-                                onChange: handleInputChange
+                                onChange: handleInputChange,
+                                onBlur: (e) => {
+                                    if (!e.target.value) {
+                                        setErrors(prev => ({ ...prev, legalIdType: 'Please select a legal identity type' }));
+                                    } else {
+                                        setErrors(prev => ({ ...prev, legalIdType: '' }));
+                                    }
+                                }
                             },
                                 createElement('option', { value: '' }, 'Select'),
                                 createElement('option', { value: 'Educational Institution' }, 'Educational Institution'),
@@ -526,7 +648,6 @@
                 errors.recaptcha && createElement('div', { className: 'recaptcha-error' },
                     createElement('span', { className: 'error-message' }, errors.recaptcha)
                 ),
-                errors.submit && createElement('div', { className: 'error-message submit-error' }, errors.submit),
                 createElement('button', {
                     className: 'arrow-btn',
                     onClick: submitBusinessDetails,

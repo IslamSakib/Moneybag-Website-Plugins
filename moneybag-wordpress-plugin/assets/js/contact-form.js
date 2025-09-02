@@ -97,6 +97,7 @@
         const validateForm = () => {
             const newErrors = {};
             
+<<<<<<< Updated upstream
             if (validator) {
                 // Use the initialized validator
                 const nameError = validator.validateField ? 
@@ -175,6 +176,43 @@
                         newErrors.otherSubject = 'Subject must be at least 2 characters';
                     }
                 }
+=======
+            // Always use centralized validation from form-validator.js
+            if (!window.MoneybagValidation) {
+                console.warn('MoneybagValidation not loaded');
+                return false;
+            }
+            
+            // Validate each field using centralized validator
+            const nameError = window.MoneybagValidation.validateField('name', formData.name);
+            if (nameError) newErrors.name = nameError;
+            
+            const emailError = window.MoneybagValidation.validateField('email', formData.email);
+            if (emailError) newErrors.email = emailError;
+            
+            // Use mobile validation for phone field
+            const phoneError = window.MoneybagValidation.validateField('mobile', formData.phone);
+            if (phoneError) newErrors.phone = phoneError;
+            
+            const companyError = window.MoneybagValidation.validateField('company', formData.company);
+            if (companyError) newErrors.company = companyError;
+            
+            // Message is optional - only validate if provided
+            if (formData.message && formData.message.trim()) {
+                const messageError = window.MoneybagValidation.validateField('message', formData.message);
+                if (messageError) newErrors.message = messageError;
+            }
+            
+            // If inquiry type is "Other", validate the subject field
+            if (formData.inquiryType === 'Other') {
+                // Make it required when inquiry type is Other
+                if (!formData.otherSubject || !formData.otherSubject.trim()) {
+                    newErrors.otherSubject = 'Please specify the subject';
+                } else {
+                    const subjectError = window.MoneybagValidation.validateField('otherSubject', formData.otherSubject);
+                    if (subjectError) newErrors.otherSubject = subjectError;
+                }
+>>>>>>> Stashed changes
             }
             
             setErrors(newErrors);
@@ -354,7 +392,11 @@
                         placeholder: 'Company Name',
                         value: formData.company,
                         onChange: handleInputChange,
+<<<<<<< Updated upstream
                         onBlur: (e) => validateAndSetFieldError('businessName', e.target.value, 'company'),
+=======
+                        onBlur: (e) => validateAndSetFieldError('company', e.target.value, 'company'),
+>>>>>>> Stashed changes
                         className: `input-field ${errors.company ? 'error' : ''} ${formData.company ? 'valid' : ''}`,
                         disabled: isSubmitting
                     }),
@@ -403,7 +445,11 @@
                             placeholder: formData.inquiryType === 'Other' ? 'Please specify subject *' : 'Other Topic Subject',
                             value: formData.otherSubject,
                             onChange: handleInputChange,
+<<<<<<< Updated upstream
                             onBlur: (e) => formData.inquiryType === 'Other' ? validateAndSetFieldError('name', e.target.value, 'otherSubject') : null,
+=======
+                            onBlur: (e) => formData.inquiryType === 'Other' ? validateAndSetFieldError('otherSubject', e.target.value, 'otherSubject') : null,
+>>>>>>> Stashed changes
                             className: `input-field ${errors.otherSubject ? 'error' : ''} ${formData.otherSubject && formData.inquiryType === 'Other' ? 'valid' : ''}`,
                             disabled: isSubmitting || (formData.inquiryType !== 'Other'),
                             required: formData.inquiryType === 'Other'

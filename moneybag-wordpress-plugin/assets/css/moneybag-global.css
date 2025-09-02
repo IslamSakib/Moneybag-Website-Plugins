@@ -45,6 +45,10 @@
     box-sizing: border-box;
     color: #1e293b;
     line-height: 1.4;
+<<<<<<< Updated upstream
+=======
+    height: 44px;
+>>>>>>> Stashed changes
     min-height: 44px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -74,8 +78,13 @@
     width: 100%;
     padding: 12px 40px 12px 16px !important; /* Extra right padding for custom arrow */
     border-radius: 8px !important;
+<<<<<<< Updated upstream
     border: 1px solid #E0E0E0 !important;
     font-size: 14px !important;
+=======
+    border: 1px solid #d1d5db !important;
+    font-size: 16px !important;
+>>>>>>> Stashed changes
     font-family: inherit;
     outline: none !important;
     outline-offset: 0 !important;

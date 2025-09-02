@@ -12,7 +12,6 @@
         const [availableLegalIdentities, setAvailableLegalIdentities] = useState([]);
         const [sessionId] = useState('sess_' + Math.random().toString(36).substring(2, 18));
         const [loading, setLoading] = useState(false);
-        const [inlineError, setInlineError] = useState(null);
         
         // Form data state
         const [formData, setFormData] = useState({
@@ -495,10 +494,17 @@
             ]);
         };
 
+<<<<<<< Updated upstream
         // CRM Integration
         const sendToCRM = async (data) => {
             try {
                 // CRM API call helper
+=======
+        // CRM Integration - Using Global System
+        const sendToCRM = async (data) => {
+            try {
+                // CRM API call helper using unified endpoint
+>>>>>>> Stashed changes
                 const crmApiCall = async (action, crmData) => {
                     const formData = new FormData();
                     formData.append('action', 'moneybag_pricing_crm');
@@ -513,11 +519,16 @@
                     
                     const result = await response.json();
                     if (!result.success) {
+<<<<<<< Updated upstream
                         throw new Error(result.data || 'CRM operation failed');
+=======
+                        throw new Error(result.data?.message || result.data || 'CRM operation failed');
+>>>>>>> Stashed changes
                     }
                     return result.data;
                 };
                 
+<<<<<<< Updated upstream
                 // 1. Find or create person in CRM
                 let personId;
                 try {
@@ -602,6 +613,38 @@
                     // It contains all merchant registration details including the opportunity name
                 } catch (error) {
                 }
+=======
+                // Use the global submit_all action for unified CRM submission
+                const crmSubmissionData = {
+                    // Person data
+                    name: `${data.firstName} ${data.lastName}`,
+                    email: data.email,
+                    mobile: data.mobile,
+                    
+                    // Business data
+                    businessName: data.businessName,
+                    domainName: data.domainName,
+                    legalIdentity: data.legalIdentity,
+                    
+                    // Extended fields
+                    businessCategory: data.customFields?.businessCategory,
+                    serviceTypes: data.customFields?.serviceTypes?.join(', '),
+                    monthlyVolume: data.customFields?.monthlyVolume,
+                    maxAmount: data.customFields?.maxAmount,
+                    currency: data.customFields?.currency || 'BDT'
+                };
+                
+                const crmResponse = await crmApiCall('submit_all', crmSubmissionData);
+                
+                // CRM submission successful - all operations handled by the global system
+                const { person_id: personId, opportunity_id: opportunityId, note_id: noteId } = crmResponse;
+                
+                console.log('Merchant CRM submission successful:', {
+                    personId,
+                    opportunityId, 
+                    noteId
+                });
+>>>>>>> Stashed changes
                 
                 return true;
             } catch (error) {
@@ -655,10 +698,17 @@
                     // Store the API response data (contains merchant_id, api_key, etc.)
                     setApiResponse(result.data || result);
                     
+<<<<<<< Updated upstream
                     // Send data to CRM asynchronously (don't block the success flow)
                     sendToCRM(submitData).catch(error => {
                         // Don't fail the whole submission if CRM fails
                     });
+=======
+                    // CRM integration disabled - uncomment below if needed
+                    // sendToCRM(submitData).catch(error => {
+                    //     // Don't fail the whole submission if CRM fails
+                    // });
+>>>>>>> Stashed changes
                     
                     setIsSubmitted(true);
                     if (config.redirect_url) {
@@ -688,8 +738,65 @@
                     displayMessage = 'Registration failed. Please try again.';
                 }
                 
+<<<<<<< Updated upstream
                 // Submission error
                 alert(displayMessage);
+=======
+                // Check if it's a validation error from the API
+                if (displayMessage.toLowerCase().includes('business name') || 
+                    displayMessage.toLowerCase().includes('repeating') ||
+                    displayMessage.toLowerCase().includes('validation') ||
+                    displayMessage.toLowerCase().includes('invalid') ||
+                    displayMessage.toLowerCase().includes('too long') ||
+                    displayMessage.toLowerCase().includes('varchar')) {
+                    
+                    // Set inline error for the appropriate field
+                    if (displayMessage.toLowerCase().includes('business name')) {
+                        setFieldErrors(prev => ({
+                            ...prev,
+                            businessName: displayMessage
+                        }));
+                        // Go back to step 2 where business name is
+                        setCurrentStep(2);
+                    } else if (displayMessage.toLowerCase().includes('first name')) {
+                        setFieldErrors(prev => ({
+                            ...prev,
+                            firstName: displayMessage
+                        }));
+                        // Go back to step 3 where first name is
+                        setCurrentStep(3);
+                    } else if (displayMessage.toLowerCase().includes('last name')) {
+                        setFieldErrors(prev => ({
+                            ...prev,
+                            lastName: displayMessage
+                        }));
+                        // Go back to step 3 where last name is
+                        setCurrentStep(3);
+                    } else if (displayMessage.toLowerCase().includes('phone')) {
+                        setFieldErrors(prev => ({
+                            ...prev,
+                            mobile: displayMessage
+                        }));
+                        // Go back to step 3 where phone is
+                        setCurrentStep(3);
+                    } else if (displayMessage.toLowerCase().includes('email') || 
+                              (displayMessage.toLowerCase().includes('varchar(30)') && displayMessage.includes('@'))) {
+                        // Handle email-related errors including database length constraints
+                        let errorMsg = displayMessage;
+                        if (displayMessage.includes('varchar(30)')) {
+                            errorMsg = 'Email must be 30 characters or less';
+                        }
+                        setFieldErrors(prev => ({
+                            ...prev,
+                            email: errorMsg
+                        }));
+                        // Go back to step 3 where email is
+                        setCurrentStep(3);
+                    }
+                    // Removed generic inline error - all validation should be field-specific
+                }
+                // Removed non-validation error inline display - let field errors handle everything
+>>>>>>> Stashed changes
             }
         };
         
@@ -1106,7 +1213,12 @@
                             value: formData.email,
                             onChange: (e) => handleInputChange('email', e.target.value),
                             onBlur: (e) => validateAndSetFieldError('email', e.target.value, 'email'),
+<<<<<<< Updated upstream
                             placeholder: 'email@example.com'
+=======
+                            placeholder: 'email@example.com',
+                            maxLength: 30  // Enforce database constraint
+>>>>>>> Stashed changes
                         }),
                         fieldErrors.email && h('span', { className: 'error-message' }, fieldErrors.email)
                     ),

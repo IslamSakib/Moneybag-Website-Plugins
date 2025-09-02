@@ -1,10 +1,18 @@
 # Moneybag WordPress Plugin
 
+<<<<<<< Updated upstream
 A comprehensive WordPress plugin providing Elementor widgets for Moneybag payment gateway integration with modern React-based forms and optimized global styling.
 
 ## 🎯 Overview
 
 The Moneybag WordPress Plugin enables seamless integration of Moneybag payment services into WordPress websites through Elementor. It features four streamlined widgets for merchant registration, customer contact forms, pricing display, and sandbox testing - all using a unified global CSS system.
+=======
+A comprehensive WordPress plugin providing Elementor widgets for Moneybag payment gateway integration with modern React-based forms, unified global CRM integration, and optimized styling system.
+
+## 🎯 Overview
+
+The Moneybag WordPress Plugin enables seamless integration of Moneybag payment services into WordPress websites through Elementor. It features four streamlined widgets for merchant registration, customer contact forms, pricing display, and sandbox testing - all powered by a unified global CRM system and optimized CSS architecture.
+>>>>>>> Stashed changes
 
 ## ✨ Features
 
@@ -53,7 +61,13 @@ The Moneybag WordPress Plugin enables seamless integration of Moneybag payment s
 - 🎯 Unified global CSS system preventing conflicts
 - ⚡ Optimized performance with minimal dependencies
 - 🔧 Simplified widget implementation without customization complexity
+<<<<<<< Updated upstream
 - 🏢 **Full CRM Integration** - automatic contact creation, opportunity tracking, and detailed notes
+=======
+- 🏢 **Unified Global CRM System** - single API call creates person, opportunity, and notes
+- 🔄 **Centralized Validation** - consistent field validation across all widgets
+- 🚫 **No Code Duplication** - all forms use the same backend methods
+>>>>>>> Stashed changes
 
 ## 📋 Requirements
 
@@ -284,6 +298,26 @@ For technical support and feature requests:
 - **Responsive Enhancement:** Improved typography scaling across all devices
 - **Mobile Optimization:** Enhanced mobile layouts and spacing
 
+<<<<<<< Updated upstream
+=======
+### v2.1.0 (December 2025) - Global CRM System
+- 🌟 **Global CRM Integration:** Unified CRM system across all widgets
+- 🔄 **Single API Calls:** Each form makes one unified CRM submission
+- 🚫 **Eliminated Duplicates:** Removed old individual CRM handlers
+- 📱 **Mobile Number Validation:** Enhanced Bangladesh phone number support
+- ⚡ **Performance Boost:** Reduced API calls and code complexity  
+- 🔧 **Centralized Validation:** All forms use global validation system
+- 🎨 **Form Consistency:** Unified error handling and visual feedback
+
+### Previous Updates (v2.0.1)
+- **Major Refactor:** Unified all widget styling into global CSS system
+- **Widget Simplification:** Removed all Elementor customization controls
+- **Enhanced CRM Integration:** Complete CRM integration for forms
+- **CSS Optimization:** Removed duplicate styles and dead code
+- **Responsive Enhancement:** Improved typography scaling
+- **Mobile Optimization:** Enhanced mobile layouts and spacing
+
+>>>>>>> Stashed changes
 ### Previous Updates (v1.0.1)
 - Fixed CRM duplicate person handling
 - Added search-before-create logic for contacts
@@ -301,8 +335,13 @@ This plugin is licensed under GPL v2 or later.
 **Developed by:** Sakib Islam  
 **Contact:** +8801950025990  
 **Company:** Moneybag  
+<<<<<<< Updated upstream
 **Version:** 2.0.1  
 **Last Updated:** September 2025
+=======
+**Version:** 2.1.0  
+**Last Updated:** December 2025
+>>>>>>> Stashed changes
 
 ---
 

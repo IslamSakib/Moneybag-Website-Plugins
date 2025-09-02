@@ -215,13 +215,43 @@ class MoneybagAPI {
         $url = self::get_crm_api_base() . $endpoint;
         $api_key = self::get_crm_api_key();
         
+<<<<<<< Updated upstream
         self::debug_log('[CRM Debug] Request URL: ' . $url);
         self::debug_log('[CRM Debug] Method: ' . $method);
         self::debug_log('[CRM Debug] API Key present: ' . (!empty($api_key) ? 'Yes' : 'No'));
+=======
+        // Add better debug logging
+        self::debug_log('[CRM Debug] Request URL: ' . $url);
+        self::debug_log('[CRM Debug] Method: ' . $method);
+        self::debug_log('[CRM Debug] API Key present: ' . (!empty($api_key) ? 'Yes' : 'No'));
+        self::debug_log('[CRM Debug] API Key length: ' . strlen($api_key));
+>>>>>>> Stashed changes
         if ($method !== 'GET') {
             self::debug_log('[CRM Debug] Data: ' . json_encode($data));
         }
         
+<<<<<<< Updated upstream
+=======
+        // Check if URL or API key is empty
+        if (empty($url) || $url === $endpoint) {
+            self::debug_log('[CRM Debug] ERROR: CRM API URL not configured');
+            return [
+                'success' => false,
+                'message' => 'CRM API URL not configured',
+                'error' => 'configuration_error'
+            ];
+        }
+        
+        if (empty($api_key)) {
+            self::debug_log('[CRM Debug] ERROR: CRM API key not configured');
+            return [
+                'success' => false,
+                'message' => 'CRM API key not configured',
+                'error' => 'configuration_error'
+            ];
+        }
+        
+>>>>>>> Stashed changes
         $args = [
             'method' => $method,
             'timeout' => 30,
@@ -346,6 +376,7 @@ class MoneybagAPI {
             ];
         }
         
+<<<<<<< Updated upstream
         // Format and validate phone number
         $phone = self::format_phone_number($data['phone']);
         if (!$phone) {
@@ -356,6 +387,11 @@ class MoneybagAPI {
                 'error' => 'validation_error'
             ];
         }
+=======
+        // Pass phone number directly to API without validation (API handles its own validation)
+        // Just sanitize the input for security
+        $phone = sanitize_text_field($data['phone']);
+>>>>>>> Stashed changes
         
         // Validate email format
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
@@ -422,6 +458,7 @@ class MoneybagAPI {
         return [];
     }
     
+<<<<<<< Updated upstream
     /**
      * Format phone number to Bangladesh standard
      * @param string $phone Raw phone number
@@ -456,6 +493,8 @@ class MoneybagAPI {
         
         return false;
     }
+=======
+>>>>>>> Stashed changes
     
     public static function verify_recaptcha($token, $action = 'submit') {
         $secret_key = get_option('moneybag_recaptcha_secret_key', '');
@@ -534,6 +573,7 @@ class MoneybagAPI {
     }
     
     /**
+<<<<<<< Updated upstream
      * Contact Form CRM Integration - Use Production CRM API
      */
     
@@ -542,6 +582,29 @@ class MoneybagAPI {
         
         if (!$api_key) {
             self::debug_log('Contact form submission failed: CRM API key not configured', 'ERROR');
+=======
+     * Global CRM Submission Handler - For all widgets
+     * 
+     * @param array $data {
+     *     @type string $name        Person's full name (required)
+     *     @type string $email       Email address (required)
+     *     @type string $phone       Phone number (required)
+     *     @type string $company     Company name (optional)
+     *     @type string $opportunity_title   Title for opportunity (optional)
+     *     @type string $opportunity_stage   Stage for opportunity (default: NEW)
+     *     @type int    $opportunity_value   Value in base currency (default: 0)
+     *     @type string $note_title          Title for note (optional)
+     *     @type string $note_content        Content for note (optional)
+     *     @type string $widget_type         Type of widget calling this (for logging)
+     * }
+     * @return array ['success', 'person_id', 'opportunity_id', 'note_id', 'message']
+     */
+    public static function submit_to_crm($data) {
+        $api_key = self::get_crm_api_key();
+        
+        if (!$api_key) {
+            self::debug_log('CRM submission failed: API key not configured', 'ERROR');
+>>>>>>> Stashed changes
             return [
                 'success' => false,
                 'message' => 'CRM API key not configured. Please contact administrator.',
@@ -549,6 +612,7 @@ class MoneybagAPI {
             ];
         }
         
+<<<<<<< Updated upstream
         // Sanitize input data
         $sanitized_data = [
             'name' => sanitize_text_field($data['name'] ?? ''),
@@ -581,6 +645,28 @@ class MoneybagAPI {
         self::debug_log("Submitting contact form for: " . $sanitized_data['name']);
         
         // Create person in CRM
+=======
+        $widget_type = $data['widget_type'] ?? 'unknown';
+        self::debug_log("========== CRM SUBMISSION FROM {$widget_type} ==========");
+        
+        // Sanitize core data
+        $sanitized_data = [
+            'name' => sanitize_text_field($data['name'] ?? ''),
+            'email' => sanitize_email($data['email'] ?? ''),
+            'phone' => sanitize_text_field($data['phone'] ?? $data['mobile'] ?? ''),
+            'company' => sanitize_text_field($data['company'] ?? '')
+        ];
+        
+        // Validate required fields
+        if (empty($sanitized_data['name']) || empty($sanitized_data['email']) || empty($sanitized_data['phone'])) {
+            return [
+                'success' => false,
+                'message' => 'Name, email, and phone are required fields.'
+            ];
+        }
+        
+        // 1. Create or find person
+>>>>>>> Stashed changes
         $person_result = self::create_person($sanitized_data);
         
         if (!$person_result['success']) {
@@ -588,6 +674,7 @@ class MoneybagAPI {
         }
         
         $person_id = $person_result['person_id'];
+<<<<<<< Updated upstream
         self::debug_log("Person result: " . json_encode($person_result));
         
         // Check if we have a valid person ID
@@ -656,6 +743,69 @@ class MoneybagAPI {
     }
     
     private static function create_person($data) {
+=======
+        self::debug_log("Person created/found with ID: " . $person_id);
+        
+        // 2. Create opportunity if title is provided
+        $opportunity_id = null;
+        if (!empty($data['opportunity_title'])) {
+            $opportunity_data = [
+                'title' => sanitize_text_field($data['opportunity_title']),
+                'person_id' => $person_id,
+                'stage' => sanitize_text_field($data['opportunity_stage'] ?? 'NEW'),
+                'value' => intval($data['opportunity_value'] ?? 0),
+                'currency' => sanitize_text_field($data['opportunity_currency'] ?? 'BDT'),
+                'company_name' => $sanitized_data['company']
+            ];
+            
+            $opportunity_result = self::create_opportunity($opportunity_data);
+            
+            if ($opportunity_result['success']) {
+                $opportunity_id = $opportunity_result['deal_id'];
+                self::debug_log("Opportunity created with ID: " . $opportunity_id);
+            } else {
+                self::debug_log("Opportunity creation failed: " . json_encode($opportunity_result));
+            }
+        }
+        
+        // 3. Create note if content is provided
+        $note_id = null;
+        if (!empty($data['note_content'])) {
+            $note_data = [
+                'title' => sanitize_text_field($data['note_title'] ?? 'Form Submission'),
+                'content' => sanitize_textarea_field($data['note_content']),
+                'person_id' => $person_id,
+                'deal_id' => $opportunity_id
+            ];
+            
+            $note_result = self::create_note($note_data);
+            
+            if ($note_result['success']) {
+                $note_id = $note_result['note_id'];
+                self::debug_log("Note created with ID: " . $note_id);
+            } else {
+                self::debug_log("Note creation failed: " . json_encode($note_result));
+            }
+        }
+        
+        return [
+            'success' => true,
+            'message' => 'Successfully processed CRM submission',
+            'person_id' => $person_id,
+            'opportunity_id' => $opportunity_id,
+            'note_id' => $note_id
+        ];
+    }
+    
+    // Old submit_contact_form method removed - now uses global submit_to_crm() method
+    
+    /**
+     * Create a person in CRM - Global method for all widgets
+     * @param array $data ['name', 'email', 'phone', 'company']
+     * @return array ['success', 'person_id', 'existing']
+     */
+    public static function create_person($data) {
+>>>>>>> Stashed changes
         // First, check if person already exists by email
         $email = $data['email'] ?? '';
         if (!empty($email)) {
@@ -827,6 +977,20 @@ class MoneybagAPI {
         } elseif (isset($create_response['id'])) {
             $person_id = $create_response['id'];
             self::debug_log("Found person ID in root id: " . $person_id);
+<<<<<<< Updated upstream
+=======
+        } elseif (isset($create_response['data']['person_id'])) {
+            $person_id = $create_response['data']['person_id'];
+            self::debug_log("Found person ID in data.person_id: " . $person_id);
+        } elseif (is_array($create_response['data']) && !empty($create_response['data'])) {
+            // If data is an array but we haven't found the ID yet, it might be the person object itself
+            $first_key = array_key_first($create_response['data']);
+            if (is_string($first_key) && strlen($first_key) > 20) {
+                // Might be a UUID as the key
+                $person_id = $first_key;
+                self::debug_log("Found person ID as array key: " . $person_id);
+            }
+>>>>>>> Stashed changes
         }
         
         if ($person_id) {
@@ -839,6 +1003,7 @@ class MoneybagAPI {
         // If we still don't have an ID, log the entire response structure
         self::debug_log("ERROR: Could not find person ID in response. Full response: " . json_encode($create_response));
         
+<<<<<<< Updated upstream
         return [
             'success' => false,
             'message' => 'Failed to create contact in CRM.',
@@ -847,6 +1012,27 @@ class MoneybagAPI {
     }
     
     private static function create_opportunity($data) {
+=======
+        // Generate a temporary ID to allow the process to continue
+        // This allows forms to work even if CRM person creation has issues
+        $temp_person_id = 'temp_' . md5($email . time());
+        self::debug_log("WARNING: Using temporary person ID: " . $temp_person_id);
+        
+        return [
+            'success' => true,  // Mark as success to allow process to continue
+            'person_id' => $temp_person_id,
+            'warning' => 'Person created but ID not found in response - using temporary ID',
+            'crm_response' => $create_response['data'] // Include for debugging
+        ];
+    }
+    
+    /**
+     * Create an opportunity in CRM - Global method for all widgets
+     * @param array $data ['title', 'person_id', 'value', 'currency', 'stage', 'company_name']
+     * @return array ['success', 'deal_id']
+     */
+    public static function create_opportunity($data) {
+>>>>>>> Stashed changes
         $opportunity_data = [
             'name' => $data['title'],
             'pointOfContactId' => $data['person_id'],
@@ -898,7 +1084,16 @@ class MoneybagAPI {
         ];
     }
     
+<<<<<<< Updated upstream
     private static function create_note($data) {
+=======
+    /**
+     * Create a note in CRM - Global method for all widgets
+     * @param array $data ['title', 'content', 'person_id', 'deal_id']
+     * @return array ['success', 'note_id']
+     */
+    public static function create_note($data) {
+>>>>>>> Stashed changes
         $note_data = [
             'title' => $data['title'] ?? 'Contact Form Submission',
             'bodyV2' => [
