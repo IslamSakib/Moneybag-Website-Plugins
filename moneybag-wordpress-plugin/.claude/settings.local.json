@@ -35,7 +35,9 @@
       "Bash(dir)",
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -l moneybag-plugin.php)",
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -v)",
-      "Read(C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins/**)"
+      "Read(C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins/**)",
+      "Bash(dir assets)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

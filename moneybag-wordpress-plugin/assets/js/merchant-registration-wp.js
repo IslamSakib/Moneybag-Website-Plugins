@@ -845,7 +845,7 @@
                                         h('div', { className: 'success-actions' },
                                             h('button', { 
                                                 className: 'secondary-btn',
-                                                onClick: () => alert('Please contact your API provider for FAQ and support information.')
+                                                onClick: () => window.open('https://moneybag.com.bd/support/#faq', '_blank')
                                             }, 'FAQ'),
                                             h('button', { 
                                                 className: 'primary-btn',
@@ -1305,9 +1305,11 @@
                         // Progress header inside form-main-wrapper
                         h('div', { className: 'form-progress-header' },
                             h('div', { className: 'merchant-form-header-nav' },
-                                h('button', null, 'Need Assistance?'),
                                 h('button', { 
-                                    onClick: () => alert('Please contact your API provider for FAQ and support information.')
+                                    onClick: () => window.open('https://moneybag.com.bd/support/', '_blank')
+                                }, 'Need Assistance?'),
+                                h('button', { 
+                                    onClick: () => window.open('https://moneybag.com.bd/support/#faq', '_blank')
                                 }, 'FAQ')
                             ),
                             h('div', { className: 'progress-section' },

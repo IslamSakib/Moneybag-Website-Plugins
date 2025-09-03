@@ -35,7 +35,7 @@ class PricingPlanWidget extends Widget_Base {
     }
     
     public function get_style_depends() {
-        return ['moneybag-pricing-plan'];
+        return ['moneybag-global'];
     }
     
     protected function register_controls() {
