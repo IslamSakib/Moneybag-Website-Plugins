@@ -558,6 +558,31 @@
         // Submit handler
         const handleSubmit = async () => {
             try {
+                // Validate all fields before submission using global validation
+                if (window.MoneybagValidation) {
+                    const allErrors = {};
+                    
+                    // Validate all steps
+                    for (let step = 1; step <= 3; step++) {
+                        const stepErrors = window.MoneybagValidation.validateMerchantStepFields(step, formData);
+                        Object.assign(allErrors, stepErrors);
+                    }
+                    
+                    // If there are validation errors, show them and don't submit
+                    if (Object.keys(allErrors).length > 0) {
+                        setFieldErrors(allErrors);
+                        // Find the first step with errors and go there
+                        for (let step = 1; step <= 3; step++) {
+                            const stepErrors = window.MoneybagValidation.validateMerchantStepFields(step, formData);
+                            if (Object.keys(stepErrors).length > 0) {
+                                setCurrentStep(step);
+                                break;
+                            }
+                        }
+                        return;
+                    }
+                }
+                
                 setLoading(true);
                 
                 // Format data according to no-auth API requirements
@@ -634,7 +659,28 @@
                 }
                 
                 // Check if it's a validation error from the API
-                if (displayMessage.toLowerCase().includes('business name') || 
+                if (displayMessage.toLowerCase().includes('email') && 
+                    displayMessage.toLowerCase().includes('already')) {
+                    // Handle existing email error with forgot password link
+                    const errorWithLink = displayMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                    setFieldErrors(prev => ({
+                        ...prev,
+                        email: errorWithLink
+                    }));
+                    // Go back to step 3 where email field is
+                    setCurrentStep(3);
+                } else if ((displayMessage.toLowerCase().includes('phone') || 
+                           displayMessage.toLowerCase().includes('mobile')) && 
+                           displayMessage.toLowerCase().includes('already')) {
+                    // Handle existing phone number error with forgot password link
+                    const errorWithLink = displayMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                    setFieldErrors(prev => ({
+                        ...prev,
+                        mobile: errorWithLink
+                    }));
+                    // Go back to step 3 where mobile field is
+                    setCurrentStep(3);
+                } else if (displayMessage.toLowerCase().includes('business name') || 
                     displayMessage.toLowerCase().includes('repeating') ||
                     displayMessage.toLowerCase().includes('validation') ||
                     displayMessage.toLowerCase().includes('invalid') ||
@@ -663,7 +709,8 @@
                         }));
                         // Go back to step 3 where last name is
                         setCurrentStep(3);
-                    } else if (displayMessage.toLowerCase().includes('phone')) {
+                    } else if (displayMessage.toLowerCase().includes('phone') || 
+                              displayMessage.toLowerCase().includes('mobile')) {
                         setFieldErrors(prev => ({
                             ...prev,
                             mobile: displayMessage
@@ -719,7 +766,14 @@
                                         ),
                                         h('a', { 
                                             href: 'tel:+8801958109228',
-                                            className: 'contact-link'
+                                            className: 'contact-link',
+                                            style: { 
+                                                color: 'inherit', 
+                                                textDecoration: 'none',
+                                                transition: 'color 0.3s ease'
+                                            },
+                                            onMouseEnter: (e) => e.target.style.color = '#ff4444',
+                                            onMouseLeave: (e) => e.target.style.color = 'inherit'
                                         }, '+880 1958 109 228')
                                     ),
                                     h('div', { className: 'contact-item' },
@@ -739,9 +793,17 @@
                                                 points: '22,6 12,13 2,6'
                                             })
                                         ),
-                                        h('span', { 
-                                            className: 'contact-info'
-                                        }, 'Contact your API provider for support')
+                                        h('a', { 
+                                            className: 'contact-info',
+                                            href: 'mailto:info@moneybag.com.bd',
+                                            style: { 
+                                                color: 'inherit', 
+                                                textDecoration: 'none',
+                                                transition: 'color 0.3s ease'
+                                            },
+                                            onMouseEnter: (e) => e.target.style.color = '#ff4444',
+                                            onMouseLeave: (e) => e.target.style.color = 'inherit'
+                                        }, 'info@moneybag.com.bd')
                                     ),
                                     h('p', { className: 'contact-description' }, 
                                         'For any inquiries, feel free to reach out via phone or email. Our support team is here to assist you with any questions or service-related requests.'
@@ -796,33 +858,22 @@
                                                                 )
                                                             ),
                                                             h('div', { className: 'login-card-text' },
-                                                                h('span', { className: 'login-card-title' }, 'Open Sandbox Dashboard'),
-                                                                h('span', { className: 'login-card-subtitle' }, 'Click to auto-login to your sandbox account')
+                                                                h('span', { className: 'login-card-title' }, 'LOGIN TO SANDBOX'),
+                                                                h('span', { className: 'login-card-subtitle' }, 'Click here for instant access')
                                                             ),
                                                             h('div', { className: 'login-card-arrow' },
                                                                 h('svg', { 
-                                                                    width: '20', 
-                                                                    height: '20', 
+                                                                    width: '24', 
+                                                                    height: '24', 
                                                                     viewBox: '0 0 24 24',
                                                                     fill: 'none',
                                                                     stroke: 'currentColor',
-                                                                    strokeWidth: '2'
+                                                                    strokeWidth: '2.5'
                                                                 },
-                                                                    h('path', { d: 'M5 12h14M12 5l7 7-7 7' })
+                                                                    h('path', { d: 'M5 12h14', strokeLinecap: 'round' }),
+                                                                    h('path', { d: 'M12 5l7 7-7 7', strokeLinecap: 'round', strokeLinejoin: 'round' })
                                                                 )
                                                             )
-                                                        )
-                                                    )
-                                                ),
-                                                apiResponse.payment_methods_configured && apiResponse.payment_methods_configured.length > 0 && 
-                                                h('div', { className: 'payment-methods' },
-                                                    h('span', { className: 'payment-methods-label' }, 'Pre-configured Payment Methods:'),
-                                                    h('div', { className: 'payment-methods-list' },
-                                                        apiResponse.payment_methods_configured.map((method, index) => 
-                                                            h('span', { 
-                                                                key: index,
-                                                                className: 'payment-method-tag' 
-                                                            }, method)
                                                         )
                                                     )
                                                 )
@@ -1106,7 +1157,15 @@
                             placeholder: 'email@example.com',
                             maxLength: 30  // Enforce database constraint
                         }),
-                        fieldErrors.email && h('span', { className: 'error-message' }, fieldErrors.email)
+                        fieldErrors.email && h('span', { 
+                            className: 'error-message',
+                            dangerouslySetInnerHTML: typeof fieldErrors.email === 'string' && fieldErrors.email.includes('<a') 
+                                ? { __html: fieldErrors.email } 
+                                : undefined
+                        }, typeof fieldErrors.email === 'string' && fieldErrors.email.includes('<a') 
+                            ? null 
+                            : fieldErrors.email
+                        )
                     ),
                     h('div', { className: 'field-group' },
                         h('label', { className: 'field-label' },
@@ -1119,10 +1178,18 @@
                             value: formData.mobile,
                             onChange: (e) => handleInputChange('mobile', e.target.value),
                             onBlur: (e) => validateAndSetFieldError('mobile', e.target.value, 'mobile'),
-                            placeholder: '+8801XXXXXXXXX'
+                            placeholder: '01XXXXXXXXX'
                         }),
-                        fieldErrors.mobile && h('span', { className: 'error-message' }, fieldErrors.mobile),
-                        h('small', { className: 'form-hint' }, 'Bangladesh mobile number format: +8801XXXXXXXXX or 01XXXXXXXXX')
+                        fieldErrors.mobile && h('span', { 
+                            className: 'error-message',
+                            dangerouslySetInnerHTML: typeof fieldErrors.mobile === 'string' && fieldErrors.mobile.includes('<a') 
+                                ? { __html: fieldErrors.mobile } 
+                                : undefined
+                        }, typeof fieldErrors.mobile === 'string' && fieldErrors.mobile.includes('<a') 
+                            ? null 
+                            : fieldErrors.mobile
+                        ),
+                        h('small', { className: 'form-hint' }, 'Bangladesh mobile number format: 01XXXXXXXXX')
                     )
                 )
             );

@@ -164,7 +164,7 @@
         };
         
         const isPhone = (identifier) => {
-            const phoneRegex = /^(\+880|0)?1[3-9]\d{8}$/;
+            const phoneRegex = /^01[3-9]\d{8}$/;
             return phoneRegex.test(identifier.replace(/\s/g, ''));
         };
 
@@ -240,7 +240,15 @@
         // API will return validation errors in its response
 
         const sendIdentifierVerification = async () => {
-            // No client-side validation - let API handle everything
+            // Use centralized validation
+            if (window.MoneybagValidation) {
+                const validationError = window.MoneybagValidation.validateField('identifier', formData.identifier);
+                if (validationError) {
+                    setErrors(prev => ({ ...prev, identifier: validationError }));
+                    return;
+                }
+            }
+            
             setLoading(true);
             try {
                 const response = await apiCall('email_verification', {
@@ -263,14 +271,31 @@
                 }
             } catch (error) {
                 // Identifier verification error
-                setErrors(prev => ({ ...prev, identifier: error.message }));
+                let errorMessage = error.message;
+                
+                // Check if it's an "already exists" error for sandbox
+                if (errorMessage && (
+                    errorMessage.toLowerCase().includes('already registered') ||
+                    errorMessage.toLowerCase().includes('already exists') ||
+                    errorMessage.toLowerCase().includes('already associated')
+                )) {
+                    // Add forgot password link for sandbox
+                    errorMessage = errorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                }
+                
+                setErrors(prev => ({ ...prev, identifier: errorMessage }));
             } finally {
                 setLoading(false);
             }
         };
 
         const verifyOTP = async () => {
-            // No client-side validation - let API handle everything
+            // Validate OTP before sending
+            if (!formData.otp || formData.otp.length !== 6) {
+                setErrors(prev => ({ ...prev, otp: 'Please enter a valid 6-digit code' }));
+                return;
+            }
+            
             setVerifyingOTP(true);
             try {
                 const response = await apiCall('verify_otp', {
@@ -297,7 +322,49 @@
         };
 
         const submitBusinessDetails = async () => {
-            // No client-side validation - let API handle everything
+            // Basic validation for required fields
+            const newErrors = {};
+            
+            if (!formData.firstName) {
+                newErrors.firstName = 'First name is required';
+            }
+            if (!formData.lastName) {
+                newErrors.lastName = 'Last name is required';
+            }
+            if (!formData.businessName) {
+                newErrors.businessName = 'Business name is required';
+            }
+            if (!formData.legalIdType) {
+                newErrors.legalIdType = 'Please select a legal identity type';
+            }
+            
+            // Check mobile or email based on verification method
+            if (isEmail(formData.identifier)) {
+                if (!formData.mobile) {
+                    newErrors.mobile = 'Mobile number is required';
+                } else if (window.MoneybagValidation) {
+                    const mobileError = window.MoneybagValidation.validateField('mobile', formData.mobile);
+                    if (mobileError) {
+                        newErrors.mobile = mobileError;
+                    }
+                }
+            } else {
+                if (!formData.email) {
+                    newErrors.email = 'Email address is required';
+                } else if (window.MoneybagValidation) {
+                    const emailError = window.MoneybagValidation.validateField('email', formData.email);
+                    if (emailError) {
+                        newErrors.email = emailError;
+                    }
+                }
+            }
+            
+            // If there are validation errors, show them and don't submit
+            if (Object.keys(newErrors).length > 0) {
+                setErrors(newErrors);
+                return;
+            }
+            
             setErrors({});
             setLoading(true);
             try {
@@ -340,9 +407,33 @@
                 } else if (errorMsg.includes('last') || errorMsg.includes('last_name')) {
                     setErrors(prev => ({ ...prev, lastName: error.message }));
                 } else if (errorMsg.includes('email')) {
-                    setErrors(prev => ({ ...prev, email: error.message }));
+                    let emailErrorMessage = error.message;
+                    
+                    // Check if it's an "already exists" error for email
+                    if (emailErrorMessage && (
+                        emailErrorMessage.toLowerCase().includes('already registered') ||
+                        emailErrorMessage.toLowerCase().includes('already exists') ||
+                        emailErrorMessage.toLowerCase().includes('already associated')
+                    )) {
+                        // Add forgot password link for email
+                        emailErrorMessage = emailErrorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                    }
+                    
+                    setErrors(prev => ({ ...prev, email: emailErrorMessage }));
                 } else if (errorMsg.includes('phone') || errorMsg.includes('mobile')) {
-                    setErrors(prev => ({ ...prev, mobile: error.message }));
+                    let mobileErrorMessage = error.message;
+                    
+                    // Check if it's an "already exists" error for mobile
+                    if (mobileErrorMessage && (
+                        mobileErrorMessage.toLowerCase().includes('already registered') ||
+                        mobileErrorMessage.toLowerCase().includes('already exists') ||
+                        mobileErrorMessage.toLowerCase().includes('already associated')
+                    )) {
+                        // Add forgot password link for mobile
+                        mobileErrorMessage = mobileErrorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                    }
+                    
+                    setErrors(prev => ({ ...prev, mobile: mobileErrorMessage }));
                 } else if (errorMsg.includes('legal') || errorMsg.includes('identity')) {
                     setErrors(prev => ({ ...prev, legalIdType: error.message }));
                 } else {
@@ -370,9 +461,18 @@
         const resendOTP = async () => {
             setResendingOTP(true);
             try {
-                await apiCall('email_verification', {
+                const response = await apiCall('email_verification', {
                     identifier: formData.identifier
                 });
+                
+                // Update sessionId with new session from resend response
+                if (response && response.data && response.data.session_id) {
+                    setSessionId(response.data.session_id);
+                } else if (response && response.session_id) {
+                    // Fallback for direct session_id
+                    setSessionId(response.session_id);
+                }
+                
                 setTimeLeft(60);
                 setTimerActive(true);
             } catch (error) {
@@ -398,7 +498,7 @@
             let helperText = null;
             
             if (name === 'mobile') {
-                helperText = 'Format: +8801712345678 or 01712345678';
+                helperText = 'Format: 01712345678';
             } else if (name === 'identifier') {
                 helperText = 'Enter your email address or phone number';
             }
@@ -416,9 +516,13 @@
             
             const validationField = validationFieldMap[name] || name;
             
+            // Determine if field is required
+            const isRequired = options.required !== false && name !== 'website';
+            
             return createElement('div', { className: 'field-group' },
                 createElement('label', { className: 'field-label' }, 
-                    name === 'identifier' ? 'Email or Phone' : label
+                    name === 'identifier' ? 'Email or Phone' : label,
+                    isRequired && createElement('span', { className: 'required-indicator' }, ' *')
                 ),
                 createElement('input', {
                     type,
@@ -427,8 +531,8 @@
                     value: formData[name],
                     onChange: handleInputChange,
                     onBlur: (e) => validateAndSetFieldError(validationField, e.target.value, name),
-                    placeholder: options.placeholder || placeholder || (name === 'mobile' ? '+8801712345678' : 
-                        name === 'identifier' ? 'user@example.com or +8801712345678' : ''),
+                    placeholder: options.placeholder || placeholder || (name === 'mobile' ? '01712345678' : 
+                        name === 'identifier' ? 'user@example.com or 01712345678' : ''),
                     maxLength: options.maxLength || (name === 'email' ? 30 : name === 'mobile' ? 14 : name === 'identifier' ? 50 : null),
                     onKeyPress: handleKeyPress,
                     required: options.required || false
@@ -436,7 +540,15 @@
                 helperText && !errors[name] && createElement('span', { 
                     className: 'field-helper-text'
                 }, helperText),
-                errors[name] && createElement('span', { className: 'error-message' }, errors[name])
+                errors[name] && createElement('span', { 
+                    className: 'error-message',
+                    dangerouslySetInnerHTML: typeof errors[name] === 'string' && errors[name].includes('<a') 
+                        ? { __html: errors[name] } 
+                        : undefined
+                }, typeof errors[name] === 'string' && errors[name].includes('<a') 
+                    ? null 
+                    : errors[name]
+                )
             );
         };
 
@@ -462,7 +574,10 @@
                 createElement('div', { className: 'section-divider' }),
                 createElement('div', { className: 'right-section' },
                     createElement('div', { className: 'form-content' },
-                        createElement('label', { className: 'input-label' }, 'Email or Phone'),
+                        createElement('label', { className: 'input-label' }, 
+                            'Email or Phone',
+                            createElement('span', { className: 'required-indicator' }, ' *')
+                        ),
                         createElement('input', {
                             type: 'text',
                             className: `input-field ${errors.identifier ? 'error' : ''} ${formData.identifier ? 'valid' : ''}`,
@@ -471,14 +586,22 @@
                             onChange: handleInputChange,
                             onBlur: (e) => validateAndSetFieldError('identifier', e.target.value, 'identifier'),
                             onKeyPress: handleKeyPress,
-                            placeholder: 'user@example.com or +8801712345678',
+                            placeholder: 'user@example.com or 01712345678',
                             disabled: loading
                         }),
-                        errors.identifier && createElement('span', { className: 'error-message' }, errors.identifier),
+                        errors.identifier && createElement('span', { 
+                            className: 'error-message',
+                            dangerouslySetInnerHTML: typeof errors.identifier === 'string' && errors.identifier.includes('<a') 
+                                ? { __html: errors.identifier } 
+                                : undefined
+                        }, typeof errors.identifier === 'string' && errors.identifier.includes('<a') 
+                            ? null 
+                            : errors.identifier
+                        ),
                         createElement('button', {
                             className: 'primary-btn',
                             onClick: sendIdentifierVerification,
-                            disabled: loading
+                            disabled: loading || !!errors.identifier
                         }, 
                             loading ? createElement('span', { className: 'btn-content' },
                                 createElement('span', { 
@@ -519,6 +642,10 @@
                         createElement('div', { className: 'form-content' },
                             createElement('div', { className: 'otp-sent-message' }, 
                                 `OTP sent to ${formData.identifier}`
+                            ),
+                            createElement('label', { className: 'input-label' }, 
+                                'Verification Code',
+                                createElement('span', { className: 'required-indicator' }, ' *')
                             ),
                             createElement('div', { className: 'otp-input-wrapper' },
                                 createElement('input', {
@@ -578,7 +705,10 @@
                 ),
                 createElement('div', { className: 'input-row' },
                     createElement('div', { className: 'field-group' },
-                        createElement('label', { className: 'field-label' }, 'Legal Identity Type'),
+                        createElement('label', { className: 'field-label' }, 
+                            'Legal Identity Type',
+                            createElement('span', { className: 'required-indicator' }, ' *')
+                        ),
                         createElement('div', { className: 'dropdown-wrapper' },
                             createElement('select', {
                                 className: `input-field ${errors.legalIdType ? 'error' : ''} ${formData.legalIdType ? 'valid' : ''}`,
@@ -644,7 +774,11 @@
                         })
                     )
                 ),
-                createElement('h2', { className: 'success-heading' }, "You're almost there! We sent an email to"),
+                createElement('h2', { className: 'success-heading' }, 
+                    isEmail(formData.identifier) 
+                        ? "You're almost there! We sent an email to"
+                        : "You're almost there! We sent a message to"
+                ),
                 createElement('div', { className: 'email-display' }, formData.identifier || 'user@example.com'),
                 createElement('p', { className: 'success-info' },
                     `Check your ${isEmail(formData.identifier) ? 'inbox' : 'messages'} for your sandbox API credentials and documentation links.`

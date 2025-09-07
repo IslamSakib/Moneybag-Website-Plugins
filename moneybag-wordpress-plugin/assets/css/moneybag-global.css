@@ -204,8 +204,24 @@
 .moneybag-form .primary-btn:disabled {
     background: #ff6b6b !important;
     color: #FFFFFF !important;
-    cursor: wait;
+    cursor: default;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    opacity: 0.7;
+}
+
+.moneybag-form .primary-btn:disabled:hover {
+    background: #ff6b6b !important;
+    color: #FFFFFF !important;
+    transform: none !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.moneybag-form .primary-btn:disabled .spinner-icon {
+    animation: none !important;
+}
+
+.moneybag-form .primary-btn:disabled .spinner {
+    opacity: 1;
 }
 
 /* Standardized Secondary Button Styles */
@@ -248,8 +264,24 @@
     background: #3B3F42 !important;
     color: #FFFFFF !important;
     border-color: #3B3F42;
-    cursor: wait;
+    cursor: default;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    opacity: 0.7;
+}
+
+.moneybag-form .secondary-btn:disabled:hover {
+    background: #3B3F42 !important;
+    color: #FFFFFF !important;
+    border-color: #3B3F42 !important;
+    transform: none !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.moneybag-form .secondary-btn:not(:disabled) {
+    background: #3B3F42 !important;
+    color: #FFFFFF !important;
+    border-color: #3B3F42 !important;
+    opacity: 1 !important;
 }
 
 /* Standardized Arrow/Submit Button Styles */
@@ -349,10 +381,15 @@
     font-size: 12px;
 }
 
-/* Field Groups */
+/* Field Groups - Base styles */
 .moneybag-form .field-group {
     display: flex;
     flex-direction: column;
+}
+
+/* Specific overrides for sandbox and merchant forms */
+.moneybag-form:not(.pricing-plan-container) .field-group {
+    height: 100%;
 }
 
 /* Error Messages */
@@ -418,6 +455,28 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     margin-bottom: 15px;
+    align-items: start;
+}
+
+.moneybag-form .input-row > * {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Field group styles for sandbox and merchant registration widgets */
+.moneybag-form-container .field-group,
+.merchant-form-container .field-group {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.moneybag-form-container .field-group .dropdown-wrapper,
+.merchant-form-container .field-group .dropdown-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .moneybag-form .input-row-2 {
@@ -463,8 +522,15 @@
 @media (max-width: 1199px) and (min-width: 1024px) {
     .moneybag-form .input-row {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        margin-bottom: 12px;
+        gap: 15px;
+        margin-bottom: 15px;
+        align-items: start;
+    }
+    
+    .moneybag-form .input-row > * {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 }
 
@@ -472,8 +538,15 @@
 @media (max-width: 1023px) and (min-width: 768px) {
     .moneybag-form .input-row {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        margin-bottom: 12px;
+        gap: 15px;
+        margin-bottom: 15px;
+        align-items: start;
+    }
+    
+    .moneybag-form .input-row > * {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 }
 
@@ -1811,13 +1884,19 @@ form.contact-form .form-row.two-columns {
     margin-top: 20px;
 }
 
-.pricing-plan-container .form-section .field-group {
+.pricing-plan-container .form-section .field-group,
+.pricing-plan-container.moneybag-form .field-group {
+    display: flex;
+    flex-direction: column;
     text-align: left;
     margin-bottom: 20px;
+    height: auto;
 }
 
 .pricing-plan-container .consultation-form .field-group {
     text-align: left;
+    display: flex;
+    flex-direction: column;
 }
 
 .pricing-plan-container .see-more-button {
@@ -3240,6 +3319,11 @@ form.contact-form .form-row.two-columns {
     margin-top: 4px;
 }
 
+/* Sandbox form step 1 - error message spacing to prevent button overlap */
+.moneybag-sandbox-form-wrapper .split-layout .error-message {
+    margin-bottom: 15px;
+}
+
 .form-hint {
     display: block;
     font-size: 12px;
@@ -3645,16 +3729,17 @@ form.contact-form .form-row.two-columns {
 }
 
 .success-actions .primary-btn {
-    background: linear-gradient(270deg, #F46F6F 0%, #EE212E 100%);
-    color: white !important;
-    border: none;
+    background: #FFFFFF;
+    color: #000000 !important;
+    border: 1px solid #E0E0E0;
 }
 
 .success-actions .primary-btn:hover {
-    background: linear-gradient(270deg, #F45858 0%, #DC1F2A 100%);
-    color: white !important;
+    background: #3B3F42;
+    border-color: #3B3F42;
+    color: #FFFFFF !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(238, 33, 46, 0.2);
+    box-shadow: 0 4px 12px rgba(59, 63, 66, 0.2);
 }
 
 /* Laptop and Desktop - Full width form groups and fields */
@@ -5124,61 +5209,127 @@ form.contact-form .form-row.two-columns {
 }
 
 .success-actions .primary-btn {
-    background: linear-gradient(270deg, #F46F6F 0%, #EE212E 100%);
-    color: white !important;
-    border: none;
+    background: #FFFFFF;
+    color: #000000 !important;
+    border: 1px solid #E0E0E0;
 }
 
 .success-actions .primary-btn:hover {
-    background: linear-gradient(270deg, #E45050 0%, #CC1A25 100%);
-    color: white !important;
+    background: #3B3F42;
+    border-color: #3B3F42;
+    color: #FFFFFF !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(238, 33, 46, 0.2);
+    box-shadow: 0 4px 12px rgba(59, 63, 66, 0.2);
 }
 
-/* Sandbox Login Card Design */
+/* Sandbox Login Card Design - Primary CTA */
 .sandbox-login-card {
     display: flex;
     align-items: center;
-    background: white;
-    border: 2px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 20px 24px;
+    justify-content: center;
+    background: #FF4444;
+    border: 3px solid #FF4444;
+    border-radius: 12px;
+    padding: 18px 36px;
     text-decoration: none !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin: 24px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(255, 68, 68, 0.4), 0 0 0 0 rgba(255, 68, 68, 0.4);
+    margin: 32px 0;
+    position: relative;
+    animation: pulse-shadow 2s infinite;
+}
+
+@keyframes pulse-shadow {
+    0%, 100% {
+        box-shadow: 0 10px 40px rgba(255, 68, 68, 0.4), 0 0 0 0 rgba(255, 68, 68, 0.4);
+    }
+    50% {
+        box-shadow: 0 10px 40px rgba(255, 68, 68, 0.5), 0 0 0 15px rgba(255, 68, 68, 0);
+    }
+}
+
+.sandbox-login-card::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #ff6666, #ff0000, #ff6666, #ff0000);
+    border-radius: 12px;
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: gradient-shift 3s ease infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+@keyframes gradient-shift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.sandbox-login-card:hover::before {
+    opacity: 1;
 }
 
 .sandbox-login-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(244, 111, 111, 0.15);
-    border-color: #F46F6F;
-    background: linear-gradient(135deg, #fff 0%, #fef2f2 100%);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 50px rgba(255, 68, 68, 0.5);
+    background: #ff3333;
+    border-color: transparent;
+    animation: none;
+}
+
+.sandbox-login-card:hover .login-card-title,
+.sandbox-login-card:hover .login-card-subtitle {
+    color: #ffffff !important;
+}
+
+.sandbox-login-card:hover .login-card-icon {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.sandbox-login-card:hover .login-card-icon svg {
+    color: #ffffff;
+}
+
+.sandbox-login-card:hover .login-card-arrow {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.sandbox-login-card:hover .login-card-arrow svg {
+    color: #ffffff;
 }
 
 .login-card-content {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
     width: 100%;
 }
 
 .login-card-icon {
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #F46F6F 0%, #EE212E 100%);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    transition: all 0.3s ease;
 }
 
 .login-card-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     color: white;
+    transition: all 0.3s ease;
 }
 
 .login-card-text {
@@ -5191,40 +5342,61 @@ form.contact-form .form-row.two-columns {
 
 .login-card-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: #111827;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
     line-height: 1.2;
     text-align: left;
+    letter-spacing: -0.5px;
+    transition: color 0.3s ease;
 }
 
 .login-card-subtitle {
     font-family: 'Poppins', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    color: #6b7280;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
     line-height: 1.4;
     text-align: left;
+    transition: color 0.3s ease;
 }
 
 .login-card-arrow {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #9ca3af;
-    transition: transform 0.3s ease;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.3s ease;
+    animation: arrow-bounce 1s infinite;
 }
 
-.sandbox-login-card:hover .login-card-arrow {
-    transform: translateX(4px);
-    color: #F46F6F;
+@keyframes arrow-bounce {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(5px);
+    }
 }
 
 .login-card-arrow svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.sandbox-login-card:hover .login-card-arrow {
+    animation: none;
+    transform: translateX(5px);
+}
+
+.sandbox-login-card:hover .login-card-arrow svg {
+    transform: scale(1.1);
 }
 
 /* Left-align illustration on desktop/laptop */

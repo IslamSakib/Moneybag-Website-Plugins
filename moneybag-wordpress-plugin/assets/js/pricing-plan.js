@@ -26,11 +26,17 @@
         useEffect(() => {
             const loadPricingRules = async () => {
                 try {
-                    const response = await fetch(`${window.location.origin}/wp-content/plugins/moneybag-wordpress-plugin/data/pricing-rules.json`);
+                    // Use the plugin URL from localized script if available
+                    const pluginUrl = window.moneybagPricingAjax?.pluginUrl || `${window.location.origin}/wp-content/plugins/moneybag-wordpress-plugin`;
+                    const response = await fetch(`${pluginUrl}/data/pricing-rules.json`);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load pricing rules: ${response.status}`);
+                    }
                     const rules = await response.json();
                     setPricingRules(rules);
                 } catch (error) {
-                    // Failed to load pricing rules
+                    console.error('Failed to load pricing rules:', error);
+                    // Don't set fallback - let the form handle missing data
                 }
             };
             
@@ -331,9 +337,21 @@
                 
                 // Check for specific field errors and map them
                 if (errorMessage.toLowerCase().includes('email')) {
-                    setErrors(prev => ({ ...prev, email: 'Invalid email address or already exists' }));
+                    // Check if it's an "already exists" error
+                    if (errorMessage.toLowerCase().includes('already')) {
+                        const errorWithLink = errorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                        setErrors(prev => ({ ...prev, email: errorWithLink }));
+                    } else {
+                        setErrors(prev => ({ ...prev, email: errorMessage }));
+                    }
                 } else if (errorMessage.toLowerCase().includes('phone') || errorMessage.toLowerCase().includes('mobile')) {
-                    setErrors(prev => ({ ...prev, mobile: 'Invalid phone number format' }));
+                    // Check if it's an "already exists" error
+                    if (errorMessage.toLowerCase().includes('already')) {
+                        const errorWithLink = errorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                        setErrors(prev => ({ ...prev, mobile: errorWithLink }));
+                    } else {
+                        setErrors(prev => ({ ...prev, mobile: 'Invalid phone number format' }));
+                    }
                 } else if (errorMessage.toLowerCase().includes('name')) {
                     setErrors(prev => ({ ...prev, name: 'Invalid name format' }));
                 } else if (errorMessage.toLowerCase().includes('duplicate')) {
@@ -353,24 +371,27 @@
         };
 
         const renderSelect = (name, options, placeholder = 'Select') => {
-            if (!pricingRules) return null;
             
             let fieldOptions = [];
             
             if (name === 'businessCategory') {
-                // Business category options - all available categories
-                fieldOptions = Object.keys(pricingRules.businessCategories || {}).map(category => ({
-                    value: category,
-                    label: category
-                }));
+                // Business category options from JSON
+                if (pricingRules && pricingRules.businessCategories) {
+                    fieldOptions = Object.keys(pricingRules.businessCategories).map(category => ({
+                        value: category,
+                        label: category
+                    }));
+                }
             } else if (name === 'legalIdentity') {
-                // Legal identity options based on selected business category
+                // Legal identity options based on selected business category from JSON
                 const selectedBusinessCategory = formData.businessCategory;
-                const availableIdentities = Object.keys(pricingRules.businessCategories?.[selectedBusinessCategory]?.identities || {});
-                fieldOptions = availableIdentities.map(identity => ({
-                    value: identity,
-                    label: identity
-                }));
+                if (pricingRules && pricingRules.businessCategories && selectedBusinessCategory && pricingRules.businessCategories[selectedBusinessCategory]) {
+                    const availableIdentities = Object.keys(pricingRules.businessCategories[selectedBusinessCategory].identities || {});
+                    fieldOptions = availableIdentities.map(identity => ({
+                        value: identity,
+                        label: identity
+                    }));
+                }
             } else if (name === 'monthlyVolume') {
                 // Monthly volume options
                 fieldOptions = [
@@ -402,7 +423,7 @@
                             key: 'placeholder', 
                             value: '' 
                         }, `Select ${name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}`),
-                        ...fieldOptions.map(option => 
+                        ...(fieldOptions || []).map(option => 
                             createElement('option', { 
                                 key: option.value, 
                                 value: option.value 
@@ -410,7 +431,15 @@
                         )
                     )
                 ),
-                errors[name] && createElement('span', { className: 'error-message' }, errors[name])
+                errors[name] && createElement('span', { 
+                    className: 'error-message',
+                    dangerouslySetInnerHTML: typeof errors[name] === 'string' && errors[name].includes('<a') 
+                        ? { __html: errors[name] } 
+                        : undefined
+                }, typeof errors[name] === 'string' && errors[name].includes('<a') 
+                    ? null 
+                    : errors[name]
+                )
             );
         };
 
@@ -446,12 +475,39 @@
                         inputMode: 'numeric'
                     })
                 }),
-                errors[name] && createElement('span', { className: 'error-message' }, errors[name])
+                errors[name] && createElement('span', { 
+                    className: 'error-message',
+                    dangerouslySetInnerHTML: typeof errors[name] === 'string' && errors[name].includes('<a') 
+                        ? { __html: errors[name] } 
+                        : undefined
+                }, typeof errors[name] === 'string' && errors[name].includes('<a') 
+                    ? null 
+                    : errors[name]
+                )
             );
         };
 
         // Step 1: Requirements Form
         if (currentStep === 1) {
+            // Only render the form when pricing rules are loaded
+            if (!pricingRules) {
+                return createElement('div', { className: 'pricing-plan-container moneybag-form' },
+                    createElement('div', { className: 'step-container' },
+                        createElement('div', { className: 'form-section' },
+                            createElement('h1', null, config.form_title),
+                            createElement('div', { style: { padding: '20px 0' } }, 'Loading...')
+                        ),
+                        createElement('div', { className: 'content-section' },
+                            createElement('div', { className: 'content-text' },
+                                createElement('h2', null,
+                                    'Share your business details for a customized Moneybag pricing quote and the exact documents needed to start accepting payments seamlessly.'
+                                )
+                            )
+                        )
+                    )
+                );
+            }
+            
             return createElement('div', { className: 'pricing-plan-container moneybag-form' },
                 createElement('div', { className: 'step-container' },
                     createElement('div', { className: 'form-section' },
@@ -663,9 +719,17 @@
                                     strokeLinejoin: 'round'
                                 })
                             ),
-                            createElement('span', {
-                                className: 'contact-info'
-                            }, 'Contact your API provider for support')
+                            createElement('a', {
+                                className: 'contact-info',
+                                href: 'mailto:info@moneybag.com.bd',
+                                style: { 
+                                    color: 'inherit', 
+                                    textDecoration: 'none',
+                                    transition: 'color 0.3s ease'
+                                },
+                                onMouseEnter: (e) => e.target.style.color = '#ff4444',
+                                onMouseLeave: (e) => e.target.style.color = 'inherit'
+                            }, 'info@moneybag.com.bd')
                         )
                     ),
                     createElement('p', { className: 'contact-description' },

@@ -25,11 +25,12 @@ class MoneybagAPI {
     
     /**
      * Get Production API base URL
+     * @deprecated Not being used - removed from admin settings
      */
-    private static function get_api_base() {
-        $url = get_option('moneybag_api_base_url');
-        return !empty($url) ? $url : null;
-    }
+    // private static function get_api_base() {
+    //     $url = get_option('moneybag_api_base_url');
+    //     return !empty($url) ? $url : null;
+    // }
     
     /**
      * Get Sandbox API base URL  
@@ -82,6 +83,11 @@ class MoneybagAPI {
     /**
      * Make API request to Production API
      */
+    /**
+     * Production API request handler
+     * @deprecated Not being used - no production features implemented
+     */
+    /*
     public static function production_request($endpoint, $data = [], $method = 'POST') {
         $url = self::get_api_base() . $endpoint;
         
@@ -123,12 +129,15 @@ class MoneybagAPI {
             ];
         }
     }
+    */
     
     /**
      * Make API request to Sandbox API
      */
     public static function sandbox_request($endpoint, $data = [], $method = 'POST') {
-        $url = self::get_sandbox_api_base() . $endpoint;
+        $base_url = rtrim(self::get_sandbox_api_base(), '/');
+        $endpoint = ltrim($endpoint, '/');
+        $url = $base_url . '/' . $endpoint;
         
         $args = [
             'method' => $method,
@@ -299,8 +308,6 @@ class MoneybagAPI {
      */
     
     public static function send_email_verification($identifier) {
-        self::debug_log("========== SANDBOX EMAIL VERIFICATION ==========");
-        self::debug_log("Identifier: " . $identifier);
         
         if (empty($identifier)) {
             return [
@@ -310,15 +317,13 @@ class MoneybagAPI {
             ];
         }
         
+        // Use v2 API endpoint structure
         return self::sandbox_request('/sandbox/email-verification', [
             'identifier' => $identifier
         ]);
     }
     
     public static function verify_otp($otp, $session_id) {
-        self::debug_log("========== SANDBOX OTP VERIFICATION ==========");
-        self::debug_log("OTP: " . $otp);
-        self::debug_log("Session ID: " . $session_id);
         
         return self::sandbox_request('/sandbox/verify-otp', [
             'otp' => $otp,
@@ -327,8 +332,6 @@ class MoneybagAPI {
     }
     
     public static function submit_business_details($data) {
-        self::debug_log("========== SANDBOX BUSINESS DETAILS ==========");
-        self::debug_log("Input data: " . print_r($data, true));
         
         $payload = [
             'business_name' => $data['business_name'],
@@ -345,8 +348,6 @@ class MoneybagAPI {
     }
     
     public static function submit_merchant_registration_no_auth($data) {
-        self::debug_log("========== SANDBOX MERCHANT REGISTRATION ==========");
-        self::debug_log("Input data keys: " . implode(', ', array_keys($data)));
         
         // Validate required fields
         $required_fields = ['business_name', 'legal_identity', 'first_name', 'last_name', 'email', 'phone'];
@@ -543,7 +544,6 @@ class MoneybagAPI {
         }
         
         $widget_type = $data['widget_type'] ?? 'unknown';
-        self::debug_log("========== CRM SUBMISSION FROM {$widget_type} ==========");
         
         // Sanitize core data
         $sanitized_data = [

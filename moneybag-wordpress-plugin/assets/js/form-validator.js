@@ -82,17 +82,17 @@
         },
         mobile: {
             required: true,
-            pattern: /^(\+880|0)?1[3-9]\d{8}$/,
+            pattern: /^01[3-9]\d{8}$/,
             messages: {
                 required: 'Mobile number is required',
-                pattern: 'Please enter a valid Bangladesh mobile number (e.g., +8801712345678 or 01712345678)'
+                pattern: 'Please enter a valid 11-digit mobile number starting with 01 (e.g., 01712345678)'
             }
         },
         phone: {
             required: false,
-            pattern: /^(\+880|0)?1[3-9]\d{8}$/,
+            pattern: /^01[3-9]\d{8}$/,
             messages: {
-                pattern: 'Please enter a valid Bangladesh phone number (e.g., +8801712345678 or 01712345678)'
+                pattern: 'Please enter a valid 11-digit phone number starting with 01 (e.g., 01712345678)'
             }
         },
         password: {
@@ -263,12 +263,12 @@
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 const isValidEmail = emailRegex.test(trimmedValue);
                 
-                // Check if it's a valid Bangladesh phone number
-                const phoneRegex = /^(\+880|0)?1[3-9]\d{8}$/;
+                // Check if it's a valid Bangladesh phone number (11 digits starting with 01)
+                const phoneRegex = /^01[3-9]\d{8}$/;
                 const isValidPhone = phoneRegex.test(trimmedValue.replace(/[\s\-]/g, ''));
                 
                 if (!isValidEmail && !isValidPhone) {
-                    return 'Please enter a valid email address or phone number (e.g., user@example.com, +8801712345678, or 01712345678)';
+                    return 'Please enter a valid email address or phone number (e.g., user@example.com or 01712345678)';
                 }
                 
                 return ''; // Valid

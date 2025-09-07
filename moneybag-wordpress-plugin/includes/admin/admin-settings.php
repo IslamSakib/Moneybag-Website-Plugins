@@ -40,9 +40,10 @@ class AdminSettings {
         register_setting('moneybag_settings', 'moneybag_sandbox_api_url', [
             'sanitize_callback' => [$this, 'sanitize_url_setting']
         ]);
-        register_setting('moneybag_settings', 'moneybag_api_base_url', [
-            'sanitize_callback' => [$this, 'sanitize_url_setting']
-        ]);
+        // Production API removed - not being used
+        // register_setting('moneybag_settings', 'moneybag_api_base_url', [
+        //     'sanitize_callback' => [$this, 'sanitize_url_setting']
+        // ]);
         register_setting('moneybag_settings', 'moneybag_default_redirect_url', [
             'sanitize_callback' => [$this, 'sanitize_url_setting']
         ]);
@@ -83,24 +84,25 @@ class AdminSettings {
             [
                 'option_name' => 'moneybag_sandbox_api_url',
                 'default' => '',
-                'placeholder' => 'https://your-sandbox-api.com/api/v2',
-                'description' => 'Base URL for Sandbox API (required for sandbox testing)'
+                'placeholder' => 'https://staging.api.moneybag.com.bd/api',
+                'description' => 'Base URL for Sandbox API without version (e.g., https://staging.api.moneybag.com.bd/api)'
             ]
         );
         
-        add_settings_field(
-            'moneybag_api_base_url',
-            __('Production API URL', 'moneybag-plugin'),
-            [$this, 'text_field_callback'],
-            'moneybag_settings',
-            'moneybag_general_section',
-            [
-                'option_name' => 'moneybag_api_base_url',
-                'default' => '',
-                'placeholder' => 'https://your-production-api.com/api/v2',
-                'description' => 'Base URL for Production API (required for live transactions)'
-            ]
-        );
+        // Production API field removed - not being used
+        // add_settings_field(
+        //     'moneybag_api_base_url',
+        //     __('Production API URL', 'moneybag-plugin'),
+        //     [$this, 'text_field_callback'],
+        //     'moneybag_settings',
+        //     'moneybag_general_section',
+        //     [
+        //         'option_name' => 'moneybag_api_base_url',
+        //         'default' => '',
+        //         'placeholder' => 'https://your-production-api.com/api/v2',
+        //         'description' => 'Base URL for Production API (required for live transactions)'
+        //     ]
+        // );
         
         add_settings_field(
             'moneybag_default_redirect_url',
@@ -519,7 +521,7 @@ class AdminSettings {
                 'pluginVersion' => MONEYBAG_PLUGIN_VERSION,
                 'settings' => [
                     'sandboxApiUrl' => get_option('moneybag_sandbox_api_url'),
-                    'apiBaseUrl' => get_option('moneybag_api_base_url'),
+                    // 'apiBaseUrl' => get_option('moneybag_api_base_url'), // Removed - not being used
                     'crmApiUrl' => get_option('moneybag_crm_api_url')
                 ]
             ]);
