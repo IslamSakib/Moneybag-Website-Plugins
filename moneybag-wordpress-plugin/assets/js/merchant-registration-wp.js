@@ -542,11 +542,7 @@
                 // CRM submission successful - all operations handled by the global system
                 const { person_id: personId, opportunity_id: opportunityId, note_id: noteId } = crmResponse;
                 
-                console.log('Merchant CRM submission successful:', {
-                    personId,
-                    opportunityId, 
-                    noteId
-                });
+                // Merchant CRM submission successful
                 
                 return true;
             } catch (error) {

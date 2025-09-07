@@ -35,8 +35,7 @@
                     const rules = await response.json();
                     setPricingRules(rules);
                 } catch (error) {
-                    console.error('Failed to load pricing rules:', error);
-                    // Don't set fallback - let the form handle missing data
+                    // Failed to load pricing rules - form will handle missing data
                 }
             };
             
@@ -241,7 +240,6 @@
                     // Check for specific CRM configuration issues
                     if (errorMessage.includes('CRM API request failed')) {
                         // This means the CRM API itself is failing - likely configuration issue
-                        console.error('CRM API Error:', errorMessage);
                         throw new Error('CRM service is temporarily unavailable. Please try again later or contact support.');
                     } else if (errorMessage.includes('API key not configured')) {
                         throw new Error('CRM not configured. Please contact administrator.');
@@ -330,8 +328,6 @@
                 // Always go to thank you page after successful CRM submission
                 nextStep();
             } catch (error) {
-                console.error('CRM submission error:', error);
-                
                 // Parse error message to determine the field
                 const errorMessage = error.message || 'Unable to process your request. Please try again.';
                 
