@@ -40,10 +40,6 @@ class AdminSettings {
         register_setting('moneybag_settings', 'moneybag_sandbox_api_url', [
             'sanitize_callback' => [$this, 'sanitize_url_setting']
         ]);
-        // Production API removed - not being used
-        // register_setting('moneybag_settings', 'moneybag_api_base_url', [
-        //     'sanitize_callback' => [$this, 'sanitize_url_setting']
-        // ]);
         register_setting('moneybag_settings', 'moneybag_default_redirect_url', [
             'sanitize_callback' => [$this, 'sanitize_url_setting']
         ]);
@@ -519,6 +515,7 @@ class AdminSettings {
                 'nonce' => wp_create_nonce('moneybag_admin_nonce'),
                 'crmPageUrl' => admin_url('admin.php?page=moneybag-crm'),
                 'pluginVersion' => MONEYBAG_PLUGIN_VERSION,
+                'elementorActive' => is_plugin_active('elementor/elementor.php'),
                 'settings' => [
                     'sandboxApiUrl' => get_option('moneybag_sandbox_api_url'),
                     // 'apiBaseUrl' => get_option('moneybag_api_base_url'), // Removed - not being used

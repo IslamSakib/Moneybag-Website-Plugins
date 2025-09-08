@@ -82,10 +82,9 @@ class MerchantRegistrationWidget extends Widget_Base {
                             <div class="moneybag-progress-step moneybag-progress-step-active">1</div>
                             <div class="moneybag-progress-step moneybag-progress-step-inactive">2</div>
                             <div class="moneybag-progress-step moneybag-progress-step-inactive">3</div>
-                            <div class="moneybag-progress-step moneybag-progress-step-inactive">4</div>
                         </div>
                         <p class="moneybag-widget-placeholder-text"><?php echo __('Multi-step merchant registration form will appear here', 'moneybag-plugin'); ?></p>
-                        <p class="moneybag-widget-placeholder-subtext"><?php echo __('Business Info → Online Presence → Point of Contact → Documents', 'moneybag-plugin'); ?></p>
+                        <p class="moneybag-widget-placeholder-subtext"><?php echo __('Business Info → Online Presence → Point of Contact', 'moneybag-plugin'); ?></p>
                     </div>
                 </div>
             </div>

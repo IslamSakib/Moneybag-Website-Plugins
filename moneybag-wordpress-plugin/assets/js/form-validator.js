@@ -190,6 +190,13 @@
                 pattern: 'Please enter a valid domain name (e.g., example.com or www.example.com)'
             }
         },
+        optionalDomain: {
+            required: false,
+            pattern: /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
+            messages: {
+                pattern: 'Please enter a valid domain name (e.g., example.com or www.example.com)'
+            }
+        },
         businessCategory: {
             required: true,
             messages: {

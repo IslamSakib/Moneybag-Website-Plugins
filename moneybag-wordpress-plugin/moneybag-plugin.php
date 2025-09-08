@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Moneybag WordPress Plugin
  * Description: Configuration-driven Elementor widgets for payment gateway integration with React.js forms. Works with any API provider.
- * Version: 2.1.1
+ * Version: 2.2.0
  * Author: Sakib Islam
  * Contact: +8801950025990
  * Text Domain: moneybag-wordpress-plugin
@@ -29,7 +29,7 @@ if (!defined('ABSPATH')) {
  */
 define('MONEYBAG_PLUGIN_URL', plugin_dir_url(__FILE__));     // Plugin URL for assets
 define('MONEYBAG_PLUGIN_PATH', plugin_dir_path(__FILE__));   // Plugin path for includes
-define('MONEYBAG_PLUGIN_VERSION', '2.1.1');                 // Plugin version for cache busting
+define('MONEYBAG_PLUGIN_VERSION', '2.1.3');                 // Plugin version for cache busting
 
 /**
  * Security and Configuration Notice
@@ -107,7 +107,6 @@ class MoneybagPlugin {
         add_action('wp_ajax_verify_recaptcha', [$this, 'verify_recaptcha']);
         add_action('wp_ajax_nopriv_verify_recaptcha', [$this, 'verify_recaptcha']);
         
-        // Legacy merchant registration endpoints removed - use moneybag_merchant_api instead
         
         // Modern API endpoints
         add_action('wp_ajax_moneybag_merchant_api', [$this, 'handle_merchant_api']);
@@ -523,13 +522,23 @@ class MoneybagPlugin {
                 wp_send_json_success($response);
             }
         } else {
-            wp_send_json_error($response['message'] ?? 'API request failed');
+            // Clean error message for users
+            $error_message = $response['message'] ?? 'API request failed';
+            
+            // Log error details for debugging but don't show to users
+            if (isset($response['error']) && defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('[Moneybag API] Error type: ' . $response['error']);
+            }
+            
+            // For development - log the full response
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('[Moneybag Sandbox API Error] Full response: ' . json_encode($response));
+            }
+            
+            wp_send_json_error($error_message);
         }
     }
     
-    // Validation methods removed - API handles all validation
-    // The validate_field() and get_validation_rules() methods have been removed
-    // as we now rely entirely on the Sandbox API for validation
     
     public function handle_contact_form() {
         try {
@@ -830,7 +839,6 @@ class MoneybagPlugin {
         return $result;
     }
     
-    // Individual CRM handlers removed - all forms now use unified submit_all handler
     
     
     private function create_crm_note_target($data) {
@@ -882,9 +890,6 @@ class MoneybagPlugin {
                 $this->handle_merchant_registration_submission($data);
                 break;
                 
-            case 'upload_document':
-                $this->handle_document_upload();
-                break;
                 
             default:
                 wp_send_json_error('Invalid action');
@@ -950,36 +955,6 @@ class MoneybagPlugin {
         }
     }
     
-    private function handle_document_upload() {
-        // Handle file uploads for merchant documents
-        if (empty($_FILES['file'])) {
-            wp_send_json_error('No file uploaded');
-            return;
-        }
-        
-        $file = $_FILES['file'];
-        
-        // Validate file type and size
-        $allowed_types = ['image/jpeg', 'image/png', 'application/pdf'];
-        $max_size = 1048576; // 1MB
-        
-        if (!in_array($file['type'], $allowed_types)) {
-            wp_send_json_error('Invalid file type. Only JPG, PNG, and PDF files are allowed.');
-            return;
-        }
-        
-        if ($file['size'] > $max_size) {
-            wp_send_json_error('File size too large. Maximum 1MB allowed.');
-            return;
-        }
-        
-        // For now, just return success - actual file handling can be implemented later
-        wp_send_json_success([
-            'message' => 'File uploaded successfully',
-            'url' => 'placeholder-url',
-            'filename' => $file['name']
-        ]);
-    }
     
     /**
      * Plugin activation
@@ -988,14 +963,6 @@ class MoneybagPlugin {
         // API configuration is now entirely user-driven through admin settings
         // Users must configure all API URLs and keys manually for security and flexibility
         
-        // Create upload directory for merchant documents
-        $upload_dir = wp_upload_dir();
-        $moneybag_dir = $upload_dir['basedir'] . '/moneybag-documents';
-        if (!file_exists($moneybag_dir)) {
-            wp_mkdir_p($moneybag_dir);
-            // Add .htaccess for security
-            file_put_contents($moneybag_dir . '/.htaccess', 'deny from all');
-        }
         
         // Flush rewrite rules
         flush_rewrite_rules();
@@ -1025,22 +992,22 @@ class MoneybagPlugin {
             return;
         }
         
-        // Remove plugin options (uncomment if you want complete cleanup)
-        // delete_option('moneybag_api_base_url');
-        // delete_option('moneybag_sandbox_api_url'); 
-        // delete_option('moneybag_crm_api_url');
-        // delete_option('moneybag_crm_api_key');
-        // delete_option('moneybag_recaptcha_site_key');
-        // delete_option('moneybag_recaptcha_secret_key');
-        // delete_option('moneybag_default_redirect_url');
-        // delete_option('moneybag_crm_opportunity_name');
+        // Clean up plugin options on deactivation
+        delete_option('moneybag_api_base_url');
+        delete_option('moneybag_sandbox_api_url'); 
+        delete_option('moneybag_crm_api_url');
+        delete_option('moneybag_crm_api_key');
+        delete_option('moneybag_recaptcha_site_key');
+        delete_option('moneybag_recaptcha_secret_key');
+        delete_option('moneybag_default_redirect_url');
+        delete_option('moneybag_crm_opportunity_name');
         
-        // Remove merchant registrations (uncomment if you want to delete data)
-        // $registrations = get_option('moneybag_all_registrations', []);
-        // foreach ($registrations as $reg) {
-        //     delete_option('moneybag_registration_' . $reg['id']);
-        // }
-        // delete_option('moneybag_all_registrations');
+        // Clean up merchant registration data
+        $registrations = get_option('moneybag_all_registrations', []);
+        foreach ($registrations as $reg) {
+            delete_option('moneybag_registration_' . $reg['id']);
+        }
+        delete_option('moneybag_all_registrations');
         
         // Remove transients
         delete_transient('moneybag_pricing_rules');

@@ -257,15 +257,94 @@ class MoneybagAPI {
             ];
         }
         
-        // Use v2 API endpoint structure
-        return self::sandbox_request('/sandbox/email-verification', [
+        // Check if API base URL is configured
+        $base_url = self::get_sandbox_api_base();
+        if (empty($base_url)) {
+            return [
+                'success' => false,
+                'message' => 'Sandbox API URL is not configured. Please configure it in WordPress admin settings.',
+                'error' => 'configuration_error'
+            ];
+        }
+        
+        self::debug_log('Sending email verification for identifier: ' . $identifier);
+        self::debug_log('Using sandbox API base URL: ' . $base_url);
+        
+        // Use the standard sandbox endpoint
+        $endpoint = 'sandbox/email-verification';
+        
+        $result = self::sandbox_request('/' . ltrim($endpoint, '/'), [
             'identifier' => $identifier
         ]);
+        
+        // Log the result for debugging
+        self::debug_log('Email verification result: ' . json_encode($result));
+        
+        // If it failed, provide detailed error information
+        if (!$result['success']) {
+            // Log the full result for debugging
+            self::debug_log('Email verification failed. Full API response: ' . json_encode($result));
+            
+            if (isset($result['status_code'])) {
+                if ($result['status_code'] === 404) {
+                    return [
+                        'success' => false,
+                        'message' => 'Email verification endpoint not found. The API endpoint may have changed.',
+                        'error' => 'endpoint_not_found'
+                    ];
+                } elseif ($result['status_code'] === 500) {
+                    return [
+                        'success' => false,
+                        'message' => 'The sandbox API is experiencing issues. This may be a temporary problem with the staging environment. Please try again in a few minutes or contact support.',
+                        'error' => 'server_error'
+                    ];
+                } elseif ($result['status_code'] === 400) {
+                    return [
+                        'success' => false,
+                        'message' => 'Bad request. The API rejected the email verification request. Please check the email format.',
+                        'error' => 'bad_request',
+                        'details' => $result['message'] ?? 'No additional details'
+                    ];
+                } elseif ($result['status_code'] === 422) {
+                    return [
+                        'success' => false,
+                        'message' => 'Validation error. ' . ($result['message'] ?? 'Please check the email format and try again.'),
+                        'error' => 'validation_error'
+                    ];
+                }
+            }
+            
+            // If there's a specific message from API, use it
+            if (!empty($result['message']) && $result['message'] !== 'An error occurred during email verification.') {
+                return [
+                    'success' => false,
+                    'message' => $result['message'],
+                    'error' => $result['error'] ?? 'api_error'
+                ];
+            }
+            
+            // Return with more debugging info
+            return [
+                'success' => false,
+                'message' => 'Email verification failed. Please check if the email is valid and try again.',
+                'error' => $result['error'] ?? 'unknown_error',
+                'debug_info' => [
+                    'status_code' => $result['status_code'] ?? 'not_set',
+                    'api_message' => $result['message'] ?? 'no_message',
+                    'full_response' => defined('WP_DEBUG') && WP_DEBUG ? $result : 'enable WP_DEBUG to see full response'
+                ]
+            ];
+        }
+        
+        return $result;
     }
     
     public static function verify_otp($otp, $session_id) {
         
-        return self::sandbox_request('/sandbox/verify-otp', [
+        // Use the standard sandbox endpoint
+        $endpoint = 'sandbox/verify-otp';
+        
+        return self::sandbox_request('/' . ltrim($endpoint, '/'), [
             'otp' => $otp,
             'session_id' => $session_id
         ]);
@@ -284,7 +363,10 @@ class MoneybagAPI {
             'session_id' => $data['session_id']
         ];
         
-        return self::sandbox_request('/sandbox/merchants/business-details', $payload);
+        // Use the standard sandbox endpoint
+        $endpoint = 'sandbox/merchants/business-details';
+        
+        return self::sandbox_request('/' . ltrim($endpoint, '/'), $payload);
     }
     
     public static function submit_merchant_registration_no_auth($data) {
@@ -340,7 +422,11 @@ class MoneybagAPI {
         }
         
         self::debug_log('Sending merchant registration to sandbox API');
-        $result = self::sandbox_request('/sandbox/merchants/business-details-no-auth', $payload);
+        
+        // Use the standard sandbox endpoint
+        $endpoint = 'sandbox/merchants/business-details-no-auth';
+        
+        $result = self::sandbox_request('/' . ltrim($endpoint, '/'), $payload);
         
         if ($result['success']) {
             self::debug_log('Merchant registration submitted successfully');
@@ -562,7 +648,6 @@ class MoneybagAPI {
         ];
     }
     
-    // Old submit_contact_form method removed - now uses global submit_to_crm() method
     
     /**
      * Create a person in CRM - Global method for all widgets

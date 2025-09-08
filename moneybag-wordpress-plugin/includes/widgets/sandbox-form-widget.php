@@ -46,7 +46,6 @@ class SandboxFormWidget extends Widget_Base {
         $widget_id = $this->get_id();
         $form_config = [
             'widget_id' => $widget_id,
-            // API URL removed - now handled securely on server-side
             'redirect_url' => '',
             'form_title' => __('Sandbox Account Registration', 'moneybag-plugin'),
             'primary_color' => '#ff6b6b',

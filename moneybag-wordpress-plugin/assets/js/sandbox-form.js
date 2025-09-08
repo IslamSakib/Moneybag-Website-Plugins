@@ -29,7 +29,6 @@
         const [recaptchaResponse, setRecaptchaResponse] = useState('');
         const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
         
-        // Password fields removed - no longer required by API
 
         useEffect(() => {
             let interval = null;
@@ -482,7 +481,6 @@
             }
         };
 
-        // Password toggle function removed - passwords no longer needed
 
         const handleKeyPress = (e) => {
             if (e.key === 'Enter' && !loading) {
@@ -552,7 +550,6 @@
             );
         };
 
-        // Password field render function removed - passwords no longer needed
 
         return createElement('div', { className: 'moneybag-form-container moneybag-form', onKeyPress: handleKeyPress },
             // Step 1: Email Input
@@ -783,9 +780,12 @@
                 createElement('p', { className: 'success-info' },
                     `Check your ${isEmail(formData.identifier) ? 'inbox' : 'messages'} for your sandbox API credentials and documentation links.`
                 ),
-                createElement('button', {
+                createElement('a', {
+                    href: 'https://sandbox.moneybag.com.bd/',
+                    target: '_blank',
+                    rel: 'noopener noreferrer',
                     className: 'arrow-btn',
-                    onClick: () => alert('Please check your admin settings for the configured redirect URL or contact your API provider.')
+                    style: { textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }
                 },
                     'Login To Sandbox',
                     createElement('span', { className: 'btn-arrow' }, '→')

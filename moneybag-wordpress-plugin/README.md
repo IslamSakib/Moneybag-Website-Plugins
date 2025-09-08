@@ -1,12 +1,12 @@
 # Moneybag WordPress Plugin
 
-![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)
+![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)
 ![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-green.svg)
 ![Elementor](https://img.shields.io/badge/Elementor-3.0%2B-purple.svg)
 ![PHP](https://img.shields.io/badge/PHP-7.4%2B-777BB4.svg)
 ![License](https://img.shields.io/badge/license-GPL--2.0--or--later-orange.svg)
 
-A comprehensive WordPress plugin for Moneybag payment gateway integration, providing merchant registration, pricing calculators, and sandbox testing capabilities through Elementor widgets.
+A comprehensive, enterprise-grade WordPress plugin for Moneybag payment gateway integration. Features merchant registration, pricing calculators, and sandbox testing capabilities through optimized Elementor widgets with React components.
 
 ## 🚀 Features
 
@@ -18,12 +18,14 @@ A comprehensive WordPress plugin for Moneybag payment gateway integration, provi
 - **🔒 Enterprise Security**: Input sanitization, nonce verification, and secure API handling
 
 ### Technical Features
-- **Elementor Integration**: Drag-and-drop widgets for easy page building
-- **React Components**: Modern UI with WordPress's wp-element
+- **Elementor Integration**: Drag-and-drop widgets with no configuration required
+- **React Components**: Modern UI built with WordPress's wp-element
 - **Responsive Design**: Mobile-first approach with optimized breakpoints
-- **Global CSS System**: Unified styling across all widgets
+- **Global CSS System**: Unified styling across all widgets (single CSS file)
 - **CRM Integration**: Automatic lead capture and management
 - **reCAPTCHA Support**: Bot protection for forms
+- **Code Optimization**: Clean, maintainable codebase with enterprise standards
+- **Performance Optimized**: Minimal file loading and efficient resource management
 
 ## 📦 Installation
 
@@ -58,11 +60,12 @@ A comprehensive WordPress plugin for Moneybag payment gateway integration, provi
 ## 🎨 Available Widgets
 
 ### 1. Merchant Registration Widget
-Multi-step registration form with:
+Streamlined 3-step registration form with:
 - Business information collection
-- Online presence details
-- Contact information
-- Document upload capability
+- Online presence details (optional business website)
+- Contact information and legal identity selection
+- Secure API integration without file uploads
+- Simplified user experience
 
 ### 2. Pricing Plan Widget
 Interactive pricing calculator featuring:
@@ -74,8 +77,9 @@ Interactive pricing calculator featuring:
 ### 3. Sandbox Form Widget
 Test environment integration with:
 - Email/phone verification
-- OTP authentication
+- OTP authentication with countdown timer
 - Business details submission
+- Direct sandbox login redirect
 
 ### 4. Contact Form Widget
 Customer support form with:
@@ -177,6 +181,28 @@ We welcome contributions! Please follow these guidelines:
 - Test on multiple devices and browsers
 - Ensure no console errors
 - Update CHANGELOG.md for significant changes
+
+## ✨ Recent Improvements (v2.2.0)
+
+### Major Cleanup & Code Optimization
+- **File Upload System Removal**: Completely removed file upload functionality from merchant registration
+  - Eliminated all document upload features (logo, trade license, ID documents, TIN certificate)
+  - Reduced form from 4 steps to streamlined 3 steps
+  - Removed 150+ lines of file upload handling code
+  - Enhanced security by eliminating file upload vulnerabilities
+- **Code Quality**: Cleaned up all commented-out code and legacy functions
+- **Bug Fixes**: 
+  - Fixed sandbox form redirect issues (now properly redirects to sandbox.moneybag.com.bd)
+  - Fixed Elementor Integration status detection in admin settings
+  - Made business website field truly optional in merchant registration
+- **Performance**: Optimized codebase by removing unused files and redundant code
+- **Architecture**: Improved code organization and removed deprecated functionality
+
+### Enhanced User Experience
+- **Simplified Registration**: Streamlined merchant registration with no file upload complexity
+- **Better Admin Interface**: Accurate plugin status reporting with improved Elementor detection
+- **Form Validation**: Enhanced validation system with proper optional field handling
+- **Mobile Responsiveness**: Improved mobile experience without upload UI complexity
 
 ## 📝 License
 

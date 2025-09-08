@@ -5,12 +5,8 @@
     
     // Admin Settings Info Cards Component
     function AdminInfoCards() {
-        const [elementorActive, setElementorActive] = useState(false);
-        
-        useEffect(() => {
-            // Check if Elementor is active
-            setElementorActive(typeof window.elementor !== 'undefined' || document.body.classList.contains('elementor-active'));
-        }, []);
+        // Get Elementor status from PHP
+        const elementorActive = moneybagAdminSettings.elementorActive || false;
         
         return h('div', { className: 'moneybag-info-cards' },
             h('div', { className: 'card' },

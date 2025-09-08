@@ -3507,62 +3507,6 @@ form.contact-form .form-row.two-columns {
     margin: 0;
 }
 
-/* File Upload */
-.file-upload {
-    border: 2px dashed #d1d5db;
-    border-radius: 8px !important;
-    padding: 16px;
-    text-align: center;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-
-.file-upload:hover {
-    border-color: #9ca3af;
-    background-color: #f9fafb;
-}
-
-.file-upload.has-file {
-    border-color: #10b981;
-    background-color: #ecfdf5;
-}
-
-.file-upload.uploading {
-    border-color: #3b82f6;
-    background-color: #eff6ff;
-    cursor: not-allowed;
-    opacity: 0.8;
-}
-
-.file-upload.error {
-    border-color: #ef4444;
-    background-color: #fef2f2;
-}
-
-.file-upload.error .file-upload-text {
-    color: #ef4444;
-}
-
-.file-upload-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.file-upload-text {
-    color: #6b7280;
-    font-size: 14px;
-}
-
-.file-upload.has-file .file-upload-text {
-    color: #10b981;
-}
-
-.upload-icon {
-    width: 20px;
-    height: 20px;
-    color: #9ca3af;
-}
 
 /* Navigation Buttons */
 .form-navigation {
@@ -4218,9 +4162,6 @@ form.contact-form .form-row.two-columns {
     
     /* Button styles handled by global CSS */
     
-    .file-upload-area {
-        padding: 16px;
-    }
     
     .instructions-panel {
         padding: 0;

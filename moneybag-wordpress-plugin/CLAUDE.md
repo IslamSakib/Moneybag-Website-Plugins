@@ -6,7 +6,7 @@ This documentation is specifically designed for **Claude Code** and other AI ass
 
 ## 📊 Plugin Overview
 
-**Version:** 2.1.1  
+**Version:** 2.2.0  
 **Architecture:** WordPress Plugin + Elementor + React (wp-element)  
 **Security Level:** Enterprise  
 **Performance:** Optimized Global CSS System (Code Cleaned)  
@@ -274,7 +274,15 @@ add_action('wp_ajax_nopriv_new_action', [$this, 'handle_new_action']);
 
 ## 🎯 Version History Context
 
-### **v2.1.1 (Current - Merchant Form Enhancement):**
+### **v2.2.0 (Current - Major Cleanup & Code Optimization):**
+- **Code Cleanup:** Removed all obsolete CSS files, debug logs, and commented-out code
+- **Architecture Improvement:** Cleaned up deprecated functions and legacy code blocks
+- **Business Website Fix:** Made business website field truly optional in merchant registration
+- **Sandbox Redirect Fix:** Resolved redirect issues in sandbox form
+- **Performance:** Optimized codebase by removing unused files and redundant code
+- **Maintenance:** Comprehensive project cleanup and code organization
+
+### **v2.1.1 (Merchant Form Enhancement):**
 - **UI Enhancement:** Updated support and FAQ buttons with direct links to moneybag.com.bd
 - **Code Cleanup:** Removed unused individual CSS files (merchant-registration.css, pricing-plan.css, sandbox-form.css)
 - **File Optimization:** Cleaned up debug logs and testing documentation files
@@ -321,7 +329,7 @@ add_action('wp_ajax_nopriv_new_action', [$this, 'handle_new_action']);
 **For AI Assistants:** This plugin follows enterprise WordPress development standards with React integration. All security, performance, and compatibility requirements have been implemented and tested. When making modifications, preserve the architectural decisions documented above.
 
 **Last Updated:** September 2025 by Claude Code  
-**Plugin Version:** 2.1.1 (Merchant Form Enhanced)  
+**Plugin Version:** 2.2.0 (Major Cleanup & Code Optimization)  
 **Developer:** Sakib Islam (+8801950025990)  
 **WordPress Compatibility:** 5.0+  
 **Elementor Compatibility:** 3.0+  

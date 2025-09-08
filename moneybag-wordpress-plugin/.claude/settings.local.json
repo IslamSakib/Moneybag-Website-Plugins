@@ -44,7 +44,15 @@
       "Bash(python:*)",
       "Bash(pip install:*)",
       "Bash(start \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-pricing-verification.html\")",
-      "Bash(start \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-cleanup-verification.html\")"
+      "Bash(start \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-cleanup-verification.html\")",
+      "Bash(start test-merchant-fix.html)",
+      "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -l \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\assets\\js\\merchant-registration-wp.js\")",
+      "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -l \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\includes\\class-moneybag-api.php\")",
+      "Bash(start \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-email-verification-fix.html\")",
+      "Bash(start:*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []

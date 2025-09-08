@@ -5,6 +5,42 @@ All notable changes to the Moneybag WordPress Plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2025-09-08
+
+### Added
+- Improved Elementor detection system in admin settings
+- Enhanced PHP-based plugin detection for accurate status reporting
+- Comprehensive project cleanup and optimization
+
+### Changed
+- Made business website field truly optional in merchant registration form
+- Updated form validation to use `optionalDomain` validation rule
+- Improved admin settings JavaScript for better Elementor status detection
+
+### Fixed
+- Fixed Elementor Integration status always showing "❌ Not Found" in admin
+- Resolved sandbox form redirect issues (now properly redirects to https://sandbox.moneybag.com.bd/)
+- Fixed business website field validation errors when left empty
+
+### Removed
+- **Complete file upload system removal from merchant registration form**
+  - Removed all file upload JavaScript handlers and UI components
+  - Removed `handleFileUpload()` function and `renderStep4()` step
+  - Removed `handle_document_upload()` PHP method and API routing
+  - Removed all file upload CSS styles and components
+  - Removed Step 4 (Documents) from form flow - now 3 steps instead of 4
+  - Removed upload directory creation from plugin activation
+- Removed obsolete CSS files (merchant-registration.css, pricing-plan.css, sandbox-form.css)
+- Removed debug files (debug.log, test-sandbox-button-fix.html)
+- Removed empty editor.js placeholder file
+- Cleaned up all commented-out code blocks and legacy comments
+- Removed unused file upload validation and processing code
+
+### Security
+- Enhanced server-side Elementor detection using `is_plugin_active()`
+- Maintained secure API handling without file upload vulnerabilities
+- Cleaned up potential security risks from file upload functionality
+
 ## [2.1.1] - 2025-09-08
 
 ### Added

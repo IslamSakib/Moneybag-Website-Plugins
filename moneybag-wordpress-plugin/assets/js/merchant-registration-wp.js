@@ -38,8 +38,6 @@
         
         const [validationErrors, setValidationErrors] = useState({});
         const [fieldErrors, setFieldErrors] = useState({});
-        const [uploadingFiles, setUploadingFiles] = useState({});
-        const [uploadedFiles, setUploadedFiles] = useState({});
         
         // Simplified steps configuration for no-auth API
         const steps = [
@@ -186,87 +184,6 @@
             return error;
         };
 
-        // File upload handler using global API system
-        const handleFileUpload = useCallback(async (field, file) => {
-            if (!file) return;
-            
-            // Map field names to document types
-            const documentTypeMap = {
-                'logo': 'logo',
-                'tradeLicense': 'trade_license',
-                'idDocument': 'owner_id',
-                'tinCertificate': 'tin_certificate'
-            };
-            
-            const documentType = documentTypeMap[field];
-            if (!documentType) {
-                // Invalid field for file upload
-                return;
-            }
-            
-            // Validate file
-            const maxSize = 1048576; // 1MB
-            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-            
-            if (file.size > maxSize) {
-                alert('File size must be less than 1MB');
-                return;
-            }
-            
-            if (!allowedTypes.includes(file.type)) {
-                alert('Only JPG, PNG, and PDF files are allowed');
-                return;
-            }
-            
-            setUploadingFiles(prev => ({ ...prev, [field]: true }));
-            
-            try {
-                // Create form data for file upload
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('type', documentType);
-                formData.append('description', `${documentType} for merchant registration`);
-                
-                // Use global API system for secure file upload
-                const result = await apiCall('upload_file', {
-                    file: file,
-                    document_type: documentType,
-                    merchant_id: sessionId
-                });
-                
-                // Upload response received
-                
-                if (result) {
-                    // Store uploaded file info
-                    const fileInfo = {
-                        url: result.file_url || result.url,
-                        filename: file.name,
-                        size: file.size,
-                        uploadId: result.id || result.file_id
-                    };
-                    
-                    setUploadedFiles(prev => ({
-                        ...prev,
-                        [field]: fileInfo
-                    }));
-                    
-                    // Update form data with file URL
-                    setFormData(prev => ({
-                        ...prev,
-                        [field]: fileInfo.url
-                    }));
-                    
-                    // File uploaded successfully
-                } else {
-                    throw new Error(result.error?.message || 'Upload failed');
-                }
-            } catch (error) {
-                // File upload error
-                alert(`Failed to upload ${file.name}: ${error.message}`);
-            } finally {
-                setUploadingFiles(prev => ({ ...prev, [field]: false }));
-            }
-        }, []);
         
         // Handle form input changes with global validation
         const handleInputChange = useCallback((field, value) => {
@@ -283,7 +200,7 @@
                     'businessName': { validation: 'businessName', filter: 'businessName' },
                     'firstName': { validation: 'name', filter: 'name' },
                     'lastName': { validation: 'name', filter: 'name' },
-                    'domainName': { validation: 'domain', filter: 'text' },
+                    'domainName': { validation: 'optionalDomain', filter: 'text' },
                     'mobile': { validation: 'mobile', filter: 'phone' },
                     'phone': { validation: 'phone', filter: 'phone' },
                     'email': { validation: 'email', filter: 'text' },
@@ -618,13 +535,28 @@
                 
                 // Global API system returns data directly on success
                 if (result) {
-                    // Store the API response data (contains merchant_id, api_key, etc.)
-                    setApiResponse(result.data || result);
+                    // The apiCall function already returns result.data from wp_send_json_success
+                    // So 'result' here is the actual API response: {success: true, data: {success: true, data: {...}}}
+                    // We need to extract the nested data.data which contains merchant_id and redirect_url
                     
-                    // CRM integration disabled - uncomment below if needed
-                    // sendToCRM(submitData).catch(error => {
-                    //     // Don't fail the whole submission if CRM fails
-                    // });
+                    let responseData = result;
+                    
+                    // Check if we have the expected nested structure
+                    if (result && result.success && result.data) {
+                        // First level: result.data
+                        if (result.data.success && result.data.data) {
+                            // Second level: result.data.data - this should have our merchant data
+                            responseData = result.data.data;
+                        } else if (result.data.merchant_id || result.data.redirect_url) {
+                            // Already at the right level
+                            responseData = result.data;
+                        }
+                    } else if (result && (result.merchant_id || result.redirect_url)) {
+                        // Direct response without nesting
+                        responseData = result;
+                    }
+                    setApiResponse(responseData);
+                    
                     
                     setIsSubmitted(true);
                     if (config.redirect_url) {
@@ -821,26 +753,28 @@
                                     'Your merchant registration has been submitted successfully. While we review your application, you can start testing with our sandbox environment right away!'
                                 ),
                                 h('div', { className: 'success-details' },
-                                    (apiResponse && (apiResponse.redirect_url || apiResponse.dashboard_url)) ? (
-                                        h('div', { className: 'success-detail-item sandbox-access' },
-                                            h('h4', { className: 'sandbox-title' }, 
-                                                h('span', { className: 'sandbox-icon' }, '🚀'),
-                                                ' Your Sandbox is Ready!'
+                                    // Always show the sandbox section since the API should return the data
+                                    h('div', { className: 'success-detail-item sandbox-access' },
+                                        h('h4', { className: 'sandbox-title' }, 
+                                            h('span', { className: 'sandbox-icon' }, '🚀'),
+                                            ' Your Sandbox is Ready!'
+                                        ),
+                                        h('div', { className: 'sandbox-login-container' },
+                                            h('p', { className: 'sandbox-intro' }, 
+                                                'Your sandbox account has been created successfully! Click below to access your sandbox dashboard with automatic login.'
                                             ),
-                                            h('div', { className: 'sandbox-login-container' },
-                                                h('p', { className: 'sandbox-intro' }, 
-                                                    'Your sandbox account has been created successfully! Click below to access your sandbox dashboard with automatic login.'
-                                                ),
-                                                h('div', { className: 'sandbox-login-action' },
-                                                    h('a', { 
-                                                        href: apiResponse.redirect_url || apiResponse.dashboard_url || apiResponse.magic_link_url,
-                                                        target: '_blank',
-                                                        rel: 'noopener noreferrer',
-                                                        className: 'sandbox-login-card'
-                                                    }, 
-                                                        h('div', { className: 'login-card-content' },
-                                                            h('div', { className: 'login-card-icon' },
-                                                                h('svg', { 
+                                            h('div', { className: 'sandbox-login-action' },
+                                                h('a', { 
+                                                    href: apiResponse?.redirect_url || 
+                                                          apiResponse?.dashboard_url || 
+                                                          'https://sandbox.moneybag.com.bd/',
+                                                    target: '_blank',
+                                                    rel: 'noopener noreferrer',
+                                                    className: 'sandbox-login-card'
+                                                }, 
+                                                    h('div', { className: 'login-card-content' },
+                                                        h('div', { className: 'login-card-icon' },
+                                                            h('svg', { 
                                                                     width: '32', 
                                                                     height: '32', 
                                                                     viewBox: '0 0 24 24',
@@ -871,20 +805,9 @@
                                                                 )
                                                             )
                                                         )
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    ) : (
-                                        h('div', { className: 'success-detail-item' },
-                                            h('h4', null, 'What\'s Next?'),
-                                            h('ul', null,
-                                                h('li', null, '• We will review your application thoroughly'),
-                                                h('li', null, '• You will receive a confirmation email shortly'),
-                                                h('li', null, '• Our team may contact you for additional information'),
-                                                h('li', null, '• Account activation typically takes 1-3 business days')
-                                            )
-                                        )
+                                                    ) // closes anchor tag
+                                                ) // closes sandbox-login-action
+                                            ) // closes sandbox-login-container
                                     ),
                                     h('div', { className: 'success-detail-item' },
                                         h('h4', null, 'Need Help?'),
@@ -900,12 +823,12 @@
                                             }, 'Submit New Application')
                                         )
                                     )
-                                )
-                            )
-                        )
-                    )
-                )
-            );
+                                ) // closes success-details
+                            ) // closes success-card
+                        ) // closes success-main-content
+                    ) // closes success-layout
+                ) // closes merchant-form-content
+            ); // closes merchant-form-container and return
         }
         
         // Step 1 Content
@@ -1191,69 +1114,6 @@
             );
         };
         
-        // Step 4 Content - File Uploads
-        const renderStep4 = () => {
-            const renderFileUpload = (field, label, required = false) => {
-                return h('div', { className: 'form-row full-width' },
-                    h('div', { className: 'field-group' },
-                        h('label', { className: 'field-label' },
-                            label,
-                            ' ',
-                            required 
-                                ? h('span', { className: 'required-indicator' }, '*')
-                                : h('span', { className: 'optional-indicator' }, '(Optional)')
-                        ),
-                        h('div', { 
-                            className: `file-upload ${formData[field] ? 'has-file' : ''} ${uploadingFiles[field] ? 'uploading' : ''}`,
-                            onClick: () => {
-                                if (uploadingFiles[field]) return; // Prevent clicks during upload
-                                
-                                const input = document.createElement('input');
-                                input.type = 'file';
-                                input.accept = '.jpg,.jpeg,.png,.pdf';
-                                input.onchange = (e) => {
-                                    if (e.target.files[0]) {
-                                        handleFileUpload(field, e.target.files[0]);
-                                    }
-                                };
-                                input.click();
-                            }
-                        },
-                            h('div', { className: 'file-upload-content' },
-                                h('span', { className: 'file-upload-text' },
-                                    uploadingFiles[field] 
-                                        ? 'Uploading...' 
-                                        : formData[field] 
-                                            ? formData[field] 
-                                            : `Click to upload ${label.toLowerCase()}`
-                                ),
-                                h('svg', { 
-                                    className: 'upload-icon',
-                                    fill: 'none',
-                                    stroke: 'currentColor',
-                                    viewBox: '0 0 24 24'
-                                },
-                                    h('path', {
-                                        strokeLinecap: 'round',
-                                        strokeLinejoin: 'round',
-                                        strokeWidth: '2',
-                                        d: 'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
-                                    })
-                                )
-                            )
-                        ),
-                        h('small', { className: 'form-hint' }, 'Accepted formats: JPG, JPEG, PNG, PDF (Max 1MB)')
-                    )
-                );
-            };
-            
-            return h('div', { className: 'step-content-4' },
-                renderFileUpload('logo', 'Business / Organization Logo'),
-                renderFileUpload('tradeLicense', 'Trade License'),
-                renderFileUpload('idDocument', 'NID / Passport / Birth Certificate / Driving License'),
-                renderFileUpload('tinCertificate', 'TIN Certificate')
-            );
-        };
         
         // Get current step content
         const getCurrentStepContent = () => {
@@ -1261,7 +1121,6 @@
                 case 1: return renderStep1();
                 case 2: return renderStep2();
                 case 3: return renderStep3();
-                // case 4: return renderStep4(); // Temporarily disabled
                 default: return null;
             }
         };
