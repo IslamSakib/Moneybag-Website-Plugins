@@ -24,15 +24,6 @@ class MoneybagAPI {
     }
     
     /**
-     * Get Production API base URL
-     * @deprecated Not being used - removed from admin settings
-     */
-    // private static function get_api_base() {
-    //     $url = get_option('moneybag_api_base_url');
-    //     return !empty($url) ? $url : null;
-    // }
-    
-    /**
      * Get Sandbox API base URL  
      */
     private static function get_sandbox_api_base() {
@@ -79,57 +70,6 @@ class MoneybagAPI {
         // No key available
         return '';
     }
-    
-    /**
-     * Make API request to Production API
-     */
-    /**
-     * Production API request handler
-     * @deprecated Not being used - no production features implemented
-     */
-    /*
-    public static function production_request($endpoint, $data = [], $method = 'POST') {
-        $url = self::get_api_base() . $endpoint;
-        
-        $args = [
-            'method' => $method,
-            'timeout' => 30,
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . self::get_api_key(),
-            ],
-            'body' => json_encode($data),
-            'sslverify' => true
-        ];
-        
-        $response = wp_remote_request($url, $args);
-        
-        if (is_wp_error($response)) {
-            return [
-                'success' => false,
-                'message' => $response->get_error_message()
-            ];
-        }
-        
-        $status_code = wp_remote_retrieve_response_code($response);
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
-        
-        if ($status_code >= 200 && $status_code < 300) {
-            return [
-                'success' => true,
-                'data' => $data
-            ];
-        } else {
-            return [
-                'success' => false,
-                'message' => isset($data['message']) ? $data['message'] : 'API request failed',
-                'status_code' => $status_code
-            ];
-        }
-    }
-    */
     
     /**
      * Make API request to Sandbox API

@@ -4,6 +4,40 @@
 /* Import Poppins font for consistent typography across all widgets */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
+/* Enhanced Spinner Animations - Smooth and Professional */
+.spinner, .spinner-icon, svg.spinner-icon, .spinner svg, .btn-content .spinner {
+    display: inline-block !important;
+    vertical-align: middle;
+}
+
+/* SVG spinner specific styles for smooth rotation */
+svg.spinner-icon,
+.spinner-icon {
+    width: 20px;
+    height: 20px;
+    animation: smooth-spin 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) infinite !important;
+    -webkit-animation: smooth-spin 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) infinite !important;
+    transform-origin: center center !important;
+    display: inline-block !important;
+}
+
+/* Ensure animation works even when button is disabled */
+.moneybag-form button:disabled .spinner-icon,
+.primary-btn:disabled .spinner-icon,
+.primary-btn:disabled svg.spinner-icon {
+    animation: smooth-spin 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) infinite !important;
+    -webkit-animation: smooth-spin 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) infinite !important;
+    opacity: 0.9;
+}
+
+/* CSS-based loading spinners (non-SVG) */
+.loading-spinner,
+.button-spinner {
+    animation: smooth-spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite !important;
+    -webkit-animation: smooth-spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite !important;
+    transform-origin: center center !important;
+}
+
 .moneybag-form {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
     box-sizing: border-box;
@@ -217,7 +251,7 @@
 }
 
 .moneybag-form .primary-btn:disabled .spinner-icon {
-    animation: none !important;
+    animation: moneybag-spin 1s linear infinite !important;
 }
 
 .moneybag-form .primary-btn:disabled .spinner {
@@ -342,15 +376,49 @@
 }
 
 .moneybag-form .spinner-icon {
-    animation: moneybag-spin 1s linear infinite;
+    animation: moneybag-spin 1s linear infinite !important;
     color: #FFFFFF;
+    display: inline-block;
 }
 
+/* Smooth spinning animation with easing */
+@keyframes smooth-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes smooth-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/* Legacy support for moneybag-spin */
 @keyframes moneybag-spin {
     from {
         transform: rotate(0deg);
     }
     to {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes moneybag-spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
 }
@@ -2157,6 +2225,17 @@ form.contact-form .form-row.two-columns {
     100% { transform: rotate(360deg); }
 }
 
+@-webkit-keyframes spin {
+    0% { 
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg); 
+    }
+    100% { 
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg); 
+    }
+}
+
 @keyframes slideUpBounce {
     0% {
         opacity: 0;
@@ -2928,10 +3007,11 @@ form.contact-form .form-row.two-columns {
 .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid #e5e7eb;
-    border-top: 3px solid #1f2937;
+    border: 3px solid rgba(255, 107, 107, 0.1);
+    border-top: 3px solid #ff6b6b;
+    border-right: 3px solid #ff6b6b;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: smooth-spin 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) infinite !important;
     margin-bottom: 16px;
 }
 
@@ -2945,10 +3025,11 @@ form.contact-form .form-row.two-columns {
 .button-spinner {
     width: 16px;
     height: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-top: 2px solid #ffffff;
+    border-right: 2px solid #ffffff;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: smooth-spin 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) infinite !important;
 }
 
 .btn.loading {

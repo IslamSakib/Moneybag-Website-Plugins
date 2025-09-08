@@ -303,13 +303,8 @@ class MoneybagPlugin {
     }
     
     public function enqueue_editor_scripts() {
-        wp_enqueue_script(
-            'moneybag-editor',
-            MONEYBAG_PLUGIN_URL . 'assets/js/editor.js',
-            ['elementor-editor'],
-            MONEYBAG_PLUGIN_VERSION,
-            true
-        );
+        // Editor scripts removed - widgets use no Elementor controls
+        return;
     }
     
     /**

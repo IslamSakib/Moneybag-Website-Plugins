@@ -113,32 +113,47 @@
                 setSelectedDocuments([]);
             }
             
-            // Set default pricing (you can customize this based on business category if needed)
+            // Get pricing data from JSON
+            const pricing = pricingRules.pricing;
+            if (!pricing) {
+                // Fallback to default pricing if no pricing data in JSON
+                setSelectedPricing({
+                    name: 'Custom Plan',
+                    services: [],
+                    negotiable: true,
+                    negotiation_text: 'Book FREE Call for custom pricing'
+                });
+                return;
+            }
+            
+            // Define service types with their display labels
             const serviceTypes = [
                 // Popular services first
                 { key: 'visa', label: 'VISA', category: 'cards' },
                 { key: 'mastercard', label: 'MasterCard', category: 'cards' },
-                { key: 'bkash', label: 'bKash', category: 'wallets' },
-                { key: 'nagad', label: 'Nagad', category: 'wallets' },
+                { key: 'bkash', label: 'bKash', category: 'mfs' },
+                { key: 'nagad', label: 'Nagad', category: 'mfs' },
                 // Other services
                 { key: 'amex', label: 'AMEX', category: 'cards' },
-                { key: 'nexus_card', label: 'Nexus', category: 'cards' },
+                { key: 'nexus_card', label: 'DBBL Nexus', category: 'cards' },
                 { key: 'unionpay', label: 'UnionPay', category: 'cards' },
                 { key: 'diners_club', label: 'Diners Club', category: 'cards' },
-                { key: 'upay', label: 'Upay', category: 'wallets' },
-                { key: 'rocket', label: 'Rocket', category: 'wallets' }
+                { key: 'upay', label: 'Upay', category: 'mfs' },
+                { key: 'rocket', label: 'Rocket', category: 'mfs' }
             ];
             
-            // Default pricing rates - can be customized based on business category
-            const isEducational = formData.businessCategory === 'Educational Institution';
-            const defaultRate = isEducational ? 0.023 : 0.025;
-            
+            // Get pricing based on business category
             const pricingByService = serviceTypes.map(service => {
-                let rate = (defaultRate * 100).toFixed(1) + '%';
+                let rate = 'Contact us';
                 
-                // Special rate for AMEX
-                if (service.key === 'amex' && !isEducational) {
-                    rate = '3.5%';
+                // Get the pricing category (cards or mfs)
+                const pricingCategory = pricing[service.category];
+                if (pricingCategory) {
+                    // Try to get rate for specific business category, fallback to default
+                    const categoryPricing = pricingCategory[formData.businessCategory] || pricingCategory['default'];
+                    if (categoryPricing && categoryPricing[service.key]) {
+                        rate = categoryPricing[service.key];
+                    }
                 }
                 
                 return {
@@ -631,7 +646,7 @@
                                         createElement('span', { 
                                             className: 'spinner',
                                             dangerouslySetInnerHTML: {
-                                                __html: '<svg class="spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6-8.485"></path></svg>'
+                                                __html: '<svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none"/><circle cx="25" cy="25" r="20" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="80 50" stroke-linecap="round"/></svg>'
                                             }
                                         }),
                                         'Submitting...'

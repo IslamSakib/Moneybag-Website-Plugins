@@ -40,7 +40,11 @@
       "Bash(dir:*)",
       "Read(//c/Users/SAKIB/Pictures/Screenshots/**)",
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -r \"\ndefine(''ABSPATH'', ''C:/laragon/www/Moneybag-Website/'');\nrequire_once ''C:/laragon/www/Moneybag-Website/wp-config.php'';\necho ''Sandbox API URL: '' . get_option(''moneybag_sandbox_api_url'', ''not set'') . PHP_EOL;\n\")",
-      "Read(//c/laragon/www/Moneybag-Website/wp-content/**)"
+      "Read(//c/laragon/www/Moneybag-Website/wp-content/**)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(start \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-pricing-verification.html\")",
+      "Bash(start \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-cleanup-verification.html\")"
     ],
     "deny": [],
     "ask": []

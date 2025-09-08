@@ -1,0 +1,110 @@
+# WordPress
+*.log
+wp-config.php
+wp-content/advanced-cache.php
+wp-content/backup-db/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/mu-plugins/
+wp-content/wp-cache-config.php
+wp-content/plugins/hello.php
+
+# Development
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+.komodotools
+_ide_helper.php
+.phpstorm.meta.php
+.project
+.buildpath
+.settings/
+nbproject/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.sass-cache/
+*.css.map
+*.js.map
+
+# Build files
+/build/
+/dist/
+/vendor/
+composer.lock
+
+# Testing
+/tests/reports/
+/tests/coverage/
+phpunit.xml
+.phpunit.result.cache
+test-*.html
+test-*.php
+
+# Environment & Config
+.env
+.env.*
+!.env.example
+config.local.php
+settings.local.php
+
+# Documentation build
+/docs/_build/
+/docs/.doctrees/
+
+# Backup files
+*.bak
+*.backup
+*.old
+backup/
+backups/
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Debug files
+debug.log
+error.log
+access.log
+
+# Cache
+.cache/
+cache/
+
+# Private/Sensitive files
+private/
+secrets/
+credentials/
+*.key
+*.pem
+*.crt
