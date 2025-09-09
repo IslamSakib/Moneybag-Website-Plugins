@@ -348,21 +348,9 @@
                 
                 // Check for specific field errors and map them
                 if (errorMessage.toLowerCase().includes('email')) {
-                    // Check if it's an "already exists" error
-                    if (errorMessage.toLowerCase().includes('already')) {
-                        const errorWithLink = errorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
-                        setErrors(prev => ({ ...prev, email: errorWithLink }));
-                    } else {
-                        setErrors(prev => ({ ...prev, email: errorMessage }));
-                    }
+                    setErrors(prev => ({ ...prev, email: errorMessage }));
                 } else if (errorMessage.toLowerCase().includes('phone') || errorMessage.toLowerCase().includes('mobile')) {
-                    // Check if it's an "already exists" error
-                    if (errorMessage.toLowerCase().includes('already')) {
-                        const errorWithLink = errorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
-                        setErrors(prev => ({ ...prev, mobile: errorWithLink }));
-                    } else {
-                        setErrors(prev => ({ ...prev, mobile: 'Invalid phone number format' }));
-                    }
+                    setErrors(prev => ({ ...prev, mobile: 'Invalid phone number format' }));
                 } else if (errorMessage.toLowerCase().includes('name')) {
                     setErrors(prev => ({ ...prev, name: 'Invalid name format' }));
                 } else if (errorMessage.toLowerCase().includes('duplicate')) {
@@ -668,22 +656,74 @@
 
         // Step 4: Thank You
         if (currentStep === 4) {
-            return createElement('div', { className: 'thank-you-container' },
+            return createElement('div', { 
+                className: 'thank-you-container',
+                style: {
+                    width: '100%',
+                    maxWidth: '600px',
+                    margin: '0 auto',
+                    padding: window.innerWidth <= 480 ? '20px 0' : '50px',
+                    textAlign: 'center',
+                    background: 'rgba(255, 255, 255, 0.30)',
+                    backdropFilter: 'blur(15px)',
+                    WebkitBackdropFilter: 'blur(15px)',
+                    borderRadius: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }
+            },
                 createElement('img', {
                     src: `${window.location.origin}/wp-content/plugins/moneybag-wordpress-plugin/assets/image/icon_moneybag.webp`,
                     alt: 'Moneybag icon',
                     className: 'moneybag-icon',
                     loading: 'lazy'
                 }),
-                createElement('h1', null, 'Thank You!'),
-                createElement('p', null, 
-                    `All set! Our team will reach out within 24 hours to schedule your ${config.consultation_duration}-minute consultation. Meanwhile, check your inbox for next steps.`
+                createElement('h1', {
+                    style: {
+                        fontSize: window.innerWidth <= 480 ? '28px' : window.innerWidth <= 768 ? '36px' : '48px',
+                        fontWeight: '700',
+                        color: '#2d3748',
+                        margin: window.innerWidth <= 480 ? '20px 0' : '30px 0',
+                        lineHeight: '1.2'
+                    }
+                }, 'Thank You!'),
+                createElement('p', {
+                    style: {
+                        fontSize: window.innerWidth <= 480 ? '15px' : window.innerWidth <= 768 ? '16px' : '17px',
+                        color: '#4a5568',
+                        lineHeight: '1.6',
+                        margin: '0 auto 20px',
+                        padding: '0'
+                    }
+                }, 
+                    'We will call you within 24 hours. If you want to connect with us immediately, please call the below number.'
                 ),
-                // Quick Contact Section
-                createElement('div', { className: 'quick-contact-section' },
-                    createElement('div', { className: 'contact-items' },
+                // Contact items directly below the text
+                createElement('div', { 
+                    className: 'contact-items',
+                    style: {
+                        display: 'flex',
+                        flexDirection: window.innerWidth <= 480 ? 'column' : 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: window.innerWidth <= 480 ? '10px' : '30px',
+                        margin: window.innerWidth <= 480 ? '20px 0 0 0' : '20px 0',
+                        flexWrap: 'wrap',
+                        width: '100%'
+                    }
+                },
                         // Phone contact
-                        createElement('div', { className: 'contact-item' },
+                        createElement('div', { 
+                            className: 'contact-item',
+                            style: {
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                justifyContent: 'center'
+                            }
+                        },
                             createElement('svg', {
                                 className: 'contact-icon phone-icon',
                                 width: '20',
@@ -702,11 +742,32 @@
                             ),
                             createElement('a', {
                                 href: 'tel:+8801958109228',
-                                className: 'contact-link'
+                                className: 'contact-link',
+                                style: {
+                                    color: '#2d3748',
+                                    fontSize: window.innerWidth <= 480 ? '14px' : '16px',
+                                    fontWeight: '500',
+                                    textDecoration: 'none',
+                                    transition: 'all 0.3s ease'
+                                },
+                                onMouseEnter: (e) => {
+                                    e.target.style.color = '#ff6b6b';
+                                },
+                                onMouseLeave: (e) => {
+                                    e.target.style.color = '#2d3748';
+                                }
                             }, '+880 1958 109 228')
                         ),
                         // Email contact
-                        createElement('div', { className: 'contact-item' },
+                        createElement('div', { 
+                            className: 'contact-item',
+                            style: {
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                justifyContent: 'center'
+                            }
+                        },
                             createElement('svg', {
                                 className: 'contact-icon email-icon',
                                 width: '20',
@@ -743,8 +804,83 @@
                             }, 'info@moneybag.com.bd')
                         )
                     ),
-                    createElement('p', { className: 'contact-description' },
-                        'For any inquiries, feel free to reach out via phone or email. Our support team is here to assist you with any questions or service-related requests.'
+                // Demo sandbox text
+                createElement('p', { 
+                    style: { 
+                        marginTop: window.innerWidth <= 480 ? '15px' : '20px',
+                        textAlign: 'center',
+                        fontSize: window.innerWidth <= 480 ? '15px' : window.innerWidth <= 768 ? '16px' : '17px',
+                        color: '#4a5568',
+                        lineHeight: '1.5',
+                        padding: '0',
+                        margin: `${window.innerWidth <= 480 ? '15px' : '20px'} auto 0`
+                    }
+                }, 'In the meantime, check out the demo sandbox.'),
+                // Button to merchant page
+                createElement('div', { 
+                    style: { 
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: window.innerWidth <= 480 ? '15px' : '20px',
+                        marginBottom: window.innerWidth <= 480 ? '10px' : '20px',
+                        width: '100%',
+                        padding: window.innerWidth <= 768 ? '0' : '0 10px'
+                    }
+                },
+                    createElement('a', {
+                        href: 'https://demo.sandbox.moneybag.com.bd/',
+                        target: '_blank',
+                        className: 'primary-btn',
+                        style: {
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: window.innerWidth <= 480 ? '10px 24px' : '12px 32px',
+                            background: 'linear-gradient(270deg, #F46F6F 0%, #EE212E 100%)',
+                            color: '#ffffff',
+                            borderRadius: '8px',
+                            fontWeight: '600',
+                            fontSize: window.innerWidth <= 480 ? '14px' : '15px',
+                            border: 'none',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            textAlign: 'center',
+                            boxShadow: '0 2px 4px rgba(238, 33, 46, 0.15)'
+                        },
+                        onMouseEnter: (e) => {
+                            e.target.style.background = 'linear-gradient(270deg, #E45050 0%, #CC1A25 100%)';
+                            e.target.style.transform = 'translateY(-2px)';
+                            e.target.style.boxShadow = '0 6px 20px rgba(238, 33, 46, 0.4)';
+                        },
+                        onMouseLeave: (e) => {
+                            e.target.style.background = 'linear-gradient(270deg, #F46F6F 0%, #EE212E 100%)';
+                            e.target.style.transform = 'translateY(0)';
+                            e.target.style.boxShadow = '0 2px 4px rgba(238, 33, 46, 0.15)';
+                        }
+                    }, 
+                        'Explore Demo Sandbox',
+                        // Right arrow icon
+                        createElement('svg', {
+                            width: '16',
+                            height: '16',
+                            viewBox: '0 0 24 24',
+                            fill: 'none',
+                            xmlns: 'http://www.w3.org/2000/svg',
+                            style: {
+                                marginLeft: '8px',
+                                display: 'inline-block',
+                                verticalAlign: 'middle'
+                            }
+                        },
+                            createElement('path', {
+                                d: 'M5 12H19M19 12L12 5M19 12L12 19',
+                                stroke: 'currentColor',
+                                strokeWidth: '2',
+                                strokeLinecap: 'round',
+                                strokeLinejoin: 'round'
+                            })
+                        )
                     )
                 )
             );

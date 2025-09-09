@@ -589,8 +589,8 @@
                 // Check if it's a validation error from the API
                 if (displayMessage.toLowerCase().includes('email') && 
                     displayMessage.toLowerCase().includes('already')) {
-                    // Handle existing email error with forgot password link
-                    const errorWithLink = displayMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                    // Handle existing email error with login link
+                    const errorWithLink = displayMessage.replace(/\.?$/, '') + ' or <a href="https://sandbox.moneybag.com.bd/" target="_blank" style="color: #ff4444; text-decoration: underline;">Login</a> instead.';
                     setFieldErrors(prev => ({
                         ...prev,
                         email: errorWithLink
@@ -600,8 +600,8 @@
                 } else if ((displayMessage.toLowerCase().includes('phone') || 
                            displayMessage.toLowerCase().includes('mobile')) && 
                            displayMessage.toLowerCase().includes('already')) {
-                    // Handle existing phone number error with forgot password link
-                    const errorWithLink = displayMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                    // Handle existing phone number error with login link
+                    const errorWithLink = displayMessage.replace(/\.?$/, '') + ' or <a href="https://sandbox.moneybag.com.bd/" target="_blank" style="color: #ff4444; text-decoration: underline;">Login</a> instead.';
                     setFieldErrors(prev => ({
                         ...prev,
                         mobile: errorWithLink
@@ -788,7 +788,7 @@
                                                                 )
                                                             ),
                                                             h('div', { className: 'login-card-text' },
-                                                                h('span', { className: 'login-card-title' }, 'LOGIN TO SANDBOX'),
+                                                                h('span', { className: 'login-card-title' }, 'Go to sandbox'),
                                                                 h('span', { className: 'login-card-subtitle' }, 'Click here for instant access')
                                                             ),
                                                             h('div', { className: 'login-card-arrow' },
@@ -845,6 +845,20 @@
                 'rocket': 'Rocket',
                 'diners': 'Diners Club',
                 'upay': 'Upay'
+            };
+            
+            // Logo mapping for each service
+            const serviceLogos = {
+                'visa': 'Visa.webp',
+                'mastercard': 'Mastercard.webp',
+                'amex': 'American Express.webp',
+                'dbbl_nexus': 'DBBL-Nexus.webp',
+                'bkash': 'bKash.webp',
+                'nagad': 'Nagad.webp',
+                'unionpay': 'UnionPay.webp',
+                'rocket': 'Rocket.webp',
+                'diners': 'Diners Club.webp',
+                'upay': 'Upay.webp'
             };
             const allServiceValues = Object.keys(serviceMap);
             
@@ -948,34 +962,101 @@
                             h('span', { className: 'required-indicator' }, '*')
                         ),
                         h('div', { className: 'service-grid' },
-                            h('div', { className: 'service-item' },
+                            h('div', { className: 'service-item service-item-select-all' },
                                 h('input', {
                                     type: 'checkbox',
                                     className: 'select-all-checkbox',
                                     id: 'select-all-services',
                                     checked: formData.serviceTypes.length === allServiceValues.length,
                                     'data-checked': formData.serviceTypes.length === allServiceValues.length ? 'true' : 'false',
-                                    onChange: (e) => handleSelectAllServices(e.target.checked)
+                                    onChange: (e) => handleSelectAllServices(e.target.checked),
+                                    style: { display: 'none' }
                                 }),
                                 h('label', { 
-                                    className: 'service-label',
-                                    htmlFor: 'select-all-services'
+                                    className: 'service-label select-all-label',
+                                    htmlFor: 'select-all-services',
+                                    style: {
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: '8px',
+                                        border: formData.serviceTypes.length === allServiceValues.length ? '1px solid #EE212E' : '1px solid #e0e0e0',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s ease',
+                                        backgroundColor: 'white',
+                                        height: '60px',
+                                        fontWeight: '600',
+                                        fontSize: '13px',
+                                        color: formData.serviceTypes.length === allServiceValues.length ? '#EE212E' : '#333'
+                                    },
+                                    onMouseEnter: (e) => {
+                                        if (formData.serviceTypes.length !== allServiceValues.length) {
+                                            e.currentTarget.style.borderColor = '#F46F6F';
+                                            e.currentTarget.style.backgroundColor = 'rgba(244, 111, 111, 0.05)';
+                                        }
+                                    },
+                                    onMouseLeave: (e) => {
+                                        if (formData.serviceTypes.length !== allServiceValues.length) {
+                                            e.currentTarget.style.borderColor = '#e0e0e0';
+                                            e.currentTarget.style.backgroundColor = 'white';
+                                        }
+                                    }
                                 }, 'Select All')
                             ),
                             ...allServiceValues.map(serviceValue =>
-                                h('div', { key: serviceValue, className: 'service-item' },
+                                h('div', { key: serviceValue, className: 'service-item service-item-logo' },
                                     h('input', {
                                         type: 'checkbox',
                                         className: 'service-checkbox',
                                         id: `service-${serviceValue}`,
                                         checked: formData.serviceTypes.includes(serviceValue),
                                         'data-checked': formData.serviceTypes.includes(serviceValue) ? 'true' : 'false',
-                                        onChange: () => handleServiceToggle(serviceValue)
+                                        onChange: () => handleServiceToggle(serviceValue),
+                                        style: { display: 'none' } // Hide the checkbox, we'll style the label
                                     }),
                                     h('label', {
-                                        className: 'service-label',
-                                        htmlFor: `service-${serviceValue}`
-                                    }, serviceMap[serviceValue])
+                                        className: 'service-label service-logo-label',
+                                        htmlFor: `service-${serviceValue}`,
+                                        style: {
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            padding: '6px 8px',
+                                            border: formData.serviceTypes.includes(serviceValue) ? '1px solid #EE212E' : '1px solid #e0e0e0',
+                                            borderRadius: '8px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            backgroundColor: 'white',
+                                            height: '60px',
+                                            justifyContent: 'center',
+                                            gap: '2px'
+                                        },
+                                        onMouseEnter: (e) => {
+                                            if (!formData.serviceTypes.includes(serviceValue)) {
+                                                e.currentTarget.style.borderColor = '#F46F6F';
+                                                e.currentTarget.style.backgroundColor = 'rgba(244, 111, 111, 0.05)';
+                                            }
+                                        },
+                                        onMouseLeave: (e) => {
+                                            if (!formData.serviceTypes.includes(serviceValue)) {
+                                                e.currentTarget.style.borderColor = '#e0e0e0';
+                                                e.currentTarget.style.backgroundColor = 'white';
+                                            }
+                                        }
+                                    }, 
+                                        h('img', {
+                                            src: `${window.location.origin}/wp-content/plugins/moneybag-wordpress-plugin/assets/image/${serviceLogos[serviceValue]}`,
+                                            alt: serviceMap[serviceValue],
+                                            style: {
+                                                width: 'auto',
+                                                height: '28px',
+                                                maxWidth: '70px',
+                                                objectFit: 'contain'
+                                            },
+                                            loading: 'lazy'
+                                        })
+                                    )
                                 )
                             )
                         ),

@@ -5,6 +5,58 @@ All notable changes to the Moneybag WordPress Plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2025-09-09
+
+### Added
+- **Visual Service Selection System** - Complete overhaul of payment service selection with payment service logos
+  - Added logo-based checkboxes for all payment services (Visa, Mastercard, American Express, bKash, Nagad, etc.)
+  - Implemented visual card-style selection with hover effects and proper selection states
+  - Added responsive 3-column layout for tablet devices and 2-column layout for mobile
+- **Enhanced Thank You Section** in pricing plan widget
+  - Added demo sandbox text and "Explore Demo Sandbox" button with right arrow icon
+  - Implemented responsive padding and typography scaling across all devices
+  - Added structured contact information display with phone and email
+
+### Changed
+- **Updated Validation Messages** across all widgets for better user experience
+  - Changed "Forgot password?" links to "Login" with updated URL (https://sandbox.moneybag.com.bd/)
+  - Removed unnecessary "already exists" validation from pricing plan widget
+  - Maintained consistent error messaging across merchant registration and sandbox forms
+- **Improved Merchant Registration UI**
+  - Service selection now displays payment service logos instead of text-only checkboxes
+  - Replaced text labels with professional logo images for better visual identification
+  - Updated "LOGIN TO SANDBOX" button text to "Go to sandbox"
+- **Enhanced Responsive Design**
+  - Optimized service grid layout: 5+ columns (desktop), 3 columns (tablet), 2 columns (mobile)
+  - Improved mobile padding and spacing throughout thank you sections
+  - Better text sizing and line breaks across all device sizes
+
+### Fixed
+- **CSS Grid Layout Issues** - Resolved service selection display problems
+  - Fixed conflicting flexbox styles that prevented proper grid layout
+  - Added specific CSS overrides for logo-style service items
+  - Ensured proper alignment and spacing in service selection grid
+- **Button and Animation Fixes**
+  - Removed sandbox login button animations for cleaner user experience
+  - Fixed border thickness inconsistencies (standardized to 1px borders)
+  - Removed red background overlay on service selection, keeping only border color changes
+- **Responsive Layout Improvements**
+  - Fixed mobile padding issues in thank you containers
+  - Resolved text overflow and spacing problems on smaller screens
+  - Ensured consistent button and element sizing across devices
+
+### Removed
+- Text labels from payment service selection (replaced with logo-only display)
+- Excessive animations from sandbox login button
+- Redundant background color overlays from selected service items
+- Pricing plan widget "already exists" validation logic (not needed for this widget)
+
+### Technical Improvements
+- Added payment service logo mapping system with proper file path resolution
+- Implemented CSS-based responsive design with media query overrides
+- Enhanced service selection state management with visual feedback
+- Optimized component re-rendering and hover state handling
+
 ## [2.2.0] - 2025-09-08
 
 ### Added

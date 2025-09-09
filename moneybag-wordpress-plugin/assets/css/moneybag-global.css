@@ -2767,7 +2767,7 @@ form.contact-form .form-row.two-columns {
     
     .thank-you-container {
         width: 100%;
-        padding: 10px;
+        padding: 20px 0 !important;
         margin: 0;
         border-radius: 10px;
     }
@@ -3448,8 +3448,8 @@ form.contact-form .form-row.two-columns {
 
 .service-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
     margin-bottom: 16px;
 }
 
@@ -3457,6 +3457,13 @@ form.contact-form .form-row.two-columns {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* Override for logo-style service items */
+.service-item-logo,
+.service-item-select-all {
+    display: block !important;
+}
     padding: 8px 4px;
 }
 
@@ -4057,7 +4064,7 @@ form.contact-form .form-row.two-columns {
     }
     
     .service-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
     }
     
@@ -5258,7 +5265,7 @@ form.contact-form .form-row.two-columns {
     box-shadow: 0 10px 40px rgba(255, 68, 68, 0.4), 0 0 0 0 rgba(255, 68, 68, 0.4);
     margin: 32px 0;
     position: relative;
-    animation: pulse-shadow 2s infinite;
+    /* animation: pulse-shadow 2s infinite; */
 }
 
 @keyframes pulse-shadow {
@@ -5281,7 +5288,7 @@ form.contact-form .form-row.two-columns {
     border-radius: 12px;
     background-size: 400% 400%;
     z-index: -1;
-    animation: gradient-shift 3s ease infinite;
+    /* animation: gradient-shift 3s ease infinite; */
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -5300,8 +5307,8 @@ form.contact-form .form-row.two-columns {
 }
 
 .sandbox-login-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 15px 50px rgba(255, 68, 68, 0.5);
+    /* transform: translateY(-4px) scale(1.02); */
+    /* box-shadow: 0 15px 50px rgba(255, 68, 68, 0.5); */
     background: #ff3333;
     border-color: transparent;
     animation: none;
@@ -5414,11 +5421,11 @@ form.contact-form .form-row.two-columns {
 
 .sandbox-login-card:hover .login-card-arrow {
     animation: none;
-    transform: translateX(5px);
+    /* transform: translateX(5px); */
 }
 
 .sandbox-login-card:hover .login-card-arrow svg {
-    transform: scale(1.1);
+    /* transform: scale(1.1); */
 }
 
 /* Left-align illustration on desktop/laptop */

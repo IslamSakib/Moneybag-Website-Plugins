@@ -278,8 +278,8 @@
                     errorMessage.toLowerCase().includes('already exists') ||
                     errorMessage.toLowerCase().includes('already associated')
                 )) {
-                    // Add forgot password link for sandbox
-                    errorMessage = errorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                    // Add login link for sandbox
+                    errorMessage = errorMessage.replace(/\.?$/, '') + ' or <a href="https://sandbox.moneybag.com.bd/" target="_blank" style="color: #ff4444; text-decoration: underline;">Login</a> instead.';
                 }
                 
                 setErrors(prev => ({ ...prev, identifier: errorMessage }));
@@ -414,8 +414,8 @@
                         emailErrorMessage.toLowerCase().includes('already exists') ||
                         emailErrorMessage.toLowerCase().includes('already associated')
                     )) {
-                        // Add forgot password link for email
-                        emailErrorMessage = emailErrorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                        // Add login link for email
+                        emailErrorMessage = emailErrorMessage.replace(/\.?$/, '') + ' or <a href="https://sandbox.moneybag.com.bd/" target="_blank" style="color: #ff4444; text-decoration: underline;">Login</a> instead.';
                     }
                     
                     setErrors(prev => ({ ...prev, email: emailErrorMessage }));
@@ -428,8 +428,8 @@
                         mobileErrorMessage.toLowerCase().includes('already exists') ||
                         mobileErrorMessage.toLowerCase().includes('already associated')
                     )) {
-                        // Add forgot password link for mobile
-                        mobileErrorMessage = mobileErrorMessage + ' <a href="https://sandbox.moneybag.com.bd/forgot-password" target="_blank" style="color: #ff4444; text-decoration: underline;">Forgot password?</a>';
+                        // Add login link for mobile
+                        mobileErrorMessage = mobileErrorMessage.replace(/\.?$/, '') + ' or <a href="https://sandbox.moneybag.com.bd/" target="_blank" style="color: #ff4444; text-decoration: underline;">Login</a> instead.';
                     }
                     
                     setErrors(prev => ({ ...prev, mobile: mobileErrorMessage }));
