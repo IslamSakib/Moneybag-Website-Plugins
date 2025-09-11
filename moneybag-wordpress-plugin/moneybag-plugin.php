@@ -29,7 +29,7 @@ if (!defined('ABSPATH')) {
  */
 define('MONEYBAG_PLUGIN_URL', plugin_dir_url(__FILE__));     // Plugin URL for assets
 define('MONEYBAG_PLUGIN_PATH', plugin_dir_path(__FILE__));   // Plugin path for includes
-define('MONEYBAG_PLUGIN_VERSION', '2.3.5');                 // Plugin version for cache busting
+define('MONEYBAG_PLUGIN_VERSION', '2.3.8');                 // Plugin version for cache busting
 
 /**
  * Security and Configuration Notice
@@ -120,6 +120,9 @@ class MoneybagPlugin {
         
         add_action('wp_ajax_moneybag_contact_form', [$this, 'handle_contact_form']);
         add_action('wp_ajax_nopriv_moneybag_contact_form', [$this, 'handle_contact_form']);
+        
+        add_action('wp_ajax_handle_calculator_lead', [$this, 'handle_calculator_lead']);
+        add_action('wp_ajax_nopriv_handle_calculator_lead', [$this, 'handle_calculator_lead']);
     }
     
     /**
@@ -201,6 +204,7 @@ class MoneybagPlugin {
         require_once(MONEYBAG_PLUGIN_PATH . 'includes/widgets/pricing-plan-widget.php');
         require_once(MONEYBAG_PLUGIN_PATH . 'includes/widgets/merchant-registration-widget.php');
         require_once(MONEYBAG_PLUGIN_PATH . 'includes/widgets/contact-form-widget.php');
+        require_once(MONEYBAG_PLUGIN_PATH . 'includes/widgets/price-comparison-calculator-widget.php');
     }
     
     public function register_widgets() {
@@ -209,6 +213,7 @@ class MoneybagPlugin {
             \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \MoneybagPlugin\Widgets\PricingPlanWidget());
             \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \MoneybagPlugin\Widgets\MerchantRegistrationWidget());
             \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \MoneybagPlugin\Widgets\Contact_Form_Widget());
+            \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \MoneybagPlugin\Widgets\PriceComparisonCalculatorWidget());
         }
     }
     
@@ -298,6 +303,20 @@ class MoneybagPlugin {
         wp_localize_script('moneybag-merchant-registration', 'moneybagMerchantAjax', [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('moneybag_merchant_nonce')
+        ]);
+        
+        // Price Comparison Calculator Scripts
+        wp_enqueue_script(
+            'moneybag-price-comparison-calculator',
+            MONEYBAG_PLUGIN_URL . 'assets/js/price-comparison-calculator.js',
+            ['wp-element'],
+            MONEYBAG_PLUGIN_VERSION,
+            true
+        );
+        
+        wp_localize_script('moneybag-price-comparison-calculator', 'moneybagCalculatorAjax', [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('moneybag_calculator_nonce')
         ]);
     }
     
@@ -526,14 +545,16 @@ class MoneybagPlugin {
             $error_message = $response['message'] ?? 'API request failed';
             
             // Log error details for debugging but don't show to users
-            if (isset($response['error']) && defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('[Moneybag API] Error type: ' . $response['error']);
-            }
+            // Log error only in debug mode (commented out for production)
+            // if (isset($response['error']) && defined('WP_DEBUG') && WP_DEBUG) {
+            //     error_log('[Moneybag API] Error type: ' . $response['error']);
+            // }
             
             // For development - log the full response
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('[Moneybag Sandbox API Error] Full response: ' . json_encode($response));
-            }
+            // Log full response only in debug mode (commented out for production)
+            // if (defined('WP_DEBUG') && WP_DEBUG) {
+            //     error_log('[Moneybag Sandbox API Error] Full response: ' . json_encode($response));
+            // }
             
             wp_send_json_error($error_message);
         }
@@ -626,8 +647,9 @@ class MoneybagPlugin {
             }
             
         } catch (Exception $e) {
-            error_log('[Moneybag CRM Debug] Fatal exception in handle_pricing_crm: ' . $e->getMessage());
-            error_log('[Moneybag CRM Debug] Exception trace: ' . $e->getTraceAsString());
+            // Commented out debug logging for production
+            // error_log('[Moneybag CRM Debug] Fatal exception in handle_pricing_crm: ' . $e->getMessage());
+            // error_log('[Moneybag CRM Debug] Exception trace: ' . $e->getTraceAsString());
             wp_send_json_error([
                 'message' => 'An unexpected error occurred. Please check the debug log.',
                 'error_code' => 'fatal_exception',
@@ -648,14 +670,16 @@ class MoneybagPlugin {
                                wp_verify_nonce($_POST['nonce'], 'moneybag_merchant_nonce');
                 
                 // TEMPORARY: Allow debug testing with test nonces
-                if (!$nonce_valid && ($_POST['nonce'] === 'test_nonce' || $_POST['nonce'] === 'debug_nonce')) {
-                    error_log('[Moneybag CRM Debug] Using test nonce - bypassing verification for debugging');
-                    $nonce_valid = true;
-                }
+                // Removed test nonce bypass for production
+                // if (!$nonce_valid && ($_POST['nonce'] === 'test_nonce' || $_POST['nonce'] === 'debug_nonce')) {
+                //     error_log('[Moneybag CRM Debug] Using test nonce - bypassing verification for debugging');
+                //     $nonce_valid = true;
+                // }
             }
             
             if (!$nonce_valid) {
-                error_log('[Moneybag CRM Debug] Security check failed - nonce: ' . ($_POST['nonce'] ?? 'not provided'));
+                // Commented out debug logging for production
+                // error_log('[Moneybag CRM Debug] Security check failed - nonce: ' . ($_POST['nonce'] ?? 'not provided'));
                 wp_send_json_error('Security check failed');
                 return;
             }
@@ -775,8 +799,8 @@ class MoneybagPlugin {
     }
     
     private function handle_pricing_crm_submission($data) {
-        // DEBUG: Log the received data to understand what merchant registration is sending
-        error_log('[Moneybag CRM Debug] handle_pricing_crm_submission received data: ' . json_encode($data));
+        // Commented out debug logging for production
+        // error_log('[Moneybag CRM Debug] handle_pricing_crm_submission received data: ' . json_encode($data));
         
         // Check if it's a merchant registration or pricing form
         if (isset($data['businessName']) && isset($data['legalIdentity'])) {
@@ -989,7 +1013,7 @@ class MoneybagPlugin {
             
             if (empty($crm_api_key) || empty($crm_api_url)) {
                 // CRM not configured - skip CRM submission (don't fail the main process)
-                error_log('[Moneybag] CRM not configured, skipping merchant registration CRM submission');
+                // error_log('[Moneybag] CRM not configured, skipping merchant registration CRM submission');
                 return;
             }
             
@@ -1052,17 +1076,84 @@ class MoneybagPlugin {
             ]);
             
             if ($crm_result['success']) {
-                error_log('[Moneybag] Merchant registration CRM submission successful - Person ID: ' . ($crm_result['person_id'] ?? 'unknown'));
+                // Commented out debug logging for production
+                // error_log('[Moneybag] Merchant registration CRM submission successful - Person ID: ' . ($crm_result['person_id'] ?? 'unknown'));
             } else {
-                error_log('[Moneybag] Merchant registration CRM submission failed: ' . ($crm_result['message'] ?? 'unknown error'));
+                // Commented out debug logging for production
+                // error_log('[Moneybag] Merchant registration CRM submission failed: ' . ($crm_result['message'] ?? 'unknown error'));
             }
             
         } catch (Exception $e) {
             // Log error but don't fail the main registration process
-            error_log('[Moneybag] Exception during merchant registration CRM submission: ' . $e->getMessage());
+            // error_log('[Moneybag] Exception during merchant registration CRM submission: ' . $e->getMessage());
         } catch (Throwable $t) {
             // Log error but don't fail the main registration process  
-            error_log('[Moneybag] Error during merchant registration CRM submission: ' . $t->getMessage());
+            // error_log('[Moneybag] Error during merchant registration CRM submission: ' . $t->getMessage());
+        }
+    }
+    
+    /**
+     * Handle calculator lead submission
+     */
+    public function handle_calculator_lead() {
+        try {
+            // Verify nonce for security
+            if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'moneybag_nonce')) {
+                wp_send_json_error(['message' => 'Security check failed']);
+                return;
+            }
+            
+            // Prepare calculator lead data
+            $form_data = [
+                'monthly_volume' => $_POST['monthly_volume'] ?? 0,
+                'current_gateway' => $_POST['current_gateway'] ?? '',
+                'estimated_savings' => $_POST['estimated_savings'] ?? 0
+            ];
+            
+            // Sanitize data
+            $sanitized_data = [
+                'monthly_volume' => intval($form_data['monthly_volume']),
+                'current_gateway' => sanitize_text_field($form_data['current_gateway']),
+                'estimated_savings' => floatval($form_data['estimated_savings'])
+            ];
+            
+            // Build note content for calculator lead
+            $note_content = "**Price Comparison Calculator Lead**\n\n" .
+                "- **Monthly Volume:** ৳" . number_format($sanitized_data['monthly_volume']) . "\n" .
+                "- **Current Gateway:** {$sanitized_data['current_gateway']}\n" .
+                "- **Estimated Annual Savings:** ৳" . number_format($sanitized_data['estimated_savings']) . "\n\n" .
+                "**Lead Source:** Price Comparison Calculator Widget";
+            
+            // Use global CRM system
+            $result = \MoneybagPlugin\MoneybagAPI::submit_to_crm([
+                'name' => 'Calculator Lead',
+                'email' => 'lead@calculator.pending',
+                'phone' => '0000000000',
+                'company' => 'Pending',
+                'opportunity_title' => 'Calculator Lead - ৳' . number_format($sanitized_data['estimated_savings']) . ' Potential Savings',
+                'opportunity_stage' => 'NEW',
+                'opportunity_value' => $sanitized_data['estimated_savings'],
+                'note_title' => 'Price Calculator Lead',
+                'note_content' => $note_content,
+                'widget_type' => 'price_calculator'
+            ]);
+            
+            if ($result['success']) {
+                wp_send_json_success([
+                    'success' => true,
+                    'message' => 'Lead captured successfully',
+                    'redirect_url' => '/contact'
+                ]);
+            } else {
+                wp_send_json_error($result);
+            }
+            
+        } catch (Exception $e) {
+            // Commented out debug logging for production
+            // error_log('[Moneybag Calculator] Exception: ' . $e->getMessage());
+            wp_send_json_error([
+                'message' => 'An error occurred while processing your request.'
+            ]);
         }
     }
     

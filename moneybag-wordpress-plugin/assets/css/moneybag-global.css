@@ -784,7 +784,7 @@ svg.spinner-icon,
     object-fit: contain;
 }
 
-.moneybag-form-container .check-icon {
+.moneybag-form-container .moneybag-calc-check-icon {
     position: relative;
     width: 120px;
     height: 90px;
@@ -2013,7 +2013,7 @@ form.contact-form .form-row.two-columns {
     margin-top: auto;
 }
 
-.pricing-plan-container .card-header {
+.pricing-plan-container .moneybag-calc-card-header {
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
     font-style: normal;
@@ -2389,7 +2389,7 @@ form.contact-form .form-row.two-columns {
         padding: 24px;
     }
     
-    .pricing-plan-container .card-header {
+    .pricing-plan-container .moneybag-calc-card-header {
         font-size: 13px;
         padding: 5px 9px;
         margin-bottom: 16px;
@@ -2856,7 +2856,7 @@ form.contact-form .form-row.two-columns {
         font-size: 12px;
     }
     
-    .pricing-plan-container .card-header {
+    .pricing-plan-container .moneybag-calc-card-header {
         font-size: 12px;
         padding: 4px 8px;
     }
@@ -3856,9 +3856,64 @@ form.contact-form .form-row.two-columns {
 
 /* Tablet Layout - Keep two columns */
 @media (max-width: 1024px) and (min-width: 768px) {
+    .moneybag-price-calculator-container {
+        padding: 0;
+    }
+    
     .merchant-form-layout {
         grid-template-columns: 1fr 1.5fr;
         gap: 20px;
+    }
+    
+    /* 3 columns for comparison row on tablet */
+    .moneybag-calc-comparison-row {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 16px;
+    }
+    
+    /* Keep calculator input bar as 3 columns on laptop */
+    .moneybag-calc-input-bar {
+        grid-template-columns: 1fr 1fr auto !important;
+    }
+    
+    /* Prevent LOWEST RATES text from breaking on tablet */
+    .moneybag-calc-badge {
+        white-space: nowrap;
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+    
+    /* Adjust Moneybag card text for tablet */
+    .moneybag-calc-comparison-card.moneybag-calc-moneybag {
+        padding: 28px 20px 24px;
+    }
+    
+    .moneybag-calc-comparison-card.moneybag .moneybag-calc-card-header {
+        font-size: 14px;
+    }
+    
+    .moneybag-calc-comparison-card.moneybag .moneybag-calc-card-value {
+        font-size: 42px;
+    }
+    
+    .moneybag-calc-card-value.moneybag-calc-primary {
+        font-size: 42px !important;
+    }
+    
+    .moneybag-calc-logo {
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+    
+    .moneybag-calc-logo-icon {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .moneybag-calc-guarantee-text {
+        font-size: 10px;
+        padding-top: 12px;
+        margin-top: 12px;
     }
     
     /* Full width form fields on tablets */
@@ -5636,5 +5691,1536 @@ form.contact-form .form-row.two-columns,
         gap: 15px !important;
         column-gap: 15px !important;
         row-gap: 15px !important;
+    }
+}
+
+/* ========================================
+   PRICE COMPARISON CALCULATOR STYLES
+   ======================================== */
+
+.moneybag-price-calculator-container {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    color: #1f2937;
+    padding: 24px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+.moneybag-calculator-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Calculator Header */
+.moneybag-calc-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.moneybag-calc-title {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #2d3748;
+    line-height: 1.2;
+}
+
+.moneybag-calc-subtitle {
+    color: #6b7280;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+/* Hero Card - Exact Screenshot Design */
+.moneybag-calc-hero-card {
+    background: linear-gradient(135deg, #E8F5FF 0%, #F0F8FF 100%);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 32px;
+    border: 1px solid #D4E9F7;
+    text-align: center;
+    position: sticky;
+    top: 20px;
+    z-index: 10;
+}
+
+.moneybag-calc-savings-arrow {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    color: #10b981;
+    top: 15px;
+    left: calc(45% - 265px);
+}
+
+.moneybag-calc-savings-main-text {
+    font-size: 36px;
+    color: #2d3748;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.moneybag-calc-savings-amount {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 48px;
+}
+
+.moneybag-calc-savings-sub-text {
+    font-size: 18px;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.moneybag-calc-savings-sub-text .moneybag-calc-yearly-amount {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+/* Input Controls Bar */
+.moneybag-calc-input-bar {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 24px;
+    margin-bottom: 32px;
+    border: 1px solid #e5e7eb;
+}
+
+.moneybag-calc-input-bar .moneybag-calc-input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.moneybag-calc-input-bar .moneybag-calc-input-group label {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.moneybag-calc-input-bar .moneybag-calc-input-field {
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f9fafb;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    color: #1e293b;
+    height: 44px;
+    width: 100%;
+}
+
+.moneybag-calc-input-bar .moneybag-calc-select-field {
+    padding: 12px 40px 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f9fafb;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    color: #1e293b;
+    height: 44px;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+.moneybag-calc-input-bar .moneybag-calc-input-field:focus,
+.moneybag-calc-input-bar .moneybag-calc-select-field:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.moneybag-calc-input-bar .moneybag-calc-input-field.moneybag-calc-error {
+    border-color: #ef4444;
+}
+
+.moneybag-calc-input-bar .moneybag-calc-error-message {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.moneybag-calc-payment-mix-error-container {
+    margin: 16px 0 0 0;
+}
+
+.moneybag-calc-payment-mix-error {
+    color: #dc2626;
+    font-size: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 1px solid #fca5a5;
+    border-left: 4px solid #ef4444;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: left;
+    display: block;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+}
+
+.moneybag-calc-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #3B3F42;
+    border: 1px solid #3B3F42;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: #FFFFFF;
+    height: 44px;
+    width: 150px;
+    align-self: flex-end;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.moneybag-calc-toggle-btn:hover,
+button.moneybag-calc-toggle-btn:hover,
+button#custom-mode-toggle:hover {
+    background: #ff6b6b !important;
+    border-color: #ff6b6b !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.moneybag-calc-toggle-btn:focus,
+button.moneybag-calc-toggle-btn:focus,
+button#custom-mode-toggle:focus {
+    outline: none !important;
+    background-color: #3B3F42 !important;
+    background: #3B3F42 !important;
+    border-color: #3B3F42 !important;
+    color: #FFFFFF !important;
+}
+
+.moneybag-calc-toggle-btn:focus:hover,
+button.moneybag-calc-toggle-btn:focus:hover,
+button#custom-mode-toggle:focus:hover {
+    background: #ff6b6b !important;
+    border-color: #ff6b6b !important;
+    color: #FFFFFF !important;
+}
+
+.moneybag-calc-toggle-btn:focus-visible,
+button.moneybag-calc-toggle-btn:focus-visible,
+button#custom-mode-toggle:focus-visible {
+    outline: none !important;
+    background-color: #3B3F42 !important;
+    background: #3B3F42 !important;
+    border-color: #3B3F42 !important;
+    color: #FFFFFF !important;
+}
+
+.moneybag-calc-toggle-btn:active {
+    background: #ff6b6b;
+    border-color: #ff6b6b;
+    color: #FFFFFF;
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.moneybag-calc-toggle-text {
+    font-size: 14px;
+}
+
+.moneybag-calc-toggle-icon {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    flex-shrink: 0;
+}
+
+/* Comparison Cards - New Design */
+.moneybag-calc-comparison-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+    align-items: stretch;
+}
+
+.moneybag-calc-comparison-card {
+    background: #F8FAFC;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.moneybag-calc-comparison-card.moneybag-calc-moneybag {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff5757 100%);
+    color: white;
+    border: none;
+    position: relative;
+    padding: 32px 24px 28px;
+    box-shadow: none;
+    overflow: visible;
+}
+
+.moneybag-calc-comparison-card.moneybag .moneybag-calc-card-header {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    margin-bottom: 12px;
+}
+
+.moneybag-calc-comparison-card.moneybag .moneybag-calc-card-value {
+    font-size: 42px;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 4px;
+}
+
+.moneybag-calc-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #FFD93D 0%, #FFC107 100%);
+    color: #1a1a1a;
+    padding: 6px 18px;
+    border-radius: 24px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+    white-space: nowrap;
+    z-index: 2;
+}
+
+.moneybag-calc-logo {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: white;
+    opacity: 1;
+    letter-spacing: 0.3px;
+}
+
+.moneybag-calc-logo-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    color: white;
+    stroke-width: 2.5;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.moneybag-calc-comparison-card.moneybag-calc-savings {
+    background: #F0FDF4;
+    border-color: #BBF7D0;
+}
+
+.moneybag-calc-card-header {
+    font-size: 14px;
+    color: #1e293b;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.moneybag-calc-comparison-card.moneybag-calc-savings .moneybag-calc-card-header {
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.moneybag-calc-check-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+}
+
+.moneybag-calc-card-value {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1e293b;
+}
+
+.moneybag-calc-card-value.moneybag-calc-primary {
+    color: white;
+    font-size: 54px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin: 12px 0;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.moneybag-calc-card-value.moneybag-calc-success {
+    color: #10b981;
+}
+
+.moneybag-calc-guarantee-text {
+    font-size: 11px;
+    margin-top: 16px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    display: block;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding-top: 16px;
+    opacity: 0.95;
+}
+
+/* Custom Mode Section - Table Format */
+.moneybag-calc-custom-mode-section {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 32px;
+    border: 1px solid #e5e7eb;
+    animation: slideDown 0.3s ease;
+}
+
+.moneybag-calc-table-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #2d3748;
+}
+
+.moneybag-calc-method-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.moneybag-calc-method-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.moneybag-calc-method-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 16px;
+}
+
+.moneybag-calc-method-cells {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.moneybag-calc-cell-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.moneybag-calc-cell-box {
+    position: relative;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    padding: 0;
+    height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.moneybag-calc-cell-label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+    margin-bottom: 4px;
+    line-height: 1;
+}
+
+.moneybag-calc-method-input {
+    padding: 12px 16px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    font-size: 16px;
+    background-color: transparent;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    color: #1e293b;
+    height: 44px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* Style the number input spinner arrows */
+.moneybag-calc-method-input::-webkit-inner-spin-button,
+.moneybag-calc-method-input::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 40px;
+    cursor: pointer;
+}
+
+.moneybag-calc-method-input:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.moneybag-calc-cell-value {
+    font-size: 16px;
+    font-weight: 400;
+    color: #1f2937;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.moneybag-calc-readonly-box {
+    background: transparent;
+    border: 1px solid #d1d5db;
+    padding: 12px 16px;
+}
+
+.moneybag-calc-savings-box {
+    background: #F0FDF4;
+    border: 1px solid #F0FDF4;
+    padding: 12px 16px;
+}
+
+.moneybag-calc-savings-box .moneybag-calc-cell-value {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+.moneybag-calc-total-row {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 24px;
+    margin-top: 16px;
+}
+
+.moneybag-calc-total-row .moneybag-calc-method-name {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.moneybag-calc-total-box {
+    background: #F3F4F6;
+    border: 1px solid #F3F4F6;
+    padding: 12px 16px;
+}
+
+.moneybag-calc-total-box .moneybag-calc-cell-value {
+    font-weight: 700;
+    color: #374151;
+}
+
+.moneybag-calc-total-savings-box {
+    background: #F0FDF4;
+    border: 1px solid #F0FDF4;
+    padding: 12px 16px;
+}
+
+.moneybag-calc-total-savings-box .moneybag-calc-cell-value {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.moneybag-calc-custom-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+}
+
+/* Responsive styles for custom payment mix table */
+/* Fit table properly for tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .moneybag-calc-custom-mode-section {
+        padding: 20px;
+    }
+    
+    .moneybag-calc-method-cells {
+        gap: 12px;
+    }
+    
+    .moneybag-calc-cell-label {
+        font-size: 12px;
+    }
+    
+    .moneybag-calc-method-name {
+        font-size: 14px;
+        min-width: 80px;
+    }
+    
+    .moneybag-calc-cell-box {
+        width: 100%;
+    }
+    
+    .moneybag-calc-method-input {
+        padding: 10px 12px !important;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 768px) and (min-width: 481px) {
+    /* Fit table within viewport for small tablets */
+    .moneybag-price-calculator-container {
+        padding: 0;
+    }
+    
+    .moneybag-calc-custom-mode-section {
+        padding: 20px 16px;
+    }
+    
+    .moneybag-calc-method-grid {
+        width: 100%;
+    }
+    
+    .moneybag-calc-method-cells {
+        gap: 8px;
+    }
+    
+    .moneybag-calc-cell-group {
+        min-width: 0;
+    }
+    
+    .moneybag-calc-cell-label {
+        font-size: 11px;
+    }
+    
+    .moneybag-calc-method-name {
+        font-size: 14px;
+        min-width: 70px;
+    }
+    
+    .moneybag-calc-cell-box {
+        width: 100%;
+    }
+    
+    .moneybag-calc-method-input {
+        padding: 8px 10px !important;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .moneybag-price-calculator-container {
+        padding: 0;
+    }
+    
+    /* Remove bottom margin from moneybag comparison card on mobile */
+    .moneybag-calc-comparison-card.moneybag-calc-moneybag {
+        margin-bottom: 0;
+    }
+    
+    .moneybag-calc-custom-mode-section {
+        padding: 20px 16px 70px 16px; /* Extra bottom padding for swipe indicator */
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+    }
+    
+    /* Keep exact same table structure as tablet */
+    .moneybag-calc-method-grid {
+        width: 100%;
+        min-width: 650px; /* Ensure table doesn't compress */
+        position: relative;
+    }
+    
+    .moneybag-calc-cell-label {
+        font-size: 11px;
+    }
+    
+    .moneybag-calc-method-name {
+        font-size: 14px;
+        min-width: 70px;
+    }
+    
+    .moneybag-calc-method-input {
+        padding: 8px 10px !important;
+        font-size: 14px;
+    }
+    
+    /* Small scrollbar for mobile */
+    .moneybag-calc-custom-mode-section::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    .moneybag-calc-custom-mode-section::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .moneybag-calc-custom-mode-section::-webkit-scrollbar-thumb {
+        background: #ff6b6b;
+        border-radius: 10px;
+    }
+    
+    /* Text with arrows on both sides indicator */
+    .moneybag-calc-custom-mode-section:has(.moneybag-calc-method-grid:not(.scrolled))::after {
+        content: '← Swipe to see more →';
+        position: absolute;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #ff6b6b;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        animation: slideIcon 2s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 100;
+        letter-spacing: 0.5px;
+    }
+    
+    @keyframes slideIcon {
+        0%, 100% {
+            transform: translateX(-50%);
+        }
+        25% {
+            transform: translateX(calc(-50% + 20px));
+        }
+        75% {
+            transform: translateX(calc(-50% - 20px));
+        }
+    }
+    
+    /* Remove the additional arrow - keep only the centered indicator */
+}
+
+.moneybag-calc-custom-column h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #2d3748;
+    white-space: nowrap;
+}
+
+/* Payment Mix Sliders */
+.moneybag-calc-slider-group {
+    margin-bottom: 20px;
+}
+
+.moneybag-calc-slider-group label {
+    display: block;
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.moneybag-calc-slider-group input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    outline: none;
+    position: relative;
+}
+
+.moneybag-calc-slider-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ff6b6b;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 107, 107, 0.3);
+    transition: all 0.2s ease;
+    position: relative;
+    margin-top: -7px;
+}
+
+.moneybag-calc-slider-group input[type="range"]::-webkit-slider-thumb:hover {
+    background: #ff6b6b;
+    transform: scale(1.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 107, 107, 0.4);
+}
+
+.moneybag-calc-slider-group input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ff6b6b;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 107, 107, 0.3);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.moneybag-calc-slider-group input[type="range"]::-moz-range-thumb:hover {
+    background: #ff6b6b;
+    transform: scale(1.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 107, 107, 0.4);
+}
+
+/* Firefox range track */
+.moneybag-calc-slider-group input[type="range"]::-moz-range-track {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+}
+
+.moneybag-calc-slider-group input[type="range"]::-moz-range-progress {
+    height: 6px;
+    background: rgba(255, 107, 107, 0.7);
+    border-radius: 3px;
+}
+
+/* Webkit range track fill */
+.moneybag-calc-slider-group input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 3px;
+}
+
+/* Competitor Rate Inputs */
+.moneybag-calc-rate-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    min-height: 56px;
+    box-sizing: border-box;
+}
+
+.moneybag-calc-rate-input label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.moneybag-calc-rate-input .moneybag-calc-rate-field {
+    width: 80px;
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    text-align: right;
+    font-size: 16px;
+    font-weight: 600;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.moneybag-calc-rate-input .moneybag-calc-rate-field:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+/* Moneybag Rate Display */
+.moneybag-calc-rate-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #f9fafb;
+    min-height: 56px;
+    box-sizing: border-box;
+}
+
+.moneybag-calc-rate-display span {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.moneybag-calc-rate-display strong {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* Savings Styling */
+.moneybag-calc-savings-display {
+    background: #f0fdf4;
+    border: 1px solid #f0fdf4;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    min-height: 56px;
+    box-sizing: border-box;
+}
+
+.moneybag-calc-savings-display:last-child {
+    margin-bottom: 0;
+}
+
+.moneybag-calc-savings-label {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.moneybag-calc-savings-value {
+    color: #16a34a;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* Call to Action Section - New Design */
+.moneybag-calc-cta-section {
+    padding: 48px;
+    background: #FEF8F9;
+    border-radius: 16px;
+    border: 1px solid #ffdbdb;
+    color: #2d3748;
+}
+
+.moneybag-calc-cta-section .moneybag-calc-cta-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2d3748;
+    text-align: center;
+}
+
+.moneybag-calc-cta-section .moneybag-calc-cta-subtitle {
+    color: #64748b;
+    margin-bottom: 40px;
+    font-size: 18px;
+    text-align: center;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+/* CTA Content Container */
+.moneybag-calc-cta-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 32px;
+    align-items: stretch;
+}
+
+/* Features Section */
+.moneybag-calc-cta-features {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    justify-content: center;
+}
+
+.moneybag-calc-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.moneybag-calc-feature-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: #10b981;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.moneybag-calc-feature-text {
+    color: #2d3748;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Promotional Card - Image Only */
+.moneybag-calc-cta-promo-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.moneybag-calc-cta-promo-card .moneybag-calc-promo-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+}
+
+
+/* Bottom Buttons */
+.moneybag-calc-cta-bottom-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.moneybag-calc-btn-call-now,
+.moneybag-calc-btn-try-sandbox {
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-family: inherit;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    height: 44px;
+    line-height: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Call button - Primary style (red) */
+.moneybag-calc-btn-call-now {
+    background: #ff6b6b;
+    color: #FFFFFF !important;
+}
+
+.moneybag-calc-btn-call-now:hover {
+    background: #3B3F42;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 63, 66, 0.3);
+}
+
+.moneybag-calc-btn-call-now:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.moneybag-calc-btn-call-now:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.moneybag-calc-call-icon {
+    margin-right: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.moneybag-calc-call-icon img,
+.moneybag-calc-call-icon .emoji {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+}
+
+/* Sandbox button - Secondary style (dark) */
+.moneybag-calc-btn-try-sandbox {
+    background: #3B3F42;
+    color: #FFFFFF !important;
+    border: 1px solid #3B3F42;
+}
+
+.moneybag-calc-sandbox-arrow {
+    display: inline-block;
+    margin-left: 4px;
+    animation: slideArrow 2s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+@keyframes slideArrow {
+    0%, 100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(5px);
+        opacity: 0.8;
+    }
+}
+
+.moneybag-calc-btn-try-sandbox:hover {
+    background: #ff6b6b;
+    border-color: #ff6b6b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.moneybag-calc-btn-try-sandbox:hover .moneybag-calc-sandbox-arrow {
+    animation: slideArrowFast 0.5s ease-in-out infinite;
+}
+
+@keyframes slideArrowFast {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(8px);
+    }
+}
+
+.moneybag-calc-btn-try-sandbox:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.moneybag-calc-btn-try-sandbox:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Calculator Responsive Design */
+@media (max-width: 1024px) {
+    /* Don't override the default 3-column layout for laptops */
+    
+    .moneybag-calc-comparison-row {
+        gap: 20px;
+    }
+    
+    .moneybag-calc-custom-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    
+    .moneybag-calc-hero-card {
+        padding: 24px;
+    }
+    
+    .moneybag-calc-savings-arrow {
+        width: 40px;
+        height: 40px;
+        top: 15px;
+        left: calc(42% - 240px);
+    }
+}
+
+@media (max-width: 768px) {
+    .moneybag-calc-title {
+        font-size: 40px;
+    }
+    
+    .moneybag-calc-subtitle {
+        font-size: 16px;
+    }
+    
+    .moneybag-calc-savings-main-text {
+        font-size: 22px;
+    }
+    
+    .moneybag-calc-savings-amount {
+        font-size: 32px;
+    }
+    
+    .moneybag-calc-savings-sub-text {
+        font-size: 16px;
+    }
+    
+    .moneybag-calc-savings-sub-text .moneybag-calc-yearly-amount {
+        font-size: 18px;
+    }
+    
+    .moneybag-calc-input-bar {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .moneybag-calc-toggle-btn {
+        grid-column: auto;
+        width: 100%;
+    }
+    
+    .moneybag-calc-comparison-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .moneybag-calc-comparison-card.moneybag-calc-moneybag {
+        padding: 36px 20px 28px;
+    }
+    
+    .moneybag-calc-comparison-card.moneybag .moneybag-calc-card-header {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+    
+    .moneybag-calc-comparison-card.moneybag .moneybag-calc-card-value {
+        font-size: 36px;
+        margin-bottom: 2px;
+    }
+    
+    .moneybag-calc-card-value.moneybag-calc-primary {
+        font-size: 44px !important;
+        margin: 10px 0;
+    }
+    
+    .moneybag-calc-badge {
+        font-size: 9px;
+        padding: 5px 14px;
+        top: -12px;
+    }
+    
+    .moneybag-calc-logo {
+        font-size: 14px;
+        margin-bottom: 14px;
+        gap: 8px;
+    }
+    
+    .moneybag-calc-logo-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .moneybag-calc-card-value {
+        font-size: 28px;
+    }
+    
+    .moneybag-calc-guarantee-text {
+        font-size: 10px;
+        padding-top: 12px;
+        margin-top: 12px;
+        letter-spacing: 0.6px;
+    }
+    
+    .moneybag-calc-custom-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .moneybag-calc-cta-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .moneybag-calc-cta-bottom-buttons {
+        flex-direction: column;
+    }
+    
+    .moneybag-calc-btn-call-now,
+    .moneybag-calc-btn-try-sandbox {
+        width: 100%;
+    }
+    
+    .moneybag-calc-cta-section {
+        padding: 32px 24px;
+    }
+    
+    .moneybag-calc-cta-section h2 {
+        font-size: 24px;
+    }
+}
+
+/* Additional Calculator Responsive Styles */
+
+/* Tablet specific - keep buttons in two columns */
+@media (min-width: 481px) and (max-width: 768px) {
+    .moneybag-calc-cta-bottom-buttons {
+        flex-direction: row;
+        gap: 16px;
+        justify-content: center;
+    }
+    
+    .moneybag-calc-btn-call-now,
+    .moneybag-calc-btn-try-sandbox {
+        width: auto;
+        flex: 1;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .moneybag-calculator-wrapper {
+        padding: 20px 16px;
+    }
+    
+    .moneybag-calc-hero-card {
+        padding: 20px;
+        position: relative;
+        top: 0;
+    }
+    
+    .moneybag-calc-savings-arrow {
+        width: 32px;
+        height: 32px;
+        top: 10px;
+        left: calc(41% - 130px);
+    }
+    
+    .moneybag-calc-comparison-card {
+        padding: 20px;
+    }
+    
+    .moneybag-calc-cta-title {
+        text-align: left !important;
+    }
+    
+    .moneybag-calc-cta-subtitle {
+        text-align: left !important;
+    }
+    
+    .moneybag-calc-cta-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    /* Enable smooth scrolling on mobile */
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    .moneybag-price-calculator-container {
+        padding: 0;
+    }
+    
+    .moneybag-calculator-wrapper {
+        padding: 16px 12px;
+    }
+    
+    .moneybag-calc-title {
+        font-size: 30px;
+    }
+    
+    .moneybag-calc-subtitle {
+        font-size: 14px;
+    }
+    
+    .moneybag-calc-hero-card {
+        padding: 16px;
+        border-radius: 8px;
+    }
+    
+    .moneybag-calc-savings-arrow {
+        width: 28px;
+        height: 28px;
+        top: 6px;
+        left: calc(37% - 100px);
+    }
+    
+    .moneybag-calc-savings-main-text {
+        font-size: 17px;
+    }
+    
+    .moneybag-calc-savings-amount {
+        font-size: 28px;
+    }
+    
+    .moneybag-calc-savings-sub-text {
+        font-size: 14px;
+    }
+    
+    .moneybag-calc-savings-sub-text .moneybag-calc-yearly-amount {
+        font-size: 16px;
+    }
+    
+    .moneybag-calc-input-bar {
+        padding: 16px;
+    }
+    
+    .calculator-input-bar label {
+        font-size: 13px;
+    }
+    
+    .calculator-input-bar .input-field,
+    .moneybag-calc-input-bar .moneybag-calc-select-field {
+        font-size: 14px;
+        padding: 10px 12px;
+        height: 40px;
+    }
+    
+    .moneybag-calc-toggle-btn {
+        font-size: 13px;
+        padding: 10px 16px;
+        height: 40px;
+        width: 100%;
+    }
+    
+    .moneybag-calc-comparison-card {
+        padding: 14px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .moneybag-calc-card-header {
+        font-size: 13px;
+    }
+    
+    .moneybag-calc-card-value {
+        font-size: 20px;
+    }
+    
+    .moneybag-calc-badge {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+    
+    .moneybag-calc-custom-column h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .moneybag-calc-slider-group label {
+        font-size: 13px;
+    }
+    
+    .moneybag-calc-rate-input label {
+        font-size: 13px;
+    }
+    
+    .moneybag-calc-rate-display {
+        font-size: 13px;
+    }
+    
+    .moneybag-calc-payment-mix-error {
+        font-size: 12px;
+        padding: 10px 12px;
+    }
+    
+    .moneybag-calc-cta-section {
+        padding: 24px 16px;
+        border-radius: 12px;
+    }
+    
+    .moneybag-calc-cta-title {
+        font-size: 22px !important;
+        margin-bottom: 12px;
+        text-align: left !important;
+    }
+    
+    .moneybag-calc-cta-subtitle {
+        font-size: 14px !important;
+        margin-bottom: 24px;
+        text-align: left !important;
+    }
+    
+    .moneybag-calc-cta-features {
+        padding: 16px;
+        gap: 16px;
+    }
+    
+    .moneybag-calc-feature-item {
+        gap: 8px;
+    }
+    
+    .moneybag-calc-feature-check {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .moneybag-calc-feature-text {
+        font-size: 13px;
+    }
+    
+    .moneybag-calc-btn-call-now,
+    .moneybag-calc-btn-try-sandbox {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+    
+    .moneybag-calc-cta-promo-card .moneybag-calc-promo-image {
+        max-width: 100%;
+    }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 320px) {
+    .moneybag-calc-title {
+        font-size: 20px;
+    }
+    
+    .moneybag-calc-savings-arrow {
+        left: calc(34% - 100px);
+        top: 8px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .moneybag-calc-savings-main-text {
+        font-size: 17px !important;
+        margin-top: 10px;
+    }
+    
+    .moneybag-calc-savings-main-text .moneybag-calc-savings-amount {
+        font-size: 30px !important;
+        display: inline-block;
+        margin: 0 4px;
+        font-weight: 700;
+    }
+    
+    .moneybag-calc-savings-sub-text {
+        font-size: 17px;
+        margin-top: 4px;
+    }
+    
+    .moneybag-calc-savings-sub-text .moneybag-calc-yearly-amount {
+        font-size: 20px;
+        font-weight: 700;
+    }
+    
+    .moneybag-calc-cta-promo-card {
+        display: none;
     }
 }

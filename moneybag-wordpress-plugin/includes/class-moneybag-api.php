@@ -18,9 +18,10 @@ class MoneybagAPI {
      * Custom debug logging - only logs when WP_DEBUG is enabled
      */
     private static function debug_log($message) {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('[Moneybag Plugin] ' . $message);
-        }
+        // Commented out debug logging for production
+        // if (defined('WP_DEBUG') && WP_DEBUG) {
+        //     error_log('[Moneybag Plugin] ' . $message);
+        // }
     }
     
     /**
