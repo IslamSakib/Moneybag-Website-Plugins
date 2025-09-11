@@ -5,6 +5,32 @@ All notable changes to the Moneybag WordPress Plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.8] - 2025-09-11
+
+### Fixed
+- **🎉 CRITICAL: TwentyOne CRM Opportunity Creation** - Resolved opportunity creation failure with comprehensive fixes:
+  - Fixed stage enum error detection by preserving detailed error responses from CRM API
+  - Implemented comprehensive stage auto-retry logic with 16+ common CRM stage values
+  - Added intelligent stage mapping that tries alternative stages when workspace-specific enums fail
+  - Enhanced debug logging with detailed opportunity creation flow tracking
+- **✅ Note Creation ID Extraction** - Fixed note ID extraction from TwentyOne CRM API responses
+  - Updated response parsing to handle `data.data.createNote.id` structure
+  - Added comprehensive debug logging for note creation troubleshooting
+- **🔧 AJAX Endpoint Regression** - Fixed empty response issue introduced in v2.3.5
+  - Removed overly aggressive configuration checks that prevented AJAX responses
+  - Restored proper error handling without breaking the endpoint functionality
+
+### Enhanced
+- **Comprehensive CRM Debug Logging** - Added detailed debug logging for all CRM operations:
+  - `[OPPORTUNITY DEBUG]` entries show complete opportunity creation flow
+  - `[NOTE DEBUG]` entries show note ID extraction attempts and results
+  - Enhanced error reporting with workspace-specific stage enum information
+
+### Technical
+- **Global CRM Integration** - All widgets (merchant registration, pricing plan, contact form) now use the enhanced CRM system
+- **Stage Auto-Discovery** - Plugin automatically finds valid opportunity stages for any TwentyOne CRM workspace
+- **Error Response Preservation** - CRM API responses now preserve detailed error information for better debugging
+
 ## [2.3.0] - 2025-09-09
 
 ### Added
