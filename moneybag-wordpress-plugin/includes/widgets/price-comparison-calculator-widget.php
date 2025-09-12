@@ -47,18 +47,143 @@ class PriceComparisonCalculatorWidget extends Widget_Base {
         $widget_id = $this->get_id();
         $calculator_config = [
             'widget_id' => !empty($widget_id) ? $widget_id : 'default',
-            'default_volume' => 100000,
+            'default_volume' => 1000000,
             'default_gateway' => 'sslcommerz',
             'api_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('moneybag_nonce'),
             'pluginUrl' => MONEYBAG_PLUGIN_URL,
             'gateway_presets' => [
-                'sslcommerz' => ['bkash' => 2.0, 'visa' => 2.45, 'nagad' => 1.85],
-                'bkash' => ['bkash' => 1.85, 'visa' => 2.5, 'nagad' => 1.9],
-                'shurjopay' => ['bkash' => 1.95, 'visa' => 2.4, 'nagad' => 1.8],
-                'aamarpay' => ['bkash' => 2.1, 'visa' => 2.55, 'nagad' => 1.95]
+                'sslcommerz' => [
+                    'bkash' => 1.85, 
+                    'nagad' => 1.85, 
+                    'rocket' => 1.85, 
+                    'upay' => 1.85,
+                    'visa' => 2.5, 
+                    'mastercard' => 2.5, 
+                    'american_express' => 3.5, 
+                    'diners_club' => 2.75, 
+                    'unionpay' => 2.75, 
+                    'dbbl_nexus' => 2.3,
+                    'card' => 2.5
+                ],
+                'shurjopay' => [
+                    'bkash' => 1.8, 
+                    'nagad' => 1.8, 
+                    'rocket' => 1.8, 
+                    'upay' => 1.8,
+                    'visa' => 2.45, 
+                    'mastercard' => 2.45, 
+                    'american_express' => 3.45, 
+                    'diners_club' => 2.7, 
+                    'unionpay' => 2.7, 
+                    'dbbl_nexus' => 2.25,
+                    'card' => 2.45
+                ],
+                'aamarpay' => [
+                    'bkash' => 1.9, 
+                    'nagad' => 1.9, 
+                    'rocket' => 1.9, 
+                    'upay' => 1.9,
+                    'visa' => 2.55, 
+                    'mastercard' => 2.55, 
+                    'american_express' => 3.55, 
+                    'diners_club' => 2.8, 
+                    'unionpay' => 2.8, 
+                    'dbbl_nexus' => 2.35,
+                    'card' => 2.55
+                ],
+                'portwallet' => [
+                    'bkash' => 1.85, 
+                    'nagad' => 1.85, 
+                    'rocket' => 1.85, 
+                    'upay' => 1.85,
+                    'visa' => 2.5, 
+                    'mastercard' => 2.5, 
+                    'american_express' => 3.5, 
+                    'diners_club' => 2.75, 
+                    'unionpay' => 2.75, 
+                    'dbbl_nexus' => 2.3,
+                    'card' => 2.5
+                ],
+                'paywell' => [
+                    'bkash' => 1.95, 
+                    'nagad' => 1.95, 
+                    'rocket' => 1.95, 
+                    'upay' => 1.95,
+                    'visa' => 2.6, 
+                    'mastercard' => 2.6, 
+                    'american_express' => 3.6, 
+                    'diners_club' => 2.85, 
+                    'unionpay' => 2.85, 
+                    'dbbl_nexus' => 2.4,
+                    'card' => 2.6
+                ],
+                'ekpay' => [
+                    'bkash' => 1.85, 
+                    'nagad' => 1.85, 
+                    'rocket' => 1.85, 
+                    'upay' => 1.85,
+                    'visa' => 2.45, 
+                    'mastercard' => 2.45, 
+                    'american_express' => 3.45, 
+                    'diners_club' => 2.7, 
+                    'unionpay' => 2.7, 
+                    'dbbl_nexus' => 2.25,
+                    'card' => 2.45
+                ],
+                'okwallet' => [
+                    'bkash' => 1.9, 
+                    'nagad' => 1.9, 
+                    'rocket' => 1.9, 
+                    'upay' => 1.9,
+                    'visa' => 2.55, 
+                    'mastercard' => 2.55, 
+                    'american_express' => 3.55, 
+                    'diners_club' => 2.8, 
+                    'unionpay' => 2.8, 
+                    'dbbl_nexus' => 2.35,
+                    'card' => 2.55
+                ],
+                'tap' => [
+                    'bkash' => 1.8, 
+                    'nagad' => 1.8, 
+                    'rocket' => 1.8, 
+                    'upay' => 1.8,
+                    'visa' => 2.4, 
+                    'mastercard' => 2.4, 
+                    'american_express' => 3.4, 
+                    'diners_club' => 2.65, 
+                    'unionpay' => 2.65, 
+                    'dbbl_nexus' => 2.2,
+                    'card' => 2.4
+                ],
+                'dmoney' => [
+                    'bkash' => 1.85, 
+                    'nagad' => 1.85, 
+                    'rocket' => 1.85, 
+                    'upay' => 1.85,
+                    'visa' => 2.5, 
+                    'mastercard' => 2.5, 
+                    'american_express' => 3.5, 
+                    'diners_club' => 2.75, 
+                    'unionpay' => 2.75, 
+                    'dbbl_nexus' => 2.3,
+                    'card' => 2.5
+                ]
             ],
-            'moneybag_rates' => ['bkash' => 1.75, 'visa' => 2.1, 'nagad' => 1.6]
+            'moneybag_rates' => [
+                'bkash' => 1.75, 
+                'visa' => 2.1, 
+                'nagad' => 1.6, 
+                'card' => 2.1,
+                'rocket' => 1.8,
+                'upay' => 1.5,
+                'mastercard' => 2.1,
+                'american_express' => 3.3,
+                'dbbl_nexus' => 2.0,
+                'diners_club' => 2.3,
+                'unionpay' => 2.3
+            ]
         ];
         ?>
         <div id="price-comparison-calculator-<?php echo esc_attr($widget_id); ?>" 

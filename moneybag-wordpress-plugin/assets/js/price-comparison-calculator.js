@@ -3,36 +3,82 @@
     
     const { useState, useEffect, createElement: h } = wp.element;
     
-    // Format numbers with Bangladesh locale
+    // Format numbers with Bangladesh locale and abbreviations for large numbers
     const formatNumber = (num) => {
-        return new Intl.NumberFormat('en-BD').format(num);
+        // For very large numbers, use abbreviations
+        if (num >= 1000000000000) { // Trillion
+            return (num / 1000000000000).toFixed(1) + 'T';
+        } else if (num >= 1000000000) { // Billion
+            return (num / 1000000000).toFixed(1) + 'B';
+        } else if (num >= 10000000) { // 10+ Million - abbreviate
+            return (num / 1000000).toFixed(1) + 'M';
+        } else if (num >= 1000000) { // Million - show full
+            return new Intl.NumberFormat('en-BD').format(num);
+        } else {
+            return new Intl.NumberFormat('en-BD').format(num);
+        }
     };
     
     // Calculate savings based on volume, payment mix, and rates
     const calculateSavings = (monthlyVolume, paymentMix, competitorRates, moneybagRates) => {
-        // Calculate competitor total cost
-        const competitorCost = (monthlyVolume * paymentMix.bkash / 100 * competitorRates.bkash / 100) +
-                               (monthlyVolume * paymentMix.visa / 100 * competitorRates.visa / 100) +
-                               (monthlyVolume * paymentMix.nagad / 100 * competitorRates.nagad / 100);
+        let competitorCost = 0;
+        let moneybagCost = 0;
+        let totalMixPercentage = 0;
         
-        // Calculate Moneybag total cost
-        const moneybagCost = (monthlyVolume * paymentMix.bkash / 100 * moneybagRates.bkash / 100) +
-                            (monthlyVolume * paymentMix.visa / 100 * moneybagRates.visa / 100) +
-                            (monthlyVolume * paymentMix.nagad / 100 * moneybagRates.nagad / 100);
+        // Calculate costs for all payment methods
+        Object.keys(paymentMix).forEach(method => {
+            const mixPercent = paymentMix[method] || 0;
+            if (mixPercent > 0) {
+                // Get rates - use visa rate for card methods, specific rates for wallets
+                let compRate = 0;
+                let mbRate = 0;
+                
+                // Get specific rates for each payment method
+                if (method === 'visa') {
+                    compRate = competitorRates.visa || competitorRates.card || 2.45;
+                    mbRate = moneybagRates.visa || 2.1;
+                } else if (method === 'mastercard') {
+                    compRate = competitorRates.mastercard || competitorRates.visa || competitorRates.card || 2.45;
+                    mbRate = moneybagRates.mastercard || 2.1;
+                } else if (method === 'american_express') {
+                    compRate = competitorRates.american_express || competitorRates.amex || competitorRates.card || 3.5;
+                    mbRate = moneybagRates.american_express || 3.3;
+                } else if (method === 'diners_club') {
+                    compRate = competitorRates.diners_club || competitorRates.card || 2.5;
+                    mbRate = moneybagRates.diners_club || 2.3;
+                } else if (method === 'unionpay') {
+                    compRate = competitorRates.unionpay || competitorRates.card || 2.5;
+                    mbRate = moneybagRates.unionpay || 2.3;
+                } else if (method === 'dbbl_nexus') {
+                    compRate = competitorRates.dbbl_nexus || competitorRates.nexus || competitorRates.card || 2.2;
+                    mbRate = moneybagRates.dbbl_nexus || 2.0;
+                } else if (method === 'bkash') {
+                    compRate = competitorRates.bkash || 2.0;
+                    mbRate = moneybagRates.bkash || 1.75;
+                } else if (method === 'nagad') {
+                    compRate = competitorRates.nagad || 1.85;
+                    mbRate = moneybagRates.nagad || 1.6;
+                } else if (method === 'rocket') {
+                    compRate = competitorRates.rocket || 2.0;
+                    mbRate = moneybagRates.rocket || 1.8;
+                } else if (method === 'upay') {
+                    compRate = competitorRates.upay || 1.8;
+                    mbRate = moneybagRates.upay || 1.5;
+                }
+                
+                competitorCost += (monthlyVolume * mixPercent / 100 * compRate / 100);
+                moneybagCost += (monthlyVolume * mixPercent / 100 * mbRate / 100);
+                totalMixPercentage += mixPercent;
+            }
+        });
         
         // Calculate savings
         const monthlySavings = competitorCost - moneybagCost;
         const yearlySavings = monthlySavings * 12;
         
-        // Calculate average fees
-        const competitorAvgFee = (competitorRates.bkash * paymentMix.bkash + 
-                                  competitorRates.visa * paymentMix.visa + 
-                                  competitorRates.nagad * paymentMix.nagad) / 100;
-        
-        const moneybagAvgFee = (moneybagRates.bkash * paymentMix.bkash + 
-                                moneybagRates.visa * paymentMix.visa + 
-                                moneybagRates.nagad * paymentMix.nagad) / 100;
-        
+        // Calculate weighted average fees
+        const competitorAvgFee = totalMixPercentage > 0 ? (competitorCost / (monthlyVolume * totalMixPercentage / 100)) * 100 : 0;
+        const moneybagAvgFee = totalMixPercentage > 0 ? (moneybagCost / (monthlyVolume * totalMixPercentage / 100)) * 100 : 0;
         const difference = competitorAvgFee - moneybagAvgFee;
         
         return {
@@ -47,16 +93,53 @@
     // Main Calculator Component
     function PriceComparisonCalculator({ config }) {
         const MONEYBAG_PLUGIN_URL = config.pluginUrl || '/wp-content/plugins/moneybag-wordpress-plugin/';
-        const [monthlyVolume, setMonthlyVolume] = useState(config.default_volume || 100000);
+        const [monthlyVolume, setMonthlyVolume] = useState(config.default_volume || 1000000);
         const [currentGateway, setCurrentGateway] = useState(config.default_gateway || 'sslcommerz');
         const [isCustomMode, setIsCustomMode] = useState(false);
-        const [paymentMix, setPaymentMix] = useState({ bkash: 60, visa: 25, nagad: 15 });
+        const [showAllMethods, setShowAllMethods] = useState(false);
+        
+        // All payment methods with display configuration
+        const paymentMethods = [
+            { id: 'visa', name: 'Visa', logo: 'Visa.webp', default: true },
+            { id: 'mastercard', name: 'Mastercard', logo: 'Mastercard.webp', default: true },
+            { id: 'bkash', name: 'bKash', logo: 'bKash.webp', default: true },
+            { id: 'nagad', name: 'Nagad', logo: 'Nagad.webp', default: false },
+            { id: 'rocket', name: 'Rocket', logo: 'Rocket.webp', default: false },
+            { id: 'upay', name: 'Upay', logo: 'Upay.webp', default: false },
+            { id: 'american_express', name: 'American Express', logo: 'American Express.webp', default: false },
+            { id: 'dbbl_nexus', name: 'DBBL Nexus', logo: 'DBBL-Nexus.webp', default: false },
+            { id: 'diners_club', name: 'Diners Club', logo: 'Diners Club.webp', default: false },
+            { id: 'unionpay', name: 'UnionPay', logo: 'UnionPay.webp', default: false }
+        ];
+        
+        // Initialize payment mix with all methods
+        const initialPaymentMix = {
+            visa: 15,
+            mastercard: 10,
+            bkash: 60,
+            nagad: 10,
+            rocket: 3,
+            upay: 2,
+            american_express: 0,
+            dbbl_nexus: 0,
+            diners_club: 0,
+            unionpay: 0
+        };
+        
+        const [paymentMix, setPaymentMix] = useState(initialPaymentMix);
         const [competitorRates, setCompetitorRates] = useState(config.gateway_presets[currentGateway]);
         const [calculations, setCalculations] = useState({});
         const [isLoading, setIsLoading] = useState(false);
         const [errors, setErrors] = useState({});
         
         const moneybagRates = config.moneybag_rates;
+        
+        // Update competitor rates when gateway changes
+        useEffect(() => {
+            if (config.gateway_presets && config.gateway_presets[currentGateway]) {
+                setCompetitorRates(config.gateway_presets[currentGateway]);
+            }
+        }, [currentGateway]);
         
         // Update calculations whenever inputs change
         useEffect(() => {
@@ -106,7 +189,9 @@
         
         // Handle volume change
         const handleVolumeChange = (e) => {
-            const value = parseInt(e.target.value) || 0;
+            let inputValue = e.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+            const value = parseInt(inputValue) || 0;
+            
             if (validateVolume(value)) {
                 setMonthlyVolume(value);
             }
@@ -114,14 +199,19 @@
         
         // Handle gateway change
         const handleGatewayChange = (e) => {
-            setCurrentGateway(e.target.value);
+            const newGateway = e.target.value;
+            setCurrentGateway(newGateway);
+            // Update competitor rates based on selected gateway
+            if (config.gateway_presets && config.gateway_presets[newGateway]) {
+                setCompetitorRates(config.gateway_presets[newGateway]);
+            }
         };
         
         // Handle payment mix change with validation
         const handlePaymentMixChange = (method, value) => {
             const newValue = parseInt(value) || 0;
             const newMix = { ...paymentMix, [method]: newValue };
-            const sum = newMix.bkash + newMix.visa + newMix.nagad;
+            const sum = Object.values(newMix).reduce((a, b) => a + b, 0);
             
             // Update the payment mix
             setPaymentMix(newMix);
@@ -180,8 +270,8 @@
             window.location.href = 'tel:+8801958109228';
         };
         
-        const handleTrySandbox = () => {
-            window.location.href = 'https://moneybag.com.bd/sandbox/';
+        const handleJoinAsMerchant = () => {
+            window.location.href = 'https://moneybag.com.bd/join-as-merchant/';
         };
         
         return h('div', { className: 'moneybag-calculator-wrapper' },
@@ -209,34 +299,38 @@
                     h('path', { d: 'm22 7-8.5 8.5-5-5L2 17' })
                 ),
                 h('div', { className: 'moneybag-calc-savings-main-text' },
-                    'You could save ',
+                    h('span', { className: 'moneybag-calc-savings-line1' }, 'You could save'),
                     h('span', { className: 'moneybag-calc-savings-amount', id: 'monthly-savings' }, 
                         formatNumber(Math.round(calculations.monthlySavings || 0))
                     ),
-                    ' per month'
+                    h('span', { className: 'moneybag-calc-savings-line3' }, '/ month')
                 ),
                 h('div', { className: 'moneybag-calc-savings-sub-text' },
                     'and ',
                     h('span', { className: 'moneybag-calc-yearly-amount', id: 'yearly-savings' }, 
                         formatNumber(Math.round(calculations.yearlySavings || 0))
                     ),
-                    ' per year with Moneybag'
+                    ' / year with Moneybag'
                 )
             ),
             
             // Input Controls Bar
             h('div', { className: 'moneybag-calc-input-bar' },
                 // Monthly Volume Input
-                h('div', { className: 'moneybag-calc-input-group' },
-                    h('label', {}, 'Monthly Volume (৳)'),
-                    h('input', {
-                        type: 'number',
-                        id: 'volume-input',
-                        className: errors.volume ? 'moneybag-calc-input-field moneybag-calc-error' : 'moneybag-calc-input-field',
-                        value: monthlyVolume,
-                        onChange: handleVolumeChange,
-                        min: 0
-                    }),
+                h('div', { className: 'moneybag-calc-input-group moneybag-calc-volume-group' },
+                    h('label', {}, 'Monthly Volume'),
+                    h('div', { className: 'moneybag-calc-input-wrapper' },
+                        h('span', { className: 'moneybag-calc-taka-icon' }, '৳'),
+                        h('input', {
+                            type: 'text', // Changed to text to control input better
+                            id: 'volume-input',
+                            className: errors.volume ? 'moneybag-calc-input-field moneybag-calc-input-with-icon moneybag-calc-error' : 'moneybag-calc-input-field moneybag-calc-input-with-icon',
+                            value: monthlyVolume,
+                            onChange: handleVolumeChange,
+                            pattern: '[0-9]*',
+                            inputMode: 'numeric'
+                        })
+                    ),
                     errors.volume && h('span', { className: 'moneybag-calc-error-message' }, errors.volume)
                 ),
                 
@@ -250,9 +344,14 @@
                         onChange: handleGatewayChange
                     },
                         h('option', { value: 'sslcommerz' }, 'SSLCommerz'),
-                        h('option', { value: 'bkash' }, 'bKash'),
                         h('option', { value: 'shurjopay' }, 'shurjoPay'),
-                        h('option', { value: 'aamarpay' }, 'aamarPay')
+                        h('option', { value: 'aamarpay' }, 'aamarPay'),
+                        h('option', { value: 'portwallet' }, 'PortWallet'),
+                        h('option', { value: 'paywell' }, 'PayWell'),
+                        h('option', { value: 'ekpay' }, 'ekPay'),
+                        h('option', { value: 'okwallet' }, 'OKWallet'),
+                        h('option', { value: 'tap' }, 'Tap'),
+                        h('option', { value: 'dmoney' }, 'Dmoney')
                     )
                 ),
                 
@@ -415,19 +514,90 @@
             
             // Custom Mode Section - Card Format
             isCustomMode && h('div', { id: 'custom-mode-section', className: 'moneybag-calc-custom-mode-section' },
-                h('h3', { className: 'moneybag-calc-table-title' }, 'Custom Payment Mix'),
+                // Header with title and button side by side
+                h('div', { className: 'moneybag-calc-custom-header' },
+                    h('h3', { className: 'moneybag-calc-table-title' }, 'Custom Payment Mix'),
+                    
+                    // Show More/Less Button
+                    h('div', { className: 'moneybag-calc-show-more-container' },
+                        h('button', {
+                            className: 'moneybag-calc-show-more-btn',
+                            onClick: () => setShowAllMethods(!showAllMethods)
+                        },
+                            h('span', { className: 'moneybag-calc-toggle-text' }, 
+                                showAllMethods ? 'Show Less Methods' : 'Show More Methods'
+                            ),
+                            h('svg', {
+                                className: 'moneybag-calc-expand-icon',
+                                width: '12',
+                                height: '12',
+                                viewBox: '0 0 24 24',
+                                fill: 'none',
+                                stroke: 'currentColor',
+                                strokeWidth: '2.5',
+                                style: { transform: showAllMethods ? 'rotate(180deg)' : 'rotate(0deg)' }
+                            },
+                                h('path', { d: 'M6 9l6 6 6-6' })
+                            )
+                        )
+                    )
+                ),
                 
                 // Method Rows
                 h('div', { className: 'moneybag-calc-method-grid' },
-                    ['bkash', 'visa', 'nagad'].map(method => {
-                        const methodVolume = monthlyVolume * paymentMix[method] / 100;
-                        const competitorCost = methodVolume * competitorRates[method] / 100;
-                        const moneybagCost = methodVolume * moneybagRates[method] / 100;
+                    paymentMethods
+                        .filter(method => showAllMethods || method.default)
+                        .map(method => {
+                        const methodVolume = monthlyVolume * paymentMix[method.id] / 100;
+                        
+                        // Determine rates based on method type
+                        let compRate = 0;
+                        let mbRate = 0;
+                        
+                        // Get specific rates for each payment method
+                        if (method.id === 'visa') {
+                            compRate = competitorRates.visa || competitorRates.card || 2.45;
+                            mbRate = moneybagRates.visa || 2.1;
+                        } else if (method.id === 'mastercard') {
+                            compRate = competitorRates.mastercard || competitorRates.visa || competitorRates.card || 2.45;
+                            mbRate = moneybagRates.mastercard || 2.1;
+                        } else if (method.id === 'american_express') {
+                            compRate = competitorRates.american_express || competitorRates.amex || competitorRates.card || 3.5;
+                            mbRate = moneybagRates.american_express || 3.3;
+                        } else if (method.id === 'diners_club') {
+                            compRate = competitorRates.diners_club || competitorRates.card || 2.5;
+                            mbRate = moneybagRates.diners_club || 2.3;
+                        } else if (method.id === 'unionpay') {
+                            compRate = competitorRates.unionpay || competitorRates.card || 2.5;
+                            mbRate = moneybagRates.unionpay || 2.3;
+                        } else if (method.id === 'dbbl_nexus') {
+                            compRate = competitorRates.dbbl_nexus || competitorRates.nexus || competitorRates.card || 2.2;
+                            mbRate = moneybagRates.dbbl_nexus || 2.0;
+                        } else if (method.id === 'bkash') {
+                            compRate = competitorRates.bkash || 2.0;
+                            mbRate = moneybagRates.bkash || 1.75;
+                        } else if (method.id === 'nagad') {
+                            compRate = competitorRates.nagad || 1.85;
+                            mbRate = moneybagRates.nagad || 1.6;
+                        } else if (method.id === 'rocket') {
+                            compRate = competitorRates.rocket || 2.0;
+                            mbRate = moneybagRates.rocket || 1.8;
+                        } else if (method.id === 'upay') {
+                            compRate = competitorRates.upay || 1.8;
+                            mbRate = moneybagRates.upay || 1.5;
+                        }
+                        
+                        const competitorCost = methodVolume * compRate / 100;
+                        const moneybagCost = methodVolume * mbRate / 100;
                         const savings = competitorCost - moneybagCost;
                         
-                        return h('div', { className: 'moneybag-calc-method-row', key: method },
-                            h('div', { className: 'moneybag-calc-method-name' }, 
-                                method === 'bkash' ? 'bKash' : method === 'visa' ? 'Visa/MC' : 'Nagad'
+                        return h('div', { className: 'moneybag-calc-method-row', key: method.id },
+                            h('div', { className: 'moneybag-calc-method-logo' }, 
+                                h('img', {
+                                    src: MONEYBAG_PLUGIN_URL + 'assets/image/' + method.logo,
+                                    alt: method.name,
+                                    className: 'moneybag-calc-payment-logo'
+                                })
                             ),
                             h('div', { className: 'moneybag-calc-method-cells' },
                                 h('div', { className: 'moneybag-calc-cell-group' },
@@ -435,11 +605,11 @@
                                     h('div', { className: 'moneybag-calc-cell-box' },
                                         h('input', {
                                             type: 'number',
-                                            value: paymentMix[method],
+                                            value: paymentMix[method.id],
                                             min: 0,
                                             max: 100,
                                             className: 'moneybag-calc-method-input',
-                                            onChange: (e) => handlePaymentMixChange(method, e.target.value)
+                                            onChange: (e) => handlePaymentMixChange(method.id, e.target.value)
                                         })
                                     )
                                 ),
@@ -448,12 +618,12 @@
                                     h('div', { className: 'moneybag-calc-cell-box' },
                                         h('input', {
                                             type: 'number',
-                                            value: competitorRates[method],
+                                            value: compRate,
                                             min: 0,
                                             max: 10,
                                             step: 0.01,
                                             className: 'moneybag-calc-method-input',
-                                            onChange: (e) => handleCompetitorRateChange(method, e.target.value)
+                                            onChange: (e) => handleCompetitorRateChange(method.id, e.target.value)
                                         })
                                     )
                                 ),
@@ -461,7 +631,7 @@
                                     h('div', { className: 'moneybag-calc-cell-label' }, 'Moneybag Rate'),
                                     h('div', { className: 'moneybag-calc-cell-box moneybag-calc-readonly-box' },
                                         h('div', { className: 'moneybag-calc-cell-value' }, 
-                                            `${moneybagRates[method]}%`
+                                            `${mbRate}%`
                                         )
                                     )
                                 ),
@@ -604,9 +774,9 @@
                     ),
                     h('button', {
                         className: 'moneybag-calc-btn-try-sandbox',
-                        onClick: handleTrySandbox
+                        onClick: handleJoinAsMerchant
                     }, 
-                        'Try Our Sandbox ',
+                        'Join As a Merchant ',
                         h('span', { className: 'moneybag-calc-sandbox-arrow' }, '→')
                     )
                 )

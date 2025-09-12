@@ -5763,10 +5763,21 @@ form.contact-form .form-row.two-columns,
     line-height: 1.4;
 }
 
+/* Hide line break spans on desktop - keep inline */
+.moneybag-calc-savings-line1,
+.moneybag-calc-savings-line3 {
+    display: inline;
+    margin: 0 4px;
+}
+
 .moneybag-calc-savings-amount {
     color: #10b981;
     font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 48px;
+    display: inline;
+    margin: 0 4px;
 }
 
 .moneybag-calc-savings-sub-text {
@@ -5816,6 +5827,31 @@ form.contact-form .form-row.two-columns,
     color: #1e293b;
     height: 44px;
     width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Input wrapper for taka icon */
+.moneybag-calc-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.moneybag-calc-taka-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #64748b;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.moneybag-calc-input-with-icon {
+    padding-left: 40px !important;
 }
 
 .moneybag-calc-input-bar .moneybag-calc-select-field {
@@ -6076,6 +6112,9 @@ button#custom-mode-toggle:focus-visible {
     font-weight: 700;
     line-height: 1.2;
     color: #1e293b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .moneybag-calc-card-value.moneybag-calc-primary {
@@ -6130,9 +6169,26 @@ button#custom-mode-toggle:focus-visible {
 
 .moneybag-calc-method-row {
     display: grid;
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: 120px 1fr;
     gap: 20px;
     align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+    position: relative;
+}
+
+.moneybag-calc-method-row:first-child {
+    padding-top: 0;
+}
+
+.moneybag-calc-method-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* Remove border from last payment method row (before total) */
+.moneybag-calc-method-row:nth-last-child(2) {
+    border-bottom: none;
 }
 
 .moneybag-calc-method-name {
@@ -6143,8 +6199,9 @@ button#custom-mode-toggle:focus-visible {
 
 .moneybag-calc-method-cells {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 16px;
+    width: 100%;
 }
 
 .moneybag-calc-cell-group {
@@ -6210,6 +6267,9 @@ button#custom-mode-toggle:focus-visible {
     color: #1f2937;
     line-height: 1.2;
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .moneybag-calc-readonly-box {
@@ -6230,20 +6290,39 @@ button#custom-mode-toggle:focus-visible {
 }
 
 .moneybag-calc-total-row {
-    border-top: 1px solid #e5e7eb;
-    padding-top: 24px;
-    margin-top: 16px;
+    border-top: 2px solid #d1d5db;
+    padding-top: 16px !important;
+    padding-bottom: 0 !important;
+    margin-top: 8px;
+    background: linear-gradient(to bottom, #fafafa 0%, transparent 100%);
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 20px;
+    align-items: center;
 }
 
 .moneybag-calc-total-row .moneybag-calc-method-name {
     font-size: 16px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 100%;
+    min-height: 72px;
+    flex-shrink: 0;
+    color: #1f2937;
 }
 
 .moneybag-calc-total-box {
     background: #F3F4F6;
-    border: 1px solid #F3F4F6;
+    border: 1px solid #e5e7eb;
     padding: 12px 16px;
+    border-radius: 8px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .moneybag-calc-total-box .moneybag-calc-cell-value {
@@ -6255,6 +6334,11 @@ button#custom-mode-toggle:focus-visible {
     background: #F0FDF4;
     border: 1px solid #F0FDF4;
     padding: 12px 16px;
+    border-radius: 8px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .moneybag-calc-total-savings-box .moneybag-calc-cell-value {
@@ -6370,7 +6454,7 @@ button#custom-mode-toggle:focus-visible {
     /* Keep exact same table structure as tablet */
     .moneybag-calc-method-grid {
         width: 100%;
-        min-width: 650px; /* Ensure table doesn't compress */
+        min-width: 700px; /* Maintain tablet-like layout */
         position: relative;
     }
     
@@ -6381,6 +6465,27 @@ button#custom-mode-toggle:focus-visible {
     .moneybag-calc-method-name {
         font-size: 14px;
         min-width: 70px;
+    }
+    
+    /* Keep same style as tablet - no changes for mobile */
+    .moneybag-calc-method-logo {
+        /* Same as desktop/tablet */
+    }
+    
+    .moneybag-calc-payment-logo {
+        /* Same as desktop/tablet */
+    }
+    
+    .moneybag-calc-method-row {
+        /* Same as desktop/tablet */
+    }
+    
+    .moneybag-calc-total-row {
+        /* Same as desktop/tablet */
+    }
+    
+    .moneybag-calc-total-row .moneybag-calc-method-name {
+        /* Same as desktop/tablet */
     }
     
     .moneybag-calc-method-input {
@@ -6524,6 +6629,125 @@ button#custom-mode-toggle:focus-visible {
 .moneybag-calc-slider-group input[type="range"]::-webkit-slider-runnable-track {
     height: 6px;
     border-radius: 3px;
+}
+
+/* Payment Method Logos Styling */
+.moneybag-calc-method-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 72px;
+    padding: 12px;
+    flex-shrink: 0;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.moneybag-calc-payment-logo {
+    height: 32px;
+    width: 90px;
+    object-fit: contain;
+    filter: none;
+}
+
+/* Hover effect for logo containers */
+.moneybag-calc-method-logo:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    transition: all 0.2s ease;
+}
+
+/* Custom Mode Header - Title and Button Side by Side */
+.moneybag-calc-custom-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.moneybag-calc-custom-header .moneybag-calc-table-title {
+    margin: 0;
+    flex: 1;
+}
+
+/* Show More/Less Button */
+.moneybag-calc-show-more-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
+}
+
+.moneybag-calc-show-more-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: #3B3F42;
+    border: 1px solid #3B3F42;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: #FFFFFF;
+    width: 180px;
+    height: 30px;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+.moneybag-calc-show-more-btn:hover,
+button.moneybag-calc-show-more-btn:hover {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+    border-color: #ff6b6b;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    text-decoration: none;
+}
+
+.moneybag-calc-show-more-btn:focus,
+button.moneybag-calc-show-more-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 63, 66, 0.2);
+    background: #3B3F42;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.moneybag-calc-show-more-btn:focus:hover,
+button.moneybag-calc-show-more-btn:focus:hover {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+    border-color: #ff6b6b;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.moneybag-calc-show-more-btn:focus-visible,
+button.moneybag-calc-show-more-btn:focus-visible {
+    outline: 2px solid #3B3F42;
+    outline-offset: 2px;
+    box-shadow: none;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.moneybag-calc-show-more-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    background: #2F3235;
+    color: #FFFFFF;
+}
+
+.moneybag-calc-expand-icon {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
 }
 
 /* Competitor Rate Inputs */
@@ -6845,14 +7069,14 @@ button#custom-mode-toggle:focus-visible {
     }
     
     .moneybag-calc-hero-card {
-        padding: 24px;
+        padding: 20px 12px;
     }
     
     .moneybag-calc-savings-arrow {
         width: 40px;
         height: 40px;
         top: 15px;
-        left: calc(42% - 240px);
+        left: calc(39% - 130px);
     }
 }
 
@@ -6865,13 +7089,6 @@ button#custom-mode-toggle:focus-visible {
         font-size: 16px;
     }
     
-    .moneybag-calc-savings-main-text {
-        font-size: 22px;
-    }
-    
-    .moneybag-calc-savings-amount {
-        font-size: 32px;
-    }
     
     .moneybag-calc-savings-sub-text {
         font-size: 16px;
@@ -6896,8 +7113,17 @@ button#custom-mode-toggle:focus-visible {
         gap: 16px;
     }
     
+    /* Center align savings card content on mobile */
+    .moneybag-calc-comparison-card.moneybag-calc-savings {
+        text-align: center;
+    }
+    
     .moneybag-calc-comparison-card.moneybag-calc-moneybag {
-        padding: 36px 20px 28px;
+        padding: 36px 15px 28px;
+        overflow: visible;
+        width: 100%;
+        box-sizing: border-box;
+        position: relative;
     }
     
     .moneybag-calc-comparison-card.moneybag .moneybag-calc-card-header {
@@ -6919,6 +7145,7 @@ button#custom-mode-toggle:focus-visible {
         font-size: 9px;
         padding: 5px 14px;
         top: -12px;
+        position: absolute;
     }
     
     .moneybag-calc-logo {
@@ -6995,7 +7222,7 @@ button#custom-mode-toggle:focus-visible {
     }
     
     .moneybag-calc-hero-card {
-        padding: 20px;
+        padding: 16px 12px;
         position: relative;
         top: 0;
     }
@@ -7049,7 +7276,7 @@ button#custom-mode-toggle:focus-visible {
     }
     
     .moneybag-calc-hero-card {
-        padding: 16px;
+        padding: 14px 10px;
         border-radius: 8px;
     }
     
@@ -7060,12 +7287,26 @@ button#custom-mode-toggle:focus-visible {
         left: calc(37% - 100px);
     }
     
+    /* Single line layout on small mobile */
     .moneybag-calc-savings-main-text {
-        font-size: 17px;
+        font-size: 14px !important;
+        display: inline;
     }
     
-    .moneybag-calc-savings-amount {
-        font-size: 28px;
+    .moneybag-calc-savings-main-text .moneybag-calc-savings-line1 {
+        display: inline;
+        font-size: 14px !important;
+    }
+    
+    .moneybag-calc-savings-main-text .moneybag-calc-savings-amount {
+        font-size: 22px !important;
+        display: inline;
+        margin: 0 4px;
+    }
+    
+    .moneybag-calc-savings-main-text .moneybag-calc-savings-line3 {
+        display: inline;
+        font-size: 14px !important;
     }
     
     .moneybag-calc-savings-sub-text {
@@ -7115,6 +7356,21 @@ button#custom-mode-toggle:focus-visible {
     .moneybag-calc-badge {
         font-size: 10px;
         padding: 3px 8px;
+    }
+    
+    .moneybag-calc-show-more-btn {
+        width: 150px;
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+    
+    .moneybag-calc-toggle-text {
+        font-size: 12px;
+    }
+    
+    .moneybag-calc-show-more-btn .moneybag-calc-expand-icon {
+        width: 10px;
+        height: 10px;
     }
     
     .moneybag-calc-custom-column h3 {
@@ -7180,6 +7436,36 @@ button#custom-mode-toggle:focus-visible {
         padding: 10px 20px;
     }
     
+    /* Custom header - single column on mobile */
+    .moneybag-calc-custom-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .moneybag-calc-custom-header .moneybag-calc-table-title {
+        margin: 0;
+    }
+    
+    .moneybag-calc-show-more-container {
+        justify-content: flex-start;
+    }
+    
+    .moneybag-calc-show-more-btn {
+        width: 160px;
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    
+    .moneybag-calc-toggle-text {
+        font-size: 12px;
+    }
+    
+    .moneybag-calc-show-more-btn .moneybag-calc-expand-icon {
+        width: 10px;
+        height: 10px;
+    }
+    
     .moneybag-calc-cta-promo-card .moneybag-calc-promo-image {
         max-width: 100%;
     }
@@ -7199,19 +7485,36 @@ button#custom-mode-toggle:focus-visible {
     }
     
     .moneybag-calc-savings-main-text {
-        font-size: 17px !important;
+        font-size: 14px !important;
         margin-top: 10px;
+        padding: 0 10px;
+        text-align: center;
+        line-height: 1.4;
+        display: inline;
+    }
+    
+    .moneybag-calc-savings-line1 {
+        display: inline;
+        font-size: 14px;
+        color: #2d3748;
     }
     
     .moneybag-calc-savings-main-text .moneybag-calc-savings-amount {
-        font-size: 30px !important;
-        display: inline-block;
+        font-size: 22px !important;
+        display: inline;
         margin: 0 4px;
         font-weight: 700;
+        color: #10b981;
+    }
+    
+    .moneybag-calc-savings-line3 {
+        display: inline;
+        font-size: 14px;
+        color: #2d3748;
     }
     
     .moneybag-calc-savings-sub-text {
-        font-size: 17px;
+        font-size: 16px;
         margin-top: 4px;
     }
     
