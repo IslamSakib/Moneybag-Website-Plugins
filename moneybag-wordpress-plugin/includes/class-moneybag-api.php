@@ -19,9 +19,19 @@ class MoneybagAPI {
      */
     private static function debug_log($message) {
         // Commented out debug logging for production
-        // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('[Moneybag Plugin] ' . $message);
-        // }
+        // Uncomment when needed for troubleshooting
+        /*
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            // Log to WordPress debug.log
+            error_log('[Moneybag Plugin] ' . $message);
+
+            // Also log to plugin's local debug.log
+            $plugin_log = MONEYBAG_PLUGIN_PATH . 'debug.log';
+            $timestamp = date('[Y-m-d H:i:s]');
+            $log_message = $timestamp . ' ' . $message . PHP_EOL;
+            file_put_contents($plugin_log, $log_message, FILE_APPEND | LOCK_EX);
+        }
+        */
     }
     
     /**
@@ -37,7 +47,8 @@ class MoneybagAPI {
      */
     private static function get_crm_api_base() {
         $url = get_option('moneybag_crm_api_url');
-        return !empty($url) ? $url : null;
+        // Default to Twenty CRM cloud API if not set
+        return !empty($url) ? $url : 'https://api.twenty.com';
     }
     
     /**
@@ -159,24 +170,26 @@ class MoneybagAPI {
     }
     
     /**
-     * Make API request to CRM
+     * Make API request to Twenty CRM using REST API
      */
     public static function crm_request($endpoint, $data = [], $method = 'POST') {
-        $url = self::get_crm_api_base() . $endpoint;
+        $base_url = rtrim(self::get_crm_api_base(), '/');
+
+        // Use the endpoint as provided - don't modify it
+        $url = $base_url . $endpoint;
         $api_key = self::get_crm_api_key();
         
         // Add better debug logging
         self::debug_log('[CRM Debug] Request URL: ' . $url);
         self::debug_log('[CRM Debug] Method: ' . $method);
         self::debug_log('[CRM Debug] API Key present: ' . (!empty($api_key) ? 'Yes' : 'No'));
-        self::debug_log('[CRM Debug] API Key length: ' . strlen($api_key));
         if ($method !== 'GET') {
             self::debug_log('[CRM Debug] Data: ' . json_encode($data));
         }
-        
+
         // Check if URL or API key is empty
-        if (empty($url) || $url === $endpoint) {
-            self::debug_log('[CRM Debug] ERROR: CRM API URL not configured');
+        if (empty($url) || empty($api_key)) {
+            self::debug_log('[CRM Debug] ERROR: CRM API URL or Key not configured');
             return [
                 'success' => false,
                 'message' => 'CRM API URL not configured',
@@ -590,27 +603,57 @@ class MoneybagAPI {
             ];
         }
         
-        // 1. Create or find person
-        $person_result = self::create_person($sanitized_data);
-        
+        // 1. Create or find company (if Business Name is provided)
+        $company_id = null;
+        if (!empty($sanitized_data['company'])) {
+            $company_result = self::create_company([
+                'name' => $sanitized_data['company'],
+                'domain' => $data['domain'] ?? ''
+            ]);
+
+            if ($company_result['success']) {
+                $company_id = $company_result['company_id'];
+                self::debug_log("Company created/found with ID: " . $company_id);
+            } else {
+                self::debug_log("Company creation failed: " . json_encode($company_result));
+            }
+        }
+
+        // 2. Create or find person (pass company_id if we have it)
+        $person_data = $sanitized_data;
+        if ($company_id) {
+            $person_data['company_id'] = $company_id;
+        }
+        $person_result = self::create_person($person_data);
+
         if (!$person_result['success']) {
             return $person_result;
         }
-        
+
         $person_id = $person_result['person_id'];
         self::debug_log("Person created/found with ID: " . $person_id);
-        
-        // 2. Create opportunity if title is provided
+
+        // Link person to company if both exist (as a fallback if not linked during creation)
+        if ($person_id && $company_id) {
+            $link_result = self::crm_request('/people/' . $person_id, ['companyId' => $company_id], 'PATCH');
+            if ($link_result['success']) {
+                self::debug_log("Successfully linked person $person_id to company $company_id");
+            } else {
+                self::debug_log("Failed to link person to company: " . json_encode($link_result));
+            }
+        }
+
+        // 3. Create opportunity if title is provided
         $opportunity_id = null;
         if (!empty($data['opportunity_title'])) {
             self::debug_log("[CRM Debug] Starting opportunity creation with title: " . $data['opportunity_title']);
             $opportunity_data = [
                 'title' => sanitize_text_field($data['opportunity_title']),
                 'person_id' => $person_id,
+                'company_id' => $company_id,  // Link to company
                 'stage' => sanitize_text_field($data['opportunity_stage'] ?? 'NEW'),
                 'value' => intval($data['opportunity_value'] ?? 0),
-                'currency' => sanitize_text_field($data['opportunity_currency'] ?? 'BDT'),
-                'company_name' => $sanitized_data['company']
+                'currency' => sanitize_text_field($data['opportunity_currency'] ?? 'BDT')
             ];
             
             $opportunity_result = self::create_opportunity($opportunity_data);
@@ -625,14 +668,15 @@ class MoneybagAPI {
             }
         }
         
-        // 3. Create note if content is provided
+        // 4. Create note if content is provided
         $note_id = null;
         if (!empty($data['note_content'])) {
             $note_data = [
                 'title' => sanitize_text_field($data['note_title'] ?? 'Form Submission'),
                 'content' => sanitize_textarea_field($data['note_content']),
                 'person_id' => $person_id,
-                'deal_id' => $opportunity_id
+                'company_id' => $company_id,  // Link to company
+                'opportunity_id' => $opportunity_id
             ];
             
             $note_result = self::create_note($note_data);
@@ -649,6 +693,7 @@ class MoneybagAPI {
             'success' => true,
             'message' => 'Successfully processed CRM submission',
             'person_id' => $person_id,
+            'company_id' => $company_id,
             'opportunity_id' => $opportunity_id,
             'note_id' => $note_id
         ];
@@ -734,19 +779,11 @@ class MoneybagAPI {
         $name_parts = explode(' ', trim($data['name']), 2);
         $first_name = $name_parts[0] ?? '';
         $last_name = $name_parts[1] ?? '';
-        
+
         // Format phone number
         $phone = preg_replace('/[^0-9+]/', '', $data['phone'] ?? '');
-        
-        if (strpos($phone, '+880') === 0) {
-            $phone = substr($phone, 4);
-        } elseif (strpos($phone, '880') === 0) {
-            $phone = substr($phone, 3);
-        }
-        if (strpos($phone, '0') === 0) {
-            $phone = substr($phone, 1);
-        }
-        
+
+        // Create person with minimal required fields
         $person_data = [
             'name' => [
                 'firstName' => $first_name,
@@ -756,20 +793,28 @@ class MoneybagAPI {
                 'primaryEmail' => $data['email']
             ],
             'phones' => [
-                'primaryPhoneNumber' => $phone,
+                'primaryPhoneNumber' => substr($phone, -10),  // Last 10 digits
                 'primaryPhoneCallingCode' => '+880',
                 'primaryPhoneCountryCode' => 'BD'
             ]
         ];
-        
-        // Add company field directly - no jobTitle for contact form
-        if (!empty($data['company'])) {
-            $person_data['company'] = $data['company'];
+
+        // Add company ID if provided (for linking during creation)
+        if (!empty($data['company_id'])) {
+            $person_data['companyId'] = $data['company_id'];
+            self::debug_log("Adding companyId to person creation: " . $data['company_id']);
+        }
+
+        // Also add company name if provided (some CRMs want this as text field)
+        $company_name = $data['company'] ?? '';
+        if (!empty($company_name)) {
+            $person_data['company'] = $company_name;
+            self::debug_log("Adding company name to person: " . $company_name);
         }
         
-        self::debug_log("Creating new person with data: " . json_encode($person_data));
+        self::debug_log("Creating new person in CRM with data: " . json_encode($person_data));
         $create_response = self::crm_request('/people', $person_data, 'POST');
-        self::debug_log("Full person creation response: " . json_encode($create_response));
+        self::debug_log("CRM person creation response: " . json_encode($create_response));
         
         if (!$create_response['success']) {
             // Check if it's a duplicate error - if so, try to search again
@@ -777,7 +822,7 @@ class MoneybagAPI {
             if (strpos($error_msg, 'duplicate') !== false || strpos($error_msg, 'unique constraint') !== false) {
                 self::debug_log("Duplicate error detected, searching for existing person again");
                 
-                $search_response = self::crm_request('/people?email=' . urlencode($email), [], 'GET');
+                $search_response = self::crm_request('/people?filter[email][eq]=' . urlencode($email), [], 'GET');
                 self::debug_log("Retry search response: " . json_encode($search_response));
                 
                 // Handle nested response structure
@@ -814,22 +859,23 @@ class MoneybagAPI {
             ];
         }
         
-        // Extract person ID from various possible response structures
+        // Extract person ID from CRM response
         $person_id = null;
-        
+
         // Log the data structure for debugging
-        self::debug_log("Checking for person ID in response data: " . json_encode($create_response['data']));
-        
-        // Try different possible paths for the person ID
-        if (isset($create_response['data']['data']['createPerson']['id'])) {
-            $person_id = $create_response['data']['data']['createPerson']['id'];
-            self::debug_log("Found person ID in data.data.createPerson.id: " . $person_id);
-        } elseif (isset($create_response['data']['createPerson']['id'])) {
-            $person_id = $create_response['data']['createPerson']['id'];
-            self::debug_log("Found person ID in data.createPerson.id: " . $person_id);
+        self::debug_log("Checking for person ID in CRM response: " . json_encode($create_response['data']));
+
+        // Check different possible response structures
+        if (isset($create_response['data']['data']['id'])) {
+            $person_id = $create_response['data']['data']['id'];
+            self::debug_log("Found person ID in data.data.id: " . $person_id);
         } elseif (isset($create_response['data']['id'])) {
             $person_id = $create_response['data']['id'];
             self::debug_log("Found person ID in data.id: " . $person_id);
+        } elseif (isset($create_response['data']) && is_string($create_response['data'])) {
+            // Sometimes the ID is returned directly as a string
+            $person_id = $create_response['data'];
+            self::debug_log("Found person ID as direct string: " . $person_id);
         } elseif (isset($create_response['data']['data']['id'])) {
             $person_id = $create_response['data']['data']['id'];
             self::debug_log("Found person ID in data.data.id: " . $person_id);
@@ -918,23 +964,119 @@ class MoneybagAPI {
     }
     
     /**
-     * Create an opportunity in CRM - Global method for all widgets
+     * Create a company in Twenty CRM
+     * @param array $data ['name', 'domain', 'address']
+     * @return array ['success', 'company_id']
+     */
+    public static function create_company($data) {
+        $company_name = $data['name'] ?? '';
+
+        if (empty($company_name)) {
+            return [
+                'success' => false,
+                'message' => 'Company name is required',
+                'error' => 'missing_company_name'
+            ];
+        }
+
+        // Check if company already exists
+        self::debug_log("Checking if company exists: " . $company_name);
+        $search_response = self::crm_request('/companies?filter[name][eq]=' . urlencode($company_name), [], 'GET');
+
+        if ($search_response['success'] && !empty($search_response['data'])) {
+            $companies_list = [];
+            if (isset($search_response['data']['data'])) {
+                $companies_list = $search_response['data']['data'];
+            } elseif (is_array($search_response['data'])) {
+                $companies_list = $search_response['data'];
+            }
+
+            // Check if company with same name exists
+            foreach ($companies_list as $company) {
+                if (strcasecmp($company['name'] ?? '', $company_name) === 0) {
+                    self::debug_log("Found existing company with ID: " . ($company['id'] ?? 'unknown'));
+                    return [
+                        'success' => true,
+                        'company_id' => $company['id'] ?? null,
+                        'existing' => true,
+                        'data' => $company
+                    ];
+                }
+            }
+        }
+
+        // Create new company - just the name
+        $company_data = [
+            'name' => $company_name
+        ];
+
+        self::debug_log("Creating new company in CRM: " . json_encode($company_data));
+        $create_response = self::crm_request('/companies', $company_data, 'POST');
+
+        if (!$create_response['success']) {
+            return [
+                'success' => false,
+                'message' => 'Failed to create company in CRM.',
+                'error' => $create_response['message'] ?? 'Unknown error'
+            ];
+        }
+
+        // Log the full response to understand structure
+        self::debug_log("Company creation response: " . json_encode($create_response));
+
+        // Extract company ID - try multiple possible locations
+        $company_id = null;
+
+        // First check if data is directly the company object
+        if (isset($create_response['data']['data']['createCompany']['id'])) {
+            $company_id = $create_response['data']['data']['createCompany']['id'];
+        } elseif (isset($create_response['data']['data']['id'])) {
+            $company_id = $create_response['data']['data']['id'];
+        } elseif (isset($create_response['data']['id'])) {
+            $company_id = $create_response['data']['id'];
+        } elseif (is_array($create_response['data']) && !empty($create_response['data'])) {
+            // Check if data is the company object itself
+            if (isset($create_response['data']['name']) && $create_response['data']['name'] === $company_name) {
+                // If we have the company object but no ID field, log it
+                self::debug_log("Company object found but no ID field: " . json_encode($create_response['data']));
+            }
+        }
+
+        if ($company_id) {
+            return [
+                'success' => true,
+                'company_id' => $company_id,
+                'existing' => false
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Company creation failed. Could not extract company ID.',
+            'error' => 'company_id_extraction_failed'
+        ];
+    }
+
+    /**
+     * Create an opportunity in Twenty CRM - Global method for all widgets
      * @param array $data ['title', 'person_id', 'value', 'currency', 'stage', 'company_name']
      * @return array ['success', 'deal_id']
      */
     public static function create_opportunity($data) {
-        self::debug_log("[OPPORTUNITY DEBUG] create_opportunity() called with data: " . json_encode($data));
-        
-        // Validate person_id - don't create opportunity with temporary person IDs
+        self::debug_log("[OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM");
+
+        // Twenty CRM uses different fields for opportunities
+        // We'll need person_id and optionally company_id
         $person_id = $data['person_id'] ?? '';
-        self::debug_log("[OPPORTUNITY DEBUG] person_id received: " . var_export($person_id, true));
-        
-        if (empty($person_id)) {
-            self::debug_log("[OPPORTUNITY DEBUG] ❌ VALIDATION FAILED: No person_id provided");
+        $company_id = $data['company_id'] ?? '';
+
+        // At least one of person_id or company_id is required
+        if (empty($person_id) && empty($company_id)) {
+            self::debug_log("[OPPORTUNITY DEBUG] No person_id or company_id provided");
             return [
                 'success' => false,
-                'message' => 'Cannot create opportunity without person_id.',
-                'error' => 'missing_person_id'
+                'message' => 'Cannot create opportunity without person or company.',
+                'error' => 'missing_ids'
             ];
         }
         
@@ -951,34 +1093,48 @@ class MoneybagAPI {
         
         self::debug_log("[OPPORTUNITY DEBUG] ✅ person_id validation passed: " . $person_id);
         
-        // Based on TwentyOne CRM API documentation, try common stage values
-        // If "NEW" doesn't work, try other common CRM stage names
-        $stage_options = ['NEW', 'PROSPECT', 'QUALIFIED', 'PROPOSAL', 'NEGOTIATION', 'CLOSED_WON', 'CLOSED_LOST'];
+        // Twenty CRM uses custom stage values with prefixes
+        // Based on actual CRM data: A_NEW_LEAD, B_PROPOSAL_WE_SENT_OFFER, etc.
+        $stage_map = [
+            'NEW' => 'A_NEW_LEAD',
+            'LEAD' => 'A_NEW_LEAD',
+            'PROSPECT' => 'A_NEW_LEAD',
+            'QUALIFIED' => 'A_NEW_LEAD',
+            'PROPOSAL' => 'B_PROPOSAL_WE_SENT_OFFER',
+            'NEGOTIATION' => 'B_PROPOSAL_WE_SENT_OFFER',
+            'CLOSED_WON' => 'B_PROPOSAL_WE_SENT_OFFER',
+            'CUSTOMER' => 'B_PROPOSAL_WE_SENT_OFFER'
+        ];
+
         $requested_stage = $data['stage'] ?? 'NEW';
+
+        // Use A_NEW_LEAD as default for merchant registrations
+        $opportunity_stage = $stage_map[$requested_stage] ?? 'A_NEW_LEAD';
         
-        // For now, let's try the original stage, but we'll implement fallback if it fails
-        $opportunity_stage = $requested_stage;
-        
-        self::debug_log("[OPPORTUNITY DEBUG] 🎯 Using opportunity stage: '" . $opportunity_stage . "'");
-        
-        // Create opportunity data structure as per TwentyOne CRM API docs
+        // Create opportunity data structure for Twenty CRM REST API
         $opportunity_data = [
-            'name' => $data['title'],
-            'pointOfContactId' => $person_id,
-            'stage' => $opportunity_stage,
+            'name' => $data['title'] ?? 'New Opportunity',
+            'stage' => $opportunity_stage,  // Always include stage with valid value
             'amount' => [
-                'amountMicros' => ($data['value'] ?? 0) * 1000000,
+                'amountMicros' => intval(($data['value'] ?? 0) * 1000000),
                 'currencyCode' => $data['currency'] ?? 'BDT'
             ]
         ];
-        
-        // Try to add company field to opportunity
-        if (!empty($data['company_name'])) {
-            $opportunity_data['company'] = $data['company_name'];
+
+        self::debug_log("[OPPORTUNITY DEBUG] 🎯 Using opportunity stage: '" . $opportunity_stage . "'");
+
+        // Link to person if provided
+        if (!empty($person_id)) {
+            $opportunity_data['pointOfContactId'] = $person_id;
+        }
+
+        // Link to company if provided
+        if (!empty($company_id)) {
+            $opportunity_data['companyId'] = $company_id;
         }
         
-        self::debug_log("[OPPORTUNITY DEBUG] 📤 Sending opportunity data to TwentyOne CRM: " . json_encode($opportunity_data, JSON_PRETTY_PRINT));
-        self::debug_log("[OPPORTUNITY DEBUG] 🔗 API endpoint: /opportunities");
+        self::debug_log("[OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: " . json_encode($opportunity_data, JSON_PRETTY_PRINT));
+        self::debug_log("[OPPORTUNITY DEBUG] API endpoint: /opportunities");
         
         $response = self::crm_request('/opportunities', $opportunity_data, 'POST');
         
@@ -1011,12 +1167,9 @@ class MoneybagAPI {
                 if ($has_stage_error) {
                     self::debug_log("[OPPORTUNITY DEBUG] 🚨 Stage enum error detected! Current stage: " . $opportunity_stage);
                     
-                    // Try a comprehensive list of common CRM stage values
+                    // Try Twenty CRM common stage values
                     $alternative_stages = [
-                        'PROSPECT', 'LEAD', 'QUALIFIED', 'CONTACT', 'DISCOVERY',
-                        'PRESENTATION', 'PROPOSAL', 'QUOTATION', 'NEGOTIATION', 
-                        'VERBAL_COMMITMENT', 'CONTRACT', 'WON', 'LOST',
-                        'CLOSED_WON', 'CLOSED_LOST', 'ON_HOLD', 'NURTURING'
+                        'NEW', 'SCREENING', 'MEETING', 'PROPOSAL', 'CUSTOMER'
                     ];
                     
                     foreach ($alternative_stages as $alt_stage) {
@@ -1107,38 +1260,47 @@ class MoneybagAPI {
      * @return array ['success', 'note_id']
      */
     public static function create_note($data) {
+        // Twenty CRM REST API note structure
+        // Use bodyV2 with markdown format as seen in the successful note creation from the log
+        $content = $data['content'] ?? '';
+
+        // Based on the successful note creation in the log,
+        // Twenty CRM uses noteTargets array to link notes to entities
         $note_data = [
-            'title' => $data['title'] ?? 'Contact Form Submission',
+            'title' => $data['title'] ?? 'Form Submission',
             'bodyV2' => [
-                'markdown' => $data['content'],
-                'blocknote' => json_encode([
-                    [
-                        'type' => 'paragraph',
-                        'content' => [
-                            ['type' => 'text', 'text' => $data['content']]
-                        ]
-                    ]
-                ])
+                'markdown' => $content
             ]
         ];
-        
+
+        // Build noteTargets array for linking
+        $noteTargets = [];
+
         if (!empty($data['person_id'])) {
-            $note_data['noteTargets'] = [
-                [
-                    'type' => 'person',
-                    'id' => $data['person_id']
-                ]
+            $noteTargets[] = [
+                'type' => 'person',
+                'id' => $data['person_id']
             ];
         }
-        
-        if (!empty($data['deal_id'])) {
-            if (!isset($note_data['noteTargets'])) {
-                $note_data['noteTargets'] = [];
-            }
-            $note_data['noteTargets'][] = [
+
+        if (!empty($data['deal_id']) || !empty($data['opportunity_id'])) {
+            $opportunityId = $data['deal_id'] ?? $data['opportunity_id'];
+            $noteTargets[] = [
                 'type' => 'opportunity',
-                'id' => $data['deal_id']
+                'id' => $opportunityId
             ];
+        }
+
+        if (!empty($data['company_id'])) {
+            $noteTargets[] = [
+                'type' => 'company',
+                'id' => $data['company_id']
+            ];
+        }
+
+        // Only add noteTargets if we have any
+        if (!empty($noteTargets)) {
+            $note_data['noteTargets'] = $noteTargets;
         }
         
         $response = self::crm_request('/notes', $note_data, 'POST');

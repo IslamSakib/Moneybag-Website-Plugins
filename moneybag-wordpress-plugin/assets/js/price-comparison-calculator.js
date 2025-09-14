@@ -18,6 +18,16 @@
             return new Intl.NumberFormat('en-BD').format(num);
         }
     };
+
+    // Format numbers with Bangladeshi comma format (for input display)
+    const formatBangladeshiNumber = (num) => {
+        return new Intl.NumberFormat('en-BD').format(num);
+    };
+
+    // Remove commas and convert to number (for input parsing)
+    const parseBangladeshiNumber = (str) => {
+        return parseInt(str.replace(/,/g, '')) || 0;
+    };
     
     // Calculate savings based on volume, payment mix, and rates
     const calculateSavings = (monthlyVolume, paymentMix, competitorRates, moneybagRates) => {
@@ -95,8 +105,12 @@
         const MONEYBAG_PLUGIN_URL = config.pluginUrl || '/wp-content/plugins/moneybag-wordpress-plugin/';
         const [monthlyVolume, setMonthlyVolume] = useState(config.default_volume || 1000000);
         const [currentGateway, setCurrentGateway] = useState(config.default_gateway || 'sslcommerz');
+        const [businessCategory, setBusinessCategory] = useState('eCommerce');
         const [isCustomMode, setIsCustomMode] = useState(false);
         const [showAllMethods, setShowAllMethods] = useState(false);
+
+        // Global validator instance
+        const validator = new window.MoneybagValidator();
         
         // All payment methods with display configuration
         const paymentMethods = [
@@ -131,8 +145,163 @@
         const [calculations, setCalculations] = useState({});
         const [isLoading, setIsLoading] = useState(false);
         const [errors, setErrors] = useState({});
-        
-        const moneybagRates = config.moneybag_rates;
+
+        // Business categories from pricing rules
+        const businessCategories = [
+            { value: 'Education', label: 'Education' },
+            { value: 'eCommerce', label: 'eCommerce' },
+            { value: 'fCommerce', label: 'fCommerce' },
+            { value: 'Health Service', label: 'Health Service' },
+            { value: 'IT Services', label: 'IT Services' },
+            { value: 'NGO/Donation', label: 'NGO/Donation' },
+            { value: 'Digital Service Platform', label: 'Digital Service Platform' },
+            { value: 'Membership & Subscriptions', label: 'Membership & Subscriptions' },
+            { value: 'Event Management / Ticketing', label: 'Event Management / Ticketing' },
+            { value: 'Consulting Services', label: 'Consulting Services' },
+            { value: 'Miscellaneous', label: 'Miscellaneous' }
+        ];
+
+        // Dynamic Moneybag rates based on business category
+        const getCategoryBasedRates = (category) => {
+            const categoryRates = {
+                'Education': {
+                    bkash: 1.20,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.45,
+                    visa: 1.20,
+                    mastercard: 1.20,
+                    diners_club: 1.30,
+                    unionpay: 1.30,
+                    american_express: 1.50,
+                    dbbl_nexus: 30 // BDT per transaction
+                },
+                'eCommerce': {
+                    bkash: 1.75,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'fCommerce': {
+                    bkash: 1.75,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'Health Service': {
+                    bkash: 1.75,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'IT Services': {
+                    bkash: 2.30,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'NGO/Donation': {
+                    bkash: 1.75,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'Digital Service Platform': {
+                    bkash: 12.50, // Special high rate for this category
+                    nagad: 1.60,
+                    upay: 1.40,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'Membership & Subscriptions': {
+                    bkash: 1.75,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'Event Management / Ticketing': {
+                    bkash: 1.75,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'Consulting Services': {
+                    bkash: 1.75,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                },
+                'Miscellaneous': {
+                    bkash: 1.75,
+                    nagad: 1.60,
+                    upay: 1.50,
+                    rocket: 1.80,
+                    visa: 2.10,
+                    mastercard: 2.10,
+                    diners_club: 2.30,
+                    unionpay: 2.30,
+                    american_express: 3.30,
+                    dbbl_nexus: 2.00
+                }
+            };
+
+            return categoryRates[category] || categoryRates['eCommerce'];
+        };
+
+        const moneybagRates = getCategoryBasedRates(businessCategory);
         
         // Update competitor rates when gateway changes
         useEffect(() => {
@@ -143,9 +312,10 @@
         
         // Update calculations whenever inputs change
         useEffect(() => {
-            const results = calculateSavings(monthlyVolume, paymentMix, competitorRates, moneybagRates);
+            const currentMoneybagRates = getCategoryBasedRates(businessCategory);
+            const results = calculateSavings(monthlyVolume, paymentMix, competitorRates, currentMoneybagRates);
             setCalculations(results);
-        }, [monthlyVolume, paymentMix, competitorRates, moneybagRates]);
+        }, [monthlyVolume, paymentMix, competitorRates, businessCategory]);
         
         // Add scroll detection for mobile swipe indicator
         useEffect(() => {
@@ -189,9 +359,10 @@
         
         // Handle volume change
         const handleVolumeChange = (e) => {
-            let inputValue = e.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-            const value = parseInt(inputValue) || 0;
-            
+            // Get the raw input value and remove commas to get the actual number
+            const rawValue = e.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters including commas
+            const value = parseInt(rawValue) || 0;
+
             if (validateVolume(value)) {
                 setMonthlyVolume(value);
             }
@@ -204,6 +375,20 @@
             // Update competitor rates based on selected gateway
             if (config.gateway_presets && config.gateway_presets[newGateway]) {
                 setCompetitorRates(config.gateway_presets[newGateway]);
+            }
+        };
+
+        // Handle business category change
+        const handleBusinessCategoryChange = (e) => {
+            const newCategory = e.target.value;
+
+            // Validate the business category
+            const validationError = validator.validateField('businessCategory', newCategory);
+            if (validationError) {
+                setErrors(prev => ({ ...prev, businessCategory: validationError }));
+            } else {
+                setErrors(prev => ({ ...prev, businessCategory: null }));
+                setBusinessCategory(newCategory);
             }
         };
         
@@ -325,34 +510,32 @@
                             type: 'text', // Changed to text to control input better
                             id: 'volume-input',
                             className: errors.volume ? 'moneybag-calc-input-field moneybag-calc-input-with-icon moneybag-calc-error' : 'moneybag-calc-input-field moneybag-calc-input-with-icon',
-                            value: monthlyVolume,
+                            value: formatBangladeshiNumber(monthlyVolume),
                             onChange: handleVolumeChange,
-                            pattern: '[0-9]*',
+                            pattern: '[0-9,]*',
                             inputMode: 'numeric'
                         })
                     ),
                     errors.volume && h('span', { className: 'moneybag-calc-error-message' }, errors.volume)
                 ),
                 
-                // Gateway Selection
+                // Business Category Selection
                 h('div', { className: 'moneybag-calc-input-group' },
-                    h('label', {}, 'Current Gateway'),
+                    h('label', {},
+                        'Business Category',
+                        h('span', { className: 'required-indicator' }, ' *')
+                    ),
                     h('select', {
-                        id: 'gateway-select',
-                        className: 'moneybag-calc-select-field',
-                        value: currentGateway,
-                        onChange: handleGatewayChange
+                        id: 'business-category-select',
+                        className: errors.businessCategory ? 'moneybag-calc-select-field moneybag-calc-error' : 'moneybag-calc-select-field',
+                        value: businessCategory,
+                        onChange: handleBusinessCategoryChange
                     },
-                        h('option', { value: 'sslcommerz' }, 'SSLCommerz'),
-                        h('option', { value: 'shurjopay' }, 'shurjoPay'),
-                        h('option', { value: 'aamarpay' }, 'aamarPay'),
-                        h('option', { value: 'portwallet' }, 'PortWallet'),
-                        h('option', { value: 'paywell' }, 'PayWell'),
-                        h('option', { value: 'ekpay' }, 'ekPay'),
-                        h('option', { value: 'okwallet' }, 'OKWallet'),
-                        h('option', { value: 'tap' }, 'Tap'),
-                        h('option', { value: 'dmoney' }, 'Dmoney')
-                    )
+                        businessCategories.map(category =>
+                            h('option', { key: category.value, value: category.value }, category.label)
+                        )
+                    ),
+                    errors.businessCategory && h('span', { className: 'moneybag-calc-error-message' }, errors.businessCategory)
                 ),
                 
                 // Mode Toggle Button
@@ -554,37 +737,40 @@
                         let compRate = 0;
                         let mbRate = 0;
                         
+                        // Get dynamic Moneybag rates based on selected business category
+                        const currentMoneybagRates = getCategoryBasedRates(businessCategory);
+
                         // Get specific rates for each payment method
                         if (method.id === 'visa') {
                             compRate = competitorRates.visa || competitorRates.card || 2.45;
-                            mbRate = moneybagRates.visa || 2.1;
+                            mbRate = currentMoneybagRates.visa || 2.1;
                         } else if (method.id === 'mastercard') {
                             compRate = competitorRates.mastercard || competitorRates.visa || competitorRates.card || 2.45;
-                            mbRate = moneybagRates.mastercard || 2.1;
+                            mbRate = currentMoneybagRates.mastercard || 2.1;
                         } else if (method.id === 'american_express') {
                             compRate = competitorRates.american_express || competitorRates.amex || competitorRates.card || 3.5;
-                            mbRate = moneybagRates.american_express || 3.3;
+                            mbRate = currentMoneybagRates.american_express || 3.3;
                         } else if (method.id === 'diners_club') {
                             compRate = competitorRates.diners_club || competitorRates.card || 2.5;
-                            mbRate = moneybagRates.diners_club || 2.3;
+                            mbRate = currentMoneybagRates.diners_club || 2.3;
                         } else if (method.id === 'unionpay') {
                             compRate = competitorRates.unionpay || competitorRates.card || 2.5;
-                            mbRate = moneybagRates.unionpay || 2.3;
+                            mbRate = currentMoneybagRates.unionpay || 2.3;
                         } else if (method.id === 'dbbl_nexus') {
                             compRate = competitorRates.dbbl_nexus || competitorRates.nexus || competitorRates.card || 2.2;
-                            mbRate = moneybagRates.dbbl_nexus || 2.0;
+                            mbRate = currentMoneybagRates.dbbl_nexus || 2.0;
                         } else if (method.id === 'bkash') {
                             compRate = competitorRates.bkash || 2.0;
-                            mbRate = moneybagRates.bkash || 1.75;
+                            mbRate = currentMoneybagRates.bkash || 1.75;
                         } else if (method.id === 'nagad') {
                             compRate = competitorRates.nagad || 1.85;
-                            mbRate = moneybagRates.nagad || 1.6;
+                            mbRate = currentMoneybagRates.nagad || 1.6;
                         } else if (method.id === 'rocket') {
                             compRate = competitorRates.rocket || 2.0;
-                            mbRate = moneybagRates.rocket || 1.8;
+                            mbRate = currentMoneybagRates.rocket || 1.8;
                         } else if (method.id === 'upay') {
                             compRate = competitorRates.upay || 1.8;
-                            mbRate = moneybagRates.upay || 1.5;
+                            mbRate = currentMoneybagRates.upay || 1.5;
                         }
                         
                         const competitorCost = methodVolume * compRate / 100;

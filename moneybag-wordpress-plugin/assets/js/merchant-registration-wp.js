@@ -1097,7 +1097,10 @@
                             className: `input-field ${fieldErrors.domainName ? 'error' : ''} ${formData.domainName ? 'valid' : ''}`,
                             value: formData.domainName,
                             onChange: (e) => handleInputChange('domainName', e.target.value),
-                            onBlur: (e) => validateAndSetFieldError('domain', e.target.value, 'domainName'),
+                            onBlur: (e) => {
+                                // Use optionalDomain validation (already configured as non-required)
+                                validateAndSetFieldError('optionalDomain', e.target.value, 'domainName');
+                            },
                             placeholder: 'www.example.com'
                         }),
                         fieldErrors.domainName && h('span', { className: 'error-message' }, fieldErrors.domainName),

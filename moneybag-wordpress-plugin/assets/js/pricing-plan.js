@@ -370,9 +370,9 @@
         };
 
         const renderSelect = (name, options, placeholder = 'Select') => {
-            
+
             let fieldOptions = [];
-            
+
             if (name === 'businessCategory') {
                 // Business category options from JSON
                 if (pricingRules && pricingRules.businessCategories) {
@@ -403,9 +403,13 @@
                     { value: '10000000+', label: '10,000,000+ BDT' }
                 ];
             }
-            
+
             return createElement('div', { className: 'field-group' },
-                createElement('label', { className: 'field-label' }, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
+                createElement('label', { className: 'field-label' },
+                    name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1'),
+                    // Add required indicator for all fields except domainName (optional)
+                    name !== 'domainName' && createElement('span', { className: 'required-indicator' }, ' *')
+                ),
                 createElement('div', { className: 'dropdown-wrapper' },
                     createElement('select', {
                         className: `input-field ${errors[name] ? 'error' : ''} ${formData[name] ? 'valid' : ''}`,
@@ -459,13 +463,22 @@
             const validationField = validationFieldMap[name] || name;
             
             return createElement('div', { className: 'field-group' },
-                createElement('label', { className: 'field-label' }, name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')),
+                createElement('label', { className: 'field-label' },
+                    name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1'),
+                    // Add required indicator for all fields except domainName (optional)
+                    name !== 'domainName' && createElement('span', { className: 'required-indicator' }, ' *')
+                ),
                 createElement('input', {
                     type,
                     className: `input-field ${errors[name] ? 'error' : ''} ${formData[name] ? 'valid' : ''}`,
                     value: formData[name],
                     onChange: (e) => handleInputChange(name, e.target.value),
-                    onBlur: (e) => validateAndSetFieldError(validationField, e.target.value, name),
+                    onBlur: (e) => {
+                        // Skip validation for optional domainName field
+                        if (name !== 'domainName') {
+                            validateAndSetFieldError(validationField, e.target.value, name);
+                        }
+                    },
                     placeholder,
                     disabled: loading,
                     maxLength: name === 'email' ? 30 : null,

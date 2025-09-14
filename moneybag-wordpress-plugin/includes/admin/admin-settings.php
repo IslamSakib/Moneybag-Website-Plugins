@@ -432,10 +432,42 @@ class AdminSettings {
         
         // Test data
         $test_time = time();
+
+        // Step 1: Create a test company first (simplified)
+        $company_data = [
+            'name' => 'Test Company ' . $test_time
+        ];
+
+        $company_response = wp_remote_post($api_url . '/companies', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $api_key,
+                'Content-Type' => 'application/json'
+            ],
+            'body' => json_encode($company_data),
+            'timeout' => 30
+        ]);
+
+        $company_id = null;
+        if (!is_wp_error($company_response)) {
+            $company_status = wp_remote_retrieve_response_code($company_response);
+            if ($company_status === 200 || $company_status === 201) {
+                $company_body = wp_remote_retrieve_body($company_response);
+                $company_result = json_decode($company_body, true);
+
+                // Extract company ID
+                if (isset($company_result['data']['id'])) {
+                    $company_id = $company_result['data']['id'];
+                } elseif (isset($company_result['id'])) {
+                    $company_id = $company_result['id'];
+                }
+            }
+        }
+
+        // Step 2: Create person with company link and phone (simplified)
         $test_data = [
             'name' => [
                 'firstName' => 'Test',
-                'lastName' => 'User'
+                'lastName' => 'User_' . $test_time
             ],
             'emails' => [
                 'primaryEmail' => "test_user_{$test_time}@example.com"
@@ -446,8 +478,16 @@ class AdminSettings {
                 'primaryPhoneCountryCode' => 'BD'
             ]
         ];
-        
-        // Test CRM API call
+
+        // Add company ID if we created one successfully
+        if ($company_id) {
+            $test_data['companyId'] = $company_id;
+        }
+
+        // Also add company name directly (some CRMs want this)
+        $test_data['company'] = $company_data['name'];
+
+        // Create the person
         $response = wp_remote_post($api_url . '/people', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $api_key,
@@ -466,21 +506,64 @@ class AdminSettings {
         $data = json_decode($body, true);
         
         if ($status_code === 200 || $status_code === 201) {
-            $person_id = $data['data']['createPerson']['id'] ?? $data['id'] ?? 'Unknown';
+            // Extract person ID from various possible response structures
+            $person_id = null;
+            if (isset($data['data']['createPerson']['id'])) {
+                $person_id = $data['data']['createPerson']['id'];
+            } elseif (isset($data['data']['id'])) {
+                $person_id = $data['data']['id'];
+            } elseif (isset($data['id'])) {
+                $person_id = $data['id'];
+            } else {
+                $person_id = 'Created but ID not found in response';
+            }
+
             wp_send_json_success([
                 'message' => 'CRM connection successful!',
                 'details' => [
                     'status_code' => $status_code,
                     'person_id' => $person_id,
-                    'test_email' => $test_data['emails']['primaryEmail']
+                    'company_id' => $company_id,
+                    'test_email' => $test_data['emails']['primaryEmail'] ?? $test_data['email'] ?? 'N/A',
+                    'test_company' => $company_data['name'] ?? 'N/A'
+                ],
+                'test_data_sent' => [
+                    'company' => $company_data,
+                    'person' => $test_data
+                ],
+                'response_data' => [
+                    'company_response' => isset($company_result) ? $company_result : null,
+                    'person_response' => $data
                 ]
             ]);
         } else {
+            // Parse the error response for better debugging
+            $error_details = json_decode($body, true);
+            $error_message = 'CRM API returned error';
+
+            // Try to extract a more specific error message
+            if ($error_details) {
+                if (isset($error_details['message'])) {
+                    $error_message = $error_details['message'];
+                } elseif (isset($error_details['error'])) {
+                    $error_message = $error_details['error'];
+                } elseif (isset($error_details['errors']) && is_array($error_details['errors'])) {
+                    $error_message = implode(', ', $error_details['errors']);
+                }
+            }
+
             wp_send_json_error([
-                'message' => 'CRM API returned error',
+                'message' => $error_message,
                 'details' => [
                     'status_code' => $status_code,
-                    'response_body' => $body
+                    'response_body' => $body,
+                    'parsed_response' => $error_details
+                ],
+                'test_data_sent' => $test_data,  // Include what we tried to send
+                'api_url_used' => $api_url . '/people',  // Show the exact endpoint
+                'headers_sent' => [
+                    'Authorization' => 'Bearer ' . substr($api_key, 0, 10) . '...',  // Show partial key for debugging
+                    'Content-Type' => 'application/json'
                 ]
             ]);
         }

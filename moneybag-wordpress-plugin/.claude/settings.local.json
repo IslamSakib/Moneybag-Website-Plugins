@@ -58,7 +58,13 @@
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -r \"\ndefine(''ABSPATH'', ''C:/laragon/www/Moneybag-Website/'');\nrequire_once ''C:/laragon/www/Moneybag-Website/wp-config.php'';\necho ''WordPress loaded successfully'' . PHP_EOL;\necho ''CRM API URL: '' . get_option(''moneybag_crm_api_url'', ''not set'') . PHP_EOL;\necho ''CRM API Key: '' . (get_option(''moneybag_crm_api_key'') ? ''SET ('' . strlen(get_option(''moneybag_crm_api_key'')) . '' chars)'' : ''NOT SET'') . PHP_EOL;\n\")",
       "Read(//c/laragon/www/Moneybag-Website/**)",
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" \"C:\\laragon\\www\\Moneybag-Website\\wp-content\\plugins\\moneybag-wordpress-plugin\\quick-fix-test.php\")",
-      "Read(//c/Users/Admin/Pictures/Screenshots/**)"
+      "Read(//c/Users/Admin/Pictures/Screenshots/**)",
+      "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" \"C:\\laragon\\www\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-twenty-crm.php\")",
+      "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" test-merchant-crm-direct.php)",
+      "Read(//c/laragon/www/**)",
+      "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" \"C:\\laragon\\www\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-merchant-crm-direct.php\")",
+      "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" test-opportunity-stages.php)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

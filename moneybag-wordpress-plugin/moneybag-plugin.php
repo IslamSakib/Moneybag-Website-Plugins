@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Moneybag WordPress Plugin
  * Description: Configuration-driven Elementor widgets for payment gateway integration with React.js forms. Works with any API provider.
- * Version: 2.3.8
+ * Version: 2.4.0
  * Author: Sakib Islam
  * Contact: +8801950025990
  * Text Domain: moneybag-wordpress-plugin
@@ -29,7 +29,7 @@ if (!defined('ABSPATH')) {
  */
 define('MONEYBAG_PLUGIN_URL', plugin_dir_url(__FILE__));     // Plugin URL for assets
 define('MONEYBAG_PLUGIN_PATH', plugin_dir_path(__FILE__));   // Plugin path for includes
-define('MONEYBAG_PLUGIN_VERSION', '2.3.8');                 // Plugin version for cache busting
+define('MONEYBAG_PLUGIN_VERSION', '2.4.0');                 // Plugin version for cache busting
 
 /**
  * Security and Configuration Notice
@@ -522,6 +522,11 @@ class MoneybagPlugin {
                 // Password field removed - no longer required by new API
                 
                 $response = \MoneybagPlugin\MoneybagAPI::submit_business_details($sanitized);
+
+                // If sandbox submission successful, also submit to CRM
+                if ($response && $response['success']) {
+                    $this->submit_sandbox_to_crm($sanitized, $response);
+                }
                 break;
                 
             default:
@@ -992,7 +997,7 @@ class MoneybagPlugin {
         if ($response['success']) {
             // SUCCESS: Also submit to CRM for lead tracking
             $this->submit_merchant_registration_to_crm($data, $response);
-            
+
             // Return the API response with merchant_id, api_key, etc.
             wp_send_json_success($response);
         } else {
@@ -1061,17 +1066,25 @@ class MoneybagPlugin {
             // Combine first and last name for CRM
             $full_name = trim(($data['firstName'] ?? '') . ' ' . ($data['lastName'] ?? ''));
             
-            // Submit to CRM using the global CRM handler
+            // Submit to CRM using the global CRM handler - FIELD MAPPING
             $crm_result = \MoneybagPlugin\MoneybagAPI::submit_to_crm([
-                'name' => $full_name,
-                'email' => $data['email'] ?? '',
-                'phone' => $data['mobile'] ?? '',
-                'company' => $data['businessName'] ?? '',
+                // PERSON FIELDS
+                'name' => $full_name,                    // firstName + lastName → Person name
+                'email' => $data['email'] ?? '',         // email → Person email
+                'phone' => $data['mobile'] ?? '',        // mobile → Person phone (+880 format)
+
+                // COMPANY FIELDS
+                'company' => $data['businessName'] ?? '', // businessName → Company name
+
+                // OPPORTUNITY FIELDS
                 'opportunity_title' => 'Merchant Registration: ' . ($data['businessName'] ?? 'New Merchant'),
                 'opportunity_stage' => 'NEW',
-                'opportunity_value' => 0, // Initial value - can be updated later
-                'note_title' => 'Merchant Registration Submission',
+                'opportunity_value' => $this->calculate_opportunity_value($data['monthlyVolume'] ?? ''),
+
+                // NOTE FIELDS - All form data
+                'note_title' => 'Merchant Registration Details',
                 'note_content' => $note_content,
+
                 'widget_type' => 'merchant_registration'
             ]);
             
@@ -1091,7 +1104,106 @@ class MoneybagPlugin {
             // error_log('[Moneybag] Error during merchant registration CRM submission: ' . $t->getMessage());
         }
     }
-    
+
+    /**
+     * Submit sandbox form data to CRM after successful sandbox API submission
+     * This runs AFTER successful sandbox API submission
+     */
+    private function submit_sandbox_to_crm($data, $api_response) {
+        try {
+            // Check if CRM is configured before attempting submission
+            $crm_api_key = \MoneybagPlugin\MoneybagAPI::get_crm_api_key();
+
+            if (!$crm_api_key) {
+                // CRM not configured, skip submission
+                // error_log('[Moneybag] CRM not configured, skipping sandbox CRM submission');
+                return;
+            }
+
+            // Build note content from the sandbox form data
+            $note_content = "**Sandbox Registration Submission**\n\n";
+            $note_content .= "- **Business Name:** " . ($data['business_name'] ?? '') . "\n";
+            $note_content .= "- **Legal Identity:** " . ($data['legal_identity'] ?? '') . "\n";
+            $note_content .= "- **Business Website:** " . ($data['business_website'] ?? '') . "\n";
+            $note_content .= "- **Contact:** " . ($data['first_name'] ?? '') . ' ' . ($data['last_name'] ?? '') . "\n";
+            $note_content .= "- **Email:** " . ($data['email'] ?? '') . "\n";
+            $note_content .= "- **Phone:** " . ($data['phone'] ?? '') . "\n";
+
+            // Add API response details if available
+            if (isset($api_response['data'])) {
+                $note_content .= "\n**API Response:**\n";
+                if (isset($api_response['data']['merchant_id'])) {
+                    $note_content .= "- **Merchant ID:** " . $api_response['data']['merchant_id'] . "\n";
+                }
+                if (isset($api_response['data']['sandbox_url'])) {
+                    $note_content .= "- **Sandbox URL:** " . $api_response['data']['sandbox_url'] . "\n";
+                }
+                $note_content .= "- **Registration Date:** " . date('Y-m-d H:i:s');
+            }
+
+            // Combine first and last name for CRM
+            $full_name = trim(($data['first_name'] ?? '') . ' ' . ($data['last_name'] ?? ''));
+
+            // Submit to CRM using the global CRM handler with proper field mapping
+            $crm_result = \MoneybagPlugin\MoneybagAPI::submit_to_crm([
+                // PERSON FIELDS
+                'name' => $full_name,                      // first_name + last_name → Person name
+                'email' => $data['email'] ?? '',           // email → Person email
+                'phone' => $data['phone'] ?? '',           // phone → Person phone (+880 format)
+
+                // COMPANY FIELDS
+                'company' => $data['business_name'] ?? '', // business_name → Company name
+
+                // OPPORTUNITY FIELDS
+                'opportunity_title' => 'Sandbox Registration: ' . ($data['business_name'] ?? 'New Business'),
+                'opportunity_stage' => 'NEW',
+                'opportunity_value' => 100000, // Default value for sandbox registrations
+
+                // NOTE FIELDS - All form data
+                'note_title' => 'Sandbox Registration Details',
+                'note_content' => $note_content,
+
+                'widget_type' => 'sandbox_registration'
+            ]);
+
+            if ($crm_result['success']) {
+                // Commented out debug logging for production
+                // error_log('[Moneybag] Sandbox registration CRM submission successful - Person ID: ' . ($crm_result['person_id'] ?? 'unknown'));
+            } else {
+                // Commented out debug logging for production
+                // error_log('[Moneybag] Sandbox registration CRM submission failed: ' . ($crm_result['message'] ?? 'unknown error'));
+            }
+
+        } catch (Exception $e) {
+            // Log error but don't fail the main registration process
+            // error_log('[Moneybag] Exception during sandbox CRM submission: ' . $e->getMessage());
+        } catch (Throwable $t) {
+            // Log error but don't fail the main registration process
+            // error_log('[Moneybag] Error during sandbox CRM submission: ' . $t->getMessage());
+        }
+    }
+
+    /**
+     * Calculate opportunity value from monthly volume range
+     *
+     * @param string $monthly_volume Monthly volume range from form
+     * @return int Estimated opportunity value
+     */
+    private function calculate_opportunity_value($monthly_volume) {
+        // Map monthly volume ranges to estimated annual values
+        $volume_map = [
+            'Below 10,000' => 120000,        // 10k * 12 months
+            '10,000 - 50,000' => 360000,     // 30k avg * 12 months
+            '50,000 - 100,000' => 900000,    // 75k avg * 12 months
+            '100,000 - 500,000' => 3600000,  // 300k avg * 12 months
+            '500,000 - 1,000,000' => 9000000, // 750k avg * 12 months
+            'Above 1,000,000' => 15000000    // 1.25M avg * 12 months
+        ];
+
+        // Return the mapped value or a default
+        return $volume_map[$monthly_volume] ?? 600000; // Default to 50k/month if unknown
+    }
+
     /**
      * Handle calculator lead submission
      */

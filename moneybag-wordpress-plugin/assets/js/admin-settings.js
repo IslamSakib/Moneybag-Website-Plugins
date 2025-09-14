@@ -90,13 +90,22 @@
                     setResultType('success');
                     setTestResult({
                         message: response.data.message,
-                        details: response.data.details
+                        details: response.data.details,
+                        testDataSent: response.data.test_data_sent,
+                        responseData: response.data.response_data
                     });
                 } else {
                     setResultType('error');
+                    // Handle the error properly - check if it's an object or string
+                    const errorMessage = typeof response.data === 'string'
+                        ? response.data
+                        : (response.data?.message || JSON.stringify(response.data));
+
                     setTestResult({
                         message: 'CRM Connection Failed',
-                        error: response.data
+                        error: errorMessage,
+                        testDataSent: response.data?.test_data_sent,
+                        apiUrlUsed: response.data?.api_url_used
                     });
                 }
             } catch (error) {
@@ -132,31 +141,104 @@
                 className: `${resultType}-result admin-result-message`
             },
                 h('h4', null, resultType === 'success' ? '✅ ' : '❌ ', testResult.message),
-                resultType === 'success' && testResult.details ? 
+                resultType === 'success' && testResult.details ?
                     h('div', { className: 'success-details' },
                         h('ul', null,
                             h('li', null, h('strong', null, 'Status Code:'), ' ', testResult.details.status_code),
-                            h('li', null, h('strong', null, 'Test Person ID:'), ' ', 
+                            testResult.details.company_id && h('li', null, h('strong', null, '🏢 Test Company ID:'), ' ',
+                                h('code', null, testResult.details.company_id)
+                            ),
+                            testResult.details.test_company && h('li', null, h('strong', null, '🏢 Company Name:'), ' ',
+                                h('code', null, testResult.details.test_company)
+                            ),
+                            h('li', null, h('strong', null, '👤 Test Person ID:'), ' ',
                                 h('code', null, testResult.details.person_id)
                             ),
-                            h('li', null, h('strong', null, 'Test Email:'), ' ', 
+                            h('li', null, h('strong', null, '📧 Test Email:'), ' ',
                                 h('code', null, testResult.details.test_email)
-                            )
+                            ),
+                            h('li', null, h('strong', null, '📱 Phone:'), ' Added to person record')
+                        ),
+                        testResult.testDataSent && h('div', {
+                            style: {
+                                marginTop: '15px',
+                                padding: '10px',
+                                backgroundColor: '#f0f4f8',
+                                borderRadius: '4px'
+                            }
+                        },
+                            h('h5', null, '📤 Data Sent to CRM:'),
+                            h('pre', {
+                                style: {
+                                    backgroundColor: 'white',
+                                    padding: '10px',
+                                    borderRadius: '4px',
+                                    overflow: 'auto',
+                                    fontSize: '12px'
+                                }
+                            }, JSON.stringify(testResult.testDataSent, null, 2))
+                        ),
+                        testResult.responseData && h('details', {
+                            style: { marginTop: '10px' }
+                        },
+                            h('summary', { style: { cursor: 'pointer', fontWeight: 'bold' } }, 'CRM Response Data'),
+                            h('pre', {
+                                style: {
+                                    backgroundColor: '#f5f5f5',
+                                    padding: '10px',
+                                    borderRadius: '4px',
+                                    overflow: 'auto',
+                                    fontSize: '12px'
+                                }
+                            }, JSON.stringify(testResult.responseData, null, 2))
                         )
                     ) :
                     h('div', { className: 'error-details' },
-                        h('p', null, h('strong', null, 'Error Details:'), ' '),
-                        h('code', { 
-                            style: { 
-                                display: 'block', 
-                                background: '#f8f9fa', 
-                                padding: '8px', 
-                                borderRadius: '4px',
-                                marginTop: '8px',
-                                fontSize: '12px',
-                                wordWrap: 'break-word'
+                        h('p', null, h('strong', null, 'Error:'), ' ', testResult.error),
+                        testResult.apiUrlUsed && h('p', null,
+                            h('strong', null, 'API Endpoint:'), ' ',
+                            h('code', null, testResult.apiUrlUsed)
+                        ),
+                        testResult.testDataSent && h('div', {
+                            style: {
+                                marginTop: '15px',
+                                padding: '10px',
+                                backgroundColor: '#fff3cd',
+                                borderRadius: '4px'
                             }
-                        }, testResult.error)
+                        },
+                            h('h5', null, '📤 Data Attempted to Send:'),
+                            h('pre', {
+                                style: {
+                                    backgroundColor: 'white',
+                                    padding: '10px',
+                                    borderRadius: '4px',
+                                    overflow: 'auto',
+                                    fontSize: '12px'
+                                }
+                            }, JSON.stringify(testResult.testDataSent, null, 2))
+                        ),
+                        h('details', {
+                            style: { marginTop: '15px' }
+                        },
+                            h('summary', {
+                                style: {
+                                    cursor: 'pointer',
+                                    fontWeight: 'bold',
+                                    color: '#d73502'
+                                }
+                            }, 'Show Full Error Details'),
+                            h('pre', {
+                                style: {
+                                    backgroundColor: '#f5f5f5',
+                                    padding: '10px',
+                                    borderRadius: '4px',
+                                    overflow: 'auto',
+                                    fontSize: '11px',
+                                    marginTop: '10px'
+                                }
+                            }, JSON.stringify(response, null, 2))
+                        )
                     )
             )
         );
