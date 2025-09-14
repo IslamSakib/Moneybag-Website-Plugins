@@ -5897,6 +5897,12 @@ form.contact-form .form-row.two-columns,
     margin: 16px 0 0 0;
 }
 
+/* When payment mix error is inside custom mode section, move it to the top */
+.moneybag-calc-custom-mode-section .moneybag-calc-payment-mix-error-container {
+    order: -1; /* Move to top if parent is flexbox */
+    margin: 0 0 24px 0; /* Remove top margin, add bottom margin */
+}
+
 .moneybag-calc-payment-mix-error {
     color: #dc2626;
     font-size: 14px;
@@ -6152,6 +6158,8 @@ button#custom-mode-toggle:focus-visible {
     margin-bottom: 32px;
     border: 1px solid #e5e7eb;
     animation: slideDown 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .moneybag-calc-table-title {
@@ -6258,6 +6266,62 @@ button#custom-mode-toggle:focus-visible {
     outline: none;
     border-color: #ff6b6b;
     background-color: white;
+}
+
+/* Error state for payment mix inputs */
+.moneybag-calc-method-input.error {
+    border: 2px solid #dc2626 !important;
+    background-color: #fef2f2 !important;
+}
+
+.moneybag-calc-method-input.error:focus {
+    border: 2px solid #dc2626 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    background-color: #fef2f2 !important;
+}
+
+/* Inline error message styling under input fields */
+.moneybag-calc-input-error-inline {
+    font-size: 11px;
+    color: #dc2626;
+    margin-top: 4px;
+    font-weight: 500;
+    line-height: 1.3;
+    padding: 0 2px;
+    animation: fadeIn 0.2s ease-in;
+    transition: opacity 0.3s ease-out;
+}
+
+/* Fade in animation for error messages */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Global payment mix status styling (less prominent than error) */
+.moneybag-calc-payment-mix-status-container {
+    margin: 16px 0 0 0;
+}
+
+.moneybag-calc-payment-mix-status-container .moneybag-calc-status-message {
+    color: #1f2937;
+    font-size: 14px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border: 1px solid #d1d5db;
+    border-left: 4px solid #6b7280;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: left;
+    display: block;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
     box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
@@ -6287,6 +6351,32 @@ button#custom-mode-toggle:focus-visible {
 .moneybag-calc-savings-box .moneybag-calc-cell-value {
     color: #16a34a;
     font-weight: 700;
+}
+
+/* Negative savings values should be red with gradient */
+.moneybag-calc-savings-box .moneybag-calc-cell-value.negative,
+.moneybag-calc-savings-box .moneybag-calc-cell-value[data-negative="true"] {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    font-weight: 700 !important;
+}
+
+/* Also apply to savings boxes with negative values - red background with low opacity */
+.moneybag-calc-savings-box.negative {
+    background: rgba(220, 38, 38, 0.08) !important; /* Red with 8% opacity */
+    border: 1px solid rgba(220, 38, 38, 0.2) !important; /* Red border with 20% opacity */
+}
+
+.moneybag-calc-savings-box.negative .moneybag-calc-cell-value {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    font-weight: 700 !important;
 }
 
 .moneybag-calc-total-row {
@@ -6344,6 +6434,42 @@ button#custom-mode-toggle:focus-visible {
 .moneybag-calc-total-savings-box .moneybag-calc-cell-value {
     color: #16a34a;
     font-weight: 700;
+}
+
+/* Negative total savings values should be red with gradient */
+.moneybag-calc-total-savings-box .moneybag-calc-cell-value.negative,
+.moneybag-calc-total-savings-box .moneybag-calc-cell-value[data-negative="true"] {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    font-weight: 700 !important;
+}
+
+.moneybag-calc-total-savings-box.negative {
+    background: rgba(220, 38, 38, 0.08) !important; /* Red with 8% opacity */
+    border: 1px solid rgba(220, 38, 38, 0.2) !important; /* Red border with 20% opacity */
+}
+
+.moneybag-calc-total-savings-box.negative .moneybag-calc-cell-value {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    font-weight: 700 !important;
+}
+
+/* Negative styling for main savings amounts in hero card */
+.moneybag-calc-savings-amount.negative,
+.moneybag-calc-yearly-amount.negative {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    font-weight: 700 !important;
 }
 
 @keyframes slideDown {

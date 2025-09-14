@@ -43,37 +43,39 @@
                 let compRate = 0;
                 let mbRate = 0;
                 
-                // Get specific rates for each payment method
+                // Get specific rates and determine fallback based on business category
+                const fallbackRate = (Object.keys(moneybagRates).length > 0 && moneybagRates.bkash === 12.5) ? 13 : 2.5;
+
                 if (method === 'visa') {
-                    compRate = competitorRates.visa || competitorRates.card || 2.45;
                     mbRate = moneybagRates.visa || 2.1;
+                    compRate = competitorRates.visa || competitorRates.card || fallbackRate;
                 } else if (method === 'mastercard') {
-                    compRate = competitorRates.mastercard || competitorRates.visa || competitorRates.card || 2.45;
                     mbRate = moneybagRates.mastercard || 2.1;
+                    compRate = competitorRates.mastercard || competitorRates.visa || competitorRates.card || fallbackRate;
                 } else if (method === 'american_express') {
-                    compRate = competitorRates.american_express || competitorRates.amex || competitorRates.card || 3.5;
                     mbRate = moneybagRates.american_express || 3.3;
+                    compRate = competitorRates.american_express || competitorRates.amex || competitorRates.card || fallbackRate;
                 } else if (method === 'diners_club') {
-                    compRate = competitorRates.diners_club || competitorRates.card || 2.5;
                     mbRate = moneybagRates.diners_club || 2.3;
+                    compRate = competitorRates.diners_club || competitorRates.card || fallbackRate;
                 } else if (method === 'unionpay') {
-                    compRate = competitorRates.unionpay || competitorRates.card || 2.5;
                     mbRate = moneybagRates.unionpay || 2.3;
+                    compRate = competitorRates.unionpay || competitorRates.card || fallbackRate;
                 } else if (method === 'dbbl_nexus') {
-                    compRate = competitorRates.dbbl_nexus || competitorRates.nexus || competitorRates.card || 2.2;
                     mbRate = moneybagRates.dbbl_nexus || 2.0;
+                    compRate = competitorRates.dbbl_nexus || competitorRates.nexus || competitorRates.card || 50;
                 } else if (method === 'bkash') {
-                    compRate = competitorRates.bkash || 2.0;
                     mbRate = moneybagRates.bkash || 1.75;
+                    compRate = competitorRates.bkash || fallbackRate;
                 } else if (method === 'nagad') {
-                    compRate = competitorRates.nagad || 1.85;
                     mbRate = moneybagRates.nagad || 1.6;
+                    compRate = competitorRates.nagad || fallbackRate;
                 } else if (method === 'rocket') {
-                    compRate = competitorRates.rocket || 2.0;
                     mbRate = moneybagRates.rocket || 1.8;
+                    compRate = competitorRates.rocket || fallbackRate;
                 } else if (method === 'upay') {
-                    compRate = competitorRates.upay || 1.8;
                     mbRate = moneybagRates.upay || 1.5;
+                    compRate = competitorRates.upay || fallbackRate;
                 }
                 
                 competitorCost += (monthlyVolume * mixPercent / 100 * compRate / 100);
@@ -99,7 +101,40 @@
             difference
         };
     };
-    
+
+    // Generate competitor rates - 13% for Digital Service Platform, 2.5% for others
+    const generateCompetitorRates = (businessCategory = 'eCommerce') => {
+        // Special case for Digital Service Platform
+        if (businessCategory === 'Digital Service Platform') {
+            return {
+                visa: 13,
+                mastercard: 13,
+                american_express: 13,
+                diners_club: 13,
+                unionpay: 13,
+                dbbl_nexus: 50, // Keep flat BDT fee same
+                bkash: 13,
+                nagad: 13,
+                rocket: 13,
+                upay: 13
+            };
+        }
+
+        // Default 2.5% for all other business categories
+        return {
+            visa: 2.5,
+            mastercard: 2.5,
+            american_express: 2.5,
+            diners_club: 2.5,
+            unionpay: 2.5,
+            dbbl_nexus: 50, // Flat BDT fee
+            bkash: 2.5,
+            nagad: 2.5,
+            rocket: 2.5,
+            upay: 2.5
+        };
+    };
+
     // Main Calculator Component
     function PriceComparisonCalculator({ config }) {
         const MONEYBAG_PLUGIN_URL = config.pluginUrl || '/wp-content/plugins/moneybag-wordpress-plugin/';
@@ -141,7 +176,10 @@
         };
         
         const [paymentMix, setPaymentMix] = useState(initialPaymentMix);
-        const [competitorRates, setCompetitorRates] = useState(config.gateway_presets[currentGateway]);
+        const [competitorRates, setCompetitorRates] = useState(() => {
+            // Initialize with appropriate rates based on business category
+            return generateCompetitorRates(businessCategory);
+        });
         const [calculations, setCalculations] = useState({});
         const [isLoading, setIsLoading] = useState(false);
         const [errors, setErrors] = useState({});
@@ -301,14 +339,10 @@
             return categoryRates[category] || categoryRates['eCommerce'];
         };
 
-        const moneybagRates = getCategoryBasedRates(businessCategory);
-        
-        // Update competitor rates when gateway changes
+        // Update competitor rates based on business category
         useEffect(() => {
-            if (config.gateway_presets && config.gateway_presets[currentGateway]) {
-                setCompetitorRates(config.gateway_presets[currentGateway]);
-            }
-        }, [currentGateway]);
+            setCompetitorRates(generateCompetitorRates(businessCategory));
+        }, [currentGateway, businessCategory]);
         
         // Update calculations whenever inputs change
         useEffect(() => {
@@ -372,10 +406,8 @@
         const handleGatewayChange = (e) => {
             const newGateway = e.target.value;
             setCurrentGateway(newGateway);
-            // Update competitor rates based on selected gateway
-            if (config.gateway_presets && config.gateway_presets[newGateway]) {
-                setCompetitorRates(config.gateway_presets[newGateway]);
-            }
+            // Update competitor rates based on current business category
+            setCompetitorRates(generateCompetitorRates(businessCategory));
         };
 
         // Handle business category change
@@ -389,28 +421,67 @@
             } else {
                 setErrors(prev => ({ ...prev, businessCategory: null }));
                 setBusinessCategory(newCategory);
+                // Update competitor rates based on new business category
+                setCompetitorRates(generateCompetitorRates(newCategory));
             }
         };
         
-        // Handle payment mix change with validation
+        // Handle payment mix change with prevention and inline validation
         const handlePaymentMixChange = (method, value) => {
             const newValue = parseInt(value) || 0;
-            const newMix = { ...paymentMix, [method]: newValue };
+            const otherMethodsSum = Object.keys(paymentMix)
+                .filter(key => key !== method)
+                .reduce((sum, key) => sum + (paymentMix[key] || 0), 0);
+
+            // Prevent exceeding 100% - cap the input at max allowed
+            const maxAllowed = 100 - otherMethodsSum;
+            const cappedValue = Math.min(newValue, Math.max(0, maxAllowed));
+
+            const newMix = { ...paymentMix, [method]: cappedValue };
             const sum = Object.values(newMix).reduce((a, b) => a + b, 0);
-            
-            // Update the payment mix
+
+            // Update the payment mix with capped value
             setPaymentMix(newMix);
-            
-            // Check if sum equals 100
-            if (sum !== 100) {
-                if (sum > 100) {
-                    setErrors(prev => ({ ...prev, paymentMix: `⚠️ Total exceeds 100% (currently ${sum}%). Please reduce one or more payment methods.` }));
+
+            // Set individual field errors for inline validation
+            const newFieldErrors = { ...errors };
+
+            // Clear payment mix global error since we're preventing it
+            newFieldErrors.paymentMix = null;
+
+            // Set individual field validation messages
+            Object.keys(paymentMix).forEach(methodKey => {
+                const fieldValue = newMix[methodKey] || 0;
+
+                if (methodKey === method && newValue > cappedValue && cappedValue >= 0) {
+                    // User tried to input more than allowed
+                    newFieldErrors[`${methodKey}_individual`] = `(Exceed 100%). To increase this, decrease others first.`;
+
+                    // Auto-hide error after 5 seconds
+                    setTimeout(() => {
+                        setErrors(prev => ({ ...prev, [`${methodKey}_individual`]: null }));
+                    }, 5000);
+                } else if (fieldValue < 0) {
+                    newFieldErrors[`${methodKey}_individual`] = 'Cannot be negative';
+
+                    // Auto-hide error after 5 seconds
+                    setTimeout(() => {
+                        setErrors(prev => ({ ...prev, [`${methodKey}_individual`]: null }));
+                    }, 5000);
                 } else {
-                    setErrors(prev => ({ ...prev, paymentMix: `⚠️ Total is only ${sum}%. Please increase payment methods to reach 100%.` }));
+                    // Clear individual field error
+                    newFieldErrors[`${methodKey}_individual`] = null;
                 }
+            });
+
+            // Set global validation state for incomplete totals
+            if (sum < 100) {
+                newFieldErrors.paymentMixGlobal = `Total: ${sum}% - Need ${100 - sum}% more`;
             } else {
-                setErrors(prev => ({ ...prev, paymentMix: null }));
+                newFieldErrors.paymentMixGlobal = null;
             }
+
+            setErrors(newFieldErrors);
         };
         
         // Handle competitor rate change
@@ -485,14 +556,20 @@
                 ),
                 h('div', { className: 'moneybag-calc-savings-main-text' },
                     h('span', { className: 'moneybag-calc-savings-line1' }, 'You could save'),
-                    h('span', { className: 'moneybag-calc-savings-amount', id: 'monthly-savings' }, 
+                    h('span', {
+                        className: `moneybag-calc-savings-amount ${(calculations.monthlySavings || 0) < 0 ? 'negative' : ''}`,
+                        id: 'monthly-savings'
+                    },
                         formatNumber(Math.round(calculations.monthlySavings || 0))
                     ),
                     h('span', { className: 'moneybag-calc-savings-line3' }, '/ month')
                 ),
                 h('div', { className: 'moneybag-calc-savings-sub-text' },
                     'and ',
-                    h('span', { className: 'moneybag-calc-yearly-amount', id: 'yearly-savings' }, 
+                    h('span', {
+                        className: `moneybag-calc-yearly-amount ${(calculations.yearlySavings || 0) < 0 ? 'negative' : ''}`,
+                        id: 'yearly-savings'
+                    },
                         formatNumber(Math.round(calculations.yearlySavings || 0))
                     ),
                     ' / year with Moneybag'
@@ -740,36 +817,38 @@
                         // Get dynamic Moneybag rates based on selected business category
                         const currentMoneybagRates = getCategoryBasedRates(businessCategory);
 
-                        // Get specific rates for each payment method
+                        // Get specific rates with appropriate fallback for business category
+                        const fallbackRate = businessCategory === 'Digital Service Platform' ? 13 : 2.5;
+
                         if (method.id === 'visa') {
-                            compRate = competitorRates.visa || competitorRates.card || 2.45;
+                            compRate = competitorRates.visa || competitorRates.card || fallbackRate;
                             mbRate = currentMoneybagRates.visa || 2.1;
                         } else if (method.id === 'mastercard') {
-                            compRate = competitorRates.mastercard || competitorRates.visa || competitorRates.card || 2.45;
+                            compRate = competitorRates.mastercard || competitorRates.visa || competitorRates.card || fallbackRate;
                             mbRate = currentMoneybagRates.mastercard || 2.1;
                         } else if (method.id === 'american_express') {
-                            compRate = competitorRates.american_express || competitorRates.amex || competitorRates.card || 3.5;
+                            compRate = competitorRates.american_express || competitorRates.amex || competitorRates.card || fallbackRate;
                             mbRate = currentMoneybagRates.american_express || 3.3;
                         } else if (method.id === 'diners_club') {
-                            compRate = competitorRates.diners_club || competitorRates.card || 2.5;
+                            compRate = competitorRates.diners_club || competitorRates.card || fallbackRate;
                             mbRate = currentMoneybagRates.diners_club || 2.3;
                         } else if (method.id === 'unionpay') {
-                            compRate = competitorRates.unionpay || competitorRates.card || 2.5;
+                            compRate = competitorRates.unionpay || competitorRates.card || fallbackRate;
                             mbRate = currentMoneybagRates.unionpay || 2.3;
                         } else if (method.id === 'dbbl_nexus') {
-                            compRate = competitorRates.dbbl_nexus || competitorRates.nexus || competitorRates.card || 2.2;
+                            compRate = competitorRates.dbbl_nexus || competitorRates.nexus || competitorRates.card || 50;
                             mbRate = currentMoneybagRates.dbbl_nexus || 2.0;
                         } else if (method.id === 'bkash') {
-                            compRate = competitorRates.bkash || 2.0;
+                            compRate = competitorRates.bkash || fallbackRate;
                             mbRate = currentMoneybagRates.bkash || 1.75;
                         } else if (method.id === 'nagad') {
-                            compRate = competitorRates.nagad || 1.85;
+                            compRate = competitorRates.nagad || fallbackRate;
                             mbRate = currentMoneybagRates.nagad || 1.6;
                         } else if (method.id === 'rocket') {
-                            compRate = competitorRates.rocket || 2.0;
+                            compRate = competitorRates.rocket || fallbackRate;
                             mbRate = currentMoneybagRates.rocket || 1.8;
                         } else if (method.id === 'upay') {
-                            compRate = competitorRates.upay || 1.8;
+                            compRate = competitorRates.upay || fallbackRate;
                             mbRate = currentMoneybagRates.upay || 1.5;
                         }
                         
@@ -794,10 +873,14 @@
                                             value: paymentMix[method.id],
                                             min: 0,
                                             max: 100,
-                                            className: 'moneybag-calc-method-input',
+                                            className: `moneybag-calc-method-input ${errors[`${method.id}_individual`] ? 'error' : ''}`,
                                             onChange: (e) => handlePaymentMixChange(method.id, e.target.value)
                                         })
-                                    )
+                                    ),
+                                    // Individual field error message under input
+                                    errors[`${method.id}_individual`] && h('div', {
+                                        className: 'moneybag-calc-input-error-inline'
+                                    }, errors[`${method.id}_individual`])
                                 ),
                                 h('div', { className: 'moneybag-calc-cell-group' },
                                     h('div', { className: 'moneybag-calc-cell-label' }, 'Your Rate (%)'),
@@ -823,8 +906,12 @@
                                 ),
                                 h('div', { className: 'moneybag-calc-cell-group' },
                                     h('div', { className: 'moneybag-calc-cell-label' }, 'Savings'),
-                                    h('div', { className: 'moneybag-calc-cell-box moneybag-calc-savings-box' },
-                                        h('div', { className: 'moneybag-calc-cell-value' }, 
+                                    h('div', {
+                                        className: `moneybag-calc-cell-box moneybag-calc-savings-box ${(savings || 0) < 0 ? 'negative' : ''}`
+                                    },
+                                        h('div', {
+                                            className: `moneybag-calc-cell-value ${(savings || 0) < 0 ? 'negative' : ''}`
+                                        },
                                             formatNumber(Math.round(savings || 0))
                                         )
                                     )
@@ -857,8 +944,12 @@
                                 )
                             ),
                             h('div', { className: 'moneybag-calc-cell-group' },
-                                h('div', { className: 'moneybag-calc-cell-box moneybag-calc-total-savings-box' },
-                                    h('div', { className: 'moneybag-calc-cell-value' }, 
+                                h('div', {
+                                    className: `moneybag-calc-cell-box moneybag-calc-total-savings-box ${(calculations.monthlySavings || 0) < 0 ? 'negative' : ''}`
+                                },
+                                    h('div', {
+                                        className: `moneybag-calc-cell-value ${(calculations.monthlySavings || 0) < 0 ? 'negative' : ''}`
+                                    },
                                         formatNumber(Math.round(calculations.monthlySavings || 0))
                                     )
                                 )
@@ -867,9 +958,9 @@
                     )
                 ),
                 
-                // Payment Mix Error (at bottom of custom mode section)
-                errors.paymentMix && h('div', { className: 'moneybag-calc-payment-mix-error-container' },
-                    h('div', { className: 'moneybag-calc-error-message moneybag-calc-payment-mix-error' }, errors.paymentMix)
+                // Global Payment Mix Status (at bottom of custom mode section)
+                errors.paymentMixGlobal && h('div', { className: 'moneybag-calc-payment-mix-status-container' },
+                    h('div', { className: 'moneybag-calc-status-message moneybag-calc-payment-mix-status' }, errors.paymentMixGlobal)
                 )
             ),
             
