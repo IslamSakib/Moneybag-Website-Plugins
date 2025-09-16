@@ -2032,6 +2032,19 @@ form.contact-form .form-row.two-columns {
     text-align: center;
 }
 
+/* Card header styling for pricing plan cards */
+.pricing-plan-container .card-header {
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 10px;
+    background-color: #F2F2F2;
+    border-radius: 28px;
+    margin-bottom: 20px;
+    display: inline-block;
+    text-align: center;
+    color: #e20e18ba;
+}
+
 /* Document Checklist */
 .pricing-plan-container .checklist {
     margin: 0;
