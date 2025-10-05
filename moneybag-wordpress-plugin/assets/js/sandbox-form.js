@@ -225,7 +225,7 @@
                 
                 if (!responseData.success) {
                     // API call failed
-                    throw new Error(responseData.data || 'API request failed');
+                    throw new Error(responseData.data || 'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                 }
                 
                 return responseData.data;
@@ -266,7 +266,7 @@
                     goToStep(2);
                 } else {
                     // If no session_id, throw error
-                    throw new Error('No session ID received from server');
+                    throw new Error('Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                 }
             } catch (error) {
                 // Identifier verification error

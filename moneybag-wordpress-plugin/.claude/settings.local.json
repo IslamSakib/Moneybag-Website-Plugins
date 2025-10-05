@@ -64,7 +64,15 @@
       "Read(//c/laragon/www/**)",
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" \"C:\\laragon\\www\\wp-content\\plugins\\moneybag-wordpress-plugin\\test-merchant-crm-direct.php\")",
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" test-opportunity-stages.php)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(for dir in ./assets/css ./assets/image ./assets/js ./includes/admin ./includes/widgets)",
+      "Bash(do if [ ! -f \"$dir/index.php\" ])",
+      "Bash(then echo \"Missing: $dir/index.php\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(while read dir)",
+      "Bash(then echo \"Missing: $dir\")",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

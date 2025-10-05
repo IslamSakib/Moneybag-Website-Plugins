@@ -30,7 +30,7 @@
                     const pluginUrl = window.moneybagPricingAjax?.pluginUrl || `${window.location.origin}/wp-content/plugins/moneybag-wordpress-plugin`;
                     const response = await fetch(`${pluginUrl}/data/pricing-rules.json`);
                     if (!response.ok) {
-                        throw new Error(`Failed to load pricing rules: ${response.status}`);
+                        throw new Error('Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                     }
                     const rules = await response.json();
                     setPricingRules(rules);
@@ -244,22 +244,22 @@
                 }
                 
                 if (!response.ok) {
-                    throw new Error(`Network error: ${response.status}`);
+                    throw new Error('Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                 }
-                
+
                 const result = await response.json();
-                
+
                 if (!result.success) {
-                    const errorMessage = result.data?.message || result.data || 'CRM operation failed';
-                    
+                    const errorMessage = result.data?.message || result.data || 'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>';
+
                     // Check for specific CRM configuration issues
                     if (errorMessage.includes('CRM API request failed')) {
                         // This means the CRM API itself is failing - likely configuration issue
-                        throw new Error('CRM service is temporarily unavailable. Please try again later or contact support.');
+                        throw new Error('Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                     } else if (errorMessage.includes('API key not configured')) {
-                        throw new Error('CRM not configured. Please contact administrator.');
+                        throw new Error('Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                     }
-                    
+
                     throw new Error(errorMessage);
                 }
                 
@@ -344,7 +344,7 @@
                 nextStep();
             } catch (error) {
                 // Parse error message to determine the field
-                const errorMessage = error.message || 'Unable to process your request. Please try again.';
+                const errorMessage = error.message || 'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>';
                 
                 // Check for specific field errors and map them
                 if (errorMessage.toLowerCase().includes('email')) {
@@ -637,7 +637,10 @@
                                     renderInput('email', 'email', 'your@email.com'),
                                     renderInput('mobile', 'tel', '+8801XXXXXXXXX')
                                 ),
-                                errors.submit && createElement('div', { className: 'submit-error' }, errors.submit),
+                                errors.submit && createElement('div', {
+                                    className: 'submit-error',
+                                    dangerouslySetInnerHTML: { __html: errors.submit }
+                                }),
                                 createElement('button', {
                                     className: 'primary-btn',
                                     onClick: handleSubmit,

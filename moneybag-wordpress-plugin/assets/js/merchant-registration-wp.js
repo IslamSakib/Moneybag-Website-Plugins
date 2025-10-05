@@ -76,7 +76,7 @@
                 
                 const result = await response.json();
                 if (!result.success) {
-                    throw new Error(result.data || 'API call failed');
+                    throw new Error(result.data || 'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                 }
                 
                 return result.data;
@@ -429,7 +429,7 @@
                     
                     const result = await response.json();
                     if (!result.success) {
-                        throw new Error(result.data?.message || result.data || 'CRM operation failed');
+                        throw new Error(result.data?.message || result.data || 'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                     }
                     return result.data;
                 };
@@ -565,13 +565,13 @@
                         }, 3000);
                     }
                 } else {
-                    throw new Error('Registration failed - no response data');
+                    throw new Error('Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>');
                 }
             } catch (error) {
                 setLoading(false);
-                let displayMessage = 'Registration failed';
-                
-                // Handle specific network errors
+                let displayMessage = 'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>';
+
+                // Handle specific network errors - keep network errors as they are user-actionable
                 if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
                     displayMessage = 'Network connection error. Please check your internet connection and try again.';
                 } else if (error.message && error.message.includes('ERR_CONNECTION_TIMED_OUT')) {
@@ -582,8 +582,6 @@
                     displayMessage = error.message;
                 } else if (error.toString && error.toString() !== '[object Object]') {
                     displayMessage = error.toString();
-                } else {
-                    displayMessage = 'Registration failed. Please try again.';
                 }
                 
                 // Check if it's a validation error from the API

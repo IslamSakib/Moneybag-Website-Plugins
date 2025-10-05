@@ -191,7 +191,7 @@
                 } else {
                     setSubmitStatus({
                         type: 'error',
-                        message: data.data?.message || 'An error occurred. Please try again.'
+                        message: 'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>'
                     });
                 }
             } catch (error) {
@@ -212,8 +212,9 @@
             },
                 // Status message
                 submitStatus.message && h('div', {
-                    className: `form-status ${submitStatus.type === 'success' ? 'success' : 'error'}`
-                }, submitStatus.message),
+                    className: `form-status ${submitStatus.type === 'success' ? 'success' : 'error'}`,
+                    dangerouslySetInnerHTML: { __html: submitStatus.message }
+                }),
                 
                 // Name field
                 h('div', { className: 'form-group' },
