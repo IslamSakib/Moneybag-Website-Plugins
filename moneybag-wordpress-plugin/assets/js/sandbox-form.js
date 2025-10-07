@@ -11,6 +11,7 @@
         const [verifyingOTP, setVerifyingOTP] = useState(false);
         const [resendingOTP, setResendingOTP] = useState(false);
         const [errors, setErrors] = useState({});
+        const [successMessage, setSuccessMessage] = useState('');
         const [sessionId, setSessionId] = useState('');
         
         const [formData, setFormData] = useState({
@@ -170,7 +171,7 @@
         const handleInputChange = (e) => {
             const { name, value, type, checked } = e.target;
             let processedValue = type === 'checkbox' ? checked : value;
-            
+
             // Use centralized input filtering
             if (window.MoneybagValidation && type !== 'checkbox') {
                 const fieldMap = {
@@ -181,20 +182,25 @@
                     'email': 'text',
                     'businessName': 'businessName',
                     'website': 'text',
-                    'otp': 'text'
+                    'otp': 'numeric' // Only allow numbers for OTP
                 };
-                
+
                 const filterType = fieldMap[name];
                 if (filterType) {
                     processedValue = window.MoneybagValidation.filterInput(value, filterType);
                 }
             }
-            
+
+            // For OTP, limit to 6 digits
+            if (name === 'otp' && processedValue.length > 6) {
+                processedValue = processedValue.slice(0, 6);
+            }
+
             setFormData(prev => ({
                 ...prev,
                 [name]: processedValue
             }));
-            
+
             // Clear error when user starts typing
             if (errors[name]) {
                 setErrors(prev => ({
@@ -289,26 +295,41 @@
         };
 
         const verifyOTP = async () => {
-            // Validate OTP before sending
-            if (!formData.otp || formData.otp.length !== 6) {
-                setErrors(prev => ({ ...prev, otp: 'Please enter a valid 6-digit code' }));
+            // Clear previous errors
+            setErrors(prev => ({ ...prev, otp: '' }));
+
+            // Basic validation - check if OTP is provided
+            if (!formData.otp || !formData.otp.trim()) {
+                setErrors(prev => ({ ...prev, otp: 'Please enter the verification code' }));
                 return;
             }
-            
+
+            // Validate OTP format (6 digits)
+            if (formData.otp.length !== 6) {
+                setErrors(prev => ({ ...prev, otp: 'Verification code must be 6 digits' }));
+                return;
+            }
+
+            // Validate OTP contains only numbers
+            if (!/^\d{6}$/.test(formData.otp)) {
+                setErrors(prev => ({ ...prev, otp: 'Verification code must contain only numbers' }));
+                return;
+            }
+
             setVerifyingOTP(true);
             try {
                 const response = await apiCall('verify_otp', {
                     otp: formData.otp,
                     session_id: sessionId
                 });
-                
+
                 // OTP verification response received
-                
+
                 // If we get a response without error, consider it successful
                 if (response) {
                     // Check for explicit verification status if available
                     if (response.verified === false) {
-                        throw new Error('Invalid OTP');
+                        throw new Error('Invalid verification code. Please try again.');
                     }
                     goToStep(3);
                 }
@@ -367,26 +388,30 @@
             setErrors({});
             setLoading(true);
             try {
+                // Execute reCAPTCHA v3
+                const recaptchaToken = await executeRecaptcha();
+
                 const requestData = {
                     business_name: formData.businessName,
                     business_website: formData.website || '',
                     first_name: formData.firstName,
                     last_name: formData.lastName,
                     legal_identity: formData.legalIdType,
-                    session_id: sessionId
+                    session_id: sessionId,
+                    recaptcha_token: recaptchaToken
                 };
-                
+
                 // Dynamic email/phone based on verification method
                 if (isEmail(formData.identifier)) {
                     // Email was used for verification, phone comes from form
                     requestData.email = formData.identifier;
                     requestData.phone = formData.mobile;
                 } else {
-                    // Phone was used for verification, email comes from form  
+                    // Phone was used for verification, email comes from form
                     requestData.phone = formData.identifier;
                     requestData.email = formData.email;
                 }
-                
+
                 const response = await apiCall('business_details', requestData);
                 
                 // Handle response - if we get here without error, it was successful
@@ -453,17 +478,29 @@
             } else {
                 setTimerActive(false);
             }
-            
+
             // reCAPTCHA v3 loads automatically, no manual rendering needed
         };
 
         const resendOTP = async () => {
+            // Validate if timer has expired
+            if (timeLeft > 0) {
+                setErrors(prev => ({
+                    ...prev,
+                    otp: `Please wait ${formatTime(timeLeft)} before requesting a new code`
+                }));
+                return;
+            }
+
+            // Clear any previous errors
+            setErrors(prev => ({ ...prev, otp: '' }));
+
             setResendingOTP(true);
             try {
                 const response = await apiCall('email_verification', {
                     identifier: formData.identifier
                 });
-                
+
                 // Update sessionId with new session from resend response
                 if (response && response.data && response.data.session_id) {
                     setSessionId(response.data.session_id);
@@ -471,7 +508,18 @@
                     // Fallback for direct session_id
                     setSessionId(response.session_id);
                 }
-                
+
+                // Show success message temporarily
+                setErrors(prev => ({
+                    ...prev,
+                    otp: `✓ Verification code sent successfully to ${formData.identifier}`
+                }));
+
+                // Clear success message after 3 seconds
+                setTimeout(() => {
+                    setErrors(prev => ({ ...prev, otp: '' }));
+                }, 3000);
+
                 setTimeLeft(60);
                 setTimerActive(true);
             } catch (error) {
@@ -551,244 +599,443 @@
         };
 
 
-        return createElement('div', { className: 'moneybag-form-container moneybag-form', onKeyPress: handleKeyPress },
-            // Step 1: Email Input
-            currentStep === 1 && createElement('div', { className: 'split-layout' },
-                createElement('div', { className: 'left-section' },
-                    createElement('div', { className: 'icon-container' },
-                        createElement('div', { className: 'envelope-icon' },
-                            createElement('img', {
-                                src: config.plugin_url + 'assets/image/emojione_e-mail.webp',
-                                alt: 'Email verification',
-                                className: 'illustration-small'
-                            })
+        return createElement('div', { className: 'moneybag-form-container moneybag-form sandbox-step-' + currentStep, onKeyPress: handleKeyPress },
+            // Step 1: Email Input - New Design (2-column layout)
+            currentStep === 1 && createElement('div', { className: 'sandbox-step1-layout' },
+                createElement('div', { className: 'sandbox-step1-left' },
+                    createElement('div', { className: 'sandbox-step1-content' },
+                        createElement('div', { className: 'sandbox-step1-heading' },
+                            'Enter your email or phone number to receive secure ',
+                            createElement('span', { className: 'sandbox-heading-highlight' }, 'Sandbox Credentials'),
+                            ' & start testing right away.'
+                        ),
+                        createElement('div', { className: 'sandbox-step1-icon-info' },
+                            createElement('div', { className: 'sandbox-phone-icon' },
+                                createElement('img', {
+                                    src: config.plugin_url + 'assets/image/fluent-color_phone-20.svg',
+                                    alt: 'Email or Phone verification',
+                                    className: 'sandbox-icon-img'
+                                })
+                            ),
+                            createElement('p', { className: 'sandbox-info-text' },
+                                'Secure email verification ensures your sandbox credentials are delivered safely to the right person.'
+                            )
+                        ),
+                        createElement('div', { className: 'sandbox-step1-form' },
+                            createElement('label', { className: 'sandbox-input-label' },
+                                'Email or Phone no.'
+                            ),
+                            createElement('input', {
+                                type: 'text',
+                                className: `sandbox-input-field ${errors.identifier ? 'error' : ''} ${formData.identifier ? 'valid' : ''}`,
+                                name: 'identifier',
+                                value: formData.identifier,
+                                onChange: handleInputChange,
+                                onBlur: (e) => validateAndSetFieldError('identifier', e.target.value, 'identifier'),
+                                onKeyPress: handleKeyPress,
+                                placeholder: '',
+                                disabled: loading
+                            }),
+                            errors.identifier && createElement('span', {
+                                className: 'error-message',
+                                dangerouslySetInnerHTML: typeof errors.identifier === 'string' && errors.identifier.includes('<a')
+                                    ? { __html: errors.identifier }
+                                    : undefined
+                            }, typeof errors.identifier === 'string' && errors.identifier.includes('<a')
+                                ? null
+                                : errors.identifier
+                            ),
+                            createElement('div', { className: 'sandbox-step1-actions' },
+                                createElement('button', {
+                                    className: 'sandbox-send-btn',
+                                    onClick: sendIdentifierVerification,
+                                    disabled: loading || !!errors.identifier
+                                },
+                                    loading ? createElement('span', { className: 'btn-content' },
+                                        createElement('span', {
+                                            className: 'spinner',
+                                            dangerouslySetInnerHTML: {
+                                                __html: '<svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none"/><circle cx="25" cy="25" r="20" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="80 50" stroke-linecap="round"/></svg>'
+                                            }
+                                        }),
+                                        'Sending...'
+                                    ) : 'Send Verification Code'
+                                ),
+                                createElement('span', { className: 'sandbox-or-text' }, 'Or, '),
+                                createElement('a', {
+                                    href: 'https://sandbox.moneybag.com.bd/',
+                                    target: '_blank',
+                                    rel: 'noopener noreferrer',
+                                    className: 'sandbox-login-link'
+                                }, 'Login')
+                            )
                         )
-                    ),
-                    createElement('p', { className: 'info-text' },
-                        'Secure verification ensures your sandbox credentials are delivered safely. We support both email and phone verification.'
                     )
                 ),
-                createElement('div', { className: 'section-divider' }),
-                createElement('div', { className: 'right-section' },
-                    createElement('div', { className: 'form-content' },
-                        createElement('label', { className: 'input-label' }, 
-                            'Email or Phone',
-                            createElement('span', { className: 'required-indicator' }, ' *')
-                        ),
-                        createElement('input', {
-                            type: 'text',
-                            className: `input-field ${errors.identifier ? 'error' : ''} ${formData.identifier ? 'valid' : ''}`,
-                            name: 'identifier',
-                            value: formData.identifier,
-                            onChange: handleInputChange,
-                            onBlur: (e) => validateAndSetFieldError('identifier', e.target.value, 'identifier'),
-                            onKeyPress: handleKeyPress,
-                            placeholder: 'user@example.com or 01712345678',
-                            disabled: loading
-                        }),
-                        errors.identifier && createElement('span', { 
-                            className: 'error-message',
-                            dangerouslySetInnerHTML: typeof errors.identifier === 'string' && errors.identifier.includes('<a') 
-                                ? { __html: errors.identifier } 
-                                : undefined
-                        }, typeof errors.identifier === 'string' && errors.identifier.includes('<a') 
-                            ? null 
-                            : errors.identifier
-                        ),
-                        createElement('button', {
-                            className: 'primary-btn',
-                            onClick: sendIdentifierVerification,
-                            disabled: loading || !!errors.identifier
-                        }, 
-                            loading ? createElement('span', { className: 'btn-content' },
-                                createElement('span', { 
-                                    className: 'spinner',
-                                    dangerouslySetInnerHTML: {
-                                        __html: '<svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none"/><circle cx="25" cy="25" r="20" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="80 50" stroke-linecap="round"/></svg>'
-                                    }
-                                }),
-                                'Sending...'
-                            ) : createElement('span', { className: 'btn-content' }, 'Send Verification Code')
-                        )
+                createElement('div', { className: 'sandbox-step1-right' },
+                    createElement('div', { className: 'sandbox-demo-header' },
+                        createElement('span', { className: 'sandbox-demo-title' }, 'Try the demo'),
+                        ' risk-free no registration required.'
+                    ),
+                    createElement('a', {
+                        href: 'https://moneybag.com.bd/demo',
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        className: 'sandbox-demo-btn'
+                    },
+                        'Try Our Free Demo',
+                        createElement('img', {
+                            src: config.plugin_url + 'assets/image/mouse-pointer.svg',
+                            alt: 'Click',
+                            className: 'sandbox-demo-icon'
+                        })
+                    ),
+                    createElement('ul', { className: 'sandbox-demo-benefits' },
+                        createElement('li', null, 'No account needed'),
+                        createElement('li', null, 'See a complete payment flow'),
+                        createElement('li', null, 'Perfect for a quick look before integrating')
                     )
                 )
             ),
 
-            // Step 2: OTP Input
-            currentStep === 2 && createElement('div', { className: 'otp-step-wrapper' },
-                createElement('div', { className: 'countdown-top-right' }, 
-                    ...renderCountdown(formatTime(timeLeft))
-                ),
-                createElement('div', { className: 'split-layout' },
-                    createElement('div', { className: 'left-section' },
-                        createElement('div', { className: 'icon-container' },
-                            createElement('div', { className: 'envelope-icon' },
+            // Step 2: OTP Input - New Design (2-column layout like Step 1)
+            currentStep === 2 && createElement('div', { className: 'sandbox-step2-layout' },
+                createElement('div', { className: 'sandbox-step2-left' },
+                    createElement('div', { className: 'sandbox-step2-content' },
+                        createElement('div', { className: 'sandbox-step2-icon-info' },
+                            createElement('div', { className: 'sandbox-lock-icon' },
                                 createElement('img', {
-                                    src: config.plugin_url + 'assets/image/streamline-freehand-color_password-approved.webp',
-                                    alt: 'Password approved',
-                                    className: 'illustration-password'
+                                    src: config.plugin_url + 'assets/image/flat-color-icons_lock.svg',
+                                    alt: 'Security lock',
+                                    className: 'sandbox-icon-img'
                                 })
+                            ),
+                            createElement('p', { className: 'sandbox-info-text' },
+                                `Enter the 6-digit verification code sent to your ${isEmail(formData.identifier) ? 'email' : 'number'}. Code expires in 1 minute for security.`
                             )
                         ),
-                        createElement('p', { className: 'info-text' },
-                            `Enter the 6-digit verification code sent to your ${isEmail(formData.identifier) ? 'email' : 'phone'}. Code expires in 1 minute for security.`
-                        )
-                    ),
-                    createElement('div', { className: 'section-divider' }),
-                    createElement('div', { className: 'right-section' },
-                        createElement('div', { className: 'form-content' },
-                            createElement('div', { className: 'otp-sent-message' }, 
-                                `OTP sent to ${formData.identifier}`
+                        createElement('div', { className: 'sandbox-step2-form' },
+                            createElement('div', { className: 'sandbox-otp-header' },
+                                createElement('label', { className: 'sandbox-input-label' }, 'OTP'),
+                                createElement('div', { className: 'sandbox-countdown' },
+                                    formatTime(timeLeft)
+                                )
                             ),
-                            createElement('label', { className: 'input-label' }, 
-                                'Verification Code',
-                                createElement('span', { className: 'required-indicator' }, ' *')
+                            createElement('input', {
+                                type: 'text',
+                                className: `sandbox-input-field ${errors.otp ? 'error' : ''} ${formData.otp ? 'valid' : ''}`,
+                                name: 'otp',
+                                value: formData.otp,
+                                onChange: handleInputChange,
+                                onKeyPress: handleKeyPress,
+                                placeholder: '',
+                                maxLength: 6,
+                                disabled: verifyingOTP || resendingOTP
+                            }),
+                            errors.otp && createElement('span', {
+                                className: errors.otp.startsWith('✓') ? 'error-message success-message' : 'error-message',
+                                dangerouslySetInnerHTML: typeof errors.otp === 'string' && errors.otp.includes('<a')
+                                    ? { __html: errors.otp }
+                                    : undefined
+                            }, typeof errors.otp === 'string' && errors.otp.includes('<a')
+                                ? null
+                                : errors.otp
                             ),
-                            createElement('div', { className: 'otp-input-wrapper' },
-                                createElement('input', {
-                                    type: 'text',
-                                    className: `input-field ${errors.otp ? 'error' : ''}`,
-                                    name: 'otp',
-                                    maxLength: 6,
-                                    value: formData.otp,
-                                    onChange: handleInputChange,
-                                    onKeyPress: handleKeyPress,
-                                    disabled: loading
-                                }),
-                                errors.otp && createElement('span', { className: 'error-message' }, errors.otp)
-                            ),
-                            createElement('div', { className: 'btn-row' },
+                            createElement('div', { className: 'sandbox-step2-actions' },
                                 createElement('button', {
-                                    className: 'primary-btn',
+                                    className: 'sandbox-verify-btn',
                                     onClick: verifyOTP,
                                     disabled: verifyingOTP || resendingOTP
-                                }, 
+                                },
                                     verifyingOTP ? createElement('span', { className: 'btn-content' },
-                                        createElement('span', { 
+                                        createElement('span', {
                                             className: 'spinner',
                                             dangerouslySetInnerHTML: {
                                                 __html: '<svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none"/><circle cx="25" cy="25" r="20" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="80 50" stroke-linecap="round"/></svg>'
                                             }
                                         }),
                                         'Verifying...'
-                                    ) : createElement('span', { className: 'btn-content' }, 'Verify')
+                                    ) : 'Verify'
                                 ),
                                 createElement('button', {
-                                    className: 'secondary-btn',
+                                    className: 'sandbox-resend-btn',
                                     onClick: resendOTP,
-                                    disabled: resendingOTP || verifyingOTP || timeLeft > 0
+                                    disabled: resendingOTP || verifyingOTP
                                 }, resendingOTP ? 'Resending...' : 'Resend')
                             )
                         )
                     )
-                )
-            ),
-
-            // Step 3: Registration Form
-            currentStep === 3 && createElement('div', { className: 'full-form' },
-                createElement('div', { className: 'input-row' },
-                    renderInput('firstName', 'text', ''),
-                    renderInput('lastName', 'text', ''),
-                    // Dynamic field based on verification method
-                    isEmail(formData.identifier) 
-                        ? renderInput('mobile', 'tel', '', {
-                            placeholder: 'Enter your mobile number',
-                            required: true
-                        })
-                        : renderInput('email', 'email', '', {
-                            placeholder: 'Enter your email address',
-                            required: true
-                        })
                 ),
-                createElement('div', { className: 'input-row' },
-                    createElement('div', { className: 'field-group' },
-                        createElement('label', { className: 'field-label' }, 
-                            'Legal Identity Type',
-                            createElement('span', { className: 'required-indicator' }, ' *')
-                        ),
-                        createElement('div', { className: 'dropdown-wrapper' },
-                            createElement('select', {
-                                className: `input-field ${errors.legalIdType ? 'error' : ''} ${formData.legalIdType ? 'valid' : ''}`,
-                                name: 'legalIdType',
-                                value: formData.legalIdType,
-                                onChange: handleInputChange,
-                                onBlur: (e) => {
-                                    if (!e.target.value) {
-                                        setErrors(prev => ({ ...prev, legalIdType: 'Please select a legal identity type' }));
-                                    } else {
-                                        setErrors(prev => ({ ...prev, legalIdType: '' }));
-                                    }
-                                }
-                            },
-                                createElement('option', { value: '' }, 'Select'),
-                                createElement('option', { value: 'Educational Institution' }, 'Educational Institution'),
-                                createElement('option', { value: 'Corporation' }, 'Corporation'),
-                                createElement('option', { value: 'Sole Proprietorship' }, 'Sole Proprietorship'),
-                                createElement('option', { value: 'Partnership' }, 'Partnership'),
-                                createElement('option', { value: 'Limited Liability Company' }, 'Limited Liability Company'),
-                                createElement('option', { value: 'Public Company' }, 'Public Company'),
-                                createElement('option', { value: 'Non-Governmental Organization' }, 'Non-Governmental Organization'),
-                                createElement('option', { value: 'Other' }, 'Other')
-                            )
-                        ),
-                        errors.legalIdType && createElement('span', { className: 'error-message' }, errors.legalIdType)
+                createElement('div', { className: 'sandbox-step2-right' },
+                    createElement('div', { className: 'sandbox-demo-header' },
+                        createElement('span', { className: 'sandbox-demo-title' }, 'Try the demo'),
+                        ' risk-free no registration required.'
                     ),
-                    renderInput('businessName', 'text', ''),
-                    renderInput('website', 'text', 'example.com')
-                ),
-                // reCAPTCHA v3 is invisible, only show error if any
-                errors.recaptcha && createElement('div', { className: 'recaptcha-error' },
-                    createElement('span', { className: 'error-message' }, errors.recaptcha)
-                ),
-                createElement('button', {
-                    className: 'arrow-btn',
-                    onClick: submitBusinessDetails,
-                    disabled: loading
-                },
-                    loading ? createElement('span', { className: 'btn-content' },
-                        createElement('span', { 
-                            className: 'spinner',
-                            dangerouslySetInnerHTML: {
-                                __html: '<svg class="spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6-8.485"></path></svg>'
-                            }
-                        }),
-                        'Creating Account...'
-                    ) : createElement('span', { className: 'btn-content' },
-                        'Get Sandbox Access',
-                        createElement('span', { className: 'btn-arrow' }, '→')
+                    createElement('a', {
+                        href: 'https://moneybag.com.bd/demo',
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        className: 'sandbox-demo-btn'
+                    },
+                        'Try Our Free Demo',
+                        createElement('img', {
+                            src: config.plugin_url + 'assets/image/mouse-pointer.svg',
+                            alt: 'Click',
+                            className: 'sandbox-demo-icon'
+                        })
+                    ),
+                    createElement('ul', { className: 'sandbox-demo-benefits' },
+                        createElement('li', null, 'No account needed'),
+                        createElement('li', null, 'See a complete payment flow'),
+                        createElement('li', null, 'Perfect for a quick look before integrating')
                     )
                 )
             ),
 
-            // Step 4: Success
-            currentStep === 4 && createElement('div', { className: 'success-page' },
-                createElement('div', { className: 'icon-container' },
-                    createElement('div', { className: 'envelope-icon' },
-                        createElement('img', {
-                            src: config.plugin_url + 'assets/image/emojione_e-mail.webp',
-                            alt: 'Email sent',
-                            className: 'illustration-small'
-                        })
+            // Step 3: Registration Form - 2 column layout
+            currentStep === 3 && createElement('div', { className: 'sandbox-step3-layout' },
+                createElement('div', { className: 'sandbox-step3-left' },
+                    createElement('div', { className: 'sandbox-step3-content' },
+                        createElement('div', { className: 'sandbox-step3-form' },
+                            // Row 1: First Name, Last Name, Mobile
+                            createElement('div', { className: 'sandbox-step3-row' },
+                                createElement('div', { className: 'sandbox-step3-field' },
+                                    createElement('label', { className: 'sandbox-input-label' },
+                                        'First Name',
+                                        createElement('span', { className: 'required-indicator' }, ' *')
+                                    ),
+                                    createElement('input', {
+                                        type: 'text',
+                                        className: `sandbox-input-field ${errors.firstName ? 'error' : ''} ${formData.firstName ? 'valid' : ''}`,
+                                        name: 'firstName',
+                                        value: formData.firstName,
+                                        onChange: handleInputChange,
+                                        onBlur: (e) => validateAndSetFieldError('name', e.target.value, 'firstName'),
+                                        placeholder: '',
+                                        disabled: loading
+                                    }),
+                                    errors.firstName && createElement('span', { className: 'error-message' }, errors.firstName)
+                                ),
+                                createElement('div', { className: 'sandbox-step3-field' },
+                                    createElement('label', { className: 'sandbox-input-label' },
+                                        'Last Name',
+                                        createElement('span', { className: 'required-indicator' }, ' *')
+                                    ),
+                                    createElement('input', {
+                                        type: 'text',
+                                        className: `sandbox-input-field ${errors.lastName ? 'error' : ''} ${formData.lastName ? 'valid' : ''}`,
+                                        name: 'lastName',
+                                        value: formData.lastName,
+                                        onChange: handleInputChange,
+                                        onBlur: (e) => validateAndSetFieldError('name', e.target.value, 'lastName'),
+                                        placeholder: '',
+                                        disabled: loading
+                                    }),
+                                    errors.lastName && createElement('span', { className: 'error-message' }, errors.lastName)
+                                ),
+                                createElement('div', { className: 'sandbox-step3-field' },
+                                    createElement('label', { className: 'sandbox-input-label' },
+                                        isEmail(formData.identifier) ? 'Mobile Number' : 'Email',
+                                        createElement('span', { className: 'required-indicator' }, ' *')
+                                    ),
+                                    createElement('input', {
+                                        type: isEmail(formData.identifier) ? 'tel' : 'email',
+                                        className: `sandbox-input-field ${(isEmail(formData.identifier) ? errors.mobile : errors.email) ? 'error' : ''} ${(isEmail(formData.identifier) ? formData.mobile : formData.email) ? 'valid' : ''}`,
+                                        name: isEmail(formData.identifier) ? 'mobile' : 'email',
+                                        value: isEmail(formData.identifier) ? formData.mobile : formData.email,
+                                        onChange: handleInputChange,
+                                        onBlur: (e) => {
+                                            if (isEmail(formData.identifier)) {
+                                                validateAndSetFieldError('mobile', e.target.value, 'mobile');
+                                            } else {
+                                                validateAndSetFieldError('email', e.target.value, 'email');
+                                            }
+                                        },
+                                        placeholder: isEmail(formData.identifier) ? '01712345678' : '',
+                                        disabled: loading
+                                    }),
+                                    (isEmail(formData.identifier) ? errors.mobile : errors.email) && createElement('span', {
+                                        className: 'error-message',
+                                        dangerouslySetInnerHTML: typeof (isEmail(formData.identifier) ? errors.mobile : errors.email) === 'string' && (isEmail(formData.identifier) ? errors.mobile : errors.email).includes('<a')
+                                            ? { __html: (isEmail(formData.identifier) ? errors.mobile : errors.email) }
+                                            : undefined
+                                    }, typeof (isEmail(formData.identifier) ? errors.mobile : errors.email) === 'string' && (isEmail(formData.identifier) ? errors.mobile : errors.email).includes('<a')
+                                        ? null
+                                        : (isEmail(formData.identifier) ? errors.mobile : errors.email)
+                                    )
+                                )
+                            ),
+                            // Row 2: Legal Identity Type, Business Name, Website
+                            createElement('div', { className: 'sandbox-step3-row' },
+                                createElement('div', { className: 'sandbox-step3-field' },
+                                    createElement('label', { className: 'sandbox-input-label' },
+                                        'Legal Identity Type',
+                                        createElement('span', { className: 'required-indicator' }, ' *')
+                                    ),
+                                    createElement('select', {
+                                        className: `sandbox-input-field ${errors.legalIdType ? 'error' : ''} ${formData.legalIdType ? 'valid' : ''}`,
+                                        name: 'legalIdType',
+                                        value: formData.legalIdType,
+                                        onChange: handleInputChange,
+                                        onBlur: (e) => {
+                                            if (!e.target.value) {
+                                                setErrors(prev => ({ ...prev, legalIdType: 'Please select a legal identity type' }));
+                                            } else {
+                                                setErrors(prev => ({ ...prev, legalIdType: '' }));
+                                            }
+                                        },
+                                        disabled: loading
+                                    },
+                                        createElement('option', { value: '' }, 'Select'),
+                                        createElement('option', { value: 'Educational Institution' }, 'Educational Institution'),
+                                        createElement('option', { value: 'Corporation' }, 'Corporation'),
+                                        createElement('option', { value: 'Sole Proprietorship' }, 'Sole Proprietorship'),
+                                        createElement('option', { value: 'Partnership' }, 'Partnership'),
+                                        createElement('option', { value: 'Limited Liability Company' }, 'Limited Liability Company'),
+                                        createElement('option', { value: 'Public Company' }, 'Public Company'),
+                                        createElement('option', { value: 'Non-Governmental Organization' }, 'Non-Governmental Organization'),
+                                        createElement('option', { value: 'Other' }, 'Other')
+                                    ),
+                                    errors.legalIdType && createElement('span', { className: 'error-message' }, errors.legalIdType)
+                                ),
+                                createElement('div', { className: 'sandbox-step3-field' },
+                                    createElement('label', { className: 'sandbox-input-label' },
+                                        'Business Name',
+                                        createElement('span', { className: 'required-indicator' }, ' *')
+                                    ),
+                                    createElement('input', {
+                                        type: 'text',
+                                        className: `sandbox-input-field ${errors.businessName ? 'error' : ''} ${formData.businessName ? 'valid' : ''}`,
+                                        name: 'businessName',
+                                        value: formData.businessName,
+                                        onChange: handleInputChange,
+                                        onBlur: (e) => validateAndSetFieldError('businessName', e.target.value, 'businessName'),
+                                        placeholder: '',
+                                        disabled: loading
+                                    }),
+                                    errors.businessName && createElement('span', { className: 'error-message' }, errors.businessName)
+                                ),
+                                createElement('div', { className: 'sandbox-step3-field' },
+                                    createElement('label', { className: 'sandbox-input-label' },
+                                        'Website Address ',
+                                        createElement('span', { className: 'required-star' }, '*')
+                                    ),
+                                    createElement('input', {
+                                        type: 'text',
+                                        className: `sandbox-input-field ${errors.website ? 'error' : ''} ${formData.website ? 'valid' : ''}`,
+                                        name: 'website',
+                                        value: formData.website,
+                                        onChange: handleInputChange,
+                                        onBlur: (e) => {
+                                            if (e.target.value) {
+                                                validateAndSetFieldError('website', e.target.value, 'website');
+                                            }
+                                        },
+                                        placeholder: 'example.com',
+                                        disabled: loading
+                                    }),
+                                    errors.website && createElement('span', { className: 'error-message' }, errors.website)
+                                )
+                            ),
+                            // Submit button
+                            createElement('div', { className: 'sandbox-step3-actions' },
+                                createElement('button', {
+                                    className: 'sandbox-submit-btn',
+                                    onClick: submitBusinessDetails,
+                                    disabled: loading
+                                },
+                                    loading ? createElement('span', { className: 'btn-content' },
+                                        createElement('span', {
+                                            className: 'spinner',
+                                            dangerouslySetInnerHTML: {
+                                                __html: '<svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none"/><circle cx="25" cy="25" r="20" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="80 50" stroke-linecap="round"/></svg>'
+                                            }
+                                        }),
+                                        'Creating Account...'
+                                    ) : 'Get My Sandbox Access'
+                                )
+                            )
+                        )
                     )
                 ),
-                createElement('h2', { className: 'success-heading' }, 
-                    isEmail(formData.identifier) 
-                        ? "You're almost there! We sent an email to"
-                        : "You're almost there! We sent a message to"
+                createElement('div', { className: 'sandbox-step3-right' },
+                    createElement('div', { className: 'sandbox-demo-header' },
+                        createElement('span', { className: 'sandbox-demo-title' }, 'Try the demo'),
+                        ' risk-free no registration required.'
+                    ),
+                    createElement('a', {
+                        href: 'https://moneybag.com.bd/demo',
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        className: 'sandbox-demo-btn'
+                    },
+                        'Try Our Free Demo',
+                        createElement('img', {
+                            src: config.plugin_url + 'assets/image/mouse-pointer.svg',
+                            alt: 'Click',
+                            className: 'sandbox-demo-icon'
+                        })
+                    ),
+                    createElement('ul', { className: 'sandbox-demo-benefits' },
+                        createElement('li', null, 'No account needed'),
+                        createElement('li', null, 'See a complete payment flow'),
+                        createElement('li', null, 'Perfect for a quick look before integrating')
+                    )
+                )
+            ),
+
+            // Step 4: Success - 2 column layout like other steps
+            currentStep === 4 && createElement('div', { className: 'sandbox-step4-layout' },
+                createElement('div', { className: 'sandbox-step4-left' },
+                    createElement('div', { className: 'sandbox-step4-content' },
+                        createElement('h2', { className: 'sandbox-step4-heading' }, 'Sandbox account is Ready!'),
+                        createElement('div', { className: 'sandbox-step4-icon' },
+                            createElement('img', {
+                                src: config.plugin_url + 'assets/image/Vector (4).svg',
+                                alt: 'Email verification',
+                                className: 'sandbox-email-icon'
+                            })
+                        ),
+                        createElement('p', { className: 'sandbox-step4-text' },
+                            isEmail(formData.identifier)
+                                ? "You're almost there! We sent an email to"
+                                : "You're almost there! We sent a message to"
+                        ),
+                        createElement('div', { className: 'sandbox-step4-email' }, formData.identifier || 'user@example.com'),
+                        createElement('p', { className: 'sandbox-step4-info' },
+                            `Check your ${isEmail(formData.identifier) ? 'inbox' : 'messages'} for Login, sandbox API credentials and documentation links.`
+                        ),
+                        createElement('a', {
+                            href: 'https://sandbox.moneybag.com.bd/',
+                            target: '_blank',
+                            rel: 'noopener noreferrer',
+                            className: 'sandbox-step4-btn'
+                        }, 'Access Sandbox')
+                    )
                 ),
-                createElement('div', { className: 'email-display' }, formData.identifier || 'user@example.com'),
-                createElement('p', { className: 'success-info' },
-                    `Check your ${isEmail(formData.identifier) ? 'inbox' : 'messages'} for your sandbox API credentials and documentation links.`
-                ),
-                createElement('a', {
-                    href: 'https://sandbox.moneybag.com.bd/',
-                    target: '_blank',
-                    rel: 'noopener noreferrer',
-                    className: 'arrow-btn',
-                    style: { textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }
-                },
-                    'Login To Sandbox',
-                    createElement('span', { className: 'btn-arrow' }, '→')
+                createElement('div', { className: 'sandbox-step4-right' },
+                    createElement('div', { className: 'sandbox-demo-header' },
+                        createElement('span', { className: 'sandbox-demo-title' }, 'Try the demo'),
+                        ' risk-free no registration required.'
+                    ),
+                    createElement('a', {
+                        href: 'https://moneybag.com.bd/demo',
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        className: 'sandbox-demo-btn'
+                    },
+                        'Try Our Free Demo',
+                        createElement('img', {
+                            src: config.plugin_url + 'assets/image/mouse-pointer.svg',
+                            alt: 'Click',
+                            className: 'sandbox-demo-icon'
+                        })
+                    ),
+                    createElement('ul', { className: 'sandbox-demo-benefits' },
+                        createElement('li', null, 'No account needed'),
+                        createElement('li', null, 'See a complete payment flow'),
+                        createElement('li', null, 'Perfect for a quick look before integrating')
+                    )
                 )
             )
         );

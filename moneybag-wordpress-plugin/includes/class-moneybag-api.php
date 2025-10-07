@@ -18,9 +18,7 @@ class MoneybagAPI {
      * Custom debug logging - only logs when WP_DEBUG is enabled
      */
     private static function debug_log($message) {
-        // Commented out debug logging for production
-        // Uncomment when needed for troubleshooting
-        /*
+        // Enable debug logging for troubleshooting
         if (defined('WP_DEBUG') && WP_DEBUG) {
             // Log to WordPress debug.log
             error_log('[Moneybag Plugin] ' . $message);
@@ -31,7 +29,6 @@ class MoneybagAPI {
             $log_message = $timestamp . ' ' . $message . PHP_EOL;
             file_put_contents($plugin_log, $log_message, FILE_APPEND | LOCK_EX);
         }
-        */
     }
     
     /**
@@ -90,7 +87,11 @@ class MoneybagAPI {
         $base_url = rtrim(self::get_sandbox_api_base(), '/');
         $endpoint = ltrim($endpoint, '/');
         $url = $base_url . '/' . $endpoint;
-        
+
+        // Debug: Log the full URL being called
+        self::debug_log('Sandbox API Request - Method: ' . $method . ' | URL: ' . $url);
+        self::debug_log('Sandbox API Request - Data: ' . json_encode($data));
+
         $args = [
             'method' => $method,
             'timeout' => 30,
@@ -101,7 +102,7 @@ class MoneybagAPI {
             'body' => json_encode($data),
             'sslverify' => true
         ];
-        
+
         // Sandbox endpoints typically don't require authentication
         // Only add API key for non-sandbox endpoints
         if (strpos($endpoint, '/sandbox/') === false) {
@@ -110,8 +111,15 @@ class MoneybagAPI {
                 $args['headers']['Authorization'] = 'Bearer ' . $api_key;
             }
         }
-        
+
         $response = wp_remote_request($url, $args);
+
+        // Debug: Log response
+        if (!is_wp_error($response)) {
+            $status_code = wp_remote_retrieve_response_code($response);
+            $body = wp_remote_retrieve_body($response);
+            self::debug_log('Sandbox API Response - Status: ' . $status_code . ' | Body: ' . substr($body, 0, 500));
+        }
         
         if (is_wp_error($response)) {
             return [
@@ -285,10 +293,10 @@ class MoneybagAPI {
         
         self::debug_log('Sending email verification for identifier: ' . $identifier);
         self::debug_log('Using sandbox API base URL: ' . $base_url);
-        
+
         // Use the standard sandbox endpoint
         $endpoint = 'sandbox/email-verification';
-        
+
         $result = self::sandbox_request('/' . ltrim($endpoint, '/'), [
             'identifier' => $identifier
         ]);
@@ -356,10 +364,10 @@ class MoneybagAPI {
     }
     
     public static function verify_otp($otp, $session_id) {
-        
+
         // Use the standard sandbox endpoint
         $endpoint = 'sandbox/verify-otp';
-        
+
         return self::sandbox_request('/' . ltrim($endpoint, '/'), [
             'otp' => $otp,
             'session_id' => $session_id
@@ -378,10 +386,10 @@ class MoneybagAPI {
             'email' => $data['email'] ?? '',
             'session_id' => $data['session_id']
         ];
-        
+
         // Use the standard sandbox endpoint
         $endpoint = 'sandbox/merchants/business-details';
-        
+
         return self::sandbox_request('/' . ltrim($endpoint, '/'), $payload);
     }
     
@@ -438,10 +446,10 @@ class MoneybagAPI {
         }
         
         self::debug_log('Sending merchant registration to sandbox API');
-        
+
         // Use the standard sandbox endpoint
         $endpoint = 'sandbox/merchants/business-details-no-auth';
-        
+
         $result = self::sandbox_request('/' . ltrim($endpoint, '/'), $payload);
         
         if ($result['success']) {

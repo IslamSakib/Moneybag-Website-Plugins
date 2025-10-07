@@ -233,6 +233,19 @@ class MoneybagPlugin {
             echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
             echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
         }, 1);
+
+        // Enqueue reCAPTCHA v3 if configured
+        $recaptcha_site_key = get_option('moneybag_recaptcha_site_key', '');
+        if (!empty($recaptcha_site_key)) {
+            wp_enqueue_script(
+                'google-recaptcha',
+                'https://www.google.com/recaptcha/api.js?render=' . esc_attr($recaptcha_site_key),
+                [],
+                null,
+                true
+            );
+        }
+
         // Sandbox Form Scripts
         wp_enqueue_script(
             'moneybag-sandbox-form',
@@ -507,7 +520,24 @@ class MoneybagPlugin {
                 break;
                 
             case 'business_details':
-                // No validation - let API handle everything
+                // reCAPTCHA disabled for sandbox widget
+                // Uncomment below to re-enable reCAPTCHA verification
+                /*
+                $recaptcha_token = sanitize_text_field($data['recaptcha_token'] ?? '');
+                if (!empty($recaptcha_token)) {
+                    $recaptcha_result = \MoneybagPlugin\MoneybagAPI::verify_recaptcha($recaptcha_token);
+                    if (!$recaptcha_result['success']) {
+                        wp_send_json_error('reCAPTCHA verification failed. Please try again.');
+                        return;
+                    }
+                    $score = $recaptcha_result['score'] ?? 0;
+                    if ($score < 0.3) {
+                        wp_send_json_error('Security check failed. Please try again.');
+                        return;
+                    }
+                }
+                */
+
                 $sanitized = [
                     'business_name' => sanitize_text_field($data['business_name'] ?? ''),
                     'business_website' => esc_url_raw($data['business_website'] ?? ''),
@@ -518,9 +548,9 @@ class MoneybagPlugin {
                     'email' => sanitize_email($data['email'] ?? ''),
                     'session_id' => sanitize_text_field($data['session_id'] ?? '')
                 ];
-                
+
                 // Password field removed - no longer required by new API
-                
+
                 $response = \MoneybagPlugin\MoneybagAPI::submit_business_details($sanitized);
 
                 // If sandbox submission successful, also submit to CRM
@@ -652,9 +682,6 @@ class MoneybagPlugin {
             }
             
         } catch (Exception $e) {
-            // Commented out debug logging for production
-            // error_log('[Moneybag CRM Debug] Fatal exception in handle_pricing_crm: ' . $e->getMessage());
-            // error_log('[Moneybag CRM Debug] Exception trace: ' . $e->getTraceAsString());
             wp_send_json_error([
                 'message' => 'An unexpected error occurred. Please check the debug log.',
                 'error_code' => 'fatal_exception',
@@ -683,8 +710,6 @@ class MoneybagPlugin {
             }
             
             if (!$nonce_valid) {
-                // Commented out debug logging for production
-                // error_log('[Moneybag CRM Debug] Security check failed - nonce: ' . ($_POST['nonce'] ?? 'not provided'));
                 wp_send_json_error('Security check failed');
                 return;
             }
@@ -804,9 +829,6 @@ class MoneybagPlugin {
     }
     
     private function handle_pricing_crm_submission($data) {
-        // Commented out debug logging for production
-        // error_log('[Moneybag CRM Debug] handle_pricing_crm_submission received data: ' . json_encode($data));
-        
         // Check if it's a merchant registration or pricing form
         if (isset($data['businessName']) && isset($data['legalIdentity'])) {
             // Merchant Registration Form
@@ -1018,7 +1040,6 @@ class MoneybagPlugin {
             
             if (empty($crm_api_key) || empty($crm_api_url)) {
                 // CRM not configured - skip CRM submission (don't fail the main process)
-                // error_log('[Moneybag] CRM not configured, skipping merchant registration CRM submission');
                 return;
             }
             
@@ -1088,20 +1109,12 @@ class MoneybagPlugin {
                 'widget_type' => 'merchant_registration'
             ]);
             
-            if ($crm_result['success']) {
-                // Commented out debug logging for production
-                // error_log('[Moneybag] Merchant registration CRM submission successful - Person ID: ' . ($crm_result['person_id'] ?? 'unknown'));
-            } else {
-                // Commented out debug logging for production
-                // error_log('[Moneybag] Merchant registration CRM submission failed: ' . ($crm_result['message'] ?? 'unknown error'));
-            }
-            
+            // CRM submission completed
+
         } catch (Exception $e) {
             // Log error but don't fail the main registration process
-            // error_log('[Moneybag] Exception during merchant registration CRM submission: ' . $e->getMessage());
         } catch (Throwable $t) {
-            // Log error but don't fail the main registration process  
-            // error_log('[Moneybag] Error during merchant registration CRM submission: ' . $t->getMessage());
+            // Log error but don't fail the main registration process
         }
     }
 
@@ -1116,7 +1129,6 @@ class MoneybagPlugin {
 
             if (!$crm_api_key) {
                 // CRM not configured, skip submission
-                // error_log('[Moneybag] CRM not configured, skipping sandbox CRM submission');
                 return;
             }
 
@@ -1166,20 +1178,12 @@ class MoneybagPlugin {
                 'widget_type' => 'sandbox_registration'
             ]);
 
-            if ($crm_result['success']) {
-                // Commented out debug logging for production
-                // error_log('[Moneybag] Sandbox registration CRM submission successful - Person ID: ' . ($crm_result['person_id'] ?? 'unknown'));
-            } else {
-                // Commented out debug logging for production
-                // error_log('[Moneybag] Sandbox registration CRM submission failed: ' . ($crm_result['message'] ?? 'unknown error'));
-            }
+            // CRM submission completed
 
         } catch (Exception $e) {
             // Log error but don't fail the main registration process
-            // error_log('[Moneybag] Exception during sandbox CRM submission: ' . $e->getMessage());
         } catch (Throwable $t) {
             // Log error but don't fail the main registration process
-            // error_log('[Moneybag] Error during sandbox CRM submission: ' . $t->getMessage());
         }
     }
 
@@ -1261,8 +1265,6 @@ class MoneybagPlugin {
             }
             
         } catch (Exception $e) {
-            // Commented out debug logging for production
-            // error_log('[Moneybag Calculator] Exception: ' . $e->getMessage());
             wp_send_json_error([
                 'message' => 'An error occurred while processing your request.'
             ]);

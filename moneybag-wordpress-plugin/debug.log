@@ -231,3 +231,595 @@
 [2025-08-31 11:30:47] Response Status: 201
 [2025-08-31 11:30:47] Response Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE94497623","api_key":"7726cde7.cJyYg8_KKv_0qv06bFkLtJrE1AOTblvte4oXvnjxVkg","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/f7d012773aca47db8a01ee74e9fafa5c","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Account created! Demo data is being prepared in the background."},"meta":{"timestamp":"2025-08-31T17:30:40.695264","status_code":201}}
 [2025-08-31 11:30:47] SUCCESS! Merchant account created
+[2025-10-07 05:17:38] Sending email verification for identifier: peyekik805@knilok.com
+[2025-10-07 05:17:38] Using sandbox API base URL: https://staging.api.moneybag.com.bd/api/v2/
+[2025-10-07 05:17:38] Sandbox API Request - Method: POST | URL: https://staging.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 05:17:38] Sandbox API Request - Data: {"identifier":"peyekik805@knilok.com"}
+[2025-10-07 05:17:38] Sandbox API Response - Status: 404 | Body: {"detail":"Not Found"}
+[2025-10-07 05:17:38] Email verification result: {"success":false,"message":"Not Found","status_code":404,"data":{"detail":"Not Found"}}
+[2025-10-07 05:17:38] Email verification failed. Full API response: {"success":false,"message":"Not Found","status_code":404,"data":{"detail":"Not Found"}}
+[2025-10-07 05:19:52] Sending email verification for identifier: peyekik805@knilok.com
+[2025-10-07 05:19:52] Using sandbox API base URL: https://staging.api.moneybag.com.bd/api/v2/
+[2025-10-07 05:19:52] Sandbox API Request - Method: POST | URL: https://staging.api.moneybag.com.bd/api/v2/email-verification
+[2025-10-07 05:19:52] Sandbox API Request - Data: {"identifier":"peyekik805@knilok.com"}
+[2025-10-07 05:19:53] Sandbox API Response - Status: 404 | Body: {"detail":"Not Found"}
+[2025-10-07 05:19:53] Email verification result: {"success":false,"message":"Not Found","status_code":404,"data":{"detail":"Not Found"}}
+[2025-10-07 05:19:53] Email verification failed. Full API response: {"success":false,"message":"Not Found","status_code":404,"data":{"detail":"Not Found"}}
+[2025-10-07 05:27:30] Sending email verification for identifier: peyekik805@knilok.com
+[2025-10-07 05:27:30] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 05:27:30] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/email-verification
+[2025-10-07 05:27:30] Sandbox API Request - Data: {"identifier":"peyekik805@knilok.com"}
+[2025-10-07 05:27:30] Sandbox API Response - Status: 404 | Body: {"detail":"Not Found"}
+[2025-10-07 05:27:30] Email verification result: {"success":false,"message":"Not Found","status_code":404,"data":{"detail":"Not Found"}}
+[2025-10-07 05:27:30] Email verification failed. Full API response: {"success":false,"message":"Not Found","status_code":404,"data":{"detail":"Not Found"}}
+[2025-10-07 05:29:00] Sending email verification for identifier: peyekik805@knilok.com
+[2025-10-07 05:29:00] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 05:29:00] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 05:29:00] Sandbox API Request - Data: {"identifier":"peyekik805@knilok.com"}
+[2025-10-07 05:29:01] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"582157775091477fb7afa28b9dfc40c3","expire_at":"2025-10-07T11:43:44.231566","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T11:28:45.091692","status_code":201}}
+[2025-10-07 05:29:01] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"582157775091477fb7afa28b9dfc40c3","expire_at":"2025-10-07T11:43:44.231566","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T11:28:45.091692","status_code":201}}
+[2025-10-07 05:32:44] Sending email verification for identifier: fever44267@aiwanlab.com
+[2025-10-07 05:32:44] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 05:32:44] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 05:32:44] Sandbox API Request - Data: {"identifier":"fever44267@aiwanlab.com"}
+[2025-10-07 05:32:45] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"751a28e41bf74d18b091eb4134f05b12","expire_at":"2025-10-07T11:47:28.027367","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T11:32:28.878246","status_code":201}}
+[2025-10-07 05:32:45] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"751a28e41bf74d18b091eb4134f05b12","expire_at":"2025-10-07T11:47:28.027367","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T11:32:28.878246","status_code":201}}
+[2025-10-07 05:33:10] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2025-10-07 05:33:10] Sandbox API Request - Data: {"otp":"549346","session_id":"751a28e41bf74d18b091eb4134f05b12"}
+[2025-10-07 05:33:11] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2025-10-07T11:32:54.310970","status_code":200}}
+[2025-10-07 05:44:51] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 05:45:09] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 05:45:15] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 05:49:50] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 05:50:06] Sending email verification for identifier: 01950025990
+[2025-10-07 05:50:06] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 05:50:06] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 05:50:06] Sandbox API Request - Data: {"identifier":"01950025990"}
+[2025-10-07 05:50:07] Sandbox API Response - Status: 409 | Body: {"success":false,"message":"Phone number already registered. Please use a different phone number.","code":409}
+[2025-10-07 05:50:07] Email verification result: {"success":false,"message":"Phone number already registered. Please use a different phone number.","code":409}
+[2025-10-07 05:50:07] Email verification failed. Full API response: {"success":false,"message":"Phone number already registered. Please use a different phone number.","code":409}
+[2025-10-07 05:51:04] Sending email verification for identifier: nigaji2753@aiwanlab.com
+[2025-10-07 05:51:04] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 05:51:04] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 05:51:04] Sandbox API Request - Data: {"identifier":"nigaji2753@aiwanlab.com"}
+[2025-10-07 05:51:05] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"6c5ba3ef64e147e0968ab7f091c164a2","expire_at":"2025-10-07T12:05:47.868709","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T11:50:48.740830","status_code":201}}
+[2025-10-07 05:51:05] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"6c5ba3ef64e147e0968ab7f091c164a2","expire_at":"2025-10-07T12:05:47.868709","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T11:50:48.740830","status_code":201}}
+[2025-10-07 05:51:34] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2025-10-07 05:51:34] Sandbox API Request - Data: {"otp":"392060","session_id":"6c5ba3ef64e147e0968ab7f091c164a2"}
+[2025-10-07 05:51:34] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2025-10-07T11:51:17.486038","status_code":200}}
+[2025-10-07 05:53:35] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 05:58:13] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 05:58:36] Sending email verification for identifier: yepira9824@ampdial.com
+[2025-10-07 05:58:36] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 05:58:36] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 05:58:36] Sandbox API Request - Data: {"identifier":"yepira9824@ampdial.com"}
+[2025-10-07 05:58:37] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"678dc5b7c2594429a9bf11ca06106e1f","expire_at":"2025-10-07T12:13:20.248121","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T11:58:21.109893","status_code":201}}
+[2025-10-07 05:58:37] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"678dc5b7c2594429a9bf11ca06106e1f","expire_at":"2025-10-07T12:13:20.248121","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T11:58:21.109893","status_code":201}}
+[2025-10-07 05:58:59] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2025-10-07 05:58:59] Sandbox API Request - Data: {"otp":"113048","session_id":"678dc5b7c2594429a9bf11ca06106e1f"}
+[2025-10-07 05:58:59] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2025-10-07T11:58:42.959669","status_code":200}}
+[2025-10-07 05:59:11] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 06:01:57] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 06:02:11] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 06:02:22] reCAPTCHA verification failed but allowing submission: browser-error
+[2025-10-07 06:04:30] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-10-07 06:04:30] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01950025990","email":"yepira9824@ampdial.com","session_id":"678dc5b7c2594429a9bf11ca06106e1f"}
+[2025-10-07 06:04:31] Sandbox API Response - Status: 422 | Body: {"detail":[{"type":"url_parsing","loc":["body","business_website"],"msg":"Input should be a valid URL, input is empty","input":"","ctx":{"error":"input is empty"}}]}
+[2025-10-07 06:05:37] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-10-07 06:05:37] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"http:\/\/google.com","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01950025990","email":"yepira9824@ampdial.com","session_id":"678dc5b7c2594429a9bf11ca06106e1f"}
+[2025-10-07 06:05:37] Sandbox API Response - Status: 409 | Body: {"success":false,"message":"Phone number already exists. Please use a different phone number.","code":409}
+[2025-10-07 06:05:49] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-10-07 06:05:49] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"http:\/\/google.com","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01950025990","email":"yepira9824@ampdial.com","session_id":"678dc5b7c2594429a9bf11ca06106e1f"}
+[2025-10-07 06:05:49] Sandbox API Response - Status: 409 | Body: {"success":false,"message":"Phone number already exists. Please use a different phone number.","code":409}
+[2025-10-07 06:06:14] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-10-07 06:06:14] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"http:\/\/google.com","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01950020232","email":"yepira9824@ampdial.com","session_id":"678dc5b7c2594429a9bf11ca06106e1f"}
+[2025-10-07 06:06:16] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE16927623","api_key":"d49b533c.9_kHi7tCPPfuNm49FZU_Hy3cV9of4Kaia6F5iF-zrWE","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_fbjVZ2ccsrdqcZOVwPb27mxGrIbXGrtMoOh4HyJyKMp45HbviUsM1S5aFKDhfcFs","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-10-07 06:06:16] Checking if company exists: Test Business ABC
+[2025-10-07 06:06:16] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test+Business+ABC
+[2025-10-07 06:06:16] [CRM Debug] Method: GET
+[2025-10-07 06:06:16] [CRM Debug] API Key present: Yes
+[2025-10-07 06:06:16] [CRM Debug] Response status: 200
+[2025-10-07 06:06:16] Creating new company in CRM: {"name":"Test Business ABC"}
+[2025-10-07 06:06:16] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-10-07 06:06:16] [CRM Debug] Method: POST
+[2025-10-07 06:06:16] [CRM Debug] API Key present: Yes
+[2025-10-07 06:06:16] [CRM Debug] Data: {"name":"Test Business ABC"}
+[2025-10-07 06:06:16] [CRM Debug] Response status: 201
+[2025-10-07 06:06:16] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test Business ABC","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'abc':3 'business':2 'test':1","id":"cd8aadca-c6ca-475d-a00b-8d4536b58310","createdAt":"2025-10-07T06:06:00.268Z","updatedAt":"2025-10-07T06:06:00.268Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-10-07 06:06:16] Company created/found with ID: cd8aadca-c6ca-475d-a00b-8d4536b58310
+[2025-10-07 06:06:16] Checking if person exists with email: yepira9824@ampdial.com
+[2025-10-07 06:06:16] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=yepira9824%40ampdial.com
+[2025-10-07 06:06:16] [CRM Debug] Method: GET
+[2025-10-07 06:06:16] [CRM Debug] API Key present: Yes
+[2025-10-07 06:06:17] [CRM Debug] Response status: 200
+[2025-10-07 06:06:17] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Shaylee","lastName":"Kemmer"},"emails":{"primaryEmail":"test_user_1757592234@example.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1712345678","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUr
+[2025-10-07 06:06:17] Found existing person with ID: 6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8 (email: yepira9824@ampdial.com)
+[2025-10-07 06:06:17] Person created/found with ID: 6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8
+[2025-10-07 06:06:17] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8
+[2025-10-07 06:06:17] [CRM Debug] Method: PATCH
+[2025-10-07 06:06:17] [CRM Debug] API Key present: Yes
+[2025-10-07 06:06:17] [CRM Debug] Data: {"companyId":"cd8aadca-c6ca-475d-a00b-8d4536b58310"}
+[2025-10-07 06:06:17] [CRM Debug] Response status: 200
+[2025-10-07 06:06:17] Successfully linked person 6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8 to company cd8aadca-c6ca-475d-a00b-8d4536b58310
+[2025-10-07 06:06:17] [CRM Debug] Starting opportunity creation with title: Sandbox Registration: Test Business ABC
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Sandbox Registration: Test Business ABC",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 100000000000,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8",
+    "companyId": "cd8aadca-c6ca-475d-a00b-8d4536b58310"
+}
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-10-07 06:06:17] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-10-07 06:06:17] [CRM Debug] Method: POST
+[2025-10-07 06:06:17] [CRM Debug] API Key present: Yes
+[2025-10-07 06:06:17] [CRM Debug] Data: {"name":"Sandbox Registration: Test Business ABC","stage":"A_NEW_LEAD","amount":{"amountMicros":100000000000,"currencyCode":"BDT"},"pointOfContactId":"6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8","companyId":"cd8aadca-c6ca-475d-a00b-8d4536b58310"}
+[2025-10-07 06:06:17] [CRM Debug] Response status: 201
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Sandbox Registration: Test Business ABC",
+                "amount": {
+                    "amountMicros": "100000000000",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'abc':5 'business':4 'registration':2 'sandbox':1 'test':3",
+                "id": "a14c05a1-472d-4493-9b1a-595a6af68c2e",
+                "createdAt": "2025-10-07T06:06:01.050Z",
+                "updatedAt": "2025-10-07T06:06:01.050Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8",
+                "companyId": "cd8aadca-c6ca-475d-a00b-8d4536b58310"
+            }
+        }
+    }
+}
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: a14c05a1-472d-4493-9b1a-595a6af68c2e
+[2025-10-07 06:06:17] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: a14c05a1-472d-4493-9b1a-595a6af68c2e
+[2025-10-07 06:06:17] [CRM Debug] ✅ Opportunity created successfully with ID: a14c05a1-472d-4493-9b1a-595a6af68c2e
+[2025-10-07 06:06:17] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-10-07 06:06:17] [CRM Debug] Method: POST
+[2025-10-07 06:06:17] [CRM Debug] API Key present: Yes
+[2025-10-07 06:06:17] [CRM Debug] Data: {"title":"Sandbox Registration Details","bodyV2":{"markdown":"**Sandbox Registration Submission**\n\n- **Business Name:** Test Business ABC\n- **Legal Identity:** Educational Institution\n- **Business Website:** http:\/\/google.com\n- **Contact:** Sakib Islam\n- **Email:** yepira9824@ampdial.com\n- **Phone:** 01950020232\n\n**API Response:**\n- **Merchant ID:** SANDTE16927623\n- **Registration Date:** 2025-10-07 06:06:16"},"noteTargets":[{"type":"person","id":"6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8"},{"type":"opportunity","id":"a14c05a1-472d-4493-9b1a-595a6af68c2e"},{"type":"company","id":"cd8aadca-c6ca-475d-a00b-8d4536b58310"}]}
+[2025-10-07 06:06:18] [CRM Debug] Response status: 201
+[2025-10-07 06:06:18] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: 289ef5e6-7ff3-40f7-9e76-8e45d1e7ef90
+[2025-10-07 06:06:18] Note created with ID: 289ef5e6-7ff3-40f7-9e76-8e45d1e7ef90
+[2025-10-07 06:06:18] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"6d37d9c5-7ebf-4dba-95d3-fa1ed7bce4e8","company_id":"cd8aadca-c6ca-475d-a00b-8d4536b58310","opportunity_id":"a14c05a1-472d-4493-9b1a-595a6af68c2e","note_id":"289ef5e6-7ff3-40f7-9e76-8e45d1e7ef90"}
+[2025-10-07 06:44:17] Sending email verification for identifier: cibifi5934@aiwanlab.com
+[2025-10-07 06:44:17] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 06:44:17] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 06:44:17] Sandbox API Request - Data: {"identifier":"cibifi5934@aiwanlab.com"}
+[2025-10-07 06:44:19] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"0c252ccd80974c94a0e9215625d3fa80","expire_at":"2025-10-07T12:59:01.492355","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T12:44:02.393637","status_code":201}}
+[2025-10-07 06:44:19] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"0c252ccd80974c94a0e9215625d3fa80","expire_at":"2025-10-07T12:59:01.492355","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T12:44:02.393637","status_code":201}}
+[2025-10-07 06:44:40] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2025-10-07 06:44:40] Sandbox API Request - Data: {"otp":"239815","session_id":"0c252ccd80974c94a0e9215625d3fa80"}
+[2025-10-07 06:44:40] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2025-10-07T12:44:24.185950","status_code":200}}
+[2025-10-07 06:44:55] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-10-07 06:44:55] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"http:\/\/google.com","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01447856587","email":"cibifi5934@aiwanlab.com","session_id":"0c252ccd80974c94a0e9215625d3fa80"}
+[2025-10-07 06:44:57] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE92857623","api_key":"847d28a8.syvha8N0RV7XS1rTTH4fH7-DScSEmIO8CSCLv6pmPtc","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_w81ZKQvQyf9a5rS7eCW7QSORA5UcvQpCtzqPIKl8NYpLO50JQFam7wQXuFxDflRr","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-10-07 06:44:57] Checking if company exists: Test Business ABC
+[2025-10-07 06:44:57] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test+Business+ABC
+[2025-10-07 06:44:57] [CRM Debug] Method: GET
+[2025-10-07 06:44:57] [CRM Debug] API Key present: Yes
+[2025-10-07 06:44:58] [CRM Debug] Response status: 200
+[2025-10-07 06:44:58] Creating new company in CRM: {"name":"Test Business ABC"}
+[2025-10-07 06:44:58] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-10-07 06:44:58] [CRM Debug] Method: POST
+[2025-10-07 06:44:58] [CRM Debug] API Key present: Yes
+[2025-10-07 06:44:58] [CRM Debug] Data: {"name":"Test Business ABC"}
+[2025-10-07 06:44:58] [CRM Debug] Response status: 201
+[2025-10-07 06:44:58] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test Business ABC","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'abc':3 'business':2 'test':1","id":"6c855624-e600-4126-9894-2515e84d6329","createdAt":"2025-10-07T06:44:41.842Z","updatedAt":"2025-10-07T06:44:41.842Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-10-07 06:44:58] Company created/found with ID: 6c855624-e600-4126-9894-2515e84d6329
+[2025-10-07 06:44:58] Checking if person exists with email: cibifi5934@aiwanlab.com
+[2025-10-07 06:44:58] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=cibifi5934%40aiwanlab.com
+[2025-10-07 06:44:58] [CRM Debug] Method: GET
+[2025-10-07 06:44:58] [CRM Debug] API Key present: Yes
+[2025-10-07 06:44:58] [CRM Debug] Response status: 200
+[2025-10-07 06:44:58] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Shaylee","lastName":"Kemmer"},"emails":{"primaryEmail":"test_user_1757592234@example.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1712345678","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUr
+[2025-10-07 06:44:58] Found existing person with ID: 74445047-911f-45f6-a089-79f65c0721c7 (email: cibifi5934@aiwanlab.com)
+[2025-10-07 06:44:58] Person created/found with ID: 74445047-911f-45f6-a089-79f65c0721c7
+[2025-10-07 06:44:58] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/74445047-911f-45f6-a089-79f65c0721c7
+[2025-10-07 06:44:58] [CRM Debug] Method: PATCH
+[2025-10-07 06:44:58] [CRM Debug] API Key present: Yes
+[2025-10-07 06:44:58] [CRM Debug] Data: {"companyId":"6c855624-e600-4126-9894-2515e84d6329"}
+[2025-10-07 06:44:59] [CRM Debug] Response status: 200
+[2025-10-07 06:44:59] Successfully linked person 74445047-911f-45f6-a089-79f65c0721c7 to company 6c855624-e600-4126-9894-2515e84d6329
+[2025-10-07 06:44:59] [CRM Debug] Starting opportunity creation with title: Sandbox Registration: Test Business ABC
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 74445047-911f-45f6-a089-79f65c0721c7
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Sandbox Registration: Test Business ABC",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 100000000000,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "74445047-911f-45f6-a089-79f65c0721c7",
+    "companyId": "6c855624-e600-4126-9894-2515e84d6329"
+}
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-10-07 06:44:59] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-10-07 06:44:59] [CRM Debug] Method: POST
+[2025-10-07 06:44:59] [CRM Debug] API Key present: Yes
+[2025-10-07 06:44:59] [CRM Debug] Data: {"name":"Sandbox Registration: Test Business ABC","stage":"A_NEW_LEAD","amount":{"amountMicros":100000000000,"currencyCode":"BDT"},"pointOfContactId":"74445047-911f-45f6-a089-79f65c0721c7","companyId":"6c855624-e600-4126-9894-2515e84d6329"}
+[2025-10-07 06:44:59] [CRM Debug] Response status: 201
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Sandbox Registration: Test Business ABC",
+                "amount": {
+                    "amountMicros": "100000000000",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'abc':5 'business':4 'registration':2 'sandbox':1 'test':3",
+                "id": "217269e2-1a7b-441b-b9f0-3ae8e7304dd0",
+                "createdAt": "2025-10-07T06:44:42.566Z",
+                "updatedAt": "2025-10-07T06:44:42.566Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "74445047-911f-45f6-a089-79f65c0721c7",
+                "companyId": "6c855624-e600-4126-9894-2515e84d6329"
+            }
+        }
+    }
+}
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: 217269e2-1a7b-441b-b9f0-3ae8e7304dd0
+[2025-10-07 06:44:59] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: 217269e2-1a7b-441b-b9f0-3ae8e7304dd0
+[2025-10-07 06:44:59] [CRM Debug] ✅ Opportunity created successfully with ID: 217269e2-1a7b-441b-b9f0-3ae8e7304dd0
+[2025-10-07 06:44:59] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-10-07 06:44:59] [CRM Debug] Method: POST
+[2025-10-07 06:44:59] [CRM Debug] API Key present: Yes
+[2025-10-07 06:44:59] [CRM Debug] Data: {"title":"Sandbox Registration Details","bodyV2":{"markdown":"**Sandbox Registration Submission**\n\n- **Business Name:** Test Business ABC\n- **Legal Identity:** Educational Institution\n- **Business Website:** http:\/\/google.com\n- **Contact:** Sakib Islam\n- **Email:** cibifi5934@aiwanlab.com\n- **Phone:** 01447856587\n\n**API Response:**\n- **Merchant ID:** SANDTE92857623\n- **Registration Date:** 2025-10-07 06:44:57"},"noteTargets":[{"type":"person","id":"74445047-911f-45f6-a089-79f65c0721c7"},{"type":"opportunity","id":"217269e2-1a7b-441b-b9f0-3ae8e7304dd0"},{"type":"company","id":"6c855624-e600-4126-9894-2515e84d6329"}]}
+[2025-10-07 06:44:59] [CRM Debug] Response status: 201
+[2025-10-07 06:44:59] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: ad88fce0-8813-419f-8e21-38fe99956404
+[2025-10-07 06:44:59] Note created with ID: ad88fce0-8813-419f-8e21-38fe99956404
+[2025-10-07 06:44:59] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"74445047-911f-45f6-a089-79f65c0721c7","company_id":"6c855624-e600-4126-9894-2515e84d6329","opportunity_id":"217269e2-1a7b-441b-b9f0-3ae8e7304dd0","note_id":"ad88fce0-8813-419f-8e21-38fe99956404"}
+[2025-10-07 06:53:31] Sending email verification for identifier: nepevi1112@ampdial.com
+[2025-10-07 06:53:31] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 06:53:31] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 06:53:31] Sandbox API Request - Data: {"identifier":"nepevi1112@ampdial.com"}
+[2025-10-07 06:53:32] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"094b6d252ac04f8fac926601b50218d2","expire_at":"2025-10-07T13:08:14.845208","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T12:53:15.712129","status_code":201}}
+[2025-10-07 06:53:32] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"094b6d252ac04f8fac926601b50218d2","expire_at":"2025-10-07T13:08:14.845208","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T12:53:15.712129","status_code":201}}
+[2025-10-07 06:55:39] Sending email verification for identifier: nepevi1112@ampdial.com
+[2025-10-07 06:55:39] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 06:55:39] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 06:55:39] Sandbox API Request - Data: {"identifier":"nepevi1112@ampdial.com"}
+[2025-10-07 06:55:40] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"aca062136a234279b6c01eeb0af22d5f","expire_at":"2025-10-07T13:10:22.704539","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T12:55:23.498152","status_code":201}}
+[2025-10-07 06:55:40] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"aca062136a234279b6c01eeb0af22d5f","expire_at":"2025-10-07T13:10:22.704539","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T12:55:23.498152","status_code":201}}
+[2025-10-07 06:56:41] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2025-10-07 06:56:41] Sandbox API Request - Data: {"otp":"019966","session_id":"aca062136a234279b6c01eeb0af22d5f"}
+[2025-10-07 06:56:41] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2025-10-07T12:56:25.301053","status_code":200}}
+[2025-10-07 06:59:34] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-10-07 06:59:34] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"http:\/\/google.com","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01654874563","email":"nepevi1112@ampdial.com","session_id":"aca062136a234279b6c01eeb0af22d5f"}
+[2025-10-07 06:59:36] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE58997623","api_key":"5ae29b8b.kErPEzEscbx7FxKyLH9y9VRn1uw32E2Kkfc-Ksm_fA8","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_gQpMK5I01otQwytm8ISTkA8sEIevgE2NywUAqFZTKjZaPwgUJVP_eV6LOJ4QcdV4","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-10-07 06:59:36] Checking if company exists: Test Business ABC
+[2025-10-07 06:59:36] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test+Business+ABC
+[2025-10-07 06:59:36] [CRM Debug] Method: GET
+[2025-10-07 06:59:36] [CRM Debug] API Key present: Yes
+[2025-10-07 06:59:37] [CRM Debug] Response status: 200
+[2025-10-07 06:59:37] Creating new company in CRM: {"name":"Test Business ABC"}
+[2025-10-07 06:59:37] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-10-07 06:59:37] [CRM Debug] Method: POST
+[2025-10-07 06:59:37] [CRM Debug] API Key present: Yes
+[2025-10-07 06:59:37] [CRM Debug] Data: {"name":"Test Business ABC"}
+[2025-10-07 06:59:37] [CRM Debug] Response status: 201
+[2025-10-07 06:59:37] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test Business ABC","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'abc':3 'business':2 'test':1","id":"4d9d35f4-3a6e-4278-98af-f0eac4814568","createdAt":"2025-10-07T06:59:20.608Z","updatedAt":"2025-10-07T06:59:20.608Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-10-07 06:59:37] Company created/found with ID: 4d9d35f4-3a6e-4278-98af-f0eac4814568
+[2025-10-07 06:59:37] Checking if person exists with email: nepevi1112@ampdial.com
+[2025-10-07 06:59:37] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=nepevi1112%40ampdial.com
+[2025-10-07 06:59:37] [CRM Debug] Method: GET
+[2025-10-07 06:59:37] [CRM Debug] API Key present: Yes
+[2025-10-07 06:59:37] [CRM Debug] Response status: 200
+[2025-10-07 06:59:37] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Shaylee","lastName":"Kemmer"},"emails":{"primaryEmail":"test_user_1757592234@example.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1712345678","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUr
+[2025-10-07 06:59:37] Found existing person with ID: 0c6e6bca-98ec-4870-abf7-2fa328bb9b92 (email: nepevi1112@ampdial.com)
+[2025-10-07 06:59:37] Person created/found with ID: 0c6e6bca-98ec-4870-abf7-2fa328bb9b92
+[2025-10-07 06:59:37] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/0c6e6bca-98ec-4870-abf7-2fa328bb9b92
+[2025-10-07 06:59:37] [CRM Debug] Method: PATCH
+[2025-10-07 06:59:37] [CRM Debug] API Key present: Yes
+[2025-10-07 06:59:37] [CRM Debug] Data: {"companyId":"4d9d35f4-3a6e-4278-98af-f0eac4814568"}
+[2025-10-07 06:59:37] [CRM Debug] Response status: 200
+[2025-10-07 06:59:37] Successfully linked person 0c6e6bca-98ec-4870-abf7-2fa328bb9b92 to company 4d9d35f4-3a6e-4278-98af-f0eac4814568
+[2025-10-07 06:59:37] [CRM Debug] Starting opportunity creation with title: Sandbox Registration: Test Business ABC
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 0c6e6bca-98ec-4870-abf7-2fa328bb9b92
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Sandbox Registration: Test Business ABC",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 100000000000,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "0c6e6bca-98ec-4870-abf7-2fa328bb9b92",
+    "companyId": "4d9d35f4-3a6e-4278-98af-f0eac4814568"
+}
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-10-07 06:59:37] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-10-07 06:59:37] [CRM Debug] Method: POST
+[2025-10-07 06:59:37] [CRM Debug] API Key present: Yes
+[2025-10-07 06:59:37] [CRM Debug] Data: {"name":"Sandbox Registration: Test Business ABC","stage":"A_NEW_LEAD","amount":{"amountMicros":100000000000,"currencyCode":"BDT"},"pointOfContactId":"0c6e6bca-98ec-4870-abf7-2fa328bb9b92","companyId":"4d9d35f4-3a6e-4278-98af-f0eac4814568"}
+[2025-10-07 06:59:37] [CRM Debug] Response status: 201
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Sandbox Registration: Test Business ABC",
+                "amount": {
+                    "amountMicros": "100000000000",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'abc':5 'business':4 'registration':2 'sandbox':1 'test':3",
+                "id": "e9a2c88e-78f6-4769-9c54-97734cd73afe",
+                "createdAt": "2025-10-07T06:59:21.311Z",
+                "updatedAt": "2025-10-07T06:59:21.311Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "0c6e6bca-98ec-4870-abf7-2fa328bb9b92",
+                "companyId": "4d9d35f4-3a6e-4278-98af-f0eac4814568"
+            }
+        }
+    }
+}
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: e9a2c88e-78f6-4769-9c54-97734cd73afe
+[2025-10-07 06:59:37] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: e9a2c88e-78f6-4769-9c54-97734cd73afe
+[2025-10-07 06:59:37] [CRM Debug] ✅ Opportunity created successfully with ID: e9a2c88e-78f6-4769-9c54-97734cd73afe
+[2025-10-07 06:59:37] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-10-07 06:59:37] [CRM Debug] Method: POST
+[2025-10-07 06:59:37] [CRM Debug] API Key present: Yes
+[2025-10-07 06:59:37] [CRM Debug] Data: {"title":"Sandbox Registration Details","bodyV2":{"markdown":"**Sandbox Registration Submission**\n\n- **Business Name:** Test Business ABC\n- **Legal Identity:** Educational Institution\n- **Business Website:** http:\/\/google.com\n- **Contact:** Sakib Islam\n- **Email:** nepevi1112@ampdial.com\n- **Phone:** 01654874563\n\n**API Response:**\n- **Merchant ID:** SANDTE58997623\n- **Registration Date:** 2025-10-07 06:59:36"},"noteTargets":[{"type":"person","id":"0c6e6bca-98ec-4870-abf7-2fa328bb9b92"},{"type":"opportunity","id":"e9a2c88e-78f6-4769-9c54-97734cd73afe"},{"type":"company","id":"4d9d35f4-3a6e-4278-98af-f0eac4814568"}]}
+[2025-10-07 06:59:38] [CRM Debug] Response status: 201
+[2025-10-07 06:59:38] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: 64758aa9-d101-4b6e-9120-61366620f003
+[2025-10-07 06:59:38] Note created with ID: 64758aa9-d101-4b6e-9120-61366620f003
+[2025-10-07 06:59:38] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"0c6e6bca-98ec-4870-abf7-2fa328bb9b92","company_id":"4d9d35f4-3a6e-4278-98af-f0eac4814568","opportunity_id":"e9a2c88e-78f6-4769-9c54-97734cd73afe","note_id":"64758aa9-d101-4b6e-9120-61366620f003"}
+[2025-10-07 07:06:34] Sending email verification for identifier: gehef69160@ampdial.com
+[2025-10-07 07:06:34] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 07:06:34] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 07:06:34] Sandbox API Request - Data: {"identifier":"gehef69160@ampdial.com"}
+[2025-10-07 07:06:36] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"9ef61d3e2863479a99d95e8396429d44","expire_at":"2025-10-07T13:21:18.581641","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T13:06:19.390531","status_code":201}}
+[2025-10-07 07:06:36] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"9ef61d3e2863479a99d95e8396429d44","expire_at":"2025-10-07T13:21:18.581641","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T13:06:19.390531","status_code":201}}
+[2025-10-07 07:06:51] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2025-10-07 07:06:51] Sandbox API Request - Data: {"otp":"499988","session_id":"9ef61d3e2863479a99d95e8396429d44"}
+[2025-10-07 07:06:51] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2025-10-07T13:06:34.718449","status_code":200}}
+[2025-10-07 07:07:23] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-10-07 07:07:23] Sandbox API Request - Data: {"business_name":"sadvgsgv","business_website":"http:\/\/google.com","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01712347898","email":"gehef69160@ampdial.com","session_id":"9ef61d3e2863479a99d95e8396429d44"}
+[2025-10-07 07:07:25] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDSA25537623","api_key":"52fb0d45.ClRqdxwCk4p9YA0aRZFbEuW2eTtOIQp3rLrwBlvzAvI","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_OYLIRmjmELYfbadZf6hS-L3qXGkK6RV7c4J1YfKo66vbyGp9mSX1ErhJhCL2XXjl","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-10-07 07:07:25] Checking if company exists: sadvgsgv
+[2025-10-07 07:07:25] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=sadvgsgv
+[2025-10-07 07:07:25] [CRM Debug] Method: GET
+[2025-10-07 07:07:25] [CRM Debug] API Key present: Yes
+[2025-10-07 07:07:26] [CRM Debug] Response status: 200
+[2025-10-07 07:07:26] Creating new company in CRM: {"name":"sadvgsgv"}
+[2025-10-07 07:07:26] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-10-07 07:07:26] [CRM Debug] Method: POST
+[2025-10-07 07:07:26] [CRM Debug] API Key present: Yes
+[2025-10-07 07:07:26] [CRM Debug] Data: {"name":"sadvgsgv"}
+[2025-10-07 07:07:26] [CRM Debug] Response status: 201
+[2025-10-07 07:07:26] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"sadvgsgv","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'sadvgsgv':1","id":"dc25f01d-6cda-4dab-8604-1cba9e433b1b","createdAt":"2025-10-07T07:07:09.677Z","updatedAt":"2025-10-07T07:07:09.677Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-10-07 07:07:26] Company created/found with ID: dc25f01d-6cda-4dab-8604-1cba9e433b1b
+[2025-10-07 07:07:26] Checking if person exists with email: gehef69160@ampdial.com
+[2025-10-07 07:07:26] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=gehef69160%40ampdial.com
+[2025-10-07 07:07:26] [CRM Debug] Method: GET
+[2025-10-07 07:07:26] [CRM Debug] API Key present: Yes
+[2025-10-07 07:07:26] [CRM Debug] Response status: 200
+[2025-10-07 07:07:26] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Shaylee","lastName":"Kemmer"},"emails":{"primaryEmail":"test_user_1757592234@example.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1712345678","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUr
+[2025-10-07 07:07:26] Found existing person with ID: 11a2b588-9b68-4023-bb35-8aadf1578d55 (email: gehef69160@ampdial.com)
+[2025-10-07 07:07:26] Person created/found with ID: 11a2b588-9b68-4023-bb35-8aadf1578d55
+[2025-10-07 07:07:26] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/11a2b588-9b68-4023-bb35-8aadf1578d55
+[2025-10-07 07:07:26] [CRM Debug] Method: PATCH
+[2025-10-07 07:07:26] [CRM Debug] API Key present: Yes
+[2025-10-07 07:07:26] [CRM Debug] Data: {"companyId":"dc25f01d-6cda-4dab-8604-1cba9e433b1b"}
+[2025-10-07 07:07:26] [CRM Debug] Response status: 200
+[2025-10-07 07:07:26] Successfully linked person 11a2b588-9b68-4023-bb35-8aadf1578d55 to company dc25f01d-6cda-4dab-8604-1cba9e433b1b
+[2025-10-07 07:07:26] [CRM Debug] Starting opportunity creation with title: Sandbox Registration: sadvgsgv
+[2025-10-07 07:07:26] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-10-07 07:07:26] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 11a2b588-9b68-4023-bb35-8aadf1578d55
+[2025-10-07 07:07:26] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-10-07 07:07:26] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Sandbox Registration: sadvgsgv",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 100000000000,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "11a2b588-9b68-4023-bb35-8aadf1578d55",
+    "companyId": "dc25f01d-6cda-4dab-8604-1cba9e433b1b"
+}
+[2025-10-07 07:07:26] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-10-07 07:07:26] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-10-07 07:07:26] [CRM Debug] Method: POST
+[2025-10-07 07:07:26] [CRM Debug] API Key present: Yes
+[2025-10-07 07:07:26] [CRM Debug] Data: {"name":"Sandbox Registration: sadvgsgv","stage":"A_NEW_LEAD","amount":{"amountMicros":100000000000,"currencyCode":"BDT"},"pointOfContactId":"11a2b588-9b68-4023-bb35-8aadf1578d55","companyId":"dc25f01d-6cda-4dab-8604-1cba9e433b1b"}
+[2025-10-07 07:07:27] [CRM Debug] Response status: 201
+[2025-10-07 07:07:27] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Sandbox Registration: sadvgsgv",
+                "amount": {
+                    "amountMicros": "100000000000",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'registration':2 'sadvgsgv':3 'sandbox':1",
+                "id": "2f3475a1-b3e4-4c77-94ca-cb3a53e9ea11",
+                "createdAt": "2025-10-07T07:07:10.367Z",
+                "updatedAt": "2025-10-07T07:07:10.367Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "11a2b588-9b68-4023-bb35-8aadf1578d55",
+                "companyId": "dc25f01d-6cda-4dab-8604-1cba9e433b1b"
+            }
+        }
+    }
+}
+[2025-10-07 07:07:27] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-10-07 07:07:27] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-10-07 07:07:27] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: 2f3475a1-b3e4-4c77-94ca-cb3a53e9ea11
+[2025-10-07 07:07:27] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: 2f3475a1-b3e4-4c77-94ca-cb3a53e9ea11
+[2025-10-07 07:07:27] [CRM Debug] ✅ Opportunity created successfully with ID: 2f3475a1-b3e4-4c77-94ca-cb3a53e9ea11
+[2025-10-07 07:07:27] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-10-07 07:07:27] [CRM Debug] Method: POST
+[2025-10-07 07:07:27] [CRM Debug] API Key present: Yes
+[2025-10-07 07:07:27] [CRM Debug] Data: {"title":"Sandbox Registration Details","bodyV2":{"markdown":"**Sandbox Registration Submission**\n\n- **Business Name:** sadvgsgv\n- **Legal Identity:** Educational Institution\n- **Business Website:** http:\/\/google.com\n- **Contact:** Sakib Islam\n- **Email:** gehef69160@ampdial.com\n- **Phone:** 01712347898\n\n**API Response:**\n- **Merchant ID:** SANDSA25537623\n- **Registration Date:** 2025-10-07 07:07:25"},"noteTargets":[{"type":"person","id":"11a2b588-9b68-4023-bb35-8aadf1578d55"},{"type":"opportunity","id":"2f3475a1-b3e4-4c77-94ca-cb3a53e9ea11"},{"type":"company","id":"dc25f01d-6cda-4dab-8604-1cba9e433b1b"}]}
+[2025-10-07 07:07:27] [CRM Debug] Response status: 201
+[2025-10-07 07:07:27] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: ec022057-d5fd-4adc-9de4-2423e7a2862b
+[2025-10-07 07:07:27] Note created with ID: ec022057-d5fd-4adc-9de4-2423e7a2862b
+[2025-10-07 07:07:27] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"11a2b588-9b68-4023-bb35-8aadf1578d55","company_id":"dc25f01d-6cda-4dab-8604-1cba9e433b1b","opportunity_id":"2f3475a1-b3e4-4c77-94ca-cb3a53e9ea11","note_id":"ec022057-d5fd-4adc-9de4-2423e7a2862b"}
+[2025-10-07 07:09:29] Sending email verification for identifier: wodoy42638@ampdial.com
+[2025-10-07 07:09:29] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-10-07 07:09:29] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-10-07 07:09:29] Sandbox API Request - Data: {"identifier":"wodoy42638@ampdial.com"}
+[2025-10-07 07:09:30] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"4744a62404b7464494c82664295ee97b","expire_at":"2025-10-07T13:24:12.991150","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T13:09:13.778212","status_code":201}}
+[2025-10-07 07:09:30] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"4744a62404b7464494c82664295ee97b","expire_at":"2025-10-07T13:24:12.991150","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-10-07T13:09:13.778212","status_code":201}}
+[2025-10-07 07:09:52] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2025-10-07 07:09:52] Sandbox API Request - Data: {"otp":"884783","session_id":"4744a62404b7464494c82664295ee97b"}
+[2025-10-07 07:09:53] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2025-10-07T13:09:37.168894","status_code":200}}
+[2025-10-07 07:11:29] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-10-07 07:11:29] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"http:\/\/google.com","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01565656522","email":"wodoy42638@ampdial.com","session_id":"4744a62404b7464494c82664295ee97b"}
+[2025-10-07 07:11:31] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE21847623","api_key":"c268bca0._00R6kmHBoXYxBcI1t0URQDWnzDm2gBTuiYBdZE-yHM","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_jFecaIcQL1rrc0zAbFVOmy33IH0eh6UiQ8P-OmDHKrqNogxyVLNsMxLdjux2rP3V","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-10-07 07:11:31] Checking if company exists: Test Business ABC
+[2025-10-07 07:11:31] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test+Business+ABC
+[2025-10-07 07:11:31] [CRM Debug] Method: GET
+[2025-10-07 07:11:31] [CRM Debug] API Key present: Yes
+[2025-10-07 07:11:31] [CRM Debug] Response status: 200
+[2025-10-07 07:11:31] Creating new company in CRM: {"name":"Test Business ABC"}
+[2025-10-07 07:11:31] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-10-07 07:11:31] [CRM Debug] Method: POST
+[2025-10-07 07:11:31] [CRM Debug] API Key present: Yes
+[2025-10-07 07:11:31] [CRM Debug] Data: {"name":"Test Business ABC"}
+[2025-10-07 07:11:32] [CRM Debug] Response status: 201
+[2025-10-07 07:11:32] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test Business ABC","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'abc':3 'business':2 'test':1","id":"fc20ffa4-4920-4519-aa95-aa7a71fa3a96","createdAt":"2025-10-07T07:11:15.454Z","updatedAt":"2025-10-07T07:11:15.454Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-10-07 07:11:32] Company created/found with ID: fc20ffa4-4920-4519-aa95-aa7a71fa3a96
+[2025-10-07 07:11:32] Checking if person exists with email: wodoy42638@ampdial.com
+[2025-10-07 07:11:32] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=wodoy42638%40ampdial.com
+[2025-10-07 07:11:32] [CRM Debug] Method: GET
+[2025-10-07 07:11:32] [CRM Debug] API Key present: Yes
+[2025-10-07 07:11:32] [CRM Debug] Response status: 200
+[2025-10-07 07:11:32] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Shaylee","lastName":"Kemmer"},"emails":{"primaryEmail":"test_user_1757592234@example.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1712345678","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUr
+[2025-10-07 07:11:32] No matching person found for email: wodoy42638@ampdial.com in 60 results
+[2025-10-07 07:11:32] Will create new person for: Sakib Islam (wodoy42638@ampdial.com)
+[2025-10-07 07:11:32] Creating new person...
+[2025-10-07 07:11:32] Adding companyId to person creation: fc20ffa4-4920-4519-aa95-aa7a71fa3a96
+[2025-10-07 07:11:32] Adding company name to person: Test Business ABC
+[2025-10-07 07:11:32] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"wodoy42638@ampdial.com"},"phones":{"primaryPhoneNumber":"1565656522","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"fc20ffa4-4920-4519-aa95-aa7a71fa3a96","company":"Test Business ABC"}
+[2025-10-07 07:11:32] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-10-07 07:11:32] [CRM Debug] Method: POST
+[2025-10-07 07:11:32] [CRM Debug] API Key present: Yes
+[2025-10-07 07:11:32] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"wodoy42638@ampdial.com"},"phones":{"primaryPhoneNumber":"1565656522","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"fc20ffa4-4920-4519-aa95-aa7a71fa3a96","company":"Test Business ABC"}
+[2025-10-07 07:11:32] [CRM Debug] Response status: 400
+[2025-10-07 07:11:32] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-10-07 07:11:32] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-10-07 07:11:32] CRM person creation response: {"success":false,"message":"CRM API request failed","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-10-07 07:16:46] Checking if person exists with email: sakib@gmail.com
+[2025-10-07 07:16:46] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=sakib%40gmail.com
+[2025-10-07 07:16:46] [CRM Debug] Method: GET
+[2025-10-07 07:16:46] [CRM Debug] API Key present: Yes
+[2025-10-07 07:16:47] [CRM Debug] Response status: 200
+[2025-10-07 07:16:47] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Shaylee","lastName":"Kemmer"},"emails":{"primaryEmail":"test_user_1757592234@example.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1712345678","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUr
+[2025-10-07 07:16:47] No matching person found for email: sakib@gmail.com in 60 results
+[2025-10-07 07:16:47] Will create new person for: Sakib (sakib@gmail.com)
+[2025-10-07 07:16:47] Creating new person...
+[2025-10-07 07:16:47] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"sakib@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-10-07 07:16:47] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-10-07 07:16:47] [CRM Debug] Method: POST
+[2025-10-07 07:16:47] [CRM Debug] API Key present: Yes
+[2025-10-07 07:16:47] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"sakib@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-10-07 07:16:47] [CRM Debug] Response status: 201
+[2025-10-07 07:16:47] CRM person creation response: {"success":true,"data":{"data":{"createPerson":{"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"sakib@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'gmail.com':3 'sakib':1 'sakib@gmail.com':2","id":"e4744f98-841e-4fc3-af83-18b634e7b40c","createdAt":"2025-10-07T07:16:30.713Z","updatedAt":"2025-10-07T07:16:30.713Z","deletedAt":null,"companyId":null}}}}
+[2025-10-07 07:16:47] Checking for person ID in CRM response: {"data":{"createPerson":{"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"sakib@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'gmail.com':3 'sakib':1 'sakib@gmail.com':2","id":"e4744f98-841e-4fc3-af83-18b634e7b40c","createdAt":"2025-10-07T07:16:30.713Z","updatedAt":"2025-10-07T07:16:30.713Z","deletedAt":null,"companyId":null}}}
+[2025-10-07 07:16:47] ERROR: Could not find person ID in response. Full response: {"success":true,"data":{"data":{"createPerson":{"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"sakib@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'gmail.com':3 'sakib':1 'sakib@gmail.com':2","id":"e4744f98-841e-4fc3-af83-18b634e7b40c","createdAt":"2025-10-07T07:16:30.713Z","updatedAt":"2025-10-07T07:16:30.713Z","deletedAt":null,"companyId":null}}}}
+[2025-10-07 07:16:47] Attempting to find person by email after creation: sakib@gmail.com
+[2025-10-07 07:16:47] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=sakib%40gmail.com
+[2025-10-07 07:16:47] [CRM Debug] Method: GET
+[2025-10-07 07:16:47] [CRM Debug] API Key present: Yes
+[2025-10-07 07:16:47] [CRM Debug] Response status: 200
+[2025-10-07 07:16:47] CRITICAL ERROR: Person creation failed completely. Cannot extract person ID from response and search failed.
+[2025-10-07 07:18:51] Sending merchant registration to sandbox API
+[2025-10-07 07:18:51] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-10-07 07:18:51] Sandbox API Request - Data: {"business_name":"adva","legal_identity":"Limited Liability Company","first_name":"davav","last_name":"avev","email":"skbgnkvb@gmail.co","phone":"01956585478"}
+[2025-10-07 07:18:53] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDAD12267623","api_key":"658c6a50.LsIpAOG52FWipdaZ4nxQnlcTF7CMp-cDfK_nJ9wFlW4","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_s7nzhNpoNzoBCjO68lrFgL8ni0n_mZERECYRfDUZUkpKe8JOVeFXl_ugWO6H-j-Q","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-10-07 07:18:53] Merchant registration submitted successfully
+[2025-10-07 07:18:53] Checking if company exists: adva
+[2025-10-07 07:18:53] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=adva
+[2025-10-07 07:18:53] [CRM Debug] Method: GET
+[2025-10-07 07:18:53] [CRM Debug] API Key present: Yes
+[2025-10-07 07:18:53] [CRM Debug] Response status: 200
+[2025-10-07 07:18:53] Creating new company in CRM: {"name":"adva"}
+[2025-10-07 07:18:53] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-10-07 07:18:53] [CRM Debug] Method: POST
+[2025-10-07 07:18:53] [CRM Debug] API Key present: Yes
+[2025-10-07 07:18:53] [CRM Debug] Data: {"name":"adva"}
+[2025-10-07 07:18:53] [CRM Debug] Response status: 201
+[2025-10-07 07:18:53] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"adva","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'adva':1","id":"6e0e0fb6-bb84-43f4-b84c-601151cadde7","createdAt":"2025-10-07T07:18:37.222Z","updatedAt":"2025-10-07T07:18:37.222Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-10-07 07:18:53] Company created/found with ID: 6e0e0fb6-bb84-43f4-b84c-601151cadde7
+[2025-10-07 07:18:53] Checking if person exists with email: skbgnkvb@gmail.co
+[2025-10-07 07:18:53] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=skbgnkvb%40gmail.co
+[2025-10-07 07:18:53] [CRM Debug] Method: GET
+[2025-10-07 07:18:53] [CRM Debug] API Key present: Yes
+[2025-10-07 07:18:54] [CRM Debug] Response status: 200
+[2025-10-07 07:18:54] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Shaylee","lastName":"Kemmer"},"emails":{"primaryEmail":"test_user_1757592234@example.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1712345678","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUr
+[2025-10-07 07:18:54] No matching person found for email: skbgnkvb@gmail.co in 60 results
+[2025-10-07 07:18:54] Will create new person for: davav avev (skbgnkvb@gmail.co)
+[2025-10-07 07:18:54] Creating new person...
+[2025-10-07 07:18:54] Adding companyId to person creation: 6e0e0fb6-bb84-43f4-b84c-601151cadde7
+[2025-10-07 07:18:54] Adding company name to person: adva
+[2025-10-07 07:18:54] Creating new person in CRM with data: {"name":{"firstName":"davav","lastName":"avev"},"emails":{"primaryEmail":"skbgnkvb@gmail.co"},"phones":{"primaryPhoneNumber":"1956585478","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"6e0e0fb6-bb84-43f4-b84c-601151cadde7","company":"adva"}
+[2025-10-07 07:18:54] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-10-07 07:18:54] [CRM Debug] Method: POST
+[2025-10-07 07:18:54] [CRM Debug] API Key present: Yes
+[2025-10-07 07:18:54] [CRM Debug] Data: {"name":{"firstName":"davav","lastName":"avev"},"emails":{"primaryEmail":"skbgnkvb@gmail.co"},"phones":{"primaryPhoneNumber":"1956585478","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"6e0e0fb6-bb84-43f4-b84c-601151cadde7","company":"adva"}
+[2025-10-07 07:18:54] [CRM Debug] Response status: 400
+[2025-10-07 07:18:54] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-10-07 07:18:54] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-10-07 07:18:54] CRM person creation response: {"success":false,"message":"CRM API request failed","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
