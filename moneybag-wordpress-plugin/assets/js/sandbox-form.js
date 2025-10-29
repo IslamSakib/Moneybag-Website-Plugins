@@ -678,7 +678,7 @@
                         ' risk-free no registration required.'
                     ),
                     createElement('a', {
-                        href: 'https://moneybag.com.bd/demo',
+                        href: 'https://demo.sandbox.moneybag.com.bd/',
                         target: '_blank',
                         rel: 'noopener noreferrer',
                         className: 'sandbox-demo-btn'

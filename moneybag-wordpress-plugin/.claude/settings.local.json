@@ -76,7 +76,8 @@
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -r \"\ndefine(''ABSPATH'', ''C:/laragon/www/Moneybag-Website/'');\nrequire_once ''C:/laragon/www/Moneybag-Website/wp-config.php'';\necho ''reCAPTCHA Site Key: '' . (get_option(''moneybag_recaptcha_site_key'') ? ''SET ('' . strlen(get_option(''moneybag_recaptcha_site_key'')) . '' chars)'' : ''NOT SET'') . PHP_EOL;\necho ''reCAPTCHA Secret Key: '' . (get_option(''moneybag_recaptcha_secret_key'') ? ''SET ('' . strlen(get_option(''moneybag_recaptcha_secret_key'')) . '' chars)'' : ''NOT SET'') . PHP_EOL;\n\")",
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -l assets/js/sandbox-form.js)",
       "Bash(\"C:\\laragon\\bin\\php\\php-8.2.12-Win32-vs16-x64\\php.exe\" -l assets/css/moneybag-global.css)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(\"/c/laragon/bin/php/php-8.2.12-Win32-vs16-x64/php.exe\" -l \"/c/laragon/www/Moneybag-Website/wp-content/plugins/moneybag-wordpress-plugin/includes/class-moneybag-api.php\")"
     ],
     "deny": [],
     "ask": []

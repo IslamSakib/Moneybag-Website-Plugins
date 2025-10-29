@@ -827,12 +827,20 @@ class MoneybagAPI {
         if (!$create_response['success']) {
             // Check if it's a duplicate error - if so, try to search again
             $error_msg = $create_response['message'] ?? '';
-            if (strpos($error_msg, 'duplicate') !== false || strpos($error_msg, 'unique constraint') !== false) {
-                self::debug_log("Duplicate error detected, searching for existing person again");
-                
-                $search_response = self::crm_request('/people?filter[email][eq]=' . urlencode($email), [], 'GET');
-                self::debug_log("Retry search response: " . json_encode($search_response));
-                
+            $error_body = $create_response['error_body'] ?? '';
+
+            // Check for duplicate constraint violations (email or phone)
+            if (strpos($error_msg, 'duplicate') !== false ||
+                strpos($error_msg, 'unique constraint') !== false ||
+                strpos($error_body, 'duplicate') !== false ||
+                strpos($error_body, 'unique constraint') !== false) {
+
+                self::debug_log("Duplicate constraint error detected, searching for existing person");
+
+                // Try to find person by email first
+                $search_response = self::crm_request('/people?email=' . urlencode($email), [], 'GET');
+                self::debug_log("Retry search by email response: " . substr(json_encode($search_response), 0, 500));
+
                 // Handle nested response structure
                 $people_list = [];
                 if (isset($search_response['data']['data']['people'])) {
@@ -842,14 +850,14 @@ class MoneybagAPI {
                 } elseif (is_array($search_response['data'])) {
                     $people_list = $search_response['data'];
                 }
-                
-                // Find matching person by email
+
+                // First try to find by email
                 foreach ($people_list as $person) {
                     $person_email = $person['emails']['primaryEmail'] ?? $person['email'] ?? '';
                     if (strtolower($person_email) === strtolower($email)) {
                         $person_id = $person['id'] ?? null;
                         if ($person_id) {
-                            self::debug_log("Found existing person after retry with ID: " . $person_id);
+                            self::debug_log("Found existing person by email with ID: " . $person_id);
                             return [
                                 'success' => true,
                                 'person_id' => $person_id,
@@ -858,8 +866,52 @@ class MoneybagAPI {
                         }
                     }
                 }
+
+                // If not found by email, try to search by phone number
+                $phone = $data['phone'] ?? '';
+                $phone_digits = preg_replace('/[^0-9]/', '', $phone);
+                $phone_last_10 = substr($phone_digits, -10);
+
+                if (!empty($phone_last_10)) {
+                    self::debug_log("Email not found, trying to search by phone: " . $phone_last_10);
+
+                    // Search for person by phone
+                    $phone_search = self::crm_request('/people', [], 'GET');
+
+                    if ($phone_search['success'] && !empty($phone_search['data'])) {
+                        $all_people = [];
+                        if (isset($phone_search['data']['data']['people'])) {
+                            $all_people = $phone_search['data']['data']['people'];
+                        } elseif (isset($phone_search['data']['people'])) {
+                            $all_people = $phone_search['data']['people'];
+                        } elseif (is_array($phone_search['data'])) {
+                            $all_people = $phone_search['data'];
+                        }
+
+                        // Search through people for matching phone
+                        foreach ($all_people as $person) {
+                            $person_phone = $person['phones']['primaryPhoneNumber'] ?? '';
+                            $person_phone_digits = preg_replace('/[^0-9]/', '', $person_phone);
+
+                            if ($person_phone_digits === $phone_last_10) {
+                                $person_id = $person['id'] ?? null;
+                                if ($person_id) {
+                                    self::debug_log("Found existing person by phone with ID: " . $person_id);
+                                    return [
+                                        'success' => true,
+                                        'person_id' => $person_id,
+                                        'existing' => true,
+                                        'found_by' => 'phone'
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                self::debug_log("Duplicate error but could not find existing person by email or phone");
             }
-            
+
             return [
                 'success' => false,
                 'message' => 'Failed to create contact in CRM.',
@@ -873,8 +925,16 @@ class MoneybagAPI {
         // Log the data structure for debugging
         self::debug_log("Checking for person ID in CRM response: " . json_encode($create_response['data']));
 
-        // Check different possible response structures
-        if (isset($create_response['data']['data']['id'])) {
+        // Check different possible response structures - prioritize data.data.createPerson.id for Twenty CRM
+        if (isset($create_response['data']['data']['createPerson']['id'])) {
+            // Twenty CRM REST API response format
+            $person_id = $create_response['data']['data']['createPerson']['id'];
+            self::debug_log("Found person ID in data.data.createPerson.id: " . $person_id);
+        } elseif (isset($create_response['data']['createPerson']['id'])) {
+            // Alternative Twenty CRM format
+            $person_id = $create_response['data']['createPerson']['id'];
+            self::debug_log("Found person ID in data.createPerson.id: " . $person_id);
+        } elseif (isset($create_response['data']['data']['id'])) {
             $person_id = $create_response['data']['data']['id'];
             self::debug_log("Found person ID in data.data.id: " . $person_id);
         } elseif (isset($create_response['data']['id'])) {
@@ -884,9 +944,6 @@ class MoneybagAPI {
             // Sometimes the ID is returned directly as a string
             $person_id = $create_response['data'];
             self::debug_log("Found person ID as direct string: " . $person_id);
-        } elseif (isset($create_response['data']['data']['id'])) {
-            $person_id = $create_response['data']['data']['id'];
-            self::debug_log("Found person ID in data.data.id: " . $person_id);
         } elseif (isset($create_response['id'])) {
             $person_id = $create_response['id'];
             self::debug_log("Found person ID in root id: " . $person_id);
