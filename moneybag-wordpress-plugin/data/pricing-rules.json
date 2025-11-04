@@ -4,174 +4,174 @@
   "pricing": {
     "cards": {
       "Education": {
-        "visa": "1.20%",
-        "mastercard": "1.20%",
-        "diners_club": "1.30%",
-        "unionpay": "1.30%",
-        "amex": "1.50%",
-        "nexus_card": "30 BDT per Trnx"
+        "visa": "1.40%",
+        "mastercard": "1.40%",
+        "diners_club": "1.50%",
+        "unionpay": "1.50%",
+        "amex": "1.70%",
+        "nexus_card": "30.20 BDT per Trnx"
       },
       "eCommerce": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "fCommerce": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "Health Service": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "IT Services": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.20%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "NGO/Donation": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "Digital Service Platform": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "Membership & Subscriptions": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "Event Management / Ticketing": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "Consulting Services": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "Miscellaneous": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       },
       "default": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.30%",
+        "mastercard": "2.30%",
+        "diners_club": "2.50%",
+        "unionpay": "2.50%",
+        "amex": "3.50%",
+        "nexus_card": "2.20%"
       }
     },
     "mfs": {
       "Education": {
-        "bkash": "1.20%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.45%"
+        "bkash": "1.40%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "1.65%"
       },
       "eCommerce": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "fCommerce": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "Health Service": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "IT Services": {
-        "bkash": "2.30%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "2.50%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "NGO/Donation": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "Digital Service Platform": {
-        "bkash": "12.50%",
-        "nagad": "1.60%",
-        "upay": "1.40%",
-        "rocket": "1.80%"
+        "bkash": "12.70%",
+        "nagad": "1.80%",
+        "upay": "1.60%",
+        "rocket": "2.00%"
       },
       "Membership & Subscriptions": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "Event Management / Ticketing": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "Consulting Services": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "Miscellaneous": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       },
       "default": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
-        "upay": "1.50%",
-        "rocket": "1.80%"
+        "bkash": "1.95%",
+        "nagad": "1.80%",
+        "upay": "1.70%",
+        "rocket": "2.00%"
       }
     }
   },
