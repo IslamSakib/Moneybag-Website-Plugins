@@ -44,7 +44,7 @@ class AdminSettings {
             'sanitize_callback' => [$this, 'sanitize_url_setting']
         ]);
         
-        // Security Settings
+        // Recaptcha V3 Security Settings
         register_setting('moneybag_settings', 'moneybag_recaptcha_site_key', [
             'sanitize_callback' => 'sanitize_text_field'
         ]);

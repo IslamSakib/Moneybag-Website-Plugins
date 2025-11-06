@@ -823,3 +823,1333 @@
 [2025-10-07 07:18:54] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
 [2025-10-07 07:18:54] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
 [2025-10-07 07:18:54] CRM person creation response: {"success":false,"message":"CRM API request failed","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 05:00:05] Sending merchant registration to sandbox API
+[2025-11-06 05:00:05] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-11-06 05:00:05] Sandbox API Request - Data: {"business_name":"Test Business","legal_identity":"Sole Proprietorship","first_name":"Sakib","last_name":"Islam","email":"islamsakib.official@gmail.com","phone":"01950025990"}
+[2025-11-06 05:00:05] Sandbox API Response - Status: 409 | Body: {"success":false,"message":"This email is already associated with a merchant account.","code":409}
+[2025-11-06 05:00:05] Merchant registration failed: This email is already associated with a merchant account.
+[2025-11-06 05:00:17] Sending merchant registration to sandbox API
+[2025-11-06 05:00:17] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-11-06 05:00:17] Sandbox API Request - Data: {"business_name":"Test Business","legal_identity":"Sole Proprietorship","first_name":"Sakib","last_name":"Islam","email":"islamsakib.official@gmail.cob","phone":"01950025990"}
+[2025-11-06 05:00:17] Sandbox API Response - Status: 409 | Body: {"success":false,"message":"Phone number already exists. Please use a different phone number.","code":409}
+[2025-11-06 05:00:17] Merchant registration failed: Phone number already exists. Please use a different phone number.
+[2025-11-06 05:00:24] Sending merchant registration to sandbox API
+[2025-11-06 05:00:24] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-11-06 05:00:24] Sandbox API Request - Data: {"business_name":"Test Business","legal_identity":"Sole Proprietorship","first_name":"Sakib","last_name":"Islam","email":"islamsakib.official@gmail.cob","phone":"01950026653"}
+[2025-11-06 05:00:27] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE31627623","api_key":"3c21b971.Mi-x-7EWDvI0idrRh-fLs_OV-UG_sBl3byW0UPgUnbw","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_w07RspUWJoTEBnJVfuZTetkiadkh8T1YEn2rt-W9sFjSuCxXjmIRoJuGwRo6HnOn","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-11-06 05:00:27] Merchant registration submitted successfully
+[2025-11-06 05:00:27] Checking if company exists: Test Business
+[2025-11-06 05:00:27] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test+Business
+[2025-11-06 05:00:27] [CRM Debug] Method: GET
+[2025-11-06 05:00:27] [CRM Debug] API Key present: Yes
+[2025-11-06 05:00:27] [CRM Debug] Response status: 200
+[2025-11-06 05:00:27] Creating new company in CRM: {"name":"Test Business"}
+[2025-11-06 05:00:27] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 05:00:27] [CRM Debug] Method: POST
+[2025-11-06 05:00:27] [CRM Debug] API Key present: Yes
+[2025-11-06 05:00:27] [CRM Debug] Data: {"name":"Test Business"}
+[2025-11-06 05:00:27] [CRM Debug] Response status: 201
+[2025-11-06 05:00:27] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test Business","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'business':2 'test':1","id":"f781bc78-ce43-4c48-b9c0-6e498403e777","createdAt":"2025-11-06T05:00:27.778Z","updatedAt":"2025-11-06T05:00:27.778Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 05:00:27] Company created/found with ID: f781bc78-ce43-4c48-b9c0-6e498403e777
+[2025-11-06 05:00:27] Checking if person exists with email: islamsakib.official@gmail.cob
+[2025-11-06 05:00:27] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.cob
+[2025-11-06 05:00:27] [CRM Debug] Method: GET
+[2025-11-06 05:00:27] [CRM Debug] API Key present: Yes
+[2025-11-06 05:00:27] [CRM Debug] Response status: 200
+[2025-11-06 05:00:27] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 05:00:27] Found existing person with ID: 4f42bdc8-8daa-4160-9059-3a8d5eff5596 (email: islamsakib.official@gmail.cob)
+[2025-11-06 05:00:27] Person created/found with ID: 4f42bdc8-8daa-4160-9059-3a8d5eff5596
+[2025-11-06 05:00:27] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/4f42bdc8-8daa-4160-9059-3a8d5eff5596
+[2025-11-06 05:00:27] [CRM Debug] Method: PATCH
+[2025-11-06 05:00:27] [CRM Debug] API Key present: Yes
+[2025-11-06 05:00:27] [CRM Debug] Data: {"companyId":"f781bc78-ce43-4c48-b9c0-6e498403e777"}
+[2025-11-06 05:00:28] [CRM Debug] Response status: 200
+[2025-11-06 05:00:28] Successfully linked person 4f42bdc8-8daa-4160-9059-3a8d5eff5596 to company f781bc78-ce43-4c48-b9c0-6e498403e777
+[2025-11-06 05:00:28] [CRM Debug] Starting opportunity creation with title: Merchant Registration: Test Business
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 4f42bdc8-8daa-4160-9059-3a8d5eff5596
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Merchant Registration: Test Business",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 600000000000,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "4f42bdc8-8daa-4160-9059-3a8d5eff5596",
+    "companyId": "f781bc78-ce43-4c48-b9c0-6e498403e777"
+}
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-11-06 05:00:28] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-11-06 05:00:28] [CRM Debug] Method: POST
+[2025-11-06 05:00:28] [CRM Debug] API Key present: Yes
+[2025-11-06 05:00:28] [CRM Debug] Data: {"name":"Merchant Registration: Test Business","stage":"A_NEW_LEAD","amount":{"amountMicros":600000000000,"currencyCode":"BDT"},"pointOfContactId":"4f42bdc8-8daa-4160-9059-3a8d5eff5596","companyId":"f781bc78-ce43-4c48-b9c0-6e498403e777"}
+[2025-11-06 05:00:28] [CRM Debug] Response status: 201
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Merchant Registration: Test Business",
+                "amount": {
+                    "amountMicros": "600000000000",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'business':4 'merchant':1 'registration':2 'test':3",
+                "id": "c78cff76-d397-48fa-925c-3032225a1894",
+                "createdAt": "2025-11-06T05:00:28.496Z",
+                "updatedAt": "2025-11-06T05:00:28.496Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "4f42bdc8-8daa-4160-9059-3a8d5eff5596",
+                "companyId": "f781bc78-ce43-4c48-b9c0-6e498403e777"
+            }
+        }
+    }
+}
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: c78cff76-d397-48fa-925c-3032225a1894
+[2025-11-06 05:00:28] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: c78cff76-d397-48fa-925c-3032225a1894
+[2025-11-06 05:00:28] [CRM Debug] ✅ Opportunity created successfully with ID: c78cff76-d397-48fa-925c-3032225a1894
+[2025-11-06 05:00:28] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-11-06 05:00:28] [CRM Debug] Method: POST
+[2025-11-06 05:00:28] [CRM Debug] API Key present: Yes
+[2025-11-06 05:00:28] [CRM Debug] Data: {"title":"Merchant Registration Details","bodyV2":{"markdown":"**Merchant Registration Submission**\n\n- **Business Name:** Test Business\n- **Legal Identity:** Sole Proprietorship\n- **Business Category:** social_commerce\n- **Service Types:** visa, mastercard, amex, dbbl_nexus, bkash, nagad, unionpay, rocket, diners, upay\n- **Monthly Volume:** 100000-500000\n- **Max Amount:** 0\n- **Currency:** BDT\n- **Business Website:** \n- **Contact:** Sakib Islam\n- **Email:** islamsakib.official@gmail.cob\n- **Phone:** 01950026653\n\n**API Response:**\n- **Status:** Registration Successful\n- **Merchant ID:** SANDTE31627623\n- **Registration Date:** 2025-11-06 11:00:27"},"noteTargets":[{"type":"person","id":"4f42bdc8-8daa-4160-9059-3a8d5eff5596"},{"type":"opportunity","id":"c78cff76-d397-48fa-925c-3032225a1894"},{"type":"company","id":"f781bc78-ce43-4c48-b9c0-6e498403e777"}]}
+[2025-11-06 05:00:28] [CRM Debug] Response status: 201
+[2025-11-06 05:00:28] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: dfd2ac4d-1000-4c13-a1ad-600395f7fbb1
+[2025-11-06 05:00:28] Note created with ID: dfd2ac4d-1000-4c13-a1ad-600395f7fbb1
+[2025-11-06 05:00:28] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"4f42bdc8-8daa-4160-9059-3a8d5eff5596","company_id":"f781bc78-ce43-4c48-b9c0-6e498403e777","opportunity_id":"c78cff76-d397-48fa-925c-3032225a1894","note_id":"dfd2ac4d-1000-4c13-a1ad-600395f7fbb1"}
+[2025-11-06 05:04:26] Sending merchant registration to sandbox API
+[2025-11-06 05:04:26] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-11-06 05:04:26] Sandbox API Request - Data: {"business_name":"Test Business By Sakib","legal_identity":"Partnership","first_name":"Sakib","last_name":"Islam","email":"fqvajfiy@gmail.co","phone":"01856985658"}
+[2025-11-06 05:04:29] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE71867623","api_key":"ba895de9.EGBBfsNyweKQIuYA1PkNTchlBv1RUJqC7Y8iZnseDCY","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_cOpw24vjIRx6JG-RUeNaAVLeWyXOpwK_Rzmk3MpW1jPnX-NZbZCjaZGgwwczpk1F","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-11-06 05:04:29] Merchant registration submitted successfully
+[2025-11-06 05:04:29] Checking if company exists: Test Business By Sakib
+[2025-11-06 05:04:29] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test+Business+By+Sakib
+[2025-11-06 05:04:29] [CRM Debug] Method: GET
+[2025-11-06 05:04:29] [CRM Debug] API Key present: Yes
+[2025-11-06 05:04:29] [CRM Debug] Response status: 200
+[2025-11-06 05:04:29] Creating new company in CRM: {"name":"Test Business By Sakib"}
+[2025-11-06 05:04:29] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 05:04:29] [CRM Debug] Method: POST
+[2025-11-06 05:04:29] [CRM Debug] API Key present: Yes
+[2025-11-06 05:04:29] [CRM Debug] Data: {"name":"Test Business By Sakib"}
+[2025-11-06 05:04:29] [CRM Debug] Response status: 201
+[2025-11-06 05:04:29] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test Business By Sakib","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'business':2 'by':3 'sakib':4 'test':1","id":"b0011959-1b00-4a8b-8c32-d44fa99b6599","createdAt":"2025-11-06T05:04:29.631Z","updatedAt":"2025-11-06T05:04:29.631Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 05:04:29] Company created/found with ID: b0011959-1b00-4a8b-8c32-d44fa99b6599
+[2025-11-06 05:04:29] Checking if person exists with email: fqvajfiy@gmail.co
+[2025-11-06 05:04:29] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=fqvajfiy%40gmail.co
+[2025-11-06 05:04:29] [CRM Debug] Method: GET
+[2025-11-06 05:04:29] [CRM Debug] API Key present: Yes
+[2025-11-06 05:04:29] [CRM Debug] Response status: 200
+[2025-11-06 05:04:29] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 05:04:29] No matching person found for email: fqvajfiy@gmail.co in 60 results
+[2025-11-06 05:04:29] Will create new person for: Sakib Islam (fqvajfiy@gmail.co)
+[2025-11-06 05:04:29] Creating new person...
+[2025-11-06 05:04:29] Adding companyId to person creation: b0011959-1b00-4a8b-8c32-d44fa99b6599
+[2025-11-06 05:04:29] Adding company name to person: Test Business By Sakib
+[2025-11-06 05:04:29] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"fqvajfiy@gmail.co"},"phones":{"primaryPhoneNumber":"1856985658","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"b0011959-1b00-4a8b-8c32-d44fa99b6599","company":"Test Business By Sakib"}
+[2025-11-06 05:04:29] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 05:04:29] [CRM Debug] Method: POST
+[2025-11-06 05:04:29] [CRM Debug] API Key present: Yes
+[2025-11-06 05:04:29] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"fqvajfiy@gmail.co"},"phones":{"primaryPhoneNumber":"1856985658","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"b0011959-1b00-4a8b-8c32-d44fa99b6599","company":"Test Business By Sakib"}
+[2025-11-06 05:04:29] [CRM Debug] Response status: 400
+[2025-11-06 05:04:29] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 05:04:29] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 05:04:29] CRM person creation response: {"success":false,"message":"CRM API request failed","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 05:04:29] Duplicate constraint error detected, searching for existing person
+[2025-11-06 05:04:29] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=fqvajfiy%40gmail.co
+[2025-11-06 05:04:29] [CRM Debug] Method: GET
+[2025-11-06 05:04:29] [CRM Debug] API Key present: Yes
+[2025-11-06 05:04:30] [CRM Debug] Response status: 200
+[2025-11-06 05:04:30] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 05:04:30] Email not found, trying to search by phone: 1856985658
+[2025-11-06 05:04:30] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 05:04:30] [CRM Debug] Method: GET
+[2025-11-06 05:04:30] [CRM Debug] API Key present: Yes
+[2025-11-06 05:04:30] [CRM Debug] Response status: 200
+[2025-11-06 05:04:30] Duplicate error but could not find existing person by email or phone
+[2025-11-06 05:40:03] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 05:40:03] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 05:40:03] [CRM Debug] Method: GET
+[2025-11-06 05:40:03] [CRM Debug] API Key present: Yes
+[2025-11-06 05:40:04] [CRM Debug] Response status: 200
+[2025-11-06 05:40:04] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 05:40:04] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 05:40:04] Will create new person for: Sakib Islam (islamsakib.official@gmail.com)
+[2025-11-06 05:40:04] Creating new person...
+[2025-11-06 05:40:04] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 05:40:04] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 05:40:04] [CRM Debug] Method: POST
+[2025-11-06 05:40:04] [CRM Debug] API Key present: Yes
+[2025-11-06 05:40:04] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 05:40:04] [CRM Debug] Response status: 400
+[2025-11-06 05:40:04] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 05:40:04] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 05:40:04] CRM person creation response: {"success":false,"message":"CRM API request failed","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 05:40:04] Duplicate constraint error detected, searching for existing person
+[2025-11-06 05:40:04] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 05:40:04] [CRM Debug] Method: GET
+[2025-11-06 05:40:04] [CRM Debug] API Key present: Yes
+[2025-11-06 05:40:04] [CRM Debug] Response status: 200
+[2025-11-06 05:40:04] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 05:40:04] Email not found, trying to search by phone: 1950025990
+[2025-11-06 05:40:04] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 05:40:04] [CRM Debug] Method: GET
+[2025-11-06 05:40:04] [CRM Debug] API Key present: Yes
+[2025-11-06 05:40:05] [CRM Debug] Response status: 200
+[2025-11-06 05:40:05] Duplicate error but could not find existing person by email or phone
+[2025-11-06 05:40:30] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 05:40:30] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 05:40:30] [CRM Debug] Method: GET
+[2025-11-06 05:40:30] [CRM Debug] API Key present: Yes
+[2025-11-06 05:40:30] [CRM Debug] Response status: 200
+[2025-11-06 05:40:30] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 05:40:30] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 05:40:30] Will create new person for: Sakib Islam (islamsakib.official@gmail.com)
+[2025-11-06 05:40:30] Creating new person...
+[2025-11-06 05:40:30] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 05:40:30] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 05:40:30] [CRM Debug] Method: POST
+[2025-11-06 05:40:30] [CRM Debug] API Key present: Yes
+[2025-11-06 05:40:30] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 05:40:31] [CRM Debug] Response status: 400
+[2025-11-06 05:40:31] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 05:40:31] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 05:40:31] CRM person creation response: {"success":false,"message":"CRM API request failed","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 05:40:31] Duplicate constraint error detected, searching for existing person
+[2025-11-06 05:40:31] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 05:40:31] [CRM Debug] Method: GET
+[2025-11-06 05:40:31] [CRM Debug] API Key present: Yes
+[2025-11-06 05:40:31] [CRM Debug] Response status: 200
+[2025-11-06 05:40:31] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 05:40:31] Email not found, trying to search by phone: 1950025990
+[2025-11-06 05:40:31] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 05:40:31] [CRM Debug] Method: GET
+[2025-11-06 05:40:31] [CRM Debug] API Key present: Yes
+[2025-11-06 05:40:31] [CRM Debug] Response status: 200
+[2025-11-06 05:40:31] Duplicate error but could not find existing person by email or phone
+[2025-11-06 06:19:13] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 06:19:13] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 06:19:13] [CRM Debug] Method: GET
+[2025-11-06 06:19:13] [CRM Debug] API Key present: Yes
+[2025-11-06 06:19:14] [CRM Debug] Response status: 200
+[2025-11-06 06:19:14] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 06:19:14] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 06:19:14] Will create new person for: Sakib Islam (islamsakib.official@gmail.com)
+[2025-11-06 06:19:14] Creating new person...
+[2025-11-06 06:19:14] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 06:19:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 06:19:14] [CRM Debug] Method: POST
+[2025-11-06 06:19:14] [CRM Debug] API Key present: Yes
+[2025-11-06 06:19:14] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 06:19:14] [CRM Debug] Response status: 400
+[2025-11-06 06:19:14] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 06:19:14] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 06:19:14] CRM person creation response: {"success":false,"message":"CRM API request failed","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 06:19:14] Duplicate constraint error detected, searching for existing person
+[2025-11-06 06:19:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 06:19:14] [CRM Debug] Method: GET
+[2025-11-06 06:19:14] [CRM Debug] API Key present: Yes
+[2025-11-06 06:19:14] [CRM Debug] Response status: 200
+[2025-11-06 06:19:14] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 06:19:14] Email not found, trying to search by phone: 1950025990
+[2025-11-06 06:19:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 06:19:14] [CRM Debug] Method: GET
+[2025-11-06 06:19:14] [CRM Debug] API Key present: Yes
+[2025-11-06 06:19:14] [CRM Debug] Response status: 200
+[2025-11-06 06:19:14] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 06:19:14] Returning specific CRM creation failure: CRM API request failed
+[2025-11-06 06:26:07] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 06:26:07] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 06:26:07] [CRM Debug] Method: GET
+[2025-11-06 06:26:07] [CRM Debug] API Key present: Yes
+[2025-11-06 06:26:07] [CRM Debug] Response status: 200
+[2025-11-06 06:26:07] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 06:26:07] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 06:26:07] Will create new person for: Sakib Islam (islamsakib.official@gmail.com)
+[2025-11-06 06:26:07] Creating new person...
+[2025-11-06 06:26:07] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 06:26:07] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 06:26:07] [CRM Debug] Method: POST
+[2025-11-06 06:26:07] [CRM Debug] API Key present: Yes
+[2025-11-06 06:26:07] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 06:26:08] [CRM Debug] Response status: 400
+[2025-11-06 06:26:08] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 06:26:08] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 06:26:08] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 06:26:08] Duplicate constraint error detected, searching for existing person
+[2025-11-06 06:26:08] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 06:26:08] [CRM Debug] Method: GET
+[2025-11-06 06:26:08] [CRM Debug] API Key present: Yes
+[2025-11-06 06:26:08] [CRM Debug] Response status: 200
+[2025-11-06 06:26:08] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 06:26:08] Email not found, trying to search by phone: 1950025990
+[2025-11-06 06:26:08] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 06:26:08] [CRM Debug] Method: GET
+[2025-11-06 06:26:08] [CRM Debug] API Key present: Yes
+[2025-11-06 06:26:08] [CRM Debug] Response status: 200
+[2025-11-06 06:26:08] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 06:26:08] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 06:37:04] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 06:37:04] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 06:37:04] [CRM Debug] Method: GET
+[2025-11-06 06:37:04] [CRM Debug] API Key present: Yes
+[2025-11-06 06:37:05] [CRM Debug] Response status: 200
+[2025-11-06 06:37:05] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 06:37:05] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 06:37:05] Will create new person for: Sakib Islam (islamsakib.official@gmail.com)
+[2025-11-06 06:37:05] Creating new person...
+[2025-11-06 06:37:05] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 06:37:05] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 06:37:05] [CRM Debug] Method: POST
+[2025-11-06 06:37:05] [CRM Debug] API Key present: Yes
+[2025-11-06 06:37:05] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 06:37:05] [CRM Debug] Response status: 400
+[2025-11-06 06:37:05] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 06:37:05] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 06:37:05] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 06:37:05] Duplicate constraint error detected, searching for existing person
+[2025-11-06 06:37:05] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 06:37:05] [CRM Debug] Method: GET
+[2025-11-06 06:37:05] [CRM Debug] API Key present: Yes
+[2025-11-06 06:37:05] [CRM Debug] Response status: 200
+[2025-11-06 06:37:05] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 06:37:05] Email not found, trying to search by phone: 1950025990
+[2025-11-06 06:37:05] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 06:37:05] [CRM Debug] Method: GET
+[2025-11-06 06:37:05] [CRM Debug] API Key present: Yes
+[2025-11-06 06:37:05] [CRM Debug] Response status: 200
+[2025-11-06 06:37:05] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 06:37:05] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:09:21] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 07:09:21] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:09:21] [CRM Debug] Method: GET
+[2025-11-06 07:09:21] [CRM Debug] API Key present: Yes
+[2025-11-06 07:09:22] [CRM Debug] Response status: 200
+[2025-11-06 07:09:22] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:09:22] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 07:09:22] Will create new person for: Sakib Islam (islamsakib.official@gmail.com)
+[2025-11-06 07:09:22] Creating new person...
+[2025-11-06 07:09:22] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 07:09:22] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:09:22] [CRM Debug] Method: POST
+[2025-11-06 07:09:22] [CRM Debug] API Key present: Yes
+[2025-11-06 07:09:22] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 07:09:22] [CRM Debug] Response status: 400
+[2025-11-06 07:09:22] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:09:22] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:09:22] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:09:22] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:09:22] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:09:22] [CRM Debug] Method: GET
+[2025-11-06 07:09:22] [CRM Debug] API Key present: Yes
+[2025-11-06 07:09:22] [CRM Debug] Response status: 200
+[2025-11-06 07:09:22] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:09:22] Email not found, trying to search by phone: 1950025990
+[2025-11-06 07:09:22] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:09:22] [CRM Debug] Method: GET
+[2025-11-06 07:09:22] [CRM Debug] API Key present: Yes
+[2025-11-06 07:09:23] [CRM Debug] Response status: 200
+[2025-11-06 07:09:23] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:09:23] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:11:13] Checking if person exists with email: test276473@gmail.com
+[2025-11-06 07:11:13] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=test276473%40gmail.com
+[2025-11-06 07:11:13] [CRM Debug] Method: GET
+[2025-11-06 07:11:13] [CRM Debug] API Key present: Yes
+[2025-11-06 07:11:13] [CRM Debug] Response status: 200
+[2025-11-06 07:11:13] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:11:13] No matching person found for email: test276473@gmail.com in 60 results
+[2025-11-06 07:11:13] Will create new person for: Test (test276473@gmail.com)
+[2025-11-06 07:11:13] Creating new person...
+[2025-11-06 07:11:13] Creating new person in CRM with data: {"name":{"firstName":"Test","lastName":""},"emails":{"primaryEmail":"test276473@gmail.com"},"phones":{"primaryPhoneNumber":"1569854785","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 07:11:13] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:11:13] [CRM Debug] Method: POST
+[2025-11-06 07:11:13] [CRM Debug] API Key present: Yes
+[2025-11-06 07:11:13] [CRM Debug] Data: {"name":{"firstName":"Test","lastName":""},"emails":{"primaryEmail":"test276473@gmail.com"},"phones":{"primaryPhoneNumber":"1569854785","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 07:11:13] [CRM Debug] Response status: 201
+[2025-11-06 07:11:13] CRM person creation response: {"success":true,"data":{"data":{"createPerson":{"name":{"firstName":"Test","lastName":""},"emails":{"primaryEmail":"test276473@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1569854785","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'gmail.com':3 'test':1 'test276473@gmail.com':2","id":"35476133-ae6e-4ac0-8fc8-7ae25bd4195f","createdAt":"2025-11-06T07:11:13.519Z","updatedAt":"2025-11-06T07:11:13.519Z","deletedAt":null,"companyId":null}}}}
+[2025-11-06 07:11:13] Checking for person ID in CRM response: {"data":{"createPerson":{"name":{"firstName":"Test","lastName":""},"emails":{"primaryEmail":"test276473@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1569854785","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'gmail.com':3 'test':1 'test276473@gmail.com':2","id":"35476133-ae6e-4ac0-8fc8-7ae25bd4195f","createdAt":"2025-11-06T07:11:13.519Z","updatedAt":"2025-11-06T07:11:13.519Z","deletedAt":null,"companyId":null}}}
+[2025-11-06 07:11:13] Found person ID in data.data.createPerson.id: 35476133-ae6e-4ac0-8fc8-7ae25bd4195f
+[2025-11-06 07:11:13] Person created/found with ID: 35476133-ae6e-4ac0-8fc8-7ae25bd4195f
+[2025-11-06 07:11:13] [CRM Debug] Starting opportunity creation with title: Pricing Plan: Custom Plan
+[2025-11-06 07:11:13] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-11-06 07:11:13] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 35476133-ae6e-4ac0-8fc8-7ae25bd4195f
+[2025-11-06 07:11:13] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-11-06 07:11:13] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Pricing Plan: Custom Plan",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 0,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "35476133-ae6e-4ac0-8fc8-7ae25bd4195f"
+}
+[2025-11-06 07:11:13] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-11-06 07:11:13] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-11-06 07:11:13] [CRM Debug] Method: POST
+[2025-11-06 07:11:13] [CRM Debug] API Key present: Yes
+[2025-11-06 07:11:13] [CRM Debug] Data: {"name":"Pricing Plan: Custom Plan","stage":"A_NEW_LEAD","amount":{"amountMicros":0,"currencyCode":"BDT"},"pointOfContactId":"35476133-ae6e-4ac0-8fc8-7ae25bd4195f"}
+[2025-11-06 07:11:14] [CRM Debug] Response status: 201
+[2025-11-06 07:11:14] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Pricing Plan: Custom Plan",
+                "amount": {
+                    "amountMicros": "0",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'custom':3 'plan':2,4 'pricing':1",
+                "id": "8dfdb0e0-bdca-40d6-8856-6028ad226d8c",
+                "createdAt": "2025-11-06T07:11:13.792Z",
+                "updatedAt": "2025-11-06T07:11:13.792Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "35476133-ae6e-4ac0-8fc8-7ae25bd4195f",
+                "companyId": null
+            }
+        }
+    }
+}
+[2025-11-06 07:11:14] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-11-06 07:11:14] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-11-06 07:11:14] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: 8dfdb0e0-bdca-40d6-8856-6028ad226d8c
+[2025-11-06 07:11:14] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: 8dfdb0e0-bdca-40d6-8856-6028ad226d8c
+[2025-11-06 07:11:14] [CRM Debug] ✅ Opportunity created successfully with ID: 8dfdb0e0-bdca-40d6-8856-6028ad226d8c
+[2025-11-06 07:11:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-11-06 07:11:14] [CRM Debug] Method: POST
+[2025-11-06 07:11:14] [CRM Debug] API Key present: Yes
+[2025-11-06 07:11:14] [CRM Debug] Data: {"title":"Pricing Form Submission","bodyV2":{"markdown":"**Pricing Form Submission**\n\n- **Industry:** eCommerce\n- **Legal identity:** Proprietorship\n- **Business category:** eCommerce\n- **Monthly Volume:** 0-100000\n- **Domain:** \n- **Contact:** Test \u2013 test276473@gmail.com \u2013 01569854785\n- **Selected Pricing:** Custom Plan\n- **Services:** VISA: 2.30%, MasterCard: 2.30%, bKash: 1.95%, Nagad: 1.80%"},"noteTargets":[{"type":"person","id":"35476133-ae6e-4ac0-8fc8-7ae25bd4195f"},{"type":"opportunity","id":"8dfdb0e0-bdca-40d6-8856-6028ad226d8c"}]}
+[2025-11-06 07:11:14] [CRM Debug] Response status: 201
+[2025-11-06 07:11:14] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: dbbde8b0-07c1-4f40-aeef-65ac17378862
+[2025-11-06 07:11:14] Note created with ID: dbbde8b0-07c1-4f40-aeef-65ac17378862
+[2025-11-06 07:11:14] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"35476133-ae6e-4ac0-8fc8-7ae25bd4195f","company_id":null,"opportunity_id":"8dfdb0e0-bdca-40d6-8856-6028ad226d8c","note_id":"dbbde8b0-07c1-4f40-aeef-65ac17378862"}
+[2025-11-06 07:12:27] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 07:12:27] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:12:27] [CRM Debug] Method: GET
+[2025-11-06 07:12:27] [CRM Debug] API Key present: Yes
+[2025-11-06 07:12:27] [CRM Debug] Response status: 200
+[2025-11-06 07:12:27] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:12:27] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 07:12:27] Will create new person for: Sakib Islam (islamsakib.official@gmail.com)
+[2025-11-06 07:12:27] Creating new person...
+[2025-11-06 07:12:27] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 07:12:27] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:12:27] [CRM Debug] Method: POST
+[2025-11-06 07:12:27] [CRM Debug] API Key present: Yes
+[2025-11-06 07:12:27] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"}}
+[2025-11-06 07:12:28] [CRM Debug] Response status: 400
+[2025-11-06 07:12:28] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:12:28] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:12:28] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:12:28] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:12:28] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:12:28] [CRM Debug] Method: GET
+[2025-11-06 07:12:28] [CRM Debug] API Key present: Yes
+[2025-11-06 07:12:28] [CRM Debug] Response status: 200
+[2025-11-06 07:12:28] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:12:28] Email not found, trying to search by phone: 1950025990
+[2025-11-06 07:12:28] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:12:28] [CRM Debug] Method: GET
+[2025-11-06 07:12:28] [CRM Debug] API Key present: Yes
+[2025-11-06 07:12:28] [CRM Debug] Response status: 200
+[2025-11-06 07:12:28] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:12:28] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:14:31] Sending email verification for identifier: rivor77989@nyfhk.com
+[2025-11-06 07:14:31] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2025-11-06 07:14:31] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2025-11-06 07:14:31] Sandbox API Request - Data: {"identifier":"rivor77989@nyfhk.com"}
+[2025-11-06 07:14:32] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"1502caa573a4478d93c8f7120fc03289","expire_at":"2025-11-06T13:29:31.277091","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-11-06T13:14:32.149124","status_code":201}}
+[2025-11-06 07:14:32] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"1502caa573a4478d93c8f7120fc03289","expire_at":"2025-11-06T13:29:31.277091","message":"OTP has been sent to your email"},"meta":{"timestamp":"2025-11-06T13:14:32.149124","status_code":201}}
+[2025-11-06 07:14:48] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2025-11-06 07:14:48] Sandbox API Request - Data: {"otp":"631574","session_id":"1502caa573a4478d93c8f7120fc03289"}
+[2025-11-06 07:14:49] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2025-11-06T13:14:48.847648","status_code":200}}
+[2025-11-06 07:15:02] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-11-06 07:15:02] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"https:\/\/trello.com\/b\/fk3hb6w6\/branding-promotion-team","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01950025990","email":"rivor77989@nyfhk.com","session_id":"1502caa573a4478d93c8f7120fc03289"}
+[2025-11-06 07:15:03] Sandbox API Response - Status: 409 | Body: {"success":false,"message":"Phone number already exists. Please use a different phone number.","code":409}
+[2025-11-06 07:15:11] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2025-11-06 07:15:11] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"https:\/\/trello.com\/b\/fk3hb6w6\/branding-promotion-team","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01950020325","email":"rivor77989@nyfhk.com","session_id":"1502caa573a4478d93c8f7120fc03289"}
+[2025-11-06 07:15:14] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE37407623","api_key":"f882d8e4.IVeRYDK30ZE9GXPfzgum2Om5s6RnLKTCdmVlnVsi_VQ","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_rtzNBT_eTsO9aKeKTm7Zc0gRSeCVgOKGiNF2BmkGDLD3XiN6ZVO0FhxDXihplbBG","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-11-06 07:15:14] Checking if company exists: Test Business ABC
+[2025-11-06 07:15:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test+Business+ABC
+[2025-11-06 07:15:14] [CRM Debug] Method: GET
+[2025-11-06 07:15:14] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:14] [CRM Debug] Response status: 200
+[2025-11-06 07:15:14] Creating new company in CRM: {"name":"Test Business ABC"}
+[2025-11-06 07:15:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:15:14] [CRM Debug] Method: POST
+[2025-11-06 07:15:14] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:14] [CRM Debug] Data: {"name":"Test Business ABC"}
+[2025-11-06 07:15:14] [CRM Debug] Response status: 201
+[2025-11-06 07:15:14] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test Business ABC","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'abc':3 'business':2 'test':1","id":"2cb5cd83-40a3-44c6-806d-9427834bf7cf","createdAt":"2025-11-06T07:15:14.563Z","updatedAt":"2025-11-06T07:15:14.563Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:15:14] Company created/found with ID: 2cb5cd83-40a3-44c6-806d-9427834bf7cf
+[2025-11-06 07:15:14] Checking if person exists with email: rivor77989@nyfhk.com
+[2025-11-06 07:15:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=rivor77989%40nyfhk.com
+[2025-11-06 07:15:14] [CRM Debug] Method: GET
+[2025-11-06 07:15:14] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:15] [CRM Debug] Response status: 200
+[2025-11-06 07:15:15] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:15:15] No matching person found for email: rivor77989@nyfhk.com in 60 results
+[2025-11-06 07:15:15] Will create new person for: Sakib Islam (rivor77989@nyfhk.com)
+[2025-11-06 07:15:15] Creating new person...
+[2025-11-06 07:15:15] Adding companyId to person creation: 2cb5cd83-40a3-44c6-806d-9427834bf7cf
+[2025-11-06 07:15:15] Adding company name to person: Test Business ABC
+[2025-11-06 07:15:15] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"rivor77989@nyfhk.com"},"phones":{"primaryPhoneNumber":"1950020325","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"2cb5cd83-40a3-44c6-806d-9427834bf7cf","company":"Test Business ABC"}
+[2025-11-06 07:15:15] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:15:15] [CRM Debug] Method: POST
+[2025-11-06 07:15:15] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:15] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"rivor77989@nyfhk.com"},"phones":{"primaryPhoneNumber":"1950020325","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"2cb5cd83-40a3-44c6-806d-9427834bf7cf","company":"Test Business ABC"}
+[2025-11-06 07:15:15] [CRM Debug] Response status: 400
+[2025-11-06 07:15:15] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:15:15] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:15:15] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:15:15] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:15:15] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=rivor77989%40nyfhk.com
+[2025-11-06 07:15:15] [CRM Debug] Method: GET
+[2025-11-06 07:15:15] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:15] [CRM Debug] Response status: 200
+[2025-11-06 07:15:15] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:15:15] Email not found, trying to search by phone: 1950020325
+[2025-11-06 07:15:15] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:15:15] [CRM Debug] Method: GET
+[2025-11-06 07:15:15] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:16] [CRM Debug] Response status: 200
+[2025-11-06 07:15:16] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:15:16] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:15:55] Checking if company exists: aaaaaaaaaaaaaaa
+[2025-11-06 07:15:55] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=aaaaaaaaaaaaaaa
+[2025-11-06 07:15:55] [CRM Debug] Method: GET
+[2025-11-06 07:15:55] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:55] [CRM Debug] Response status: 200
+[2025-11-06 07:15:55] Creating new company in CRM: {"name":"aaaaaaaaaaaaaaa"}
+[2025-11-06 07:15:55] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:15:55] [CRM Debug] Method: POST
+[2025-11-06 07:15:55] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:55] [CRM Debug] Data: {"name":"aaaaaaaaaaaaaaa"}
+[2025-11-06 07:15:56] [CRM Debug] Response status: 201
+[2025-11-06 07:15:56] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"aaaaaaaaaaaaaaa","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'aaaaaaaaaaaaaaa':1","id":"2be1c522-6fb0-4d90-bd3c-05350b853d9c","createdAt":"2025-11-06T07:15:55.691Z","updatedAt":"2025-11-06T07:15:55.691Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:15:56] Company created/found with ID: 2be1c522-6fb0-4d90-bd3c-05350b853d9c
+[2025-11-06 07:15:56] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 07:15:56] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:15:56] [CRM Debug] Method: GET
+[2025-11-06 07:15:56] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:56] [CRM Debug] Response status: 200
+[2025-11-06 07:15:56] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:15:56] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 07:15:56] Will create new person for: Sakib (islamsakib.official@gmail.com)
+[2025-11-06 07:15:56] Creating new person...
+[2025-11-06 07:15:56] Adding companyId to person creation: 2be1c522-6fb0-4d90-bd3c-05350b853d9c
+[2025-11-06 07:15:56] Adding company name to person: aaaaaaaaaaaaaaa
+[2025-11-06 07:15:56] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"2be1c522-6fb0-4d90-bd3c-05350b853d9c","company":"aaaaaaaaaaaaaaa"}
+[2025-11-06 07:15:56] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:15:56] [CRM Debug] Method: POST
+[2025-11-06 07:15:56] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:56] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"2be1c522-6fb0-4d90-bd3c-05350b853d9c","company":"aaaaaaaaaaaaaaa"}
+[2025-11-06 07:15:56] [CRM Debug] Response status: 400
+[2025-11-06 07:15:56] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:15:56] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:15:56] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:15:56] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:15:56] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:15:56] [CRM Debug] Method: GET
+[2025-11-06 07:15:56] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:56] [CRM Debug] Response status: 200
+[2025-11-06 07:15:56] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:15:56] Email not found, trying to search by phone: 1950025990
+[2025-11-06 07:15:56] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:15:56] [CRM Debug] Method: GET
+[2025-11-06 07:15:56] [CRM Debug] API Key present: Yes
+[2025-11-06 07:15:57] [CRM Debug] Response status: 200
+[2025-11-06 07:15:57] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:15:57] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:17:16] Checking if company exists: aaaaaaaaaaaaaaa
+[2025-11-06 07:17:16] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=aaaaaaaaaaaaaaa
+[2025-11-06 07:17:16] [CRM Debug] Method: GET
+[2025-11-06 07:17:16] [CRM Debug] API Key present: Yes
+[2025-11-06 07:17:17] [CRM Debug] Response status: 200
+[2025-11-06 07:17:17] Creating new company in CRM: {"name":"aaaaaaaaaaaaaaa"}
+[2025-11-06 07:17:17] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:17:17] [CRM Debug] Method: POST
+[2025-11-06 07:17:17] [CRM Debug] API Key present: Yes
+[2025-11-06 07:17:17] [CRM Debug] Data: {"name":"aaaaaaaaaaaaaaa"}
+[2025-11-06 07:17:17] [CRM Debug] Response status: 201
+[2025-11-06 07:17:17] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"aaaaaaaaaaaaaaa","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'aaaaaaaaaaaaaaa':1","id":"ad726f50-77b4-46a2-a382-aed08dc8850c","createdAt":"2025-11-06T07:17:16.962Z","updatedAt":"2025-11-06T07:17:16.962Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:17:17] Company created/found with ID: ad726f50-77b4-46a2-a382-aed08dc8850c
+[2025-11-06 07:17:17] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 07:17:17] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:17:17] [CRM Debug] Method: GET
+[2025-11-06 07:17:17] [CRM Debug] API Key present: Yes
+[2025-11-06 07:17:17] [CRM Debug] Response status: 200
+[2025-11-06 07:17:17] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:17:17] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 07:17:17] Will create new person for: Sakib (islamsakib.official@gmail.com)
+[2025-11-06 07:17:17] Creating new person...
+[2025-11-06 07:17:17] Adding companyId to person creation: ad726f50-77b4-46a2-a382-aed08dc8850c
+[2025-11-06 07:17:17] Adding company name to person: aaaaaaaaaaaaaaa
+[2025-11-06 07:17:17] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"ad726f50-77b4-46a2-a382-aed08dc8850c","company":"aaaaaaaaaaaaaaa"}
+[2025-11-06 07:17:17] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:17:17] [CRM Debug] Method: POST
+[2025-11-06 07:17:17] [CRM Debug] API Key present: Yes
+[2025-11-06 07:17:17] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"ad726f50-77b4-46a2-a382-aed08dc8850c","company":"aaaaaaaaaaaaaaa"}
+[2025-11-06 07:17:17] [CRM Debug] Response status: 400
+[2025-11-06 07:17:17] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:17:17] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:17:17] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:17:17] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:17:17] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:17:17] [CRM Debug] Method: GET
+[2025-11-06 07:17:17] [CRM Debug] API Key present: Yes
+[2025-11-06 07:17:18] [CRM Debug] Response status: 200
+[2025-11-06 07:17:18] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:17:18] Email not found, trying to search by phone: 1950025990
+[2025-11-06 07:17:18] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:17:18] [CRM Debug] Method: GET
+[2025-11-06 07:17:18] [CRM Debug] API Key present: Yes
+[2025-11-06 07:17:18] [CRM Debug] Response status: 200
+[2025-11-06 07:17:18] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:17:18] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:23:23] Checking if company exists: Contact Form Test
+[2025-11-06 07:23:23] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Contact+Form+Test
+[2025-11-06 07:23:23] [CRM Debug] Method: GET
+[2025-11-06 07:23:23] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:24] [CRM Debug] Response status: 200
+[2025-11-06 07:23:24] Creating new company in CRM: {"name":"Contact Form Test"}
+[2025-11-06 07:23:24] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:23:24] [CRM Debug] Method: POST
+[2025-11-06 07:23:24] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:24] [CRM Debug] Data: {"name":"Contact Form Test"}
+[2025-11-06 07:23:24] [CRM Debug] Response status: 201
+[2025-11-06 07:23:24] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Contact Form Test","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'contact':1 'form':2 'test':3","id":"1491270d-6522-43ee-b29a-0fe6084ac10c","createdAt":"2025-11-06T07:23:24.212Z","updatedAt":"2025-11-06T07:23:24.212Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:23:24] Company created/found with ID: 1491270d-6522-43ee-b29a-0fe6084ac10c
+[2025-11-06 07:23:24] Checking if person exists with email: islamsakib.cial26@gmail.com
+[2025-11-06 07:23:24] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.cial26%40gmail.com
+[2025-11-06 07:23:24] [CRM Debug] Method: GET
+[2025-11-06 07:23:24] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:24] [CRM Debug] Response status: 200
+[2025-11-06 07:23:24] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:23:24] No matching person found for email: islamsakib.cial26@gmail.com in 60 results
+[2025-11-06 07:23:24] Will create new person for: test (islamsakib.cial26@gmail.com)
+[2025-11-06 07:23:24] Creating new person...
+[2025-11-06 07:23:24] Adding companyId to person creation: 1491270d-6522-43ee-b29a-0fe6084ac10c
+[2025-11-06 07:23:24] Adding company name to person: Contact Form Test
+[2025-11-06 07:23:24] Creating new person in CRM with data: {"name":{"firstName":"test","lastName":""},"emails":{"primaryEmail":"islamsakib.cial26@gmail.com"},"phones":{"primaryPhoneNumber":"1950020123","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"1491270d-6522-43ee-b29a-0fe6084ac10c","company":"Contact Form Test"}
+[2025-11-06 07:23:24] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:23:24] [CRM Debug] Method: POST
+[2025-11-06 07:23:24] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:24] [CRM Debug] Data: {"name":{"firstName":"test","lastName":""},"emails":{"primaryEmail":"islamsakib.cial26@gmail.com"},"phones":{"primaryPhoneNumber":"1950020123","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"1491270d-6522-43ee-b29a-0fe6084ac10c","company":"Contact Form Test"}
+[2025-11-06 07:23:25] [CRM Debug] Response status: 201
+[2025-11-06 07:23:25] CRM person creation response: {"success":true,"data":{"data":{"createPerson":{"name":{"firstName":"test","lastName":""},"emails":{"primaryEmail":"islamsakib.cial26@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1950020123","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'gmail.com':3 'islamsakib.cial26@gmail.com':2 'test':1","id":"0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c","createdAt":"2025-11-06T07:23:24.708Z","updatedAt":"2025-11-06T07:23:24.708Z","deletedAt":null,"companyId":"1491270d-6522-43ee-b29a-0fe6084ac10c"}}}}
+[2025-11-06 07:23:25] Checking for person ID in CRM response: {"data":{"createPerson":{"name":{"firstName":"test","lastName":""},"emails":{"primaryEmail":"islamsakib.cial26@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1950020123","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'gmail.com':3 'islamsakib.cial26@gmail.com':2 'test':1","id":"0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c","createdAt":"2025-11-06T07:23:24.708Z","updatedAt":"2025-11-06T07:23:24.708Z","deletedAt":null,"companyId":"1491270d-6522-43ee-b29a-0fe6084ac10c"}}}
+[2025-11-06 07:23:25] Found person ID in data.data.createPerson.id: 0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c
+[2025-11-06 07:23:25] Person created/found with ID: 0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c
+[2025-11-06 07:23:25] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c
+[2025-11-06 07:23:25] [CRM Debug] Method: PATCH
+[2025-11-06 07:23:25] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:25] [CRM Debug] Data: {"companyId":"1491270d-6522-43ee-b29a-0fe6084ac10c"}
+[2025-11-06 07:23:25] [CRM Debug] Response status: 200
+[2025-11-06 07:23:25] Successfully linked person 0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c to company 1491270d-6522-43ee-b29a-0fe6084ac10c
+[2025-11-06 07:23:25] [CRM Debug] Starting opportunity creation with title: Contact Form: General Inquiry - Contact Form Test
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Contact Form: General Inquiry - Contact Form Test",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 0,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c",
+    "companyId": "1491270d-6522-43ee-b29a-0fe6084ac10c"
+}
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-11-06 07:23:25] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-11-06 07:23:25] [CRM Debug] Method: POST
+[2025-11-06 07:23:25] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:25] [CRM Debug] Data: {"name":"Contact Form: General Inquiry - Contact Form Test","stage":"A_NEW_LEAD","amount":{"amountMicros":0,"currencyCode":"BDT"},"pointOfContactId":"0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c","companyId":"1491270d-6522-43ee-b29a-0fe6084ac10c"}
+[2025-11-06 07:23:25] [CRM Debug] Response status: 201
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Contact Form: General Inquiry - Contact Form Test",
+                "amount": {
+                    "amountMicros": "0",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'contact':1,5 'form':2,6 'general':3 'inquiry':4 'test':7",
+                "id": "ff3bfa86-3e18-4a26-bd2a-2bb046c27752",
+                "createdAt": "2025-11-06T07:23:25.134Z",
+                "updatedAt": "2025-11-06T07:23:25.134Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c",
+                "companyId": "1491270d-6522-43ee-b29a-0fe6084ac10c"
+            }
+        }
+    }
+}
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: ff3bfa86-3e18-4a26-bd2a-2bb046c27752
+[2025-11-06 07:23:25] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: ff3bfa86-3e18-4a26-bd2a-2bb046c27752
+[2025-11-06 07:23:25] [CRM Debug] ✅ Opportunity created successfully with ID: ff3bfa86-3e18-4a26-bd2a-2bb046c27752
+[2025-11-06 07:23:25] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-11-06 07:23:25] [CRM Debug] Method: POST
+[2025-11-06 07:23:25] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:25] [CRM Debug] Data: {"title":"Contact Form Submission","bodyV2":{"markdown":"**Contact Form Submission**\n\n- **Name:** test\n- **Email:** islamsakib.cial26@gmail.com\n- **Phone:** 01950020123\n- **Company:** Contact Form Test\n- **Inquiry Type:** General Inquiry\n\n**Message:**\nshfbqkae fwqeuifhajuvgfwr wrgswhbg"},"noteTargets":[{"type":"person","id":"0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c"},{"type":"opportunity","id":"ff3bfa86-3e18-4a26-bd2a-2bb046c27752"},{"type":"company","id":"1491270d-6522-43ee-b29a-0fe6084ac10c"}]}
+[2025-11-06 07:23:25] [CRM Debug] Response status: 201
+[2025-11-06 07:23:25] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: 662c331c-1835-47b4-a5a6-5700a4d47b44
+[2025-11-06 07:23:25] Note created with ID: 662c331c-1835-47b4-a5a6-5700a4d47b44
+[2025-11-06 07:23:25] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"0632ca2d-7f5a-4ff2-94f9-72dbb341ee2c","company_id":"1491270d-6522-43ee-b29a-0fe6084ac10c","opportunity_id":"ff3bfa86-3e18-4a26-bd2a-2bb046c27752","note_id":"662c331c-1835-47b4-a5a6-5700a4d47b44"}
+[2025-11-06 07:23:44] Checking if company exists: asfafv
+[2025-11-06 07:23:44] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=asfafv
+[2025-11-06 07:23:44] [CRM Debug] Method: GET
+[2025-11-06 07:23:44] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:44] [CRM Debug] Response status: 200
+[2025-11-06 07:23:44] Creating new company in CRM: {"name":"asfafv"}
+[2025-11-06 07:23:44] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:23:44] [CRM Debug] Method: POST
+[2025-11-06 07:23:44] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:44] [CRM Debug] Data: {"name":"asfafv"}
+[2025-11-06 07:23:44] [CRM Debug] Response status: 201
+[2025-11-06 07:23:44] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"asfafv","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'asfafv':1","id":"622621d8-b68a-475d-a4e7-7c0e5e32ca77","createdAt":"2025-11-06T07:23:44.605Z","updatedAt":"2025-11-06T07:23:44.605Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:23:44] Company created/found with ID: 622621d8-b68a-475d-a4e7-7c0e5e32ca77
+[2025-11-06 07:23:44] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 07:23:44] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:23:44] [CRM Debug] Method: GET
+[2025-11-06 07:23:44] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:45] [CRM Debug] Response status: 200
+[2025-11-06 07:23:45] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:23:45] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 07:23:45] Will create new person for: Sakib Islam (islamsakib.official@gmail.com)
+[2025-11-06 07:23:45] Creating new person...
+[2025-11-06 07:23:45] Adding companyId to person creation: 622621d8-b68a-475d-a4e7-7c0e5e32ca77
+[2025-11-06 07:23:45] Adding company name to person: asfafv
+[2025-11-06 07:23:45] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"622621d8-b68a-475d-a4e7-7c0e5e32ca77","company":"asfafv"}
+[2025-11-06 07:23:45] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:23:45] [CRM Debug] Method: POST
+[2025-11-06 07:23:45] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:45] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"622621d8-b68a-475d-a4e7-7c0e5e32ca77","company":"asfafv"}
+[2025-11-06 07:23:45] [CRM Debug] Response status: 400
+[2025-11-06 07:23:45] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:23:45] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:23:45] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:23:45] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:23:45] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:23:45] [CRM Debug] Method: GET
+[2025-11-06 07:23:45] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:45] [CRM Debug] Response status: 200
+[2025-11-06 07:23:45] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:23:45] Email not found, trying to search by phone: 1950025990
+[2025-11-06 07:23:45] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:23:45] [CRM Debug] Method: GET
+[2025-11-06 07:23:45] [CRM Debug] API Key present: Yes
+[2025-11-06 07:23:45] [CRM Debug] Response status: 200
+[2025-11-06 07:23:45] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:23:45] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:28:10] Checking if company exists: Contact Form Test
+[2025-11-06 07:28:10] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Contact+Form+Test
+[2025-11-06 07:28:10] [CRM Debug] Method: GET
+[2025-11-06 07:28:10] [CRM Debug] API Key present: Yes
+[2025-11-06 07:28:10] [CRM Debug] Response status: 200
+[2025-11-06 07:28:10] Creating new company in CRM: {"name":"Contact Form Test"}
+[2025-11-06 07:28:10] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:28:10] [CRM Debug] Method: POST
+[2025-11-06 07:28:10] [CRM Debug] API Key present: Yes
+[2025-11-06 07:28:10] [CRM Debug] Data: {"name":"Contact Form Test"}
+[2025-11-06 07:28:11] [CRM Debug] Response status: 201
+[2025-11-06 07:28:11] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Contact Form Test","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'contact':1 'form':2 'test':3","id":"3559c515-cde4-4478-98ff-b2297a4807e6","createdAt":"2025-11-06T07:28:10.812Z","updatedAt":"2025-11-06T07:28:10.812Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:28:11] Company created/found with ID: 3559c515-cde4-4478-98ff-b2297a4807e6
+[2025-11-06 07:28:11] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 07:28:11] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:28:11] [CRM Debug] Method: GET
+[2025-11-06 07:28:11] [CRM Debug] API Key present: Yes
+[2025-11-06 07:28:11] [CRM Debug] Response status: 200
+[2025-11-06 07:28:11] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:28:11] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 07:28:11] Will create new person for: Sakib (islamsakib.official@gmail.com)
+[2025-11-06 07:28:11] Creating new person...
+[2025-11-06 07:28:11] Adding companyId to person creation: 3559c515-cde4-4478-98ff-b2297a4807e6
+[2025-11-06 07:28:11] Adding company name to person: Contact Form Test
+[2025-11-06 07:28:11] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"3559c515-cde4-4478-98ff-b2297a4807e6","company":"Contact Form Test"}
+[2025-11-06 07:28:11] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:28:11] [CRM Debug] Method: POST
+[2025-11-06 07:28:11] [CRM Debug] API Key present: Yes
+[2025-11-06 07:28:11] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"3559c515-cde4-4478-98ff-b2297a4807e6","company":"Contact Form Test"}
+[2025-11-06 07:28:11] [CRM Debug] Response status: 400
+[2025-11-06 07:28:11] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:28:11] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:28:11] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:28:11] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:28:11] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:28:11] [CRM Debug] Method: GET
+[2025-11-06 07:28:11] [CRM Debug] API Key present: Yes
+[2025-11-06 07:28:11] [CRM Debug] Response status: 200
+[2025-11-06 07:28:11] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:28:11] Email not found, trying to search by phone: 1950025990
+[2025-11-06 07:28:11] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:28:11] [CRM Debug] Method: GET
+[2025-11-06 07:28:11] [CRM Debug] API Key present: Yes
+[2025-11-06 07:28:12] [CRM Debug] Response status: 200
+[2025-11-06 07:28:12] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:28:12] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:31:39] Checking if company exists: asfafv
+[2025-11-06 07:31:39] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=asfafv
+[2025-11-06 07:31:39] [CRM Debug] Method: GET
+[2025-11-06 07:31:39] [CRM Debug] API Key present: Yes
+[2025-11-06 07:31:39] [CRM Debug] Response status: 200
+[2025-11-06 07:31:39] Creating new company in CRM: {"name":"asfafv"}
+[2025-11-06 07:31:39] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:31:39] [CRM Debug] Method: POST
+[2025-11-06 07:31:39] [CRM Debug] API Key present: Yes
+[2025-11-06 07:31:39] [CRM Debug] Data: {"name":"asfafv"}
+[2025-11-06 07:31:40] [CRM Debug] Response status: 201
+[2025-11-06 07:31:40] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"asfafv","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'asfafv':1","id":"780f8c09-bb79-4047-baff-7cb38d3eb1e3","createdAt":"2025-11-06T07:31:39.805Z","updatedAt":"2025-11-06T07:31:39.805Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:31:40] Company created/found with ID: 780f8c09-bb79-4047-baff-7cb38d3eb1e3
+[2025-11-06 07:31:40] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 07:31:40] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:31:40] [CRM Debug] Method: GET
+[2025-11-06 07:31:40] [CRM Debug] API Key present: Yes
+[2025-11-06 07:31:40] [CRM Debug] Response status: 200
+[2025-11-06 07:31:40] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:31:40] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 07:31:40] Will create new person for: Sakib (islamsakib.official@gmail.com)
+[2025-11-06 07:31:40] Creating new person...
+[2025-11-06 07:31:40] Adding companyId to person creation: 780f8c09-bb79-4047-baff-7cb38d3eb1e3
+[2025-11-06 07:31:40] Adding company name to person: asfafv
+[2025-11-06 07:31:40] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"780f8c09-bb79-4047-baff-7cb38d3eb1e3","company":"asfafv"}
+[2025-11-06 07:31:40] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:31:40] [CRM Debug] Method: POST
+[2025-11-06 07:31:40] [CRM Debug] API Key present: Yes
+[2025-11-06 07:31:40] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"780f8c09-bb79-4047-baff-7cb38d3eb1e3","company":"asfafv"}
+[2025-11-06 07:31:40] [CRM Debug] Response status: 400
+[2025-11-06 07:31:40] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:31:40] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:31:40] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:31:40] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:31:40] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:31:40] [CRM Debug] Method: GET
+[2025-11-06 07:31:40] [CRM Debug] API Key present: Yes
+[2025-11-06 07:31:41] [CRM Debug] Response status: 200
+[2025-11-06 07:31:41] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:31:41] Email not found, trying to search by phone: 1950025990
+[2025-11-06 07:31:41] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:31:41] [CRM Debug] Method: GET
+[2025-11-06 07:31:41] [CRM Debug] API Key present: Yes
+[2025-11-06 07:31:41] [CRM Debug] Response status: 200
+[2025-11-06 07:31:41] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:31:41] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:33:19] Checking if company exists: asfafv
+[2025-11-06 07:33:19] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=asfafv
+[2025-11-06 07:33:19] [CRM Debug] Method: GET
+[2025-11-06 07:33:19] [CRM Debug] API Key present: Yes
+[2025-11-06 07:33:19] [CRM Debug] Response status: 200
+[2025-11-06 07:33:19] Creating new company in CRM: {"name":"asfafv"}
+[2025-11-06 07:33:19] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:33:19] [CRM Debug] Method: POST
+[2025-11-06 07:33:19] [CRM Debug] API Key present: Yes
+[2025-11-06 07:33:19] [CRM Debug] Data: {"name":"asfafv"}
+[2025-11-06 07:33:19] [CRM Debug] Response status: 201
+[2025-11-06 07:33:19] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"asfafv","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'asfafv':1","id":"53e67240-0da4-4c0e-a42c-359d808aed7f","createdAt":"2025-11-06T07:33:19.389Z","updatedAt":"2025-11-06T07:33:19.389Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:33:19] Company created/found with ID: 53e67240-0da4-4c0e-a42c-359d808aed7f
+[2025-11-06 07:33:19] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 07:33:19] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:33:19] [CRM Debug] Method: GET
+[2025-11-06 07:33:19] [CRM Debug] API Key present: Yes
+[2025-11-06 07:33:20] [CRM Debug] Response status: 200
+[2025-11-06 07:33:20] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:33:20] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 07:33:20] Will create new person for: Sakib (islamsakib.official@gmail.com)
+[2025-11-06 07:33:20] Creating new person...
+[2025-11-06 07:33:20] Adding companyId to person creation: 53e67240-0da4-4c0e-a42c-359d808aed7f
+[2025-11-06 07:33:20] Adding company name to person: asfafv
+[2025-11-06 07:33:20] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"53e67240-0da4-4c0e-a42c-359d808aed7f","company":"asfafv"}
+[2025-11-06 07:33:20] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:33:20] [CRM Debug] Method: POST
+[2025-11-06 07:33:20] [CRM Debug] API Key present: Yes
+[2025-11-06 07:33:20] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"53e67240-0da4-4c0e-a42c-359d808aed7f","company":"asfafv"}
+[2025-11-06 07:33:20] [CRM Debug] Response status: 400
+[2025-11-06 07:33:20] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:33:20] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:33:20] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 07:33:20] Duplicate constraint error detected, searching for existing person
+[2025-11-06 07:33:20] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 07:33:20] [CRM Debug] Method: GET
+[2025-11-06 07:33:20] [CRM Debug] API Key present: Yes
+[2025-11-06 07:33:20] [CRM Debug] Response status: 200
+[2025-11-06 07:33:20] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:33:20] Email not found, trying to search by phone: 1950025990
+[2025-11-06 07:33:20] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:33:20] [CRM Debug] Method: GET
+[2025-11-06 07:33:20] [CRM Debug] API Key present: Yes
+[2025-11-06 07:33:20] [CRM Debug] Response status: 200
+[2025-11-06 07:33:20] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 07:33:20] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 07:35:13] Checking if company exists: ASWFCAFG
+[2025-11-06 07:35:13] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=ASWFCAFG
+[2025-11-06 07:35:13] [CRM Debug] Method: GET
+[2025-11-06 07:35:13] [CRM Debug] API Key present: Yes
+[2025-11-06 07:35:13] [CRM Debug] Response status: 200
+[2025-11-06 07:35:13] Creating new company in CRM: {"name":"ASWFCAFG"}
+[2025-11-06 07:35:13] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 07:35:13] [CRM Debug] Method: POST
+[2025-11-06 07:35:13] [CRM Debug] API Key present: Yes
+[2025-11-06 07:35:13] [CRM Debug] Data: {"name":"ASWFCAFG"}
+[2025-11-06 07:35:14] [CRM Debug] Response status: 201
+[2025-11-06 07:35:14] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"ASWFCAFG","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'aswfcafg':1","id":"808c6bd6-aef4-401b-9c66-f32376e813e8","createdAt":"2025-11-06T07:35:13.863Z","updatedAt":"2025-11-06T07:35:13.863Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 07:35:14] Company created/found with ID: 808c6bd6-aef4-401b-9c66-f32376e813e8
+[2025-11-06 07:35:14] Checking if person exists with email: islams555b.official@gmail.com
+[2025-11-06 07:35:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islams555b.official%40gmail.com
+[2025-11-06 07:35:14] [CRM Debug] Method: GET
+[2025-11-06 07:35:14] [CRM Debug] API Key present: Yes
+[2025-11-06 07:35:14] [CRM Debug] Response status: 200
+[2025-11-06 07:35:14] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 07:35:14] No matching person found for email: islams555b.official@gmail.com in 60 results
+[2025-11-06 07:35:14] Will create new person for: AEGWGH (islams555b.official@gmail.com)
+[2025-11-06 07:35:14] Creating new person...
+[2025-11-06 07:35:14] Adding companyId to person creation: 808c6bd6-aef4-401b-9c66-f32376e813e8
+[2025-11-06 07:35:14] Adding company name to person: ASWFCAFG
+[2025-11-06 07:35:14] Creating new person in CRM with data: {"name":{"firstName":"AEGWGH","lastName":""},"emails":{"primaryEmail":"islams555b.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950026235","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"808c6bd6-aef4-401b-9c66-f32376e813e8","company":"ASWFCAFG"}
+[2025-11-06 07:35:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 07:35:14] [CRM Debug] Method: POST
+[2025-11-06 07:35:14] [CRM Debug] API Key present: Yes
+[2025-11-06 07:35:14] [CRM Debug] Data: {"name":{"firstName":"AEGWGH","lastName":""},"emails":{"primaryEmail":"islams555b.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950026235","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"808c6bd6-aef4-401b-9c66-f32376e813e8","company":"ASWFCAFG"}
+[2025-11-06 07:35:14] [CRM Debug] Response status: 201
+[2025-11-06 07:35:14] CRM person creation response: {"success":true,"data":{"data":{"createPerson":{"name":{"firstName":"AEGWGH","lastName":""},"emails":{"primaryEmail":"islams555b.official@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1950026235","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'aegwgh':1 'gmail.com':3 'islams555b.official@gmail.com':2","id":"bec35dda-7e01-4155-856b-2886ca8048d1","createdAt":"2025-11-06T07:35:14.341Z","updatedAt":"2025-11-06T07:35:14.341Z","deletedAt":null,"companyId":"808c6bd6-aef4-401b-9c66-f32376e813e8"}}}}
+[2025-11-06 07:35:14] Checking for person ID in CRM response: {"data":{"createPerson":{"name":{"firstName":"AEGWGH","lastName":""},"emails":{"primaryEmail":"islams555b.official@gmail.com","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1950026235","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'aegwgh':1 'gmail.com':3 'islams555b.official@gmail.com':2","id":"bec35dda-7e01-4155-856b-2886ca8048d1","createdAt":"2025-11-06T07:35:14.341Z","updatedAt":"2025-11-06T07:35:14.341Z","deletedAt":null,"companyId":"808c6bd6-aef4-401b-9c66-f32376e813e8"}}}
+[2025-11-06 07:35:14] Found person ID in data.data.createPerson.id: bec35dda-7e01-4155-856b-2886ca8048d1
+[2025-11-06 07:35:14] Person created/found with ID: bec35dda-7e01-4155-856b-2886ca8048d1
+[2025-11-06 07:35:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/bec35dda-7e01-4155-856b-2886ca8048d1
+[2025-11-06 07:35:14] [CRM Debug] Method: PATCH
+[2025-11-06 07:35:14] [CRM Debug] API Key present: Yes
+[2025-11-06 07:35:14] [CRM Debug] Data: {"companyId":"808c6bd6-aef4-401b-9c66-f32376e813e8"}
+[2025-11-06 07:35:14] [CRM Debug] Response status: 200
+[2025-11-06 07:35:14] Successfully linked person bec35dda-7e01-4155-856b-2886ca8048d1 to company 808c6bd6-aef4-401b-9c66-f32376e813e8
+[2025-11-06 07:35:14] [CRM Debug] Starting opportunity creation with title: Contact Form: Account Setup & Onboarding - ASWFCAFG
+[2025-11-06 07:35:14] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-11-06 07:35:14] [OPPORTUNITY DEBUG] ✅ person_id validation passed: bec35dda-7e01-4155-856b-2886ca8048d1
+[2025-11-06 07:35:14] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-11-06 07:35:14] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Contact Form: Account Setup & Onboarding - ASWFCAFG",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 0,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "bec35dda-7e01-4155-856b-2886ca8048d1",
+    "companyId": "808c6bd6-aef4-401b-9c66-f32376e813e8"
+}
+[2025-11-06 07:35:14] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-11-06 07:35:14] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-11-06 07:35:14] [CRM Debug] Method: POST
+[2025-11-06 07:35:14] [CRM Debug] API Key present: Yes
+[2025-11-06 07:35:14] [CRM Debug] Data: {"name":"Contact Form: Account Setup & Onboarding - ASWFCAFG","stage":"A_NEW_LEAD","amount":{"amountMicros":0,"currencyCode":"BDT"},"pointOfContactId":"bec35dda-7e01-4155-856b-2886ca8048d1","companyId":"808c6bd6-aef4-401b-9c66-f32376e813e8"}
+[2025-11-06 07:35:15] [CRM Debug] Response status: 201
+[2025-11-06 07:35:15] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Contact Form: Account Setup & Onboarding - ASWFCAFG",
+                "amount": {
+                    "amountMicros": "0",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'account':3 'aswfcafg':6 'contact':1 'form':2 'onboarding':5 'setup':4",
+                "id": "cc5e7553-9f63-4d03-b391-f65db8e15077",
+                "createdAt": "2025-11-06T07:35:14.768Z",
+                "updatedAt": "2025-11-06T07:35:14.768Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "bec35dda-7e01-4155-856b-2886ca8048d1",
+                "companyId": "808c6bd6-aef4-401b-9c66-f32376e813e8"
+            }
+        }
+    }
+}
+[2025-11-06 07:35:15] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-11-06 07:35:15] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-11-06 07:35:15] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: cc5e7553-9f63-4d03-b391-f65db8e15077
+[2025-11-06 07:35:15] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: cc5e7553-9f63-4d03-b391-f65db8e15077
+[2025-11-06 07:35:15] [CRM Debug] ✅ Opportunity created successfully with ID: cc5e7553-9f63-4d03-b391-f65db8e15077
+[2025-11-06 07:35:15] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-11-06 07:35:15] [CRM Debug] Method: POST
+[2025-11-06 07:35:15] [CRM Debug] API Key present: Yes
+[2025-11-06 07:35:15] [CRM Debug] Data: {"title":"Contact Form Submission","bodyV2":{"markdown":"**Contact Form Submission**\n\n- **Name:** AEGWGH\n- **Email:** islams555b.official@gmail.com\n- **Phone:** 01950026235\n- **Company:** ASWFCAFG\n- **Inquiry Type:** Account Setup & Onboarding\n\n**Message:**\nADVGERYHEH"},"noteTargets":[{"type":"person","id":"bec35dda-7e01-4155-856b-2886ca8048d1"},{"type":"opportunity","id":"cc5e7553-9f63-4d03-b391-f65db8e15077"},{"type":"company","id":"808c6bd6-aef4-401b-9c66-f32376e813e8"}]}
+[2025-11-06 07:35:15] [CRM Debug] Response status: 201
+[2025-11-06 07:35:15] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: 646d2a97-3a58-4e9a-a5d2-eb308129a98f
+[2025-11-06 07:35:15] Note created with ID: 646d2a97-3a58-4e9a-a5d2-eb308129a98f
+[2025-11-06 07:35:15] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"bec35dda-7e01-4155-856b-2886ca8048d1","company_id":"808c6bd6-aef4-401b-9c66-f32376e813e8","opportunity_id":"cc5e7553-9f63-4d03-b391-f65db8e15077","note_id":"646d2a97-3a58-4e9a-a5d2-eb308129a98f"}
+[2025-11-06 08:19:03] Checking if company exists: asfafv
+[2025-11-06 08:19:03] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=asfafv
+[2025-11-06 08:19:03] [CRM Debug] Method: GET
+[2025-11-06 08:19:03] [CRM Debug] API Key present: Yes
+[2025-11-06 08:19:03] [CRM Debug] Response status: 200
+[2025-11-06 08:19:03] Creating new company in CRM: {"name":"asfafv"}
+[2025-11-06 08:19:03] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 08:19:03] [CRM Debug] Method: POST
+[2025-11-06 08:19:03] [CRM Debug] API Key present: Yes
+[2025-11-06 08:19:03] [CRM Debug] Data: {"name":"asfafv"}
+[2025-11-06 08:19:04] [CRM Debug] Response status: 201
+[2025-11-06 08:19:04] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"asfafv","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'asfafv':1","id":"b5866ba8-5c91-4cf2-b1d9-fe9c94f93adb","createdAt":"2025-11-06T08:19:03.753Z","updatedAt":"2025-11-06T08:19:03.753Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 08:19:04] Company created/found with ID: b5866ba8-5c91-4cf2-b1d9-fe9c94f93adb
+[2025-11-06 08:19:04] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 08:19:04] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 08:19:04] [CRM Debug] Method: GET
+[2025-11-06 08:19:04] [CRM Debug] API Key present: Yes
+[2025-11-06 08:19:04] [CRM Debug] Response status: 200
+[2025-11-06 08:19:04] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 08:19:04] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 08:19:04] Will create new person for: Sakib (islamsakib.official@gmail.com)
+[2025-11-06 08:19:04] Creating new person...
+[2025-11-06 08:19:04] Adding companyId to person creation: b5866ba8-5c91-4cf2-b1d9-fe9c94f93adb
+[2025-11-06 08:19:04] Adding company name to person: asfafv
+[2025-11-06 08:19:04] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"b5866ba8-5c91-4cf2-b1d9-fe9c94f93adb","company":"asfafv"}
+[2025-11-06 08:19:04] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 08:19:04] [CRM Debug] Method: POST
+[2025-11-06 08:19:04] [CRM Debug] API Key present: Yes
+[2025-11-06 08:19:04] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"b5866ba8-5c91-4cf2-b1d9-fe9c94f93adb","company":"asfafv"}
+[2025-11-06 08:19:04] [CRM Debug] Response status: 400
+[2025-11-06 08:19:04] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:19:04] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:19:04] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 08:19:04] Duplicate constraint error detected, searching for existing person
+[2025-11-06 08:19:04] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 08:19:04] [CRM Debug] Method: GET
+[2025-11-06 08:19:04] [CRM Debug] API Key present: Yes
+[2025-11-06 08:19:04] [CRM Debug] Response status: 200
+[2025-11-06 08:19:04] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 08:19:04] Email not found, trying to search by phone: 1950025990
+[2025-11-06 08:19:04] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 08:19:04] [CRM Debug] Method: GET
+[2025-11-06 08:19:04] [CRM Debug] API Key present: Yes
+[2025-11-06 08:19:05] [CRM Debug] Response status: 200
+[2025-11-06 08:19:05] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 08:19:05] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:21:18] Checking if company exists: asfafv
+[2025-11-06 08:21:18] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=asfafv
+[2025-11-06 08:21:18] [CRM Debug] Method: GET
+[2025-11-06 08:21:18] [CRM Debug] API Key present: Yes
+[2025-11-06 08:21:19] [CRM Debug] Response status: 200
+[2025-11-06 08:21:19] Creating new company in CRM: {"name":"asfafv"}
+[2025-11-06 08:21:19] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 08:21:19] [CRM Debug] Method: POST
+[2025-11-06 08:21:19] [CRM Debug] API Key present: Yes
+[2025-11-06 08:21:19] [CRM Debug] Data: {"name":"asfafv"}
+[2025-11-06 08:21:19] [CRM Debug] Response status: 201
+[2025-11-06 08:21:19] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"asfafv","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'asfafv':1","id":"3ce5a573-fa39-4cc6-af5c-126001910def","createdAt":"2025-11-06T08:21:19.126Z","updatedAt":"2025-11-06T08:21:19.126Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 08:21:19] Company created/found with ID: 3ce5a573-fa39-4cc6-af5c-126001910def
+[2025-11-06 08:21:19] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 08:21:19] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 08:21:19] [CRM Debug] Method: GET
+[2025-11-06 08:21:19] [CRM Debug] API Key present: Yes
+[2025-11-06 08:21:19] [CRM Debug] Response status: 200
+[2025-11-06 08:21:19] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 08:21:19] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 08:21:19] Will create new person for: Moneybag Website Multi Role Plugin (islamsakib.official@gmail.com)
+[2025-11-06 08:21:19] Creating new person...
+[2025-11-06 08:21:19] Adding companyId to person creation: 3ce5a573-fa39-4cc6-af5c-126001910def
+[2025-11-06 08:21:19] Adding company name to person: asfafv
+[2025-11-06 08:21:19] Creating new person in CRM with data: {"name":{"firstName":"Moneybag","lastName":"Website Multi Role Plugin"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"3ce5a573-fa39-4cc6-af5c-126001910def","company":"asfafv"}
+[2025-11-06 08:21:19] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 08:21:19] [CRM Debug] Method: POST
+[2025-11-06 08:21:19] [CRM Debug] API Key present: Yes
+[2025-11-06 08:21:19] [CRM Debug] Data: {"name":{"firstName":"Moneybag","lastName":"Website Multi Role Plugin"},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"3ce5a573-fa39-4cc6-af5c-126001910def","company":"asfafv"}
+[2025-11-06 08:21:19] [CRM Debug] Response status: 400
+[2025-11-06 08:21:19] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:21:19] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:21:19] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 08:21:19] Duplicate constraint error detected, searching for existing person
+[2025-11-06 08:21:19] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 08:21:19] [CRM Debug] Method: GET
+[2025-11-06 08:21:19] [CRM Debug] API Key present: Yes
+[2025-11-06 08:21:20] [CRM Debug] Response status: 200
+[2025-11-06 08:21:20] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 08:21:20] Email not found, trying to search by phone: 1950025990
+[2025-11-06 08:21:20] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 08:21:20] [CRM Debug] Method: GET
+[2025-11-06 08:21:20] [CRM Debug] API Key present: Yes
+[2025-11-06 08:21:20] [CRM Debug] Response status: 200
+[2025-11-06 08:21:20] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 08:21:20] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:24:57] Checking if company exists: asfcaf
+[2025-11-06 08:24:57] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=asfcaf
+[2025-11-06 08:24:57] [CRM Debug] Method: GET
+[2025-11-06 08:24:57] [CRM Debug] API Key present: Yes
+[2025-11-06 08:24:57] [CRM Debug] Response status: 200
+[2025-11-06 08:24:57] Creating new company in CRM: {"name":"asfcaf"}
+[2025-11-06 08:24:57] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 08:24:57] [CRM Debug] Method: POST
+[2025-11-06 08:24:57] [CRM Debug] API Key present: Yes
+[2025-11-06 08:24:57] [CRM Debug] Data: {"name":"asfcaf"}
+[2025-11-06 08:24:58] [CRM Debug] Response status: 201
+[2025-11-06 08:24:58] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"asfcaf","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'asfcaf':1","id":"484492f4-399b-410c-a0a5-5934584b5449","createdAt":"2025-11-06T08:24:57.836Z","updatedAt":"2025-11-06T08:24:57.836Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 08:24:58] Company created/found with ID: 484492f4-399b-410c-a0a5-5934584b5449
+[2025-11-06 08:24:58] Checking if person exists with email: islamsakib.official@gmail.com
+[2025-11-06 08:24:58] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 08:24:58] [CRM Debug] Method: GET
+[2025-11-06 08:24:58] [CRM Debug] API Key present: Yes
+[2025-11-06 08:24:58] [CRM Debug] Response status: 200
+[2025-11-06 08:24:58] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 08:24:58] No matching person found for email: islamsakib.official@gmail.com in 60 results
+[2025-11-06 08:24:58] Will create new person for: Sakib (islamsakib.official@gmail.com)
+[2025-11-06 08:24:58] Creating new person...
+[2025-11-06 08:24:58] Adding companyId to person creation: 484492f4-399b-410c-a0a5-5934584b5449
+[2025-11-06 08:24:58] Adding company name to person: asfcaf
+[2025-11-06 08:24:58] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"484492f4-399b-410c-a0a5-5934584b5449","company":"asfcaf"}
+[2025-11-06 08:24:58] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 08:24:58] [CRM Debug] Method: POST
+[2025-11-06 08:24:58] [CRM Debug] API Key present: Yes
+[2025-11-06 08:24:58] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":""},"emails":{"primaryEmail":"islamsakib.official@gmail.com"},"phones":{"primaryPhoneNumber":"1950025990","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"484492f4-399b-410c-a0a5-5934584b5449","company":"asfcaf"}
+[2025-11-06 08:24:58] [CRM Debug] Response status: 400
+[2025-11-06 08:24:58] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:24:58] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:24:58] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2025-11-06 08:24:58] Duplicate constraint error detected, searching for existing person
+[2025-11-06 08:24:58] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=islamsakib.official%40gmail.com
+[2025-11-06 08:24:58] [CRM Debug] Method: GET
+[2025-11-06 08:24:58] [CRM Debug] API Key present: Yes
+[2025-11-06 08:24:58] [CRM Debug] Response status: 200
+[2025-11-06 08:24:58] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 08:24:58] Email not found, trying to search by phone: 1950025990
+[2025-11-06 08:24:58] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 08:24:58] [CRM Debug] Method: GET
+[2025-11-06 08:24:58] [CRM Debug] API Key present: Yes
+[2025-11-06 08:24:59] [CRM Debug] Response status: 200
+[2025-11-06 08:24:59] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2025-11-06 08:24:59] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2025-11-06 08:26:07] Checking if company exists: aefga
+[2025-11-06 08:26:07] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=aefga
+[2025-11-06 08:26:07] [CRM Debug] Method: GET
+[2025-11-06 08:26:07] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:07] [CRM Debug] Response status: 200
+[2025-11-06 08:26:07] Creating new company in CRM: {"name":"aefga"}
+[2025-11-06 08:26:07] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 08:26:07] [CRM Debug] Method: POST
+[2025-11-06 08:26:07] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:07] [CRM Debug] Data: {"name":"aefga"}
+[2025-11-06 08:26:08] [CRM Debug] Response status: 201
+[2025-11-06 08:26:08] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"aefga","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'aefga':1","id":"799489b8-013a-4a88-8021-f553044f0424","createdAt":"2025-11-06T08:26:07.864Z","updatedAt":"2025-11-06T08:26:07.864Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 08:26:08] Company created/found with ID: 799489b8-013a-4a88-8021-f553044f0424
+[2025-11-06 08:26:08] Checking if person exists with email: asbgsarbg@gmail.co
+[2025-11-06 08:26:08] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=asbgsarbg%40gmail.co
+[2025-11-06 08:26:08] [CRM Debug] Method: GET
+[2025-11-06 08:26:08] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:08] [CRM Debug] Response status: 200
+[2025-11-06 08:26:08] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 08:26:08] No matching person found for email: asbgsarbg@gmail.co in 60 results
+[2025-11-06 08:26:08] Will create new person for: aevfwavg (asbgsarbg@gmail.co)
+[2025-11-06 08:26:08] Creating new person...
+[2025-11-06 08:26:08] Adding companyId to person creation: 799489b8-013a-4a88-8021-f553044f0424
+[2025-11-06 08:26:08] Adding company name to person: aefga
+[2025-11-06 08:26:08] Creating new person in CRM with data: {"name":{"firstName":"aevfwavg","lastName":""},"emails":{"primaryEmail":"asbgsarbg@gmail.co"},"phones":{"primaryPhoneNumber":"1369854785","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"799489b8-013a-4a88-8021-f553044f0424","company":"aefga"}
+[2025-11-06 08:26:08] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2025-11-06 08:26:08] [CRM Debug] Method: POST
+[2025-11-06 08:26:08] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:08] [CRM Debug] Data: {"name":{"firstName":"aevfwavg","lastName":""},"emails":{"primaryEmail":"asbgsarbg@gmail.co"},"phones":{"primaryPhoneNumber":"1369854785","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"799489b8-013a-4a88-8021-f553044f0424","company":"aefga"}
+[2025-11-06 08:26:08] [CRM Debug] Response status: 201
+[2025-11-06 08:26:08] CRM person creation response: {"success":true,"data":{"data":{"createPerson":{"name":{"firstName":"aevfwavg","lastName":""},"emails":{"primaryEmail":"asbgsarbg@gmail.co","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1369854785","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'aevfwavg':1 'asbgsarbg@gmail.co':2 'gmail.co':3","id":"17ac4843-4a58-41d2-8831-20f14cf0a084","createdAt":"2025-11-06T08:26:08.404Z","updatedAt":"2025-11-06T08:26:08.404Z","deletedAt":null,"companyId":"799489b8-013a-4a88-8021-f553044f0424"}}}}
+[2025-11-06 08:26:08] Checking for person ID in CRM response: {"data":{"createPerson":{"name":{"firstName":"aevfwavg","lastName":""},"emails":{"primaryEmail":"asbgsarbg@gmail.co","additionalEmails":null},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1369854785","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":null},"city":"","avatarUrl":"","position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'aevfwavg':1 'asbgsarbg@gmail.co':2 'gmail.co':3","id":"17ac4843-4a58-41d2-8831-20f14cf0a084","createdAt":"2025-11-06T08:26:08.404Z","updatedAt":"2025-11-06T08:26:08.404Z","deletedAt":null,"companyId":"799489b8-013a-4a88-8021-f553044f0424"}}}
+[2025-11-06 08:26:08] Found person ID in data.data.createPerson.id: 17ac4843-4a58-41d2-8831-20f14cf0a084
+[2025-11-06 08:26:08] Person created/found with ID: 17ac4843-4a58-41d2-8831-20f14cf0a084
+[2025-11-06 08:26:08] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/17ac4843-4a58-41d2-8831-20f14cf0a084
+[2025-11-06 08:26:08] [CRM Debug] Method: PATCH
+[2025-11-06 08:26:08] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:08] [CRM Debug] Data: {"companyId":"799489b8-013a-4a88-8021-f553044f0424"}
+[2025-11-06 08:26:08] [CRM Debug] Response status: 200
+[2025-11-06 08:26:08] Successfully linked person 17ac4843-4a58-41d2-8831-20f14cf0a084 to company 799489b8-013a-4a88-8021-f553044f0424
+[2025-11-06 08:26:08] [CRM Debug] Starting opportunity creation with title: Contact Form: General Inquiry - aefga
+[2025-11-06 08:26:08] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-11-06 08:26:08] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 17ac4843-4a58-41d2-8831-20f14cf0a084
+[2025-11-06 08:26:08] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-11-06 08:26:08] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Contact Form: General Inquiry - aefga",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 0,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "17ac4843-4a58-41d2-8831-20f14cf0a084",
+    "companyId": "799489b8-013a-4a88-8021-f553044f0424"
+}
+[2025-11-06 08:26:08] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-11-06 08:26:08] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-11-06 08:26:08] [CRM Debug] Method: POST
+[2025-11-06 08:26:08] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:08] [CRM Debug] Data: {"name":"Contact Form: General Inquiry - aefga","stage":"A_NEW_LEAD","amount":{"amountMicros":0,"currencyCode":"BDT"},"pointOfContactId":"17ac4843-4a58-41d2-8831-20f14cf0a084","companyId":"799489b8-013a-4a88-8021-f553044f0424"}
+[2025-11-06 08:26:09] [CRM Debug] Response status: 201
+[2025-11-06 08:26:09] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Contact Form: General Inquiry - aefga",
+                "amount": {
+                    "amountMicros": "0",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'aefga':5 'contact':1 'form':2 'general':3 'inquiry':4",
+                "id": "a5cf11ef-27d0-4277-9a03-d58a1c9d70d9",
+                "createdAt": "2025-11-06T08:26:08.808Z",
+                "updatedAt": "2025-11-06T08:26:08.808Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "17ac4843-4a58-41d2-8831-20f14cf0a084",
+                "companyId": "799489b8-013a-4a88-8021-f553044f0424"
+            }
+        }
+    }
+}
+[2025-11-06 08:26:09] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-11-06 08:26:09] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-11-06 08:26:09] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: a5cf11ef-27d0-4277-9a03-d58a1c9d70d9
+[2025-11-06 08:26:09] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: a5cf11ef-27d0-4277-9a03-d58a1c9d70d9
+[2025-11-06 08:26:09] [CRM Debug] ✅ Opportunity created successfully with ID: a5cf11ef-27d0-4277-9a03-d58a1c9d70d9
+[2025-11-06 08:26:09] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-11-06 08:26:09] [CRM Debug] Method: POST
+[2025-11-06 08:26:09] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:09] [CRM Debug] Data: {"title":"Contact Form Submission","bodyV2":{"markdown":"**Contact Form Submission**\n\n- **Name:** aevfwavg\n- **Email:** asbgsarbg@gmail.co\n- **Phone:** 01369854785\n- **Company:** aefga\n- **Inquiry Type:** General Inquiry\n\n**Message:**\nadbghe5t ethyejhejh"},"noteTargets":[{"type":"person","id":"17ac4843-4a58-41d2-8831-20f14cf0a084"},{"type":"opportunity","id":"a5cf11ef-27d0-4277-9a03-d58a1c9d70d9"},{"type":"company","id":"799489b8-013a-4a88-8021-f553044f0424"}]}
+[2025-11-06 08:26:09] [CRM Debug] Response status: 201
+[2025-11-06 08:26:09] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: 5727ca0f-f172-4c58-bc3f-09f5130c2c1a
+[2025-11-06 08:26:09] Note created with ID: 5727ca0f-f172-4c58-bc3f-09f5130c2c1a
+[2025-11-06 08:26:09] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"17ac4843-4a58-41d2-8831-20f14cf0a084","company_id":"799489b8-013a-4a88-8021-f553044f0424","opportunity_id":"a5cf11ef-27d0-4277-9a03-d58a1c9d70d9","note_id":"5727ca0f-f172-4c58-bc3f-09f5130c2c1a"}
+[2025-11-06 08:26:44] Sending merchant registration to sandbox API
+[2025-11-06 08:26:44] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details-no-auth
+[2025-11-06 08:26:44] Sandbox API Request - Data: {"business_name":"Test","legal_identity":"Partnership","first_name":"Test","last_name":"Test","email":"agvqaavg2323@gmail.com","phone":"01365985365"}
+[2025-11-06 08:26:47] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE69547623","api_key":"ba22eb69.H9WUj-TYQpTkyOy3nkz1hE4BkhVdfneUsjSjMSQWAxw","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_z6UKEYapM32JqowEUELXS-JKJhBiAkCtyf7BBxjsBUTdzwRsgUZ84o0Zr_KI9OvY","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Accou
+[2025-11-06 08:26:47] Merchant registration submitted successfully
+[2025-11-06 08:26:47] Checking if company exists: Test
+[2025-11-06 08:26:47] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test
+[2025-11-06 08:26:47] [CRM Debug] Method: GET
+[2025-11-06 08:26:47] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:47] [CRM Debug] Response status: 200
+[2025-11-06 08:26:47] Creating new company in CRM: {"name":"Test"}
+[2025-11-06 08:26:47] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2025-11-06 08:26:47] [CRM Debug] Method: POST
+[2025-11-06 08:26:47] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:47] [CRM Debug] Data: {"name":"Test"}
+[2025-11-06 08:26:47] [CRM Debug] Response status: 201
+[2025-11-06 08:26:47] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'test':1","id":"85ec652a-998e-45f4-8685-56434903b60d","createdAt":"2025-11-06T08:26:47.268Z","updatedAt":"2025-11-06T08:26:47.268Z","deletedAt":null,"accountOwnerId":null}}}}
+[2025-11-06 08:26:47] Company created/found with ID: 85ec652a-998e-45f4-8685-56434903b60d
+[2025-11-06 08:26:47] Checking if person exists with email: agvqaavg2323@gmail.com
+[2025-11-06 08:26:47] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=agvqaavg2323%40gmail.com
+[2025-11-06 08:26:47] [CRM Debug] Method: GET
+[2025-11-06 08:26:47] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:47] [CRM Debug] Response status: 200
+[2025-11-06 08:26:47] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2025-11-06 08:26:47] Found existing person with ID: 20846ae9-af38-4796-9c3f-08acb3767426 (email: agvqaavg2323@gmail.com)
+[2025-11-06 08:26:47] Person created/found with ID: 20846ae9-af38-4796-9c3f-08acb3767426
+[2025-11-06 08:26:47] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people/20846ae9-af38-4796-9c3f-08acb3767426
+[2025-11-06 08:26:47] [CRM Debug] Method: PATCH
+[2025-11-06 08:26:47] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:47] [CRM Debug] Data: {"companyId":"85ec652a-998e-45f4-8685-56434903b60d"}
+[2025-11-06 08:26:47] [CRM Debug] Response status: 200
+[2025-11-06 08:26:47] Successfully linked person 20846ae9-af38-4796-9c3f-08acb3767426 to company 85ec652a-998e-45f4-8685-56434903b60d
+[2025-11-06 08:26:47] [CRM Debug] Starting opportunity creation with title: Merchant Registration: Test
+[2025-11-06 08:26:47] [OPPORTUNITY DEBUG] create_opportunity() called for Twenty CRM
+[2025-11-06 08:26:47] [OPPORTUNITY DEBUG] ✅ person_id validation passed: 20846ae9-af38-4796-9c3f-08acb3767426
+[2025-11-06 08:26:47] [OPPORTUNITY DEBUG] 🎯 Using opportunity stage: 'A_NEW_LEAD'
+[2025-11-06 08:26:47] [OPPORTUNITY DEBUG] Sending opportunity data to Twenty CRM: {
+    "name": "Merchant Registration: Test",
+    "stage": "A_NEW_LEAD",
+    "amount": {
+        "amountMicros": 600000000000,
+        "currencyCode": "BDT"
+    },
+    "pointOfContactId": "20846ae9-af38-4796-9c3f-08acb3767426",
+    "companyId": "85ec652a-998e-45f4-8685-56434903b60d"
+}
+[2025-11-06 08:26:47] [OPPORTUNITY DEBUG] API endpoint: /opportunities
+[2025-11-06 08:26:47] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/opportunities
+[2025-11-06 08:26:47] [CRM Debug] Method: POST
+[2025-11-06 08:26:47] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:47] [CRM Debug] Data: {"name":"Merchant Registration: Test","stage":"A_NEW_LEAD","amount":{"amountMicros":600000000000,"currencyCode":"BDT"},"pointOfContactId":"20846ae9-af38-4796-9c3f-08acb3767426","companyId":"85ec652a-998e-45f4-8685-56434903b60d"}
+[2025-11-06 08:26:48] [CRM Debug] Response status: 201
+[2025-11-06 08:26:48] [OPPORTUNITY DEBUG] 📥 Raw CRM API response: {
+    "success": true,
+    "data": {
+        "data": {
+            "createOpportunity": {
+                "name": "Merchant Registration: Test",
+                "amount": {
+                    "amountMicros": "600000000000",
+                    "currencyCode": "BDT"
+                },
+                "closeDate": null,
+                "position": 0,
+                "createdBy": {
+                    "source": "API",
+                    "workspaceMemberId": null,
+                    "name": "moneybag",
+                    "context": []
+                },
+                "searchVector": "'merchant':1 'registration':2 'test':3",
+                "id": "399549e7-ad73-49f6-866f-eee77e458aa0",
+                "createdAt": "2025-11-06T08:26:47.917Z",
+                "updatedAt": "2025-11-06T08:26:47.917Z",
+                "deletedAt": null,
+                "stage": "A_NEW_LEAD",
+                "pointOfContactId": "20846ae9-af38-4796-9c3f-08acb3767426",
+                "companyId": "85ec652a-998e-45f4-8685-56434903b60d"
+            }
+        }
+    }
+}
+[2025-11-06 08:26:48] [OPPORTUNITY DEBUG] 📊 Response success flag: true
+[2025-11-06 08:26:48] [OPPORTUNITY DEBUG] 🔍 Attempting to extract opportunity ID from response...
+[2025-11-06 08:26:48] [OPPORTUNITY DEBUG] ✅ Found opportunity ID in data.data.createOpportunity.id: 399549e7-ad73-49f6-866f-eee77e458aa0
+[2025-11-06 08:26:48] [OPPORTUNITY DEBUG] 🎉 SUCCESS: Opportunity created with ID: 399549e7-ad73-49f6-866f-eee77e458aa0
+[2025-11-06 08:26:48] [CRM Debug] ✅ Opportunity created successfully with ID: 399549e7-ad73-49f6-866f-eee77e458aa0
+[2025-11-06 08:26:48] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/notes
+[2025-11-06 08:26:48] [CRM Debug] Method: POST
+[2025-11-06 08:26:48] [CRM Debug] API Key present: Yes
+[2025-11-06 08:26:48] [CRM Debug] Data: {"title":"Merchant Registration Details","bodyV2":{"markdown":"**Merchant Registration Submission**\n\n- **Business Name:** Test\n- **Legal Identity:** Partnership\n- **Business Category:** social_commerce\n- **Service Types:** visa, mastercard, amex, dbbl_nexus, bkash, nagad, unionpay, rocket, diners, upay\n- **Monthly Volume:** 5000000+\n- **Max Amount:** 0\n- **Currency:** BDT\n- **Business Website:** \n- **Contact:** Test Test\n- **Email:** agvqaavg2323@gmail.com\n- **Phone:** 01365985365\n\n**API Response:**\n- **Status:** Registration Successful\n- **Merchant ID:** SANDTE69547623\n- **Registration Date:** 2025-11-06 14:26:47"},"noteTargets":[{"type":"person","id":"20846ae9-af38-4796-9c3f-08acb3767426"},{"type":"opportunity","id":"399549e7-ad73-49f6-866f-eee77e458aa0"},{"type":"company","id":"85ec652a-998e-45f4-8685-56434903b60d"}]}
+[2025-11-06 08:26:48] [CRM Debug] Response status: 201
+[2025-11-06 08:26:48] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: bfdfee80-28df-4db6-b9ed-b4f9874039a8
+[2025-11-06 08:26:48] Note created with ID: bfdfee80-28df-4db6-b9ed-b4f9874039a8
+[2025-11-06 08:26:48] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"20846ae9-af38-4796-9c3f-08acb3767426","company_id":"85ec652a-998e-45f4-8685-56434903b60d","opportunity_id":"399549e7-ad73-49f6-866f-eee77e458aa0","note_id":"bfdfee80-28df-4db6-b9ed-b4f9874039a8"}
