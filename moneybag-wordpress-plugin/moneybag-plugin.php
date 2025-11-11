@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Moneybag WordPress Plugin
  * Description: Configuration-driven Elementor widgets for payment gateway integration with React.js forms. Works with any API provider.
- * Version: 2.4.0
+ * Version: 2.4.2
  * Author: Sakib Islam
  * Contact: +8801950025990
  * Text Domain: moneybag-wordpress-plugin
@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
  */
 define('MONEYBAG_PLUGIN_URL', plugin_dir_url(__FILE__));     // Plugin URL for assets
 define('MONEYBAG_PLUGIN_PATH', plugin_dir_path(__FILE__));   // Plugin path for includes
-define('MONEYBAG_PLUGIN_VERSION', '2.4.0');                 // Plugin version for cache busting
+define('MONEYBAG_PLUGIN_VERSION', '2.4.2');                 // Plugin version for cache busting
 
 /**
  * Security and Configuration Notice
@@ -544,23 +544,6 @@ class MoneybagPlugin
                 break;
 
             case 'business_details':
-                // reCAPTCHA disabled for sandbox widget
-                // Uncomment below to re-enable reCAPTCHA verification
-                /*
-                $recaptcha_token = sanitize_text_field($data['recaptcha_token'] ?? '');
-                if (!empty($recaptcha_token)) {
-                    $recaptcha_result = \MoneybagPlugin\MoneybagAPI::verify_recaptcha($recaptcha_token);
-                    if (!$recaptcha_result['success']) {
-                        wp_send_json_error('reCAPTCHA verification failed. Please try again.');
-                        return;
-                    }
-                    $score = $recaptcha_result['score'] ?? 0;
-                    if ($score < 0.3) {
-                        wp_send_json_error('Security check failed. Please try again.');
-                        return;
-                    }
-                }
-                */
 
                 $sanitized = [
                     'business_name' => sanitize_text_field($data['business_name'] ?? ''),
@@ -603,17 +586,6 @@ class MoneybagPlugin
             // Clean error message for users
             $error_message = $response['message'] ?? 'API request failed';
 
-            // Log error details for debugging but don't show to users
-            // Log error only in debug mode (commented out for production)
-            // if (isset($response['error']) && defined('WP_DEBUG') && WP_DEBUG) {
-            //     error_log('[Moneybag API] Error type: ' . $response['error']);
-            // }
-
-            // For development - log the full response
-            // Log full response only in debug mode (commented out for production)
-            // if (defined('WP_DEBUG') && WP_DEBUG) {
-            //     error_log('[Moneybag Sandbox API Error] Full response: ' . json_encode($response));
-            // }
 
             wp_send_json_error($error_message);
         }
@@ -727,13 +699,6 @@ class MoneybagPlugin
             if (isset($_POST['nonce'])) {
                 $nonce_valid = wp_verify_nonce($_POST['nonce'], 'moneybag_pricing_nonce') ||
                     wp_verify_nonce($_POST['nonce'], 'moneybag_merchant_nonce');
-
-                // TEMPORARY: Allow debug testing with test nonces
-                // Removed test nonce bypass for production
-                // if (!$nonce_valid && ($_POST['nonce'] === 'test_nonce' || $_POST['nonce'] === 'debug_nonce')) {
-                //     error_log('[Moneybag CRM Debug] Using test nonce - bypassing verification for debugging');
-                //     $nonce_valid = true;
-                // }
             }
 
             if (!$nonce_valid) {
@@ -1366,19 +1331,6 @@ class MoneybagPlugin
         // Remove transients
         delete_transient('moneybag_pricing_rules');
         delete_transient('moneybag_registration_options');
-
-        // Remove upload directory (optional - commented for safety)
-        // $upload_dir = wp_upload_dir();
-        // $moneybag_dir = $upload_dir['basedir'] . '/moneybag-documents';
-        // if (file_exists($moneybag_dir)) {
-        //     $files = glob($moneybag_dir . '/*');
-        //     foreach ($files as $file) {
-        //         if (is_file($file)) {
-        //             unlink($file);
-        //         }
-        //     }
-        //     rmdir($moneybag_dir);
-        // }
     }
 }
 

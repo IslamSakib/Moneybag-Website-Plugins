@@ -8129,6 +8129,7 @@ button.moneybag-calc-show-more-btn:focus-visible {
 
 .sandbox-step4-btn:hover {
     background: #3B3F42;
+    color: #FFFFFF;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(59, 63, 66, 0.3);
 }

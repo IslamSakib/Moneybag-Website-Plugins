@@ -1,5 +1,4 @@
 <?php
-
 namespace MoneybagPlugin\Widgets;
 
 use Elementor\Widget_Base;
@@ -9,51 +8,41 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class SandboxFormWidget extends Widget_Base
-{
-
-    public function get_name()
-    {
+class SandboxFormWidget extends Widget_Base {
+    
+    public function get_name() {
         return 'moneybag-sandbox-form';
     }
-
-    public function get_title()
-    {
+    
+    public function get_title() {
         return __('Moneybag Sandbox Form', 'moneybag-plugin');
     }
-
-    public function get_icon()
-    {
+    
+    public function get_icon() {
         return 'eicon-form-horizontal';
     }
-
-    public function get_categories()
-    {
+    
+    public function get_categories() {
         return ['moneybag'];
     }
-
-    public function get_keywords()
-    {
+    
+    public function get_keywords() {
         return ['moneybag', 'form', 'sandbox', 'payment'];
     }
-
-    public function get_script_depends()
-    {
+    
+    public function get_script_depends() {
         return ['moneybag-sandbox-form'];
     }
-
-    public function get_style_depends()
-    {
+    
+    public function get_style_depends() {
         return ['moneybag-global'];
     }
-
-    protected function register_controls()
-    {
+    
+    protected function register_controls() {
         // No controls needed - widget uses global styles
     }
-
-    protected function render()
-    {
+    
+    protected function render() {
         $widget_id = $this->get_id();
         $form_config = [
             'widget_id' => $widget_id,
@@ -61,10 +50,9 @@ class SandboxFormWidget extends Widget_Base
             'form_title' => __('Sandbox Account Registration', 'moneybag-plugin'),
             'primary_color' => '#ff6b6b',
             'recaptcha_site_key' => get_option('moneybag_recaptcha_site_key', ''),
-            'plugin_url' => MONEYBAG_PLUGIN_URL,
-            'login_url' => wp_login_url() // <-- ADD THIS LINE
+            'plugin_url' => MONEYBAG_PLUGIN_URL
         ];
-?>
+        ?>
         <div class="moneybag-sandbox-form-wrapper moneybag-form" data-config='<?php echo esc_attr(json_encode($form_config)); ?>'>
             <div id="moneybag-sandbox-form-<?php echo esc_attr($widget_id); ?>">
                 <div class="moneybag-loading">
@@ -72,12 +60,11 @@ class SandboxFormWidget extends Widget_Base
                 </div>
             </div>
         </div>
-    <?php
+        <?php
     }
-
-    protected function content_template()
-    {
-    ?>
+    
+    protected function content_template() {
+        ?>
         <div class="moneybag-sandbox-form-wrapper">
             <div class="moneybag-form-preview">
                 <h3><?php echo __('Sandbox Account Registration', 'moneybag-plugin'); ?></h3>
@@ -89,6 +76,7 @@ class SandboxFormWidget extends Widget_Base
                 </div>
             </div>
         </div>
-<?php
+        <?php
     }
 }
+
