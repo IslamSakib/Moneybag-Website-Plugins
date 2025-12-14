@@ -1,6 +1,6 @@
 # Moneybag WordPress Plugin
 
-![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.4.1-blue.svg)
 ![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-green.svg)
 ![Elementor](https://img.shields.io/badge/Elementor-3.0%2B-purple.svg)
 ![PHP](https://img.shields.io/badge/PHP-7.4%2B-777BB4.svg)
@@ -182,27 +182,28 @@ We welcome contributions! Please follow these guidelines:
 - Ensure no console errors
 - Update CHANGELOG.md for significant changes
 
-## ✨ Recent Improvements (v2.2.0)
+## ✨ Recent Improvements (v2.4.1)
 
-### Major Cleanup & Code Optimization
-- **File Upload System Removal**: Completely removed file upload functionality from merchant registration
-  - Eliminated all document upload features (logo, trade license, ID documents, TIN certificate)
-  - Reduced form from 4 steps to streamlined 3 steps
-  - Removed 150+ lines of file upload handling code
-  - Enhanced security by eliminating file upload vulnerabilities
-- **Code Quality**: Cleaned up all commented-out code and legacy functions
-- **Bug Fixes**: 
-  - Fixed sandbox form redirect issues (now properly redirects to sandbox.moneybag.com.bd)
-  - Fixed Elementor Integration status detection in admin settings
-  - Made business website field truly optional in merchant registration
-- **Performance**: Optimized codebase by removing unused files and redundant code
-- **Architecture**: Improved code organization and removed deprecated functionality
+### UI Enhancement & Style Improvements
+- **Card Header Styling**: Enhanced pricing plan widget card headers with:
+  - Beautiful gradient text color using linear gradient (#F46F6F to #E20E18)
+  - Consistent pill-shaped background (#F2F2F2) with 28px border radius
+  - Optimized typography (14px font size, 700 font weight)
+  - Perfect padding (6px vertical, 10px horizontal) for visual balance
+  - Improved accessibility with fallback colors for non-webkit browsers
 
-### Enhanced User Experience
-- **Simplified Registration**: Streamlined merchant registration with no file upload complexity
-- **Better Admin Interface**: Accurate plugin status reporting with improved Elementor detection
-- **Form Validation**: Enhanced validation system with proper optional field handling
-- **Mobile Responsiveness**: Improved mobile experience without upload UI complexity
+### Code Quality & Maintenance
+- **CSS Optimization**: Streamlined card header styling in global CSS system
+- **Code Cleanup**: Removed temporary debug files and test logs
+- **Documentation**: Updated project documentation to reflect latest changes
+- **Performance**: Maintained lightweight CSS with targeted selectors
+
+### Previous Updates (v2.4.0)
+- **Business Category Integration**: Dynamic pricing based on business categories
+- **Price Calculator Enhancement**: Real-time calculations with business-specific rates
+- **Form Validation Improvements**: Enhanced required field validation
+- **Localization**: Bangladeshi comma formatting for monetary inputs
+- **Data Integration**: Connected 11 business categories with specific pricing tiers
 
 ## 📝 License
 

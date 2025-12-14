@@ -1,175 +1,175 @@
 {
-  "version": "1.1",
-  "last_updated": "2025-09-08",
+  "version": "1.3",
+  "last_updated": "2025-11-11",
   "pricing": {
     "cards": {
       "Education": {
-        "visa": "1.20%",
-        "mastercard": "1.20%",
-        "diners_club": "1.30%",
-        "unionpay": "1.30%",
-        "amex": "1.50%",
-        "nexus_card": "30 BDT per Trnx"
+        "visa": "1.50%",
+        "mastercard": "1.50%",
+        "diners_club": "1.50%",
+        "unionpay": "1.50%",
+        "amex": "1.70%",
+        "nexus_card": "30.00 BDT per Trnx"
       },
       "eCommerce": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "fCommerce": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "Health Service": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "IT Services": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "NGO/Donation": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "Digital Service Platform": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "Membership & Subscriptions": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "Event Management / Ticketing": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "Consulting Services": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "Miscellaneous": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       },
       "default": {
-        "visa": "2.10%",
-        "mastercard": "2.10%",
-        "diners_club": "2.30%",
-        "unionpay": "2.30%",
-        "amex": "3.30%",
-        "nexus_card": "2.00%"
+        "visa": "2.40%",
+        "mastercard": "2.40%",
+        "diners_club": "2.40%",
+        "unionpay": "2.40%",
+        "amex": "3.40%",
+        "nexus_card": "2.10%"
       }
     },
     "mfs": {
       "Education": {
-        "bkash": "1.20%",
-        "nagad": "1.60%",
+        "bkash": "1.50%",
+        "nagad": "1.70%",
         "upay": "1.50%",
-        "rocket": "1.45%"
+        "rocket": "1.70%"
       },
       "eCommerce": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "fCommerce": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "Health Service": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "IT Services": {
-        "bkash": "2.30%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "NGO/Donation": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "Digital Service Platform": {
-        "bkash": "12.50%",
-        "nagad": "1.60%",
-        "upay": "1.40%",
+        "bkash": "15.00%",
+        "nagad": "1.80%",
+        "upay": "1.60%",
         "rocket": "1.80%"
       },
       "Membership & Subscriptions": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "Event Management / Ticketing": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "Consulting Services": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "Miscellaneous": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       },
       "default": {
-        "bkash": "1.75%",
-        "nagad": "1.60%",
+        "bkash": "1.80%",
+        "nagad": "1.80%",
         "upay": "1.50%",
         "rocket": "1.80%"
       }
@@ -180,46 +180,29 @@
       "identities": {
         "Proprietorship": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)"
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "Partnership": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
             "Deed of Partnership Agreement"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Board Resolution",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI) (if applicable)",
-            "Board resolution"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         }
       }
@@ -228,33 +211,23 @@
       "identities": {
         "Proprietorship": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)"
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "Partnership": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
             "Deed of Partnership Agreement"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         }
       }
@@ -263,24 +236,17 @@
       "identities": {
         "Educational Institution": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
-            "Approval from Ministry of Education",
+            "Approval from education board",
             "Educational Institute Identification Number (EIIN)",
-            "Approval Letter from the Principal",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Board resolution from the Governing Body/Executive Committee/Trustee Board (if applicable)"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Educational Association/Alumni Association": {
-          "required_documents": [
-            "Merchant Registration Form (MRF)",
-            "Letter in the official letterhead pad from the HoD/Head of Agency/Director General/Secretary."
-          ]
+          "required_documents": ["Approval from concerned department"]
         },
         "Trust": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Board of Trustees Name",
             "Trust Deed",
             "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
@@ -288,15 +254,13 @@
         },
         "NGO": {
           "required_documents": [
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
+            "TIN Certificate (if applicable)",
             "Certificate from NGO Bureau",
             "Member list of Board of Trustees"
           ]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Board of Trustees Name",
             "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
           ]
@@ -307,51 +271,34 @@
       "identities": {
         "Proprietorship": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)"
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
+            "Approval from government"
           ]
         },
         "Partnership": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
             "Deed of Partnership Agreement"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Board Resolution",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI) (if applicable)",
-            "Board resolution"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Trust": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Board of Trustees Name",
             "Trust Deed",
             "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
@@ -359,16 +306,14 @@
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Board of Trustees Name",
             "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
           ]
         },
         "NGO": {
           "required_documents": [
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Certificate from NGO Bureau",
+            "TIN Certificate (if applicable)",
+            "Approval from government",
             "Member list of Board of Trustees"
           ]
         }
@@ -378,46 +323,29 @@
       "identities": {
         "Proprietorship": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)"
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "Partnership": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
             "Deed of Partnership Agreement"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Board Resolution",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI) (if applicable)",
-            "Board resolution"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         }
       }
@@ -426,24 +354,18 @@
       "identities": {
         "NGO": {
           "required_documents": [
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Certificate from NGO Bureau",
-            "Member list of Board of Trustees"
+            "TIN Certificate (if applicable)",
+            "Approval from government"
           ]
         },
         "Trust": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
-            "Board of Trustees Name",
             "Trust Deed",
             "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
           ]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
-            "Board of Trustees Name",
             "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
           ]
         }
@@ -453,46 +375,29 @@
       "identities": {
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Board Resolution",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI) (if applicable)",
-            "Board resolution"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Partnership": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
             "Deed of Partnership Agreement"
           ]
         },
         "Proprietorship": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)"
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         }
       }
@@ -500,44 +405,32 @@
     "Membership & Subscriptions": {
       "identities": {
         "Educational Association/Alumni Association": {
-          "required_documents": [
-            "Merchant Registration Form (MRF)",
-            "Letter in the official letterhead pad from the HoD/Head of Agency/Director General/Secretary."
-          ]
+          "required_documents": ["Approval from concerned department"]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Board of Trustees Name",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from government"
           ]
         },
         "Trust": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Board of Trustees Name",
             "Trust Deed",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from government"
           ]
         },
         "NGO": {
           "required_documents": [
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
+            "TIN Certificate (if applicable)",
             "Certificate from NGO Bureau",
             "Member list of Board of Trustees"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         }
       }
@@ -546,46 +439,29 @@
       "identities": {
         "Proprietorship": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)"
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "Partnership": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
             "Deed of Partnership Agreement"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Board Resolution",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI) (if applicable)",
-            "Board resolution"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         }
       }
@@ -594,46 +470,29 @@
       "identities": {
         "Proprietorship": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)"
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "Partnership": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
             "Deed of Partnership Agreement"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Board Resolution",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI) (if applicable)",
-            "Board resolution"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         }
       }
@@ -642,51 +501,33 @@
       "identities": {
         "Proprietorship": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)"
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "Partnership": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Trade License",
-            "TIN Certificate",
-            "VAT Certificate",
-            "Digital Business ID (DBID)",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)",
             "Deed of Partnership Agreement"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI)",
-            "Company board resolution for the signatory authority"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "Digital Business Identification Number (DBID)",
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
-            "Trade License",
-            "Board Resolution",
-            "Certificate of Incorporation (CoI), Form XII",
-            "Memorandum of Association (MoA)/Articles of Association (AoA)",
-            "Registration Certificate from Board of Foreign Investment (RCBFI) (if applicable)",
-            "Board resolution"
+            "TIN Certificate (if applicable)",
+            "Trade License"
           ]
         },
         "Trust": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Board of Trustees Name",
             "Trust Deed",
             "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
@@ -694,35 +535,27 @@
         },
         "NGO": {
           "required_documents": [
-            "TIN Certificate",
-            "Merchant Registration Form (MRF)",
+            "TIN Certificate (if applicable)",
             "Certificate from NGO Bureau",
             "Member list of Board of Trustees"
           ]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
             "Board of Trustees Name",
             "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
           ]
         },
         "Educational Institution": {
           "required_documents": [
-            "Merchant Registration Form (MRF)",
-            "Approval from Ministry of Education",
+            "Approval from education board",
             "Educational Institute Identification Number (EIIN)",
-            "Approval Letter from the Principal",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Board resolution from the Governing Body/Executive Committee/Trustee Board (if applicable)"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Educational Association/Alumni Association": {
-          "required_documents": [
-            "Merchant Registration Form (MRF)",
-            "Letter in the official letterhead pad from the HoD/Head of Agency/Director General/Secretary."
-          ]
+          "required_documents": ["Approval from concerned department"]
         },
         "Government Services": {
           "required_documents": [

@@ -1,0 +1,12 @@
+# Allow access to JSON files in this directory
+<FilesMatch "\.(json)$">
+    Order allow,deny
+    Allow from all
+    <IfModule mod_headers.c>
+        Header set Access-Control-Allow-Origin "*"
+        Header set Content-Type "application/json"
+    </IfModule>
+</FilesMatch>
+
+# Ensure JSON files are served with correct MIME type
+AddType application/json .json
