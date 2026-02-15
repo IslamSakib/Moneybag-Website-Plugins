@@ -57,7 +57,7 @@ class PriceComparisonCalculatorWidget extends Widget_Base
     {
         $widget_id = $this->get_id();
         // Version should match pricing-rules.json version
-        $pricing_version = '1.2';
+        $pricing_version = '1.4';
 
         $calculator_config = [
             'widget_id' => !empty($widget_id) ? $widget_id : 'default',

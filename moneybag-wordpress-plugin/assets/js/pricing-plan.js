@@ -232,11 +232,11 @@
         { key: "nagad", label: "Nagad", category: "mfs" },
         // Other services
         { key: "amex", label: "AMEX", category: "cards" },
-        { key: "nexus_card", label: "DBBL Nexus", category: "cards" },
         { key: "unionpay", label: "UnionPay", category: "cards" },
         { key: "diners_club", label: "Diners Club", category: "cards" },
         { key: "upay", label: "Upay", category: "mfs" },
         { key: "rocket", label: "Rocket", category: "mfs" },
+        { key: "nexus_card", label: "DBBL Nexus", category: "cards" },
       ];
 
       // Get pricing based on business category
@@ -864,7 +864,11 @@
               createElement(
                 "div",
                 { className: "card" },
-                createElement("h3", { className: "card-header" }, "Pricing"),
+                createElement(
+                  "h3",
+                  { className: "card-header" },
+                  "On Boarding Fee 10,500 BDT*"
+                ),
                 createElement(
                   "div",
                   { className: "pricing-grid" },

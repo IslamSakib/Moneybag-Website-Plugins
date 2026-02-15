@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Moneybag WordPress Plugin
  * Description: Configuration-driven Elementor widgets for payment gateway integration with React.js forms. Works with any API provider.
- * Version: 2.4.2
+ * Version: 2.4.5
  * Author: Sakib Islam
  * Contact: +8801950025990
  * Text Domain: moneybag-wordpress-plugin
@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
  */
 define('MONEYBAG_PLUGIN_URL', plugin_dir_url(__FILE__));     // Plugin URL for assets
 define('MONEYBAG_PLUGIN_PATH', plugin_dir_path(__FILE__));   // Plugin path for includes
-define('MONEYBAG_PLUGIN_VERSION', '2.4.2');                 // Plugin version for cache busting
+define('MONEYBAG_PLUGIN_VERSION', '2.4.4');                 // Plugin version for cache busting
 
 /**
  * Security and Configuration Notice
