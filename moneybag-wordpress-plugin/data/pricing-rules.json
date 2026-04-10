@@ -1,6 +1,6 @@
 {
-  "version": "1.3",
-  "last_updated": "2025-11-11",
+  "version": "1.4",
+  "last_updated": "2025-12-21",
   "pricing": {
     "cards": {
       "Education": {
@@ -188,21 +188,21 @@
         "Partnership": {
           "required_documents": [
             "Trade License",
+            "Deed of Partnership Agreement",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Deed of Partnership Agreement"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         }
       }
@@ -219,15 +219,15 @@
         "Partnership": {
           "required_documents": [
             "Trade License",
+            "Deed of Partnership Agreement",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Deed of Partnership Agreement"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         }
       }
@@ -243,26 +243,29 @@
           ]
         },
         "Educational Association/Alumni Association": {
-          "required_documents": ["Approval from concerned department"]
+          "required_documents": [
+            "Educational Institute Identification Number (EIIN)",
+            "Approval from concerned department"
+          ]
         },
         "Trust": {
           "required_documents": [
-            "Board of Trustees Name",
             "Trust Deed",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from concerned department"
           ]
         },
         "NGO": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
             "Certificate from NGO Bureau",
-            "Member list of Board of Trustees"
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Board of Trustees Name",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         }
       }
@@ -272,49 +275,49 @@
         "Proprietorship": {
           "required_documents": [
             "Trade License",
+            "Approval from concerned department",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Approval from government"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Partnership": {
           "required_documents": [
             "Trade License",
+            "Deed of Partnership Agreement",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Deed of Partnership Agreement"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Trust": {
           "required_documents": [
-            "Board of Trustees Name",
             "Trust Deed",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from concerned department"
           ]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Board of Trustees Name",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "NGO": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Approval from government",
-            "Member list of Board of Trustees"
+            "Certificate from NGO Bureau",
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)"
           ]
         }
       }
@@ -331,21 +334,21 @@
         "Partnership": {
           "required_documents": [
             "Trade License",
+            "Deed of Partnership Agreement",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Deed of Partnership Agreement"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         }
       }
@@ -354,19 +357,22 @@
       "identities": {
         "NGO": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Approval from government"
+            "Certificate from NGO Bureau",
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Trust": {
           "required_documents": [
             "Trust Deed",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from concerned department"
           ]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         }
       }
@@ -375,22 +381,22 @@
       "identities": {
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Partnership": {
           "required_documents": [
             "Trade License",
+            "Deed of Partnership Agreement",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Deed of Partnership Agreement"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Proprietorship": {
@@ -405,32 +411,35 @@
     "Membership & Subscriptions": {
       "identities": {
         "Educational Association/Alumni Association": {
-          "required_documents": ["Approval from concerned department"]
+          "required_documents": [
+            "Educational Institute Identification Number (EIIN)",
+            "Approval from concerned department"
+          ]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Board of Trustees Name",
-            "Approval from government"
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "Trust": {
           "required_documents": [
-            "Board of Trustees Name",
             "Trust Deed",
-            "Approval from government"
+            "Approval from concerned department"
           ]
         },
         "NGO": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
             "Certificate from NGO Bureau",
-            "Member list of Board of Trustees"
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         }
       }
@@ -447,21 +456,21 @@
         "Partnership": {
           "required_documents": [
             "Trade License",
+            "Deed of Partnership Agreement",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Deed of Partnership Agreement"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         }
       }
@@ -478,21 +487,21 @@
         "Partnership": {
           "required_documents": [
             "Trade License",
+            "Deed of Partnership Agreement",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Deed of Partnership Agreement"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         }
       }
@@ -509,41 +518,41 @@
         "Partnership": {
           "required_documents": [
             "Trade License",
+            "Deed of Partnership Agreement",
             "TIN Certificate (if applicable)",
-            "VAT Certificate (if applicable)",
-            "Deed of Partnership Agreement"
+            "VAT Certificate (if applicable)"
           ]
         },
         "Private Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Public Limited": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
-            "Trade License"
+            "Trade License",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Trust": {
           "required_documents": [
-            "Board of Trustees Name",
             "Trust Deed",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from concerned department"
           ]
         },
         "NGO": {
           "required_documents": [
-            "TIN Certificate (if applicable)",
             "Certificate from NGO Bureau",
-            "Member list of Board of Trustees"
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)"
           ]
         },
         "Foundation/Charity/Association": {
           "required_documents": [
-            "Board of Trustees Name",
-            "Permit from Social Welfare Ministry/RJSC Certificate/Establishment Certificate"
+            "Approval from concerned department",
+            "TIN Certificate (if applicable)",
+            "VAT Certificate (if applicable)"
           ]
         },
         "Educational Institution": {
@@ -555,13 +564,13 @@
           ]
         },
         "Educational Association/Alumni Association": {
-          "required_documents": ["Approval from concerned department"]
+          "required_documents": [
+            "Educational Institute Identification Number (EIIN)",
+            "Approval from concerned department"
+          ]
         },
         "Government Services": {
-          "required_documents": [
-            "Merchant Registration Form",
-            "Government Agencies/Associations/Defense Associations"
-          ]
+          "required_documents": ["Approval from concerned department"]
         }
       }
     }

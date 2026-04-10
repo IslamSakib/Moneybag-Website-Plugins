@@ -3,6 +3,29 @@
 
   const { useState, useEffect, useCallback, createElement } = wp.element;
 
+  // Fetch fresh nonce to prevent cache issues
+  async function fetchFreshNonce(nonceType, ajaxUrl) {
+    try {
+      const formData = new FormData();
+      formData.append("action", "moneybag_get_nonce");
+      formData.append("nonce_type", nonceType);
+      const response = await fetch(ajaxUrl, {
+        method: "POST",
+        body: formData,
+        credentials: "same-origin",
+      });
+      const data = await response.json();
+      if (data.success && data.data.nonce) {
+        return data.data.nonce;
+      } else {
+        throw new Error("Failed to fetch nonce");
+      }
+    } catch (error) {
+      console.error(`✗ Error fetching ${nonceType} nonce:`, error);
+      throw error;
+    }
+  }
+
   const PricingPlanForm = ({ config }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -25,6 +48,27 @@
     // --- START: Added Recaptcha State As Requested ---
     const [recaptchaResponse, setRecaptchaResponse] = useState("");
     const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+    const [nonce, setNonce] = useState(null);
+    const [nonceLoading, setNonceLoading] = useState(true);
+    // Fetch fresh nonce on mount
+    useEffect(() => {
+      const getNonce = async () => {
+        try {
+          setNonceLoading(true);
+          const ajaxUrl =
+            window.moneybagPricingAjax?.ajaxurl || "/wp-admin/admin-ajax.php";
+          const freshNonce = await fetchFreshNonce("pricing", ajaxUrl);
+          setNonce(freshNonce);
+        } catch (error) {
+          console.error("Failed to initialize pricing nonce:", error);
+        } finally {
+          setNonceLoading(false);
+        }
+      };
+
+      getNonce();
+    }, []);
+
     // --- END: Added Recaptcha State ---
 
     // Load pricing rules from JSON
@@ -38,7 +82,7 @@
           const response = await fetch(`${pluginUrl}/data/pricing-rules.json`);
           if (!response.ok) {
             throw new Error(
-              'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>'
+              'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>',
             );
           }
           const rules = await response.json();
@@ -62,7 +106,7 @@
         const firstLegalIdentity =
           Object.keys(
             pricingRules.businessCategories?.[firstBusinessCategory]
-              ?.identities || {}
+              ?.identities || {},
           )[0] || "";
 
         const defaultValues = {
@@ -91,7 +135,7 @@
         // Get available legal identities for selected business category
         const availableLegalIdentities = Object.keys(
           pricingRules.businessCategories?.[formData.businessCategory]
-            ?.identities || {}
+            ?.identities || {},
         );
 
         // If current legal identity is not available for selected business category, reset it
@@ -311,7 +355,7 @@
     const validateAndSetFieldError = (
       fieldName,
       value,
-      formFieldName = null
+      formFieldName = null,
     ) => {
       if (!window.MoneybagValidation) {
         return "";
@@ -331,7 +375,7 @@
     const crmApiCall = async (action, data) => {
       const formData = new FormData();
       formData.append("action", "moneybag_pricing_crm");
-      formData.append("nonce", moneybagPricingAjax.nonce);
+      formData.append("nonce", nonce);
       formData.append("crm_action", action);
       formData.append("data", JSON.stringify(data));
 
@@ -348,7 +392,7 @@
 
         if (!response.ok) {
           throw new Error(
-            'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>'
+            'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>',
           );
         }
 
@@ -364,11 +408,11 @@
           if (errorMessage.includes("CRM API request failed")) {
             // This means the CRM API itself is failing - likely configuration issue
             throw new Error(
-              'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>'
+              'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>',
             );
           } else if (errorMessage.includes("API key not configured")) {
             throw new Error(
-              'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>'
+              'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>',
             );
           }
 
@@ -438,19 +482,19 @@
         // Validate each field
         const nameError = window.MoneybagValidation.validateField(
           "name",
-          formData.name
+          formData.name,
         );
         if (nameError) validationErrors.name = nameError;
 
         const emailError = window.MoneybagValidation.validateField(
           "email",
-          formData.email
+          formData.email,
         );
         if (emailError) validationErrors.email = emailError;
 
         const mobileError = window.MoneybagValidation.validateField(
           "mobile",
-          formData.mobile
+          formData.mobile,
         );
         if (mobileError) validationErrors.mobile = mobileError;
 
@@ -458,7 +502,7 @@
         if (formData.domainName) {
           const domainError = window.MoneybagValidation.validateField(
             "domain",
-            formData.domainName
+            formData.domainName,
           );
           if (domainError) validationErrors.domainName = domainError;
         }
@@ -548,7 +592,7 @@
             (category) => ({
               value: category,
               label: category,
-            })
+            }),
           );
         }
       } else if (name === "legalIdentity") {
@@ -562,7 +606,7 @@
         ) {
           const availableIdentities = Object.keys(
             pricingRules.businessCategories[selectedBusinessCategory]
-              .identities || {}
+              .identities || {},
           );
           fieldOptions = availableIdentities.map((identity) => ({
             value: identity,
@@ -592,7 +636,7 @@
             name.slice(1).replace(/([A-Z])/g, " $1"),
           // Add required indicator for all fields except domainName (optional)
           name !== "domainName" &&
-            createElement("span", { className: "required-indicator" }, " *")
+            createElement("span", { className: "required-indicator" }, " *"),
         ),
         createElement(
           "div",
@@ -626,7 +670,7 @@
               `Select ${
                 name.charAt(0).toUpperCase() +
                 name.slice(1).replace(/([A-Z])/g, " $1")
-              }`
+              }`,
             ),
             ...(fieldOptions || []).map((option) =>
               createElement(
@@ -635,10 +679,10 @@
                   key: option.value,
                   value: option.value,
                 },
-                option.label
-              )
-            )
-          )
+                option.label,
+              ),
+            ),
+          ),
         ),
         errors[name] &&
           createElement(
@@ -652,8 +696,8 @@
             },
             typeof errors[name] === "string" && errors[name].includes("<a")
               ? null
-              : errors[name]
-          )
+              : errors[name],
+          ),
       );
     };
 
@@ -683,7 +727,7 @@
             name.slice(1).replace(/([A-Z])/g, " $1"),
           // Add required indicator for all fields except domainName (optional)
           name !== "domainName" &&
-            createElement("span", { className: "required-indicator" }, " *")
+            createElement("span", { className: "required-indicator" }, " *"),
         ),
         createElement("input", {
           type,
@@ -718,8 +762,8 @@
             },
             typeof errors[name] === "string" && errors[name].includes("<a")
               ? null
-              : errors[name]
-          )
+              : errors[name],
+          ),
       );
     };
 
@@ -740,8 +784,8 @@
               createElement(
                 "div",
                 { style: { padding: "20px 0" } },
-                "Loading..."
-              )
+                "Loading...",
+              ),
             ),
             createElement(
               "div",
@@ -752,11 +796,11 @@
                 createElement(
                   "h2",
                   null,
-                  "Share your business details for a customized Moneybag pricing quote and the exact documents needed to start accepting payments seamlessly."
-                )
-              )
-            )
-          )
+                  "Share your business details for a customized Moneybag pricing quote and the exact documents needed to start accepting payments seamlessly.",
+                ),
+              ),
+            ),
+          ),
         );
       }
 
@@ -783,9 +827,9 @@
               createElement(
                 "span",
                 { className: "btn-content" },
-                "Get Pricing & Docs"
-              )
-            )
+                "Get Pricing & Docs",
+              ),
+            ),
           ),
           createElement(
             "div",
@@ -796,11 +840,11 @@
               createElement(
                 "h2",
                 null,
-                "Share your business details for a customized Moneybag pricing quote and the exact documents needed to start accepting payments seamlessly."
-              )
-            )
-          )
-        )
+                "Share your business details for a customized Moneybag pricing quote and the exact documents needed to start accepting payments seamlessly.",
+              ),
+            ),
+          ),
+        ),
       );
     }
 
@@ -828,9 +872,8 @@
                 "span",
                 { className: "btn-content" },
                 "Book an Appointment",
-                createElement("span", { className: "btn-arrow" }, "→")
-              )
-            )
+              ),
+            ),
           ),
 
           createElement(
@@ -842,7 +885,7 @@
               createElement(
                 "h3",
                 { className: "card-header" },
-                "Required Documents"
+                "Required Documents",
               ),
               createElement(
                 "div",
@@ -854,10 +897,10 @@
                       key: index,
                       className: "checklist-item",
                     },
-                    doc
-                  )
-                )
-              )
+                    doc,
+                  ),
+                ),
+              ),
             ),
 
             selectedPricing &&
@@ -867,7 +910,7 @@
                 createElement(
                   "h3",
                   { className: "card-header" },
-                  "On Boarding Fee 10,500 BDT"
+                  "On Boarding Fee >30,000 BDT*",
                 ),
                 createElement(
                   "div",
@@ -883,8 +926,8 @@
                           className: "pricing-row",
                         },
                         createElement("span", null, service.label),
-                        createElement("span", null, service.rate)
-                      )
+                        createElement("span", null, service.rate),
+                      ),
                     ),
                   // Show more services if expanded
                   showAllPricing &&
@@ -896,9 +939,9 @@
                           className: "pricing-row",
                         },
                         createElement("span", null, service.label),
-                        createElement("span", null, service.rate)
-                      )
-                    )
+                        createElement("span", null, service.rate),
+                      ),
+                    ),
                 ),
                 // See more/less button
                 selectedPricing.services &&
@@ -909,7 +952,7 @@
                       className: "see-more-button",
                       onClick: () => setShowAllPricing(!showAllPricing),
                     },
-                    showAllPricing ? "See Less" : "See More"
+                    showAllPricing ? "See Less" : "See More",
                   ),
                 createElement(
                   "p",
@@ -922,13 +965,13 @@
                       rel: "noopener noreferrer",
                       className: "book-call-link",
                     },
-                    "Book FREE Call"
+                    "Book FREE Call",
                   ),
-                  " to discuss your needs and negotiate a better price."
-                )
-              )
-          )
-        )
+                  " to discuss your needs and negotiate a better price.",
+                ),
+              ),
+          ),
+        ),
       );
     }
 
@@ -948,7 +991,7 @@
               null,
               `${config.consultation_duration} minutes`,
               createElement("br"),
-              "Expert Consultation"
+              "Expert Consultation",
             ),
             createElement(
               "div",
@@ -962,7 +1005,7 @@
                 renderSelect("monthlyVolume"),
                 renderInput("name", "text", "Full Name"),
                 renderInput("email", "email", "your@email.com"),
-                renderInput("mobile", "tel", "+8801XXXXXXXXX")
+                renderInput("mobile", "tel", "01XXXXXXXXX"),
               ),
               errors.submit &&
                 createElement("div", {
@@ -987,15 +1030,15 @@
                             '<svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none"/><circle cx="25" cy="25" r="20" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="80 50" stroke-linecap="round"/></svg>',
                         },
                       }),
-                      "Submitting..."
+                      "Submitting...",
                     )
                   : createElement(
                       "span",
                       { className: "btn-content" },
-                      "Submit"
-                    )
-              )
-            )
+                      "Submit",
+                    ),
+              ),
+            ),
           ),
 
           createElement(
@@ -1005,9 +1048,9 @@
               src: `${window.location.origin}/wp-content/plugins/moneybag-wordpress-plugin/assets/image/Right.webp`,
               alt: "Consultation illustration",
               loading: "lazy",
-            })
-          )
-        )
+            }),
+          ),
+        ),
       );
     }
 
@@ -1047,15 +1090,15 @@
                 window.innerWidth <= 480
                   ? "28px"
                   : window.innerWidth <= 768
-                  ? "36px"
-                  : "48px",
+                    ? "36px"
+                    : "48px",
               fontWeight: "700",
               color: "#2d3748",
               margin: window.innerWidth <= 480 ? "20px 0" : "30px 0",
               lineHeight: "1.2",
             },
           },
-          "Thank You!"
+          "Thank You!",
         ),
         createElement(
           "p",
@@ -1065,15 +1108,15 @@
                 window.innerWidth <= 480
                   ? "15px"
                   : window.innerWidth <= 768
-                  ? "16px"
-                  : "17px",
+                    ? "16px"
+                    : "17px",
               color: "#4a5568",
               lineHeight: "1.6",
               margin: "0 auto 20px",
               padding: "0",
             },
           },
-          "We will call you within 24 hours. If you want to connect with us immediately, please call the below number."
+          "We will call you within 24 hours. If you want to connect with us immediately, please call the below number.",
         ),
         // Contact items directly below the text
         createElement(
@@ -1119,7 +1162,7 @@
                 strokeWidth: "2",
                 strokeLinecap: "round",
                 strokeLinejoin: "round",
-              })
+              }),
             ),
             createElement(
               "a",
@@ -1140,8 +1183,8 @@
                   e.target.style.color = "#2d3748";
                 },
               },
-              "+880 1958 109 228"
-            )
+              "+880 1958 109 228",
+            ),
           ),
           // Email contact
           createElement(
@@ -1178,7 +1221,7 @@
                 strokeWidth: "2",
                 strokeLinecap: "round",
                 strokeLinejoin: "round",
-              })
+              }),
             ),
             createElement(
               "a",
@@ -1193,9 +1236,9 @@
                 onMouseEnter: (e) => (e.target.style.color = "#ff4444"),
                 onMouseLeave: (e) => (e.target.style.color = "inherit"),
               },
-              "info@moneybag.com.bd"
-            )
-          )
+              "info@moneybag.com.bd",
+            ),
+          ),
         ),
         // Demo sandbox text
         createElement(
@@ -1208,15 +1251,15 @@
                 window.innerWidth <= 480
                   ? "15px"
                   : window.innerWidth <= 768
-                  ? "16px"
-                  : "17px",
+                    ? "16px"
+                    : "17px",
               color: "#4a5568",
               lineHeight: "1.5",
               padding: "0",
               margin: `${window.innerWidth <= 480 ? "15px" : "20px"} auto 0`,
             },
           },
-          "In the meantime, check out the demo sandbox."
+          "In the meantime, check out the demo sandbox.",
         ),
         // Button to merchant page
         createElement(
@@ -1289,10 +1332,10 @@
                 strokeWidth: "2",
                 strokeLinecap: "round",
                 strokeLinejoin: "round",
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       );
     }
 
@@ -1305,7 +1348,7 @@
   // Initialize forms when DOM is ready
   document.addEventListener("DOMContentLoaded", function () {
     const formWrappers = document.querySelectorAll(
-      ".moneybag-pricing-plan-wrapper"
+      ".moneybag-pricing-plan-wrapper",
     );
 
     formWrappers.forEach((wrapper) => {
@@ -1318,7 +1361,7 @@
         success_redirect_url: config.success_redirect_url || "",
         consultation_duration: config.consultation_duration || 15,
         opportunity_name:
-          config.opportunity_name || "Payment Gateway – merchant onboarding",
+          config.opportunity_name || "Payment Gateway â€“ merchant onboarding",
         primary_color: config.primary_color || "#ff6b6b",
         ...config,
       };
@@ -1329,7 +1372,7 @@
       if (targetElement && wp.element && wp.element.render) {
         wp.element.render(
           createElement(PricingPlanForm, { config: safeConfig }),
-          targetElement
+          targetElement,
         );
       }
     });
