@@ -2153,3 +2153,61 @@
 [2025-11-06 08:26:48] [NOTE DEBUG] ✅ Found note ID in data.data.createNote.id: bfdfee80-28df-4db6-b9ed-b4f9874039a8
 [2025-11-06 08:26:48] Note created with ID: bfdfee80-28df-4db6-b9ed-b4f9874039a8
 [2025-11-06 08:26:48] [CRM Debug] 📊 Final submit_to_crm result: {"success":true,"message":"Successfully processed CRM submission","person_id":"20846ae9-af38-4796-9c3f-08acb3767426","company_id":"85ec652a-998e-45f4-8685-56434903b60d","opportunity_id":"399549e7-ad73-49f6-866f-eee77e458aa0","note_id":"bfdfee80-28df-4db6-b9ed-b4f9874039a8"}
+[2026-01-13 04:06:51] Sending email verification for identifier: jaroxe4268@jparksky.com
+[2026-01-13 04:06:51] Using sandbox API base URL: https://sandbox.api.moneybag.com.bd/api/v2
+[2026-01-13 04:06:51] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/email-verification
+[2026-01-13 04:06:51] Sandbox API Request - Data: {"identifier":"jaroxe4268@jparksky.com"}
+[2026-01-13 04:06:53] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"38abe9d1776446c1a3a7d9f10b8f70f1","expire_at":"2026-01-13T10:21:52.312680","message":"OTP has been sent to your email"},"meta":{"timestamp":"2026-01-13T10:06:53.220987","status_code":201}}
+[2026-01-13 04:06:53] Email verification result: {"success":true,"message":"Verification email sent successfully","data":{"session_id":"38abe9d1776446c1a3a7d9f10b8f70f1","expire_at":"2026-01-13T10:21:52.312680","message":"OTP has been sent to your email"},"meta":{"timestamp":"2026-01-13T10:06:53.220987","status_code":201}}
+[2026-01-13 04:07:11] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/verify-otp
+[2026-01-13 04:07:11] Sandbox API Request - Data: {"otp":"842602","session_id":"38abe9d1776446c1a3a7d9f10b8f70f1"}
+[2026-01-13 04:07:11] Sandbox API Response - Status: 200 | Body: {"success":true,"message":"OTP verified successfully","data":{"verified":true},"meta":{"timestamp":"2026-01-13T10:07:11.503954","status_code":200}}
+[2026-01-13 04:07:35] Sandbox API Request - Method: POST | URL: https://sandbox.api.moneybag.com.bd/api/v2/sandbox/merchants/business-details
+[2026-01-13 04:07:35] Sandbox API Request - Data: {"business_name":"Test Business ABC","business_website":"http:\/\/google.com","first_name":"Sakib","last_name":"Islam","legal_identity":"Educational Institution","phone":"01465452321","email":"jaroxe4268@jparksky.com","session_id":"38abe9d1776446c1a3a7d9f10b8f70f1"}
+[2026-01-13 04:07:40] Sandbox API Response - Status: 201 | Body: {"success":true,"message":"Sandbox business account created successfully","data":{"merchant_id":"SANDTE93147623322","api_key":"4d694355.2su2R65ySid-cXL165-Y8W3m1AGB-lwO3z1jng-TTcU","payment_methods_configured":["VISA","MASTER","AMEX","NEXUS","UNIONPAY","DINERS CLUB","BKASH","NAGAD","UPAY","ROCKET"],"redirect_url":"https://sandbox.moneybag.com.bd/magic-link/mbml_R5S7uQMdCeYjOMucBUoE2miv7sIAyV5d0mIbISTcE1jPzkfk6ll1E-HJcHWjgKAW","dashboard_url":"https://sandbox.moneybag.com.bd/dashboard","note":"Ac
+[2026-01-13 04:07:40] Checking if company exists: Test Business ABC
+[2026-01-13 04:07:40] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies?filter[name][eq]=Test+Business+ABC
+[2026-01-13 04:07:40] [CRM Debug] Method: GET
+[2026-01-13 04:07:40] [CRM Debug] API Key present: Yes
+[2026-01-13 04:07:41] [CRM Debug] Response status: 200
+[2026-01-13 04:07:41] Creating new company in CRM: {"name":"Test Business ABC"}
+[2026-01-13 04:07:41] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/companies
+[2026-01-13 04:07:41] [CRM Debug] Method: POST
+[2026-01-13 04:07:41] [CRM Debug] API Key present: Yes
+[2026-01-13 04:07:41] [CRM Debug] Data: {"name":"Test Business ABC"}
+[2026-01-13 04:07:41] [CRM Debug] Response status: 201
+[2026-01-13 04:07:41] Company creation response: {"success":true,"data":{"data":{"createCompany":{"name":"Test Business ABC","domainName":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"employees":null,"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"annualRecurringRevenue":{"amountMicros":null,"currencyCode":""},"address":{"addressStreet1":"","addressStreet2":"","addressCity":"","addressPostcode":"","addressState":"","addressCountry":"","addressLat":null,"addressLng":null},"idealCustomerProfile":false,"position":0,"createdBy":{"source":"API","workspaceMemberId":null,"name":"moneybag","context":[]},"searchVector":"'abc':3 'business':2 'test':1","id":"87e0b586-4c84-4a22-88a7-f6778d848d73","createdAt":"2026-01-13T04:07:41.582Z","updatedAt":"2026-01-13T04:07:41.582Z","deletedAt":null,"accountOwnerId":null}}}}
+[2026-01-13 04:07:41] Company created/found with ID: 87e0b586-4c84-4a22-88a7-f6778d848d73
+[2026-01-13 04:07:41] Checking if person exists with email: jaroxe4268@jparksky.com
+[2026-01-13 04:07:41] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=jaroxe4268%40jparksky.com
+[2026-01-13 04:07:41] [CRM Debug] Method: GET
+[2026-01-13 04:07:41] [CRM Debug] API Key present: Yes
+[2026-01-13 04:07:41] [CRM Debug] Response status: 200
+[2026-01-13 04:07:41] Person search response structure: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2026-01-13 04:07:41] No matching person found for email: jaroxe4268@jparksky.com in 60 results
+[2026-01-13 04:07:41] Will create new person for: Sakib Islam (jaroxe4268@jparksky.com)
+[2026-01-13 04:07:41] Creating new person...
+[2026-01-13 04:07:41] Adding companyId to person creation: 87e0b586-4c84-4a22-88a7-f6778d848d73
+[2026-01-13 04:07:41] Adding company name to person: Test Business ABC
+[2026-01-13 04:07:41] Creating new person in CRM with data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"jaroxe4268@jparksky.com"},"phones":{"primaryPhoneNumber":"1465452321","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"87e0b586-4c84-4a22-88a7-f6778d848d73","company":"Test Business ABC"}
+[2026-01-13 04:07:41] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2026-01-13 04:07:41] [CRM Debug] Method: POST
+[2026-01-13 04:07:41] [CRM Debug] API Key present: Yes
+[2026-01-13 04:07:41] [CRM Debug] Data: {"name":{"firstName":"Sakib","lastName":"Islam"},"emails":{"primaryEmail":"jaroxe4268@jparksky.com"},"phones":{"primaryPhoneNumber":"1465452321","primaryPhoneCallingCode":"+880","primaryPhoneCountryCode":"BD"},"companyId":"87e0b586-4c84-4a22-88a7-f6778d848d73","company":"Test Business ABC"}
+[2026-01-13 04:07:42] [CRM Debug] Response status: 400
+[2026-01-13 04:07:42] [CRM Debug] Response body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2026-01-13 04:07:42] [CRM Debug] Request failed with status 400 Body: {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}
+[2026-01-13 04:07:42] CRM person creation response: {"success":false,"message":"CRM API Error (Status 400): {\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","status_code":400,"error_body":"{\"statusCode\":400,\"error\":\"BadRequestException\",\"messages\":[\"duplicate key value violates unique constraint \\\"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\\\"\"]}","error_data":{"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}}
+[2026-01-13 04:07:42] Duplicate constraint error detected, searching for existing person
+[2026-01-13 04:07:42] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people?email=jaroxe4268%40jparksky.com
+[2026-01-13 04:07:42] [CRM Debug] Method: GET
+[2026-01-13 04:07:42] [CRM Debug] API Key present: Yes
+[2026-01-13 04:07:42] [CRM Debug] Response status: 200
+[2026-01-13 04:07:42] Retry search by email response: {"success":true,"data":{"data":{"people":[{"name":{"firstName":"Nazmul Islam Sujan","lastName":""},"emails":{"primaryEmail":"gymaccessoriesbd@gmail.com","additionalEmails":[]},"linkedinLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"xLink":{"primaryLinkLabel":"","primaryLinkUrl":"","secondaryLinks":null},"jobTitle":"","phones":{"primaryPhoneNumber":"1819164612","primaryPhoneCountryCode":"BD","primaryPhoneCallingCode":"+880","additionalPhones":[]},"city":"","avatarUrl":""
+[2026-01-13 04:07:42] Email not found, trying to search by phone: 1465452321
+[2026-01-13 04:07:42] [CRM Debug] Request URL: https://crm.moneybag.com.bd/rest/people
+[2026-01-13 04:07:42] [CRM Debug] Method: GET
+[2026-01-13 04:07:42] [CRM Debug] API Key present: Yes
+[2026-01-13 04:07:43] [CRM Debug] Response status: 200
+[2026-01-13 04:07:43] CRM person creation failed. Error was not a duplicate, or duplicate search failed.
+[2026-01-13 04:07:43] Returning specific CRM creation failure: CRM API Error (Status 400): {"statusCode":400,"error":"BadRequestException","messages":["duplicate key value violates unique constraint \"IDX_UNIQUE_87914cd3ce963115f8cb943e2ac\""]}

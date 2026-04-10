@@ -3,6 +3,29 @@
 
   const { useState, useEffect, createElement: h } = wp.element;
 
+  // Fetch fresh nonce to prevent cache issues
+  async function fetchFreshNonce(nonceType, ajaxUrl) {
+    try {
+      const formData = new FormData();
+      formData.append("action", "moneybag_get_nonce");
+      formData.append("nonce_type", nonceType);
+      const response = await fetch(ajaxUrl, {
+        method: "POST",
+        body: formData,
+        credentials: "same-origin",
+      });
+      const data = await response.json();
+      if (data.success && data.data.nonce) {
+        return data.data.nonce;
+      } else {
+        throw new Error("Failed to fetch nonce");
+      }
+    } catch (error) {
+      console.error(`✗ Error fetching ${nonceType} nonce:`, error);
+      throw error;
+    }
+  }
+
   // Format numbers with Bangladesh locale and abbreviations for large numbers
   const formatNumber = (num) => {
     if (num >= 1000000000000) {
@@ -119,7 +142,7 @@
         unionpay: 2.4,
         american_express: 3.4,
         dbbl_nexus: 2.1,
-        bkash: 15.0, // ⚠️ HIGHER RATE FOR BKASH IN THIS CATEGORY
+        bkash: 15.0, // âš ï¸ HIGHER RATE FOR BKASH IN THIS CATEGORY
         nagad: 1.8,
         upay: 1.6,
         rocket: 1.8,
@@ -182,7 +205,7 @@
     monthlyVolume,
     paymentMix,
     competitorRates,
-    moneybagRates
+    moneybagRates,
   ) => {
     let competitorCost = 0;
     let moneybagCost = 0;
@@ -200,7 +223,7 @@
         if (method === "visa") {
           mbRate = parseRate(moneybagRates.visa) || 2.3;
           compRate = parseRate(
-            competitorRates.visa || competitorRates.card || fallbackRate
+            competitorRates.visa || competitorRates.card || fallbackRate,
           );
         } else if (method === "mastercard") {
           mbRate = parseRate(moneybagRates.mastercard) || 2.3;
@@ -208,7 +231,7 @@
             competitorRates.mastercard ||
               competitorRates.visa ||
               competitorRates.card ||
-              fallbackRate
+              fallbackRate,
           );
         } else if (method === "american_express") {
           mbRate = parseRate(moneybagRates.american_express) || 3.5;
@@ -216,17 +239,17 @@
             competitorRates.american_express ||
               competitorRates.amex ||
               competitorRates.card ||
-              fallbackRate
+              fallbackRate,
           );
         } else if (method === "diners_club") {
           mbRate = parseRate(moneybagRates.diners_club) || 2.5;
           compRate = parseRate(
-            competitorRates.diners_club || competitorRates.card || fallbackRate
+            competitorRates.diners_club || competitorRates.card || fallbackRate,
           );
         } else if (method === "unionpay") {
           mbRate = parseRate(moneybagRates.unionpay) || 2.5;
           compRate = parseRate(
-            competitorRates.unionpay || competitorRates.card || fallbackRate
+            competitorRates.unionpay || competitorRates.card || fallbackRate,
           );
         } else if (method === "dbbl_nexus") {
           mbRate = parseRate(moneybagRates.dbbl_nexus) || 2.2;
@@ -234,7 +257,7 @@
             competitorRates.dbbl_nexus ||
               competitorRates.nexus ||
               competitorRates.card ||
-              2.5
+              2.5,
           );
         } else if (method === "bkash") {
           mbRate = parseRate(moneybagRates.bkash) || 1.95;
@@ -310,10 +333,10 @@
     const MONEYBAG_PLUGIN_URL =
       config.pluginUrl || "/wp-content/plugins/moneybag-wordpress-plugin/";
     const [monthlyVolume, setMonthlyVolume] = useState(
-      config.default_volume || 1000000
+      config.default_volume || 1000000,
     );
     const [currentGateway, setCurrentGateway] = useState(
-      config.default_gateway || "sslcommerz"
+      config.default_gateway || "sslcommerz",
     );
     const [businessCategory, setBusinessCategory] = useState("eCommerce");
     const [isCustomMode, setIsCustomMode] = useState(false);
@@ -424,6 +447,25 @@
       setCompetitorRates(newCompetitorRates);
     }, [businessCategory]);
 
+    // Fetch fresh nonce on component mount
+    useEffect(() => {
+      fetchNonceForForm();
+    }, []);
+
+    const fetchNonceForForm = async () => {
+      try {
+        setNonceLoading(true);
+        const ajaxUrl =
+          config.api_url || window.location.origin + "/wp-admin/admin-ajax.php";
+        const freshNonce = await fetchFreshNonce("calculator", ajaxUrl);
+        setNonce(freshNonce);
+      } catch (error) {
+        console.error("Failed to load security token");
+      } finally {
+        setNonceLoading(false);
+      }
+    };
+
     useEffect(() => {
       const currentMoneybagRates = getCategoryBasedRates(businessCategory);
       const generatedCompetitorRates =
@@ -432,7 +474,7 @@
         monthlyVolume,
         paymentMix,
         generatedCompetitorRates,
-        currentMoneybagRates
+        currentMoneybagRates,
       );
       setCalculations(results);
     }, [monthlyVolume, paymentMix, businessCategory]);
@@ -453,7 +495,7 @@
         };
 
         const section = document.querySelector(
-          ".moneybag-calc-custom-mode-section"
+          ".moneybag-calc-custom-mode-section",
         );
         if (section) {
           section.addEventListener("scroll", handleScroll);
@@ -499,7 +541,7 @@
 
       const validationError = validator.validateField(
         "businessCategory",
-        newCategory
+        newCategory,
       );
       if (validationError) {
         setErrors((prev) => ({ ...prev, businessCategory: validationError }));
@@ -536,9 +578,8 @@
           newValue > cappedValue &&
           cappedValue >= 0
         ) {
-          newFieldErrors[
-            `${methodKey}_individual`
-          ] = `(Exceed 100%). To increase this, decrease others first.`;
+          newFieldErrors[`${methodKey}_individual`] =
+            `(Exceed 100%). To increase this, decrease others first.`;
 
           setTimeout(() => {
             setErrors((prev) => ({
@@ -581,7 +622,7 @@
       try {
         const formData = new FormData();
         formData.append("action", "handle_calculator_lead");
-        formData.append("nonce", config.nonce);
+        formData.append("nonce", nonce);
         formData.append("monthly_volume", monthlyVolume);
         formData.append("current_gateway", currentGateway);
         formData.append("estimated_savings", calculations.yearlySavings);
@@ -619,13 +660,13 @@
         h(
           "h1",
           { className: "moneybag-calc-title" },
-          "Switch & Save with Moneybag"
+          "Switch & Save with Moneybag",
         ),
         h(
           "p",
           { className: "moneybag-calc-subtitle" },
-          "Calculate how much your business can save on payment processing fees"
-        )
+          "Calculate how much your business can save on payment processing fees",
+        ),
       ),
 
       h(
@@ -646,7 +687,7 @@
             strokeLinejoin: "round",
           },
           h("path", { d: "M16 7h6v6" }),
-          h("path", { d: "m22 7-8.5 8.5-5-5L2 17" })
+          h("path", { d: "m22 7-8.5 8.5-5-5L2 17" }),
         ),
         h(
           "div",
@@ -654,7 +695,7 @@
           h(
             "span",
             { className: "moneybag-calc-savings-line1" },
-            "You could save"
+            "You could save",
           ),
           h(
             "span",
@@ -664,9 +705,9 @@
               }`,
               id: "monthly-savings",
             },
-            formatNumber(Math.round(calculations.monthlySavings || 0))
+            formatNumber(Math.round(calculations.monthlySavings || 0)),
           ),
-          h("span", { className: "moneybag-calc-savings-line3" }, "/ month")
+          h("span", { className: "moneybag-calc-savings-line3" }, "/ month"),
         ),
         h(
           "div",
@@ -680,10 +721,10 @@
               }`,
               id: "yearly-savings",
             },
-            formatNumber(Math.round(calculations.yearlySavings || 0))
+            formatNumber(Math.round(calculations.yearlySavings || 0)),
           ),
-          " / year with Moneybag"
-        )
+          " / year with Moneybag",
+        ),
       ),
 
       h(
@@ -696,7 +737,7 @@
           h(
             "div",
             { className: "moneybag-calc-input-wrapper" },
-            h("span", { className: "moneybag-calc-taka-icon" }, "৳"),
+            h("span", { className: "moneybag-calc-taka-icon" }, "à§³"),
             h("input", {
               type: "text",
               id: "volume-input",
@@ -707,14 +748,14 @@
               onChange: handleVolumeChange,
               pattern: "[0-9,]*",
               inputMode: "numeric",
-            })
+            }),
           ),
           errors.volume &&
             h(
               "span",
               { className: "moneybag-calc-error-message" },
-              errors.volume
-            )
+              errors.volume,
+            ),
         ),
 
         h(
@@ -724,7 +765,7 @@
             "label",
             {},
             "Business Category",
-            h("span", { className: "required-indicator" }, " *")
+            h("span", { className: "required-indicator" }, " *"),
           ),
           h(
             "select",
@@ -740,16 +781,16 @@
               h(
                 "option",
                 { key: category.value, value: category.value },
-                category.label
-              )
-            )
+                category.label,
+              ),
+            ),
           ),
           errors.businessCategory &&
             h(
               "span",
               { className: "moneybag-calc-error-message" },
-              errors.businessCategory
-            )
+              errors.businessCategory,
+            ),
         ),
 
         h(
@@ -762,7 +803,7 @@
               if (!isCustomMode) {
                 setTimeout(() => {
                   const customSection = document.getElementById(
-                    "custom-mode-section"
+                    "custom-mode-section",
                   );
                   if (customSection) {
                     const rect = customSection.getBoundingClientRect();
@@ -830,14 +871,14 @@
             }),
             h("circle", { cx: "4", cy: "14", r: "2", strokeWidth: "2" }),
             h("circle", { cx: "12", cy: "11", r: "2", strokeWidth: "2" }),
-            h("circle", { cx: "20", cy: "16", r: "2", strokeWidth: "2" })
+            h("circle", { cx: "20", cy: "16", r: "2", strokeWidth: "2" }),
           ),
           h(
             "span",
             { className: "moneybag-calc-toggle-text" },
-            isCustomMode ? "Quick Mode" : "Custom Mode"
-          )
-        )
+            isCustomMode ? "Quick Mode" : "Custom Mode",
+          ),
+        ),
       ),
 
       h(
@@ -849,13 +890,13 @@
           h(
             "div",
             { className: "moneybag-calc-card-header" },
-            "Your current avg fee"
+            "Your current avg fee",
           ),
           h(
             "div",
             { className: "moneybag-calc-card-value", id: "competitor-fee" },
-            `${(calculations.competitorAvgFee || 0).toFixed(2)}%`
-          )
+            `${(calculations.competitorAvgFee || 0).toFixed(2)}%`,
+          ),
         ),
         h(
           "div",
@@ -883,9 +924,9 @@
               }),
               h("path", { d: "m15 9-6 6" }),
               h("path", { d: "M9 9h.01" }),
-              h("path", { d: "M15 15h.01" })
+              h("path", { d: "M15 15h.01" }),
             ),
-            " Moneybag avg fee"
+            " Moneybag avg fee",
           ),
           h(
             "div",
@@ -893,13 +934,13 @@
               className: "moneybag-calc-card-value moneybag-calc-primary",
               id: "moneybag-fee",
             },
-            `${(calculations.moneybagAvgFee || 0).toFixed(2)}%`
+            `${(calculations.moneybagAvgFee || 0).toFixed(2)}%`,
           ),
           h(
             "div",
             { className: "moneybag-calc-guarantee-text" },
-            "Guaranteed lowest in Bangladesh"
-          )
+            "Guaranteed lowest in Bangladesh",
+          ),
         ),
         h(
           "div",
@@ -922,9 +963,9 @@
                 strokeLinejoin: "round",
               },
               h("path", { d: "M16 17h6v-6" }),
-              h("path", { d: "m22 17-8.5-8.5-5 5L2 7" })
+              h("path", { d: "m22 17-8.5-8.5-5 5L2 7" }),
             ),
-            " You save"
+            " You save",
           ),
           h(
             "div",
@@ -932,9 +973,9 @@
               className: "moneybag-calc-card-value moneybag-calc-success",
               id: "difference",
             },
-            `${(calculations.difference || 0).toFixed(2)}%`
-          )
-        )
+            `${(calculations.difference || 0).toFixed(2)}%`,
+          ),
+        ),
       ),
 
       isCustomMode &&
@@ -950,7 +991,7 @@
             h(
               "h3",
               { className: "moneybag-calc-table-title" },
-              "Custom Payment Mix"
+              "Custom Payment Mix",
             ),
 
             h(
@@ -965,7 +1006,7 @@
                 h(
                   "span",
                   { className: "moneybag-calc-toggle-text" },
-                  showAllMethods ? "Show Less Methods" : "Show More Methods"
+                  showAllMethods ? "Show Less Methods" : "Show More Methods",
                 ),
                 h(
                   "svg",
@@ -983,10 +1024,10 @@
                         : "rotate(0deg)",
                     },
                   },
-                  h("path", { d: "M6 9l6 6 6-6" })
-                )
-              )
-            )
+                  h("path", { d: "M6 9l6 6 6-6" }),
+                ),
+              ),
+            ),
           ),
 
           h(
@@ -1056,7 +1097,7 @@
                       src: MONEYBAG_PLUGIN_URL + "assets/image/" + method.logo,
                       alt: method.name,
                       className: "moneybag-calc-payment-logo",
-                    })
+                    }),
                   ),
                   h(
                     "div",
@@ -1067,7 +1108,7 @@
                       h(
                         "div",
                         { className: "moneybag-calc-cell-label" },
-                        "Payment Mix (%)"
+                        "Payment Mix (%)",
                       ),
                       h(
                         "div",
@@ -1082,14 +1123,14 @@
                           }`,
                           onChange: (e) =>
                             handlePaymentMixChange(method.id, e.target.value),
-                        })
+                        }),
                       ),
                       errors[`${method.id}_individual`] &&
                         h(
                           "div",
                           { className: "moneybag-calc-input-error-inline" },
-                          errors[`${method.id}_individual`]
-                        )
+                          errors[`${method.id}_individual`],
+                        ),
                     ),
                     h(
                       "div",
@@ -1097,7 +1138,7 @@
                       h(
                         "div",
                         { className: "moneybag-calc-cell-label" },
-                        "Your Rate (%)"
+                        "Your Rate (%)",
                       ),
                       h(
                         "div",
@@ -1112,10 +1153,10 @@
                           onChange: (e) =>
                             handleCompetitorRateChange(
                               method.id,
-                              e.target.value
+                              e.target.value,
                             ),
-                        })
-                      )
+                        }),
+                      ),
                     ),
                     h(
                       "div",
@@ -1123,7 +1164,7 @@
                       h(
                         "div",
                         { className: "moneybag-calc-cell-label" },
-                        "Moneybag Rate"
+                        "Moneybag Rate",
                       ),
                       h(
                         "div",
@@ -1134,9 +1175,9 @@
                         h(
                           "div",
                           { className: "moneybag-calc-cell-value" },
-                          `${mbRate.toFixed(2)}%`
-                        )
-                      )
+                          `${mbRate.toFixed(2)}%`,
+                        ),
+                      ),
                     ),
                     h(
                       "div",
@@ -1144,7 +1185,7 @@
                       h(
                         "div",
                         { className: "moneybag-calc-cell-label" },
-                        "Savings"
+                        "Savings",
                       ),
                       h(
                         "div",
@@ -1160,11 +1201,11 @@
                               (savings || 0) < 0 ? "negative" : ""
                             }`,
                           },
-                          formatNumber(Math.round(savings || 0))
-                        )
-                      )
-                    )
-                  )
+                          formatNumber(Math.round(savings || 0)),
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               }),
 
@@ -1184,8 +1225,8 @@
                       className:
                         "moneybag-calc-cell-box moneybag-calc-total-box",
                     },
-                    h("div", { className: "moneybag-calc-cell-value" }, "100%")
-                  )
+                    h("div", { className: "moneybag-calc-cell-value" }, "100%"),
+                  ),
                 ),
                 h(
                   "div",
@@ -1199,9 +1240,9 @@
                     h(
                       "div",
                       { className: "moneybag-calc-cell-value" },
-                      (calculations.competitorAvgFee || 0).toFixed(2)
-                    )
-                  )
+                      (calculations.competitorAvgFee || 0).toFixed(2),
+                    ),
+                  ),
                 ),
                 h(
                   "div",
@@ -1215,9 +1256,9 @@
                     h(
                       "div",
                       { className: "moneybag-calc-cell-value" },
-                      (calculations.moneybagAvgFee || 0).toFixed(2)
-                    )
-                  )
+                      (calculations.moneybagAvgFee || 0).toFixed(2),
+                    ),
+                  ),
                 ),
                 h(
                   "div",
@@ -1238,12 +1279,14 @@
                             : ""
                         }`,
                       },
-                      formatNumber(Math.round(calculations.monthlySavings || 0))
-                    )
-                  )
-                )
-              )
-            )
+                      formatNumber(
+                        Math.round(calculations.monthlySavings || 0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
 
           errors.paymentMixGlobal &&
@@ -1256,9 +1299,9 @@
                   className:
                     "moneybag-calc-status-message moneybag-calc-payment-mix-status",
                 },
-                errors.paymentMixGlobal
-              )
-            )
+                errors.paymentMixGlobal,
+              ),
+            ),
         ),
 
       h(
@@ -1267,12 +1310,12 @@
         h(
           "h2",
           { className: "moneybag-calc-cta-title" },
-          "Ready to Start Saving?"
+          "Ready to Start Saving?",
         ),
         h(
           "p",
           { className: "moneybag-calc-cta-subtitle" },
-          "Join hundreds of businesses across Bangladesh who are already saving thousands with Moneybag's industry-leading rates."
+          "Join hundreds of businesses across Bangladesh who are already saving thousands with Moneybag's industry-leading rates.",
         ),
 
         h(
@@ -1299,13 +1342,13 @@
                   strokeLinejoin: "round",
                 },
                 h("path", { d: "M21.801 10A10 10 0 1 1 17 3.335" }),
-                h("path", { d: "m9 11 3 3L22 4" })
+                h("path", { d: "m9 11 3 3L22 4" }),
               ),
               h(
                 "span",
                 { className: "moneybag-calc-feature-text" },
-                "Lowest transaction rates guaranteed in Bangladesh"
-              )
+                "Lowest transaction rates guaranteed in Bangladesh",
+              ),
             ),
             h(
               "div",
@@ -1325,13 +1368,13 @@
                   strokeLinejoin: "round",
                 },
                 h("path", { d: "M21.801 10A10 10 0 1 1 17 3.335" }),
-                h("path", { d: "m9 11 3 3L22 4" })
+                h("path", { d: "m9 11 3 3L22 4" }),
               ),
               h(
                 "span",
                 { className: "moneybag-calc-feature-text" },
-                "Easy integration with any website or app"
-              )
+                "Easy integration with any website or app",
+              ),
             ),
             h(
               "div",
@@ -1351,14 +1394,14 @@
                   strokeLinejoin: "round",
                 },
                 h("path", { d: "M21.801 10A10 10 0 1 1 17 3.335" }),
-                h("path", { d: "m9 11 3 3L22 4" })
+                h("path", { d: "m9 11 3 3L22 4" }),
               ),
               h(
                 "span",
                 { className: "moneybag-calc-feature-text" },
-                "24/7 local support team based in Dhaka"
-              )
-            )
+                "24/7 local support team based in Dhaka",
+              ),
+            ),
           ),
 
           h(
@@ -1370,8 +1413,8 @@
                 "assets/image/lowest-transaction-rate.webp",
               alt: "Moneybag Promotion",
               className: "moneybag-calc-promo-image",
-            })
-          )
+            }),
+          ),
         ),
 
         h(
@@ -1380,8 +1423,8 @@
           h(
             "button",
             { className: "moneybag-calc-btn-call-now", onClick: handleCallNow },
-            h("span", { className: "moneybag-calc-call-icon" }, "☎"),
-            " Call +880 1958 109 228"
+            h("span", { className: "moneybag-calc-call-icon" }, "â˜Ž"),
+            " Call +880 1958 109 228",
           ),
           h(
             "button",
@@ -1390,16 +1433,16 @@
               onClick: handleJoinAsMerchant,
             },
             "Join As a Merchant ",
-            h("span", { className: "moneybag-calc-sandbox-arrow" }, "→")
-          )
-        )
-      )
+            h("span", { className: "moneybag-calc-sandbox-arrow" }, "â†’"),
+          ),
+        ),
+      ),
     );
   }
 
   function initCalculators() {
     const containers = document.querySelectorAll(
-      '[id^="price-comparison-calculator-"]'
+      '[id^="price-comparison-calculator-"]',
     );
 
     containers.forEach((container) => {
@@ -1413,7 +1456,7 @@
           typeof config === "string" ? JSON.parse(config) : config;
         wp.element.render(
           h(PriceComparisonCalculator, { config: parsedConfig }),
-          container
+          container,
         );
       }
     });
@@ -1428,7 +1471,7 @@
   if (window.elementor) {
     window.elementor.hooks.addAction(
       "panel/open_editor/widget/moneybag-price-comparison-calculator",
-      initCalculators
+      initCalculators,
     );
     jQuery(window).on("elementor/frontend/init", initCalculators);
   }

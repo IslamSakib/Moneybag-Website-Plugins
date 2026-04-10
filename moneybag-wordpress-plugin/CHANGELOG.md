@@ -5,6 +5,17 @@ All notable changes to the Moneybag WordPress Plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.4] - 2026-04-10
+
+### Fixed
+- **`moneybagAjax is not defined` error in sandbox form** — `wp_localize_script` was missing for the `moneybag-sandbox-form` script handle, unlike all other widget scripts which had it. Added localization so `moneybagAjax.ajaxurl` is available at runtime.
+- **Hardcoded AJAX URL in sandbox form** — `fetchNonceForForm` was constructing the AJAX URL from `window.location.origin` instead of using the WordPress-provided `moneybagAjax.ajaxurl`, which could break on non-standard WordPress installs.
+
+### Changed
+- Removed debug `console.log` success messages from all JS widget files (`sandbox-form.js`, `contact-form.js`, `merchant-registration-wp.js`, `pricing-plan.js`, `price-comparison-calculator.js`). Error-level logs are preserved.
+
+---
+
 ## [2.3.8] - 2025-09-11
 
 ### Fixed

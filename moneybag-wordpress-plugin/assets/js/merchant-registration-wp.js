@@ -3,6 +3,29 @@
 
   const { useState, useEffect, useCallback, createElement: h } = wp.element;
 
+  // Fetch fresh nonce to prevent cache issues
+  async function fetchFreshNonce(nonceType, ajaxUrl) {
+    try {
+      const formData = new FormData();
+      formData.append("action", "moneybag_get_nonce");
+      formData.append("nonce_type", nonceType);
+      const response = await fetch(ajaxUrl, {
+        method: "POST",
+        body: formData,
+        credentials: "same-origin",
+      });
+      const data = await response.json();
+      if (data.success && data.data.nonce) {
+        return data.data.nonce;
+      } else {
+        throw new Error("Failed to fetch nonce");
+      }
+    } catch (error) {
+      console.error(`✗ Error fetching ${nonceType} nonce:`, error);
+      throw error;
+    }
+  }
+
   const MerchantRegistrationForm = ({ config }) => {
     // State management
     const [currentStep, setCurrentStep] = useState(1);
@@ -10,16 +33,19 @@
     const [apiResponse, setApiResponse] = useState(null);
     const [registrationOptions, setRegistrationOptions] = useState(null);
     const [availableLegalIdentities, setAvailableLegalIdentities] = useState(
-      []
+      [],
     );
     const [sessionId] = useState(
-      "sess_" + Math.random().toString(36).substring(2, 18)
+      "sess_" + Math.random().toString(36).substring(2, 18),
     );
     const [loading, setLoading] = useState(false);
 
     // --- START: Added Recaptcha State As Requested ---
     const [recaptchaResponse, setRecaptchaResponse] = useState("");
     const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+    const [nonce, setNonce] = useState(null);
+    const [nonceLoading, setNonceLoading] = useState(true);
+
     // --- END: Added Recaptcha State ---
 
     // Form data state
@@ -62,11 +88,31 @@
       // 4: 100 // Temporarily disabled
     };
 
+    // Fetch fresh nonce on component mount
+    useEffect(() => {
+      fetchNonceForForm();
+    }, []);
+
+    const fetchNonceForForm = async () => {
+      try {
+        setNonceLoading(true);
+        const ajaxUrl =
+          config.ajax_url ||
+          window.location.origin + "/wp-admin/admin-ajax.php";
+        const freshNonce = await fetchFreshNonce("merchant", ajaxUrl);
+        setNonce(freshNonce);
+      } catch (error) {
+        console.error("Failed to load security token");
+      } finally {
+        setNonceLoading(false);
+      }
+    };
+
     // Global API call system - similar to sandbox form
     const apiCall = async (action, data) => {
       const formData = new FormData();
       formData.append("action", "moneybag_merchant_api");
-      formData.append("nonce", window.moneybagMerchantAjax.nonce);
+      formData.append("nonce", nonce);
       formData.append("api_action", action);
       formData.append("data", JSON.stringify(data));
 
@@ -87,7 +133,7 @@
         if (!result.success) {
           throw new Error(
             result.data ||
-              'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>'
+              'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>',
           );
         }
 
@@ -104,7 +150,7 @@
         try {
           // Load directly from JSON file for faster rendering
           const response = await fetch(
-            config.plugin_url + "data/merchant-registration-options.json"
+            config.plugin_url + "data/merchant-registration-options.json",
           );
           if (response.ok) {
             const data = await response.json();
@@ -127,7 +173,7 @@
         for (const [catName, catData] of Object.entries(categories)) {
           if (catData.value === formData.businessCategory) {
             setAvailableLegalIdentities(
-              Object.entries(catData.identities || {})
+              Object.entries(catData.identities || {}),
             );
             break;
           }
@@ -221,10 +267,10 @@
         }
         return window.MoneybagValidation.validateMerchantStep(
           stepNumber,
-          formData
+          formData,
         );
       },
-      [formData]
+      [formData],
     );
 
     const getStepStatus = useCallback(
@@ -237,7 +283,7 @@
           return "future";
         }
       },
-      [currentStep, isStepComplete]
+      [currentStep, isStepComplete],
     );
 
     const canNavigateToStep = useCallback(
@@ -248,7 +294,7 @@
           return true;
         return false;
       },
-      [currentStep, isStepComplete]
+      [currentStep, isStepComplete],
     );
 
     const getProgressHeight = useCallback(() => {
@@ -275,7 +321,7 @@
     const validateAndSetFieldError = (
       fieldName,
       value,
-      formFieldName = null
+      formFieldName = null,
     ) => {
       if (!window.MoneybagValidation) {
         // MoneybagValidation not loaded
@@ -326,7 +372,7 @@
           if (mappedField) {
             processedValue = window.MoneybagValidation.filterInput(
               value,
-              mappedField.filter
+              mappedField.filter,
             );
           }
         } else {
@@ -362,14 +408,14 @@
           }));
 
           const isAvailable = availableLegalIdentities.some(
-            ([name, data]) => data.value === formData.legalIdentity
+            ([name, data]) => data.value === formData.legalIdentity,
           );
           if (!isAvailable) {
             setFormData((prev) => ({ ...prev, legalIdentity: "" }));
           }
         }
       },
-      [availableLegalIdentities, formData.legalIdentity]
+      [availableLegalIdentities, formData.legalIdentity],
     );
 
     // Handle service type selection
@@ -389,7 +435,7 @@
         if (window.MoneybagValidation) {
           const error = window.MoneybagValidation.validateField(
             "serviceTypes",
-            newServiceTypes
+            newServiceTypes,
           );
           setFieldErrors((prev) => ({
             ...prev,
@@ -397,7 +443,7 @@
           }));
         }
       },
-      [formData.serviceTypes]
+      [formData.serviceTypes],
     );
 
     // Handle select all services
@@ -427,7 +473,7 @@
       if (window.MoneybagValidation) {
         const error = window.MoneybagValidation.validateField(
           "serviceTypes",
-          newServiceTypes
+          newServiceTypes,
         );
         setFieldErrors((prev) => ({
           ...prev,
@@ -449,7 +495,7 @@
           const stepErrors =
             window.MoneybagValidation.validateMerchantStepFields(
               step,
-              formData
+              formData,
             );
           Object.assign(allErrors, stepErrors);
         }
@@ -460,7 +506,7 @@
             const stepErrors =
               window.MoneybagValidation.validateMerchantStepFields(
                 step,
-                formData
+                formData,
               );
             if (Object.keys(stepErrors).length > 0) {
               setCurrentStep(step);
@@ -528,7 +574,7 @@
         // Use global API system (from original file)
         const result = await apiCall(
           "submit_merchant_registration",
-          submitData
+          submitData,
         );
 
         setLoading(false);
@@ -554,7 +600,7 @@
           }
         } else {
           throw new Error(
-            'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>'
+            'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>',
           );
         }
       } catch (error) {
@@ -675,7 +721,7 @@
       if (window.MoneybagValidation) {
         const stepErrors = window.MoneybagValidation.validateMerchantStepFields(
           currentStep,
-          formData
+          formData,
         );
 
         // Set all field errors at once
@@ -721,7 +767,7 @@
           setCurrentStep(stepId);
         }
       },
-      [canNavigateToStep]
+      [canNavigateToStep],
     );
 
     // Helper function to generate BlockNote content format
@@ -746,7 +792,7 @@
           content: [
             {
               type: "text",
-              text: `• Business Name: ${data.businessName || "N/A"}`,
+              text: `â€¢ Business Name: ${data.businessName || "N/A"}`,
             },
           ],
         },
@@ -755,7 +801,7 @@
           content: [
             {
               type: "text",
-              text: `• Legal Identity: ${data.legalIdentity || "N/A"}`,
+              text: `â€¢ Legal Identity: ${data.legalIdentity || "N/A"}`,
             },
           ],
         },
@@ -768,7 +814,7 @@
           content: [
             {
               type: "text",
-              text: `• Name: ${data.firstName || "N/A"} ${
+              text: `â€¢ Name: ${data.firstName || "N/A"} ${
                 data.lastName || "N/A"
               }`,
             },
@@ -776,14 +822,16 @@
         },
         {
           type: "paragraph",
-          content: [{ type: "text", text: `• Email: ${data.email || "N/A"}` }],
+          content: [
+            { type: "text", text: `â€¢ Email: ${data.email || "N/A"}` },
+          ],
         },
         {
           type: "paragraph",
           content: [
             {
               type: "text",
-              text: `• Phone: ${data.mobile || data.phone || "N/A"}`,
+              text: `â€¢ Phone: ${data.mobile || data.phone || "N/A"}`,
             },
           ],
         },
@@ -792,7 +840,7 @@
           content: [
             {
               type: "text",
-              text: `• Website: ${data.businessWebsite || "N/A"}`,
+              text: `â€¢ Website: ${data.businessWebsite || "N/A"}`,
             },
           ],
         },
@@ -816,10 +864,7 @@
           const formData = new FormData();
           formData.append("action", "moneybag_pricing_crm");
           formData.append("crm_action", action);
-          formData.append(
-            "nonce",
-            config.nonce || window.moneybagMerchantAjax?.nonce
-          );
+          formData.append("nonce", nonce);
           formData.append("data", JSON.stringify(crmData));
 
           const response = await fetch(
@@ -827,7 +872,7 @@
             {
               method: "POST",
               body: formData,
-            }
+            },
           );
 
           const result = await response.json();
@@ -835,7 +880,7 @@
             throw new Error(
               result.data?.message ||
                 result.data ||
-                'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>'
+                'Something went wrong! Hotline <a href="tel:+8801958109228" style="color: #ff4444; text-decoration: underline;">+880 1958 109 228</a>',
             );
           }
           return result.data;
@@ -901,12 +946,12 @@
                 h(
                   "h3",
                   { className: "success-sidebar-title" },
-                  "Registration Complete"
+                  "Registration Complete",
                 ),
                 h(
                   "p",
                   { className: "success-sidebar-subtitle" },
-                  "Your application has been submitted successfully and is now under review."
+                  "Your application has been submitted successfully and is now under review.",
                 ),
                 h(
                   "div",
@@ -914,7 +959,7 @@
                   h(
                     "h4",
                     { className: "contact-section-title" },
-                    "Quick Contact"
+                    "Quick Contact",
                   ),
                   h(
                     "div",
@@ -932,7 +977,7 @@
                       },
                       h("path", {
                         d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z",
-                      })
+                      }),
                     ),
                     h(
                       "a",
@@ -947,8 +992,8 @@
                         onMouseEnter: (e) => (e.target.style.color = "#ff4444"),
                         onMouseLeave: (e) => (e.target.style.color = "inherit"),
                       },
-                      "+880 1958 109 228"
-                    )
+                      "+880 1958 109 228",
+                    ),
                   ),
                   h(
                     "div",
@@ -969,7 +1014,7 @@
                       }),
                       h("polyline", {
                         points: "22,6 12,13 2,6",
-                      })
+                      }),
                     ),
                     h(
                       "a",
@@ -984,15 +1029,15 @@
                         onMouseEnter: (e) => (e.target.style.color = "#ff4444"),
                         onMouseLeave: (e) => (e.target.style.color = "inherit"),
                       },
-                      "info@moneybag.com.bd"
-                    )
+                      "info@moneybag.com.bd",
+                    ),
                   ),
                   h(
                     "p",
                     { className: "contact-description" },
-                    "For any inquiries, feel free to reach out via phone or email. Our support team is here to assist you with any questions or service-related requests."
-                  )
-                )
+                    "For any inquiries, feel free to reach out via phone or email. Our support team is here to assist you with any questions or service-related requests.",
+                  ),
+                ),
               ),
               h(
                 "div",
@@ -1001,8 +1046,8 @@
                   src: `${config.plugin_url}assets/image/img_join now.webp`,
                   alt: "Success",
                   className: "illustration-image",
-                })
-              )
+                }),
+              ),
             ),
             h(
               "div",
@@ -1013,12 +1058,12 @@
                 h(
                   "h1",
                   { className: "success-title" },
-                  "Thank You for Your Application!"
+                  "Thank You for Your Application!",
                 ),
                 h(
                   "p",
                   { className: "success-description" },
-                  "Your merchant registration has been submitted successfully. While we review your application, you can start testing with our sandbox environment right away!"
+                  "Your merchant registration has been submitted successfully. While we review your application, you can start testing with our sandbox environment right away!",
                 ),
                 h(
                   "div",
@@ -1030,8 +1075,8 @@
                     h(
                       "h4",
                       { className: "sandbox-title" },
-                      h("span", { className: "sandbox-icon" }, "🚀"),
-                      " Your Sandbox is Ready!"
+                      h("span", { className: "sandbox-icon" }, "\uD83D\uDE80"),
+                      " Your Sandbox is Ready!",
                     ),
                     h(
                       "div",
@@ -1039,7 +1084,7 @@
                       h(
                         "p",
                         { className: "sandbox-intro" },
-                        "Your sandbox account has been created successfully! Click below to access your sandbox dashboard with automatic login."
+                        "Your sandbox account has been created successfully! Click below to access your sandbox dashboard with automatic login.",
                       ),
                       h(
                         "div",
@@ -1080,8 +1125,8 @@
                                   ry: "2",
                                 }),
                                 h("path", { d: "M9 3v18" }),
-                                h("path", { d: "M16 10l-3 3-3-3" })
-                              )
+                                h("path", { d: "M16 10l-3 3-3-3" }),
+                              ),
                             ),
                             h(
                               "div",
@@ -1089,13 +1134,13 @@
                               h(
                                 "span",
                                 { className: "login-card-title" },
-                                "Go to sandbox"
+                                "Go to sandbox",
                               ),
                               h(
                                 "span",
                                 { className: "login-card-subtitle" },
-                                "Click here for instant access"
-                              )
+                                "Click here for instant access",
+                              ),
                             ),
                             h(
                               "div",
@@ -1118,13 +1163,13 @@
                                   d: "M12 5l7 7-7 7",
                                   strokeLinecap: "round",
                                   strokeLinejoin: "round",
-                                })
-                              )
-                            )
-                          )
-                        ) // closes anchor tag
-                      ) // closes sandbox-login-action
-                    ) // closes sandbox-login-container
+                                }),
+                              ),
+                            ),
+                          ),
+                        ), // closes anchor tag
+                      ), // closes sandbox-login-action
+                    ), // closes sandbox-login-container
                   ),
                   h(
                     "div",
@@ -1133,7 +1178,7 @@
                     h(
                       "p",
                       null,
-                      "If you have any questions, feel free to contact our support team."
+                      "If you have any questions, feel free to contact our support team.",
                     ),
                     h(
                       "div",
@@ -1145,10 +1190,10 @@
                           onClick: () =>
                             window.open(
                               "https://moneybag.com.bd/support/#faq",
-                              "_blank"
+                              "_blank",
                             ),
                         },
-                        "FAQ"
+                        "FAQ",
                       ),
                       h(
                         "button",
@@ -1156,15 +1201,15 @@
                           className: "primary-btn",
                           onClick: () => window.location.reload(),
                         },
-                        "Submit New Application"
-                      )
-                    )
-                  )
-                ) // closes success-details
-              ) // closes success-card
-            ) // closes success-main-content
-          ) // closes success-layout
-        ) // closes merchant-form-content
+                        "Submit New Application",
+                      ),
+                    ),
+                  ),
+                ), // closes success-details
+              ), // closes success-card
+            ), // closes success-main-content
+          ), // closes success-layout
+        ), // closes merchant-form-content
       ); // closes merchant-form-container and return
     }
 
@@ -1212,7 +1257,7 @@
               "label",
               { className: "field-label" },
               "Business Category ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h(
               "select",
@@ -1227,14 +1272,14 @@
                   validateAndSetFieldError(
                     "businessCategory",
                     e.target.value,
-                    "businessCategory"
+                    "businessCategory",
                   ),
               },
               !registrationOptions?.businessCategories
                 ? h(
                     "option",
                     { value: "", disabled: true },
-                    "Loading business categories..."
+                    "Loading business categories...",
                   )
                 : [
                     h(
@@ -1245,10 +1290,10 @@
                         selected: !formData.businessCategory,
                         hidden: true,
                       },
-                      "Select Business Category"
+                      "Select Business Category",
                     ),
                     ...Object.entries(
-                      registrationOptions.businessCategories
+                      registrationOptions.businessCategories,
                     ).map(([name, data]) =>
                       h(
                         "option",
@@ -1256,17 +1301,17 @@
                           key: data.value,
                           value: data.value,
                         },
-                        name
-                      )
+                        name,
+                      ),
                     ),
-                  ]
+                  ],
             ),
             fieldErrors.businessCategory &&
               h(
                 "span",
                 { className: "error-message" },
-                fieldErrors.businessCategory
-              )
+                fieldErrors.businessCategory,
+              ),
           ),
           h(
             "div",
@@ -1275,7 +1320,7 @@
               "label",
               { className: "field-label" },
               "Legal Identity ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h(
               "select",
@@ -1290,14 +1335,14 @@
                   validateAndSetFieldError(
                     "legalIdentity",
                     e.target.value,
-                    "legalIdentity"
+                    "legalIdentity",
                   ),
               },
               !formData.businessCategory
                 ? h(
                     "option",
                     { value: "", disabled: true },
-                    "Please select Business Category first"
+                    "Please select Business Category first",
                   )
                 : [
                     h(
@@ -1308,7 +1353,7 @@
                         selected: !formData.legalIdentity,
                         hidden: true,
                       },
-                      "Select Legal Identity"
+                      "Select Legal Identity",
                     ),
                     ...availableLegalIdentities.map(([name, data]) =>
                       h(
@@ -1317,18 +1362,18 @@
                           key: data.value,
                           value: data.value,
                         },
-                        name
-                      )
+                        name,
+                      ),
                     ),
-                  ]
+                  ],
             ),
             fieldErrors.legalIdentity &&
               h(
                 "span",
                 { className: "error-message" },
-                fieldErrors.legalIdentity
-              )
-          )
+                fieldErrors.legalIdentity,
+              ),
+          ),
         ),
         h(
           "div",
@@ -1340,7 +1385,7 @@
               "label",
               { className: "field-label" },
               "Monthly Transaction Volume ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h(
               "select",
@@ -1355,14 +1400,14 @@
                   validateAndSetFieldError(
                     "monthlyVolume",
                     e.target.value,
-                    "monthlyVolume"
+                    "monthlyVolume",
                   ),
               },
               !registrationOptions?.monthlyVolumes
                 ? h(
                     "option",
                     { value: "", disabled: true },
-                    "Loading volume options..."
+                    "Loading volume options...",
                   )
                 : [
                     h(
@@ -1373,7 +1418,7 @@
                         selected: !formData.monthlyVolume,
                         hidden: true,
                       },
-                      "Select Monthly Volume"
+                      "Select Monthly Volume",
                     ),
                     ...registrationOptions.monthlyVolumes.map((volume) =>
                       h(
@@ -1382,17 +1427,17 @@
                           key: volume.value,
                           value: volume.value,
                         },
-                        volume.label
-                      )
+                        volume.label,
+                      ),
                     ),
-                  ]
+                  ],
             ),
             fieldErrors.monthlyVolume &&
               h(
                 "span",
                 { className: "error-message" },
-                fieldErrors.monthlyVolume
-              )
+                fieldErrors.monthlyVolume,
+              ),
           ),
           h(
             "div",
@@ -1400,7 +1445,7 @@
             h(
               "label",
               { className: "field-label" },
-              "Maximum Amount in a Single Transaction"
+              "Maximum Amount in a Single Transaction",
             ),
             h("input", {
               type: "number",
@@ -1412,8 +1457,8 @@
               step: "any",
             }),
             fieldErrors.maxAmount &&
-              h("span", { className: "error-message" }, fieldErrors.maxAmount)
-          )
+              h("span", { className: "error-message" }, fieldErrors.maxAmount),
+          ),
         ),
         h(
           "div",
@@ -1425,7 +1470,7 @@
               "label",
               { className: "field-label" },
               "Type of Service Needed ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h(
               "div",
@@ -1490,8 +1535,8 @@
                       }
                     },
                   },
-                  "Select All"
-                )
+                  "Select All",
+                ),
               ),
               ...allServiceValues.map((serviceValue) =>
                 h(
@@ -1556,19 +1601,19 @@
                         objectFit: "contain",
                       },
                       loading: "lazy",
-                    })
-                  )
-                )
-              )
+                    }),
+                  ),
+                ),
+              ),
             ),
             fieldErrors.serviceTypes &&
               h(
                 "span",
                 { className: "error-message" },
-                fieldErrors.serviceTypes
-              )
-          )
-        )
+                fieldErrors.serviceTypes,
+              ),
+          ),
+        ),
       );
     };
 
@@ -1587,7 +1632,7 @@
               "label",
               { className: "field-label" },
               "Business Name ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h("input", {
               type: "text",
@@ -1601,7 +1646,7 @@
                 validateAndSetFieldError(
                   "businessName",
                   e.target.value,
-                  "businessName"
+                  "businessName",
                 ),
               placeholder: "Enter your business name",
             }),
@@ -1609,9 +1654,9 @@
               h(
                 "span",
                 { className: "error-message" },
-                fieldErrors.businessName
-              )
-          )
+                fieldErrors.businessName,
+              ),
+          ),
         ),
         h(
           "div",
@@ -1623,7 +1668,7 @@
               "label",
               { className: "field-label" },
               "Business Website ",
-              h("span", { className: "optional-text" }, "(Optional)")
+              h("span", { className: "optional-text" }, "(Optional)"),
             ),
             h("input", {
               type: "url",
@@ -1637,7 +1682,7 @@
                 validateAndSetFieldError(
                   "optionalDomain",
                   e.target.value,
-                  "domainName"
+                  "domainName",
                 );
               },
               placeholder: "www.example.com",
@@ -1647,10 +1692,10 @@
             h(
               "small",
               { className: "form-hint" },
-              "Enter your business website URL (optional)"
-            )
-          )
-        )
+              "Enter your business website URL (optional)",
+            ),
+          ),
+        ),
       );
     };
 
@@ -1669,7 +1714,7 @@
               "label",
               { className: "field-label" },
               "First Name ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h("input", {
               type: "text",
@@ -1683,7 +1728,7 @@
               placeholder: "First name",
             }),
             fieldErrors.firstName &&
-              h("span", { className: "error-message" }, fieldErrors.firstName)
+              h("span", { className: "error-message" }, fieldErrors.firstName),
           ),
           h(
             "div",
@@ -1692,7 +1737,7 @@
               "label",
               { className: "field-label" },
               "Last Name ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h("input", {
               type: "text",
@@ -1706,8 +1751,8 @@
               placeholder: "Last name",
             }),
             fieldErrors.lastName &&
-              h("span", { className: "error-message" }, fieldErrors.lastName)
-          )
+              h("span", { className: "error-message" }, fieldErrors.lastName),
+          ),
         ),
         h(
           "div",
@@ -1719,7 +1764,7 @@
               "label",
               { className: "field-label" },
               "Email ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h("input", {
               type: "email",
@@ -1747,8 +1792,8 @@
                 typeof fieldErrors.email === "string" &&
                   fieldErrors.email.includes("<a")
                   ? null
-                  : fieldErrors.email
-              )
+                  : fieldErrors.email,
+              ),
           ),
           h(
             "div",
@@ -1757,7 +1802,7 @@
               "label",
               { className: "field-label" },
               "Mobile Number ",
-              h("span", { className: "required-indicator" }, "*")
+              h("span", { className: "required-indicator" }, "*"),
             ),
             h("input", {
               type: "text",
@@ -1784,15 +1829,15 @@
                 typeof fieldErrors.mobile === "string" &&
                   fieldErrors.mobile.includes("<a")
                   ? null
-                  : fieldErrors.mobile
+                  : fieldErrors.mobile,
               ),
             h(
               "small",
               { className: "form-hint" },
-              "Bangladesh mobile number format: 01XXXXXXXXX"
-            )
-          )
-        )
+              "Bangladesh mobile number format: 01XXXXXXXXX",
+            ),
+          ),
+        ),
       );
     };
 
@@ -1818,12 +1863,12 @@
         h(
           "h3",
           { className: "steps-title" },
-          "Please fill this information first"
+          "Please fill this information first",
         ),
         h(
           "p",
           { className: "steps-subtitle" },
-          "After completing all steps you will be eligible for 7 days trial."
+          "After completing all steps you will be eligible for 7 days trial.",
         ),
         h(
           "div",
@@ -1835,7 +1880,7 @@
             h("div", {
               className: "vertical-line-fill",
               style: { height: `${getProgressHeight()}%` },
-            })
+            }),
           ),
           ...steps.map((step) => {
             const status = getStepStatus(step.id);
@@ -1856,25 +1901,25 @@
                 h(
                   "div",
                   { className: "step-title" },
-                  `Step ${step.id}: ${step.title}`
+                  `Step ${step.id}: ${step.title}`,
                 ),
                 status === "completed" &&
                   h(
                     "div",
                     { className: "step-status completed" },
-                    "✓ Completed"
+                    "âœ“ Completed",
                   ),
                 status === "incomplete" &&
                   h(
                     "div",
                     { className: "step-status incomplete" },
-                    "⚠ Incomplete"
+                    "âš  Incomplete",
                   ),
                 status === "current" &&
-                  h("div", { className: "step-status current" }, "In Progress")
-              )
+                  h("div", { className: "step-status current" }, "In Progress"),
+              ),
             );
-          })
+          }),
         ),
         h(
           "div",
@@ -1883,8 +1928,8 @@
             src: `${config.plugin_url}assets/image/img_join now.webp`,
             alt: "Join Now",
             className: "illustration-image",
-          })
-        )
+          }),
+        ),
       );
     };
 
@@ -1892,28 +1937,28 @@
     const renderInstructions = () => {
       const instructionsMap = {
         1: [
-          "• Select your business type from the legal identity dropdown",
-          "• Enter your expected monthly transaction amount in BDT",
-          "• Specify the highest single transaction amount you expect to process",
-          "• Select all payment methods you want to accept (you can add more later)",
-          "• All fields are required to proceed to the next step",
-          "• Ensure your transaction volumes are realistic to avoid delays in approval",
+          "1: Select your business type from the legal identity dropdown",
+          "2: Enter your expected monthly transaction amount in BDT",
+          "3: Specify the highest single transaction amount you expect to process",
+          "4: Select all payment methods you want to accept (you can add more later)",
+          "5: All fields are required to proceed to the next step",
+          "6: Ensure your transaction volumes are realistic to avoid delays in approval",
         ],
         2: [
-          "• Enter your official business name as registered with government authorities",
-          "• Trading name is what customers see (your shop/brand name)",
-          "• Enter your domain name without http:// or https://",
-          "• If you don't have a website yet, enter your social media domain",
-          "• Double-check spelling - this information will appear on your merchant account",
-          "• These details will be used for payment gateway integration",
+          "1: Enter your official business name as registered with government authorities",
+          "2: Trading name is what customers see (your shop/brand name)",
+          "3: Enter your domain name without http:// or https://",
+          "4: If you don't have a website yet, enter your social media domain",
+          "5: Double-check spelling - this information will appear on your merchant account",
+          "6: These details will be used for payment gateway integration",
         ],
         3: [
-          "• Provide details of the primary contact person for this merchant account",
-          "• This person will receive all account-related communications",
-          "• Email must be valid and actively monitored",
-          "• Mobile number must be a Bangladesh number starting with 01",
-          "• Phone number is optional but recommended for urgent support",
-          "• This contact will have admin access to the merchant dashboard",
+          "1: Provide details of the primary contact person for this merchant account",
+          "2: This person will receive all account-related communications",
+          "3: Email must be valid and actively monitored",
+          "4: Mobile number must be a Bangladesh number starting with 01",
+          "5: Phone number is optional but recommended for urgent support",
+          "6: This contact will have admin access to the merchant dashboard",
         ],
       };
 
@@ -1925,9 +1970,9 @@
           "ul",
           { className: "instructions-list" },
           ...instructionsMap[currentStep].map((instruction, index) =>
-            h("li", { key: index }, instruction)
-          )
-        )
+            h("li", { key: index }, instruction),
+          ),
+        ),
       );
     };
 
@@ -1960,7 +2005,7 @@
                     onClick: () =>
                       window.open("https://moneybag.com.bd/support/", "_blank"),
                   },
-                  "Need Assistance?"
+                  "Need Assistance?",
                 ),
                 h(
                   "button",
@@ -1968,11 +2013,11 @@
                     onClick: () =>
                       window.open(
                         "https://moneybag.com.bd/support/#faq",
-                        "_blank"
+                        "_blank",
                       ),
                   },
-                  "FAQ"
-                )
+                  "FAQ",
+                ),
               ),
               h(
                 "div",
@@ -1980,7 +2025,7 @@
                 h(
                   "div",
                   { className: "progress-text" },
-                  `${progressPercentage[currentStep]}% Progress`
+                  `${progressPercentage[currentStep]}% Progress`,
                 ),
                 h(
                   "div",
@@ -1988,9 +2033,9 @@
                   h("div", {
                     className: "progress-bar-fill",
                     style: { width: `${progressPercentage[currentStep]}%` },
-                  })
-                )
-              )
+                  }),
+                ),
+              ),
             ),
             // Content wrapper for form and instructions
             h(
@@ -2013,9 +2058,9 @@
                             className: "secondary-btn",
                             onClick: handlePrevious,
                           },
-                          "Previous"
+                          "Previous",
                         )
-                      : h("div")
+                      : h("div"),
                   ),
                   h(
                     "div",
@@ -2040,22 +2085,22 @@
                             }),
                             currentStep === 3
                               ? "Submitting..."
-                              : "Processing..."
+                              : "Processing...",
                           )
                         : h(
                             "span",
                             { className: "btn-content" },
-                            currentStep === 3 ? "Submit" : "Save & Next"
-                          )
-                    )
-                  )
-                )
+                            currentStep === 3 ? "Submit" : "Save & Next",
+                          ),
+                    ),
+                  ),
+                ),
               ),
-              renderInstructions()
-            )
-          )
-        )
-      )
+              renderInstructions(),
+            ),
+          ),
+        ),
+      ),
     );
   };
 
@@ -2067,12 +2112,12 @@
 
       if (config && widgetId) {
         const container = document.getElementById(
-          `moneybag-merchant-form-${widgetId}`
+          `moneybag-merchant-form-${widgetId}`,
         );
         if (container) {
           wp.element.render(
             wp.element.createElement(MerchantRegistrationForm, { config }),
-            container
+            container,
           );
         }
       }

@@ -3,13 +3,34 @@
 
   const { useState, useEffect, createElement: h } = wp.element;
 
+  // Fetch fresh nonce to prevent cache issues
+  async function fetchFreshNonce(nonceType, ajaxUrl) {
+    try {
+      const formData = new FormData();
+      formData.append("action", "moneybag_get_nonce");
+      formData.append("nonce_type", nonceType);
+
+      const response = await fetch(ajaxUrl, {
+        method: "POST",
+        body: formData,
+        credentials: "same-origin",
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.data.nonce) {
+        return data.data.nonce;
+      } else {
+        throw new Error("Failed to fetch nonce");
+      }
+    } catch (error) {
+      console.error(`✗ Error fetching ${nonceType} nonce:`, error);
+      throw error;
+    }
+  }
+
   // Contact Form Component
-  window.MoneybagContactForm = function ({
-    ajaxUrl,
-    nonce,
-    widgetId,
-    config = {},
-  }) {
+  window.MoneybagContactForm = function ({ ajaxUrl, widgetId, config = {} }) {
     const [formData, setFormData] = useState({
       name: "",
       email: "",
@@ -28,6 +49,8 @@
     // --- reCAPTCHA State ---
     const [recaptchaResponse, setRecaptchaResponse] = useState("");
     const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+    const [nonce, setNonce] = useState(null);
+    const [nonceLoading, setNonceLoading] = useState(true);
 
     // Inquiry type options
     const inquiryOptions = [
@@ -56,6 +79,27 @@
         return () => clearTimeout(timer);
       }
     }, []);
+
+    // Fetch fresh nonce on component mount
+    useEffect(() => {
+      fetchNonceForForm();
+    }, []);
+
+    const fetchNonceForForm = async () => {
+      try {
+        setNonceLoading(true);
+        const freshNonce = await fetchFreshNonce("contact", ajaxUrl);
+        setNonce(freshNonce);
+      } catch (error) {
+        console.error("Failed to load security token");
+        setSubmitStatus({
+          type: "error",
+          message: "Failed to initialize form. Please refresh the page.",
+        });
+      } finally {
+        setNonceLoading(false);
+      }
+    };
 
     // --- reCAPTCHA useEffect & Functions ---
     useEffect(() => {
@@ -124,7 +168,7 @@
     const validateAndSetFieldError = (
       fieldName,
       value,
-      formFieldName = null
+      formFieldName = null,
     ) => {
       if (!window.MoneybagValidation) {
         return "";
@@ -163,28 +207,28 @@
       }
       const nameError = window.MoneybagValidation.validateField(
         "name",
-        formData.name
+        formData.name,
       );
       if (nameError) newErrors.name = nameError;
       const emailError = window.MoneybagValidation.validateField(
         "email",
-        formData.email
+        formData.email,
       );
       if (emailError) newErrors.email = emailError;
       const phoneError = window.MoneybagValidation.validateField(
         "mobile",
-        formData.phone
+        formData.phone,
       );
       if (phoneError) newErrors.phone = phoneError;
       const companyError = window.MoneybagValidation.validateField(
         "company",
-        formData.company
+        formData.company,
       );
       if (companyError) newErrors.company = companyError;
       if (formData.message && formData.message.trim()) {
         const messageError = window.MoneybagValidation.validateField(
           "message",
-          formData.message
+          formData.message,
         );
         if (messageError) newErrors.message = messageError;
       }
@@ -194,7 +238,7 @@
         } else {
           const subjectError = window.MoneybagValidation.validateField(
             "otherSubject",
-            formData.otherSubject
+            formData.otherSubject,
           );
           if (subjectError) newErrors.otherSubject = subjectError;
         }
@@ -302,6 +346,24 @@
     };
 
     // --- RENDER (Your original render function with CSS) ---
+
+    // Loading check
+    if (nonceLoading) {
+      return h(
+        "div",
+        { className: "moneybag-form-loading" },
+        h("p", null, "Loading form..."),
+      );
+    }
+
+    if (!nonce) {
+      return h(
+        "div",
+        { className: "moneybag-form-error" },
+        h("p", null, "Failed to load form. Please refresh the page."),
+      );
+    }
+
     return h(
       "div",
       { className: "contact-form-wrapper moneybag-form" },
@@ -338,7 +400,7 @@
             }`,
             disabled: isSubmitting,
           }),
-          errors.name && h("span", { className: "error-message" }, errors.name)
+          errors.name && h("span", { className: "error-message" }, errors.name),
         ),
 
         // Email and Phone row with icons
@@ -366,7 +428,7 @@
                   strokeWidth: "1.5",
                   strokeLinecap: "round",
                   strokeLinejoin: "round",
-                })
+                }),
               ),
               h("input", {
                 type: "email",
@@ -380,10 +442,10 @@
                   errors.email ? "error" : ""
                 } ${formData.email ? "valid" : ""}`,
                 disabled: isSubmitting,
-              })
+              }),
             ),
             errors.email &&
-              h("span", { className: "error-message" }, errors.email)
+              h("span", { className: "error-message" }, errors.email),
           ),
           h(
             "div",
@@ -406,12 +468,12 @@
                   strokeWidth: "1.5",
                   strokeLinecap: "round",
                   strokeLinejoin: "round",
-                })
+                }),
               ),
               h("input", {
                 type: "tel",
                 name: "phone",
-                placeholder: "+8801XXXXXXXXX",
+                placeholder: "01XXXXXXXXX",
                 value: formData.phone,
                 onChange: handleInputChange,
                 onBlur: (e) =>
@@ -428,11 +490,11 @@
                   errors.phone ? "error" : ""
                 } ${formData.phone ? "valid" : ""}`,
                 disabled: isSubmitting,
-              })
+              }),
             ),
             errors.phone &&
-              h("span", { className: "error-message" }, errors.phone)
-          )
+              h("span", { className: "error-message" }, errors.phone),
+          ),
         ),
 
         // Company field
@@ -453,7 +515,7 @@
             disabled: isSubmitting,
           }),
           errors.company &&
-            h("span", { className: "error-message" }, errors.company)
+            h("span", { className: "error-message" }, errors.company),
         ),
 
         // Inquiry type dropdown and Other subject row
@@ -493,10 +555,10 @@
                     key: option,
                     value: option,
                   },
-                  option
-                )
-              )
-            )
+                  option,
+                ),
+              ),
+            ),
           ),
           h(
             "div",
@@ -515,7 +577,7 @@
                   ? validateAndSetFieldError(
                       "otherSubject",
                       e.target.value,
-                      "otherSubject"
+                      "otherSubject",
                     )
                   : null,
               className: `input-field ${errors.otherSubject ? "error" : ""} ${
@@ -527,8 +589,8 @@
               required: formData.inquiryType === "Other",
             }),
             errors.otherSubject &&
-              h("span", { className: "error-message" }, errors.otherSubject)
-          )
+              h("span", { className: "error-message" }, errors.otherSubject),
+          ),
         ),
 
         // Message field
@@ -558,7 +620,7 @@
             disabled: isSubmitting,
           }),
           errors.message &&
-            h("span", { className: "error-message" }, errors.message)
+            h("span", { className: "error-message" }, errors.message),
         ),
 
         // Submit button
@@ -572,10 +634,10 @@
               className: "primary-btn submit-button",
               disabled: isSubmitting,
             },
-            isSubmitting ? "Submitting..." : "Submit"
-          )
-        )
-      )
+            isSubmitting ? "Submitting..." : "Submit",
+          ),
+        ),
+      ),
     );
   };
 })();

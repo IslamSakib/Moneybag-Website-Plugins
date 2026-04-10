@@ -6,7 +6,7 @@ This documentation is specifically designed for **Claude Code** and other AI ass
 
 ## 📊 Plugin Overview
 
-**Version:** 2.4.0
+**Version:** 2.5.4
 **Architecture:** WordPress Plugin + Elementor + React (wp-element)
 **Security Level:** Enterprise
 **Performance:** Optimized Global CSS System (Production Ready)  
@@ -274,7 +274,12 @@ add_action('wp_ajax_nopriv_new_action', [$this, 'handle_new_action']);
 
 ## 🎯 Version History Context
 
-### **v2.4.0 (Current - Business Category Integration & UX Improvements):**
+### **v2.5.4 (Current - Sandbox Form Bug Fixes & Production Cleanup):**
+- **Bug Fix:** Added missing `wp_localize_script` for `moneybag-sandbox-form` — resolves `moneybagAjax is not defined` JS error
+- **Bug Fix:** Replaced hardcoded `/wp-admin/admin-ajax.php` URL in `fetchNonceForForm` with `moneybagAjax.ajaxurl` for environment compatibility
+- **Cleanup:** Removed debug `console.log` success messages from all JS widgets (contact-form, merchant-registration, pricing-plan, price-comparison-calculator, sandbox-form)
+
+### **v2.4.0 (Business Category Integration & UX Improvements):**
 - **Price Calculator Business Logic:** Replaced Current Gateway field with Business Category selection
 - **Dynamic Pricing:** Implemented category-based Moneybag rates from pricing-rules.json
 - **Form Validation:** Added required field validation for Business Category with global validator
@@ -337,8 +342,8 @@ add_action('wp_ajax_nopriv_new_action', [$this, 'handle_new_action']);
 
 **For AI Assistants:** This plugin follows enterprise WordPress development standards with React integration. All security, performance, and compatibility requirements have been implemented and tested. When making modifications, preserve the architectural decisions documented above.
 
-**Last Updated:** September 2025 by Claude Code
-**Plugin Version:** 2.4.0 (Business Category Integration & UX Improvements)
+**Last Updated:** April 2026 by Claude Code
+**Plugin Version:** 2.5.4 (Sandbox Form Bug Fixes & Production Cleanup)
 **Developer:** Sakib Islam (+8801950025990)
 **WordPress Compatibility:** 5.0+
 **Elementor Compatibility:** 3.0+
